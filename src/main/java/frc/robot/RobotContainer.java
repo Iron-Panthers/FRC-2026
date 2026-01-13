@@ -4,6 +4,9 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -159,7 +162,7 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    //driverA.b().onTrue(RobotState.approachPoseCommand(new Pose2d()))
+    driverA.b().onTrue(RobotState.getInstance().approachPoseCommand(new Pose2d(10.406, 1.916, new Rotation2d(0)), true));
   }
 
   private void configureAutos() {

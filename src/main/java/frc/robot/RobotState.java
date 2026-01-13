@@ -223,8 +223,22 @@ public class RobotState {
           new Pose2d(estimatedPose.getTranslation(),
           angle),
           new Pose2d(approachPose.getPose().getTranslation(), angle));
-    if(approachPose.getPose().getX() > 5.7 != approachPose.getPose().getX() > 5.7){ //TODO: CAn flip, angle for over bump turn 45 degreres: )
-      waypoints.add(1,PathPlannerPath.waypointsFromPoses( underTrench ? new Pose2d(4.6, 7.408, angle) : new Pose2d(4.6,5.568, angle)).get(0));
+    
+    boolean doWeFlipHorz = estimatedPose.getTranslation().getY() < 4;
+    Pose2d trenchPose = new Pose2d(4.6, 
+      doWeFlipHorz ? 7.44 : 0.7,
+       angle);
+    Pose2d bumpPose = new Pose2d(4.6, 
+      doWeFlipHorz ? 5.5 : 2.5,
+       angle.plus(new Rotation2d(45)));
+    trenchPose = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
+      ? FlippingUtil.flipFieldPose(trenchPose)
+      : trenchPose;
+    bumpPose = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
+      ? FlippingUtil.flipFieldPose(bumpPose)
+      : bumpPose;
+    if(approachPose.getPose().getX() > 5.7 != approachPose.getPose().getX() > 5.7){ 
+      waypoints.add(1,PathPlannerPath.waypointsFromPoses(underTrench ? trenchPose : bumpPose).get(0));
     }
     PathPlannerPath path =
         new PathPlannerPath(waypoints,
