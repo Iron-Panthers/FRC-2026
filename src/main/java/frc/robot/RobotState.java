@@ -211,6 +211,31 @@ public class RobotState {
     return translateByVector(pose, mag, theta).transformBy(new Transform2d(0, 0, theta));
   }
 
+  public Command approachPoseCommand(Pose2d approachPose2d, boolean underTrench){
+    Translation2d velocity = getVelocity();
+    ApproachPose approachPose = new ApproachPose(approachPose2d);
+    Pose2d estimatedPose = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
+      ? FlippingUtil.flipFieldPose(getEstimatedPose())
+      : getEstimatedPose();
+    Rotation2d angle = approachPose.getPose().getTranslation().minus(estimatedPose.getTranslation()).getAngle();
+    List<Waypoint> waypoints =
+        PathPlannerPath.waypointsFromPoses(
+          new Pose2d(estimatedPose.getTranslation(),
+          angle),
+          new Pose2d(approachPose.getPose().getTranslation(), angle));
+    if(approachPose.getPose().getX() > 5.7 != approachPose.getPose().getX() > 5.7){ //TODO: CAn flip, angle for over bump turn 45 degreres: )
+      waypoints.add(1,PathPlannerPath.waypointsFromPoses( underTrench ? new Pose2d(4.6, 7.408, angle) : new Pose2d(4.6,5.568, angle)).get(0));
+    }
+    PathPlannerPath path =
+        new PathPlannerPath(waypoints,
+        DriveConstants.ALIGN_PATH_CONSTRAINTS, 
+        new IdealStartingState(velocity.getNorm(), estimatedPose.getRotation()),
+        new GoalEndState(
+          0.0, 
+          approachPose.getPose().getRotation()));
+    return AutoBuilder.followPath(path);
+
+  }
   public void addRobotSpeeds(ChassisSpeeds chassisSpeeds) {
     this.robotSpeeds = chassisSpeeds;
   }
