@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swerve.controllers;
+package frc.robot.subsystems.swerve.controllers.translation;
 
 import static frc.robot.subsystems.swerve.DriveConstants.DRIVE_CONFIG;
 
@@ -12,8 +12,7 @@ import frc.robot.Constants;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 
-public class TeleopController {
-  private final Supplier<Rotation2d> yawSupplier;
+public class TeleopTranslationController extends BaseTranslationController {
   private double controllerX = 0;
   private double controllerY = 0;
   private double controllerOmega = 0;
@@ -22,8 +21,8 @@ public class TeleopController {
   private double acceleration;
 
   /* teleop control with specified yaw supplier, typically "arbitrary" yaw */
-  public TeleopController(Supplier<Rotation2d> yawSupplier) {
-    this.yawSupplier = yawSupplier;
+  public TeleopTranslationController(Supplier<Rotation2d> yawSupplier) {
+    super(yawSupplier);
   }
 
   /* accept driver input from joysticks */
@@ -46,10 +45,9 @@ public class TeleopController {
   /* update controller with current desired state */
   public ChassisSpeeds update() {
     Translation2d linearVelocity = calculateLinearVelocity(controllerX, controllerY);
-
     double omega = MathUtil.applyDeadband(controllerOmega, 0.001);
     omega = Math.copySign(Math.pow(Math.abs(omega), 1.5), omega);
-
+    // Translation2d newVelocity = linearVelocity;
     // acceleration limiting
     Translation2d linearVelocityDiff = linearVelocity.minus(pastLinearVelocity);
     clampedVelocityDiff =
