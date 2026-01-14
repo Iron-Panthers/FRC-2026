@@ -259,15 +259,6 @@ public class Drive extends SubsystemBase {
         this);
   }
 
-  public Command setTargetApproachReef(double offset, boolean bside) {
-    return new FunctionalCommand(
-        () -> setTargetPosition(RobotState.getInstance().getApproachPose(offset, bside)),
-        () -> {},
-        (t) -> clearTargetPositionController(),
-        () -> false,
-        this);
-  }
-
   public boolean isTeleop() {
     return driveMode == DriveModes.TELEOP;
   }
