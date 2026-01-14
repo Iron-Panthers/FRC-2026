@@ -49,7 +49,7 @@ public class DriveConstants {
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
-            4.5,
+            3.75,
             10,
             6);
         case SPRINT -> new DrivebaseConfig(
@@ -120,31 +120,31 @@ public class DriveConstants {
         };
         case VISION -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(19, "FL Drive"),
-              CAN.at(18, "FL Steer"),
-              2,
-              new Rotation2d(-1.148),
+              CAN.at(5, "FL Drive"),
+              CAN.at(4, "FL Steer"),
+              6,
+              new Rotation2d(-1.877592 - Math.PI),
               InvertedValue.Clockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(17, "FR Drive"),
-              CAN.at(16, "FR Steer"),
-              1,
-              new Rotation2d(-0.405),
+              CAN.at(2, "FR Drive"),
+              CAN.at(1, "FR Steer"),
+              3,
+              new Rotation2d(-2.32498),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(21, "BL Drive"),
-              CAN.at(20, "BLSteer"),
-              3,
-              new Rotation2d(1.0139),
+              CAN.at(8, "BL Drive"),
+              CAN.at(7, "BL Steer"),
+              9,
+              new Rotation2d(-2.212),
               InvertedValue.Clockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(23, "BR Drive"),
-              CAN.at(22, "BRSteer"),
-              4,
-              new Rotation2d(-2.8148),
+              CAN.at(11, "BR Drive"),
+              CAN.at(10, "BR Steer"),
+              12,
+              new Rotation2d(2.15377 - Math.PI),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive)
         };
@@ -215,11 +215,11 @@ public class DriveConstants {
             287.0 / 11,
             3.125);
         case VISION -> new ModuleConstants(
-            new Gains(0.25, 2.26, 0, 50, 0, 0),
+            new Gains(0.24, 2.4, 0.08, 70, 0, 0),
             new MotionProfileGains(4, 64, 640),
             new Gains(0.16, 0.67, 0, 1.5, 0, 0),
-            (45.0 / 15) * (17.0 / 27) * (50.0 / 16), // MK4i L2.5 16 tooth
-            150.0 / 7,
+            (30.0 / 15) * (25.0 / 32) * (54.0 / 14), // Mk5n L2.5 16 tooth
+            287.0 / 11,
             3.125);
         case SPRINT -> new ModuleConstants(
             new Gains(0.25, 2.26, 0, 50, 0, 0),
@@ -279,6 +279,10 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
+        case VISION -> new PIDAutoAlignControllerConstants(
+            4, 0, 2, 2, 2); /*FIXME: tune these constants*/
+        case SPRINT -> new PIDAutoAlignControllerConstants(
+            7, 0, 0, 1, 1); /* FIXME: tune these constants */
         case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 2, 2);
         default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
       };
