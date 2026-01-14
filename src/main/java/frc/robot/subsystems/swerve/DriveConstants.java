@@ -124,28 +124,28 @@ public class DriveConstants {
               CAN.at(4, "FL Steer"),
               6,
               new Rotation2d(-1.877592 - Math.PI),
-              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(2, "FR Drive"),
               CAN.at(1, "FR Steer"),
               3,
               new Rotation2d(-2.32498),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.Clockwise_Positive),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(8, "BL Drive"),
               CAN.at(7, "BL Steer"),
               9,
               new Rotation2d(-2.212),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.CounterClockwise_Positive),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(11, "BR Drive"),
               CAN.at(10, "BR Steer"),
               12,
               new Rotation2d(2.15377 - Math.PI),
-              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive)
         };
         case SPRINT -> new ModuleConfig[] {
