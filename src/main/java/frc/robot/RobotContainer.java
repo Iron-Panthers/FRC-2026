@@ -48,6 +48,7 @@ public class RobotContainer {
 
   // DO NOT DELETE -- this actually does something important
   private RobotState robotState = RobotState.getInstance();
+
   private ElasticSetpoints elasticSetpoints = ElasticSetpoints.getInstance();
 
   // private SendableChooser<Command> autoChooser;

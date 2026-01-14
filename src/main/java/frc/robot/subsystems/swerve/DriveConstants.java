@@ -183,7 +183,7 @@ public class DriveConstants {
 
   public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
 
-  public static final Pose2d INITAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
+  public static final Pose2d INITAL_POSE = new Pose2d(1, 3.8, new Rotation2d(1, 0));
 
   public static final PPHolonomicDriveController HOLONOMIC_DRIVE_CONTROLLER =
       new PPHolonomicDriveController(
