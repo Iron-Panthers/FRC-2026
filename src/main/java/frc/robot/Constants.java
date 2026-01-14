@@ -26,12 +26,14 @@ public final class Constants {
 
   public static final Pose3d MECHANISM_ROOT_POSE = Pose3d.kZero;
 
-  public static RobotType ROBOT_TYPE = RobotType.SIM;
+  public static RobotType ROBOT_TYPE = RobotBase.isReal() ? RobotType.VISION : RobotType.SIM;
+
+  public static final boolean REPLAY = false; 
 
   /* running mode of robot */
   public static Mode getRobotMode() {
     return switch (ROBOT_TYPE) {
-      case COMP -> RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
+      case COMP, VISION, SPRINT -> REPLAY ? Mode.REPLAY : Mode.REAL;
       case SIM -> Mode.SIM;
     };
   }
@@ -55,6 +57,8 @@ public final class Constants {
   /* */
   public enum RobotType {
     COMP,
-    SIM;
+    SIM,
+    SPRINT,
+    VISION;
   }
 }
