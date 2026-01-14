@@ -35,6 +35,39 @@ public class VisionConstants {
           // arducam-5 (back left)
           new Transform3d(-0.17, 0.298, 0.3651, new Rotation3d(0, 0, -Math.PI + Math.toRadians(12)))
         };
+        case VISION -> new Transform3d[] {
+          // arducam-1 (front left)
+          new Transform3d(
+              0.299, 0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), Math.toRadians(55))),
+          // arducam-2 (front center)
+          new Transform3d(0.3017, 0, 0.3373, new Rotation3d(0, -Math.toRadians(35), 0)),
+          // arducam-3 (front right)
+          new Transform3d(
+              0.299, -0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), -Math.toRadians(55))),
+          // arducam-4 (back right)
+          new Transform3d(
+              -0.17, -0.298, 0.3651, new Rotation3d(0, 0, Math.PI - Math.toRadians(12))),
+          // arducam-5 (back left)
+          new Transform3d(-0.17, 0.298, 0.3651, new Rotation3d(0, 0, -Math.PI + Math.toRadians(12)))
+        };
+        case SPRINT -> new Transform3d[] {
+          // arducam-1 (Lower intake)
+          new Transform3d(
+              -0.305,
+              -0.102,
+              0.159,
+              new Rotation3d(
+                  Math.toRadians(17.259),
+                  Math.toRadians(-35.296 + 4),
+                  Math.toRadians(-36.069 - 180 - 7))),
+          // arducam-2 (Upper intake)
+          new Transform3d(
+              -0.181,
+              0.243,
+              0.249,
+              new Rotation3d(
+                  Math.toRadians(5.739), Math.toRadians(-19.623), Math.toRadians(34.632 - 180)))
+        };
         case SIM -> new Transform3d[] {
           // arducam-1 (front left)
           new Transform3d(
@@ -55,6 +88,7 @@ public class VisionConstants {
 
   public static final List<TagCountDeviation> TAG_COUNT_DEVIATIONS =
       switch (getRobotType()) {
+        // TODO: tune these?
         default -> List.of(
             // 1 tag
             new TagCountDeviation(

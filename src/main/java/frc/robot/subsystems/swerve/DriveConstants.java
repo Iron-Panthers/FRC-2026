@@ -44,6 +44,22 @@ public class DriveConstants {
             3.75,
             10,
             6);
+        case VISION -> new DrivebaseConfig(
+            Units.inchesToMeters(1.925),
+            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(34),
+            Units.inchesToMeters(34),
+            4.5,
+            10,
+            6);
+        case SPRINT -> new DrivebaseConfig(
+            Units.inchesToMeters(1.925),
+            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(34),
+            Units.inchesToMeters(34),
+            4.5,
+            10,
+            6);
         case SIM -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
             Units.inchesToMeters(22.5),
@@ -71,6 +87,7 @@ public class DriveConstants {
   // fl, fr, bl, br; negate offsets
   public static final ModuleConfig[] MODULE_CONFIGS =
       switch (getRobotType()) {
+        // TODO: Check that InvertedValue.(Counter)Clockwise_Positive is for true or false
         case COMP -> new ModuleConfig[] {
           new ModuleConfig(
               CAN.at(5, "FL Drive"),
@@ -100,6 +117,61 @@ public class DriveConstants {
               new Rotation2d(2.15377 - Math.PI),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive)
+        };
+        case VISION -> new ModuleConfig[] {
+          new ModuleConfig(
+              CAN.at(19, "FL Drive"),
+              CAN.at(18, "FL Steer"),
+              2,
+              new Rotation2d(-1.148),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
+          new ModuleConfig(
+              CAN.at(17, "FR Drive"),
+              CAN.at(16, "FR Steer"),
+              1,
+              new Rotation2d(-0.405),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.Clockwise_Positive),
+          new ModuleConfig(
+              CAN.at(21, "BL Drive"),
+              CAN.at(20, "BLSteer"),
+              3,
+              new Rotation2d(1.0139),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
+          new ModuleConfig(
+              CAN.at(23, "BR Drive"),
+              CAN.at(22, "BRSteer"),
+              4,
+              new Rotation2d(-2.8148),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.Clockwise_Positive)
+        };
+        case SPRINT -> new ModuleConfig[] {
+          new ModuleConfig(
+              CAN.at(19, "FL Drive"),
+              CAN.at(18, "FL Steer"),
+              2,
+              new Rotation2d(-1.148),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
+          new ModuleConfig(
+              CAN.at(17, "FR Drive"),
+              CAN.at(16, "FR Steer"),
+              1,
+              new Rotation2d(-0.405),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.Clockwise_Positive),
+          new ModuleConfig(
+              CAN.at(21, "BL Drive"),
+              CAN.at(20, "BLSteer"),
+              3,
+              new Rotation2d(1.0139),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.CounterClockwise_Positive),
+          new ModuleConfig(
+              CAN.at(23, "BR Drive"), CAN.at(22, "BRSteer"), 4, new Rotation2d(-2.8148), InvertedValue.Clockwise_Positive, InvertedValue.Clockwise_Positive)
         };
         case SIM -> new ModuleConfig[] {
           new ModuleConfig(
@@ -142,6 +214,20 @@ public class DriveConstants {
             (30.0 / 15) * (25.0 / 32) * (54.0 / 14), // Mk5n L2.5 16 tooth
             287.0 / 11,
             3.125);
+        case VISION -> new ModuleConstants(
+            new Gains(0.25, 2.26, 0, 50, 0, 0),
+            new MotionProfileGains(4, 64, 640),
+            new Gains(0.16, 0.67, 0, 1.5, 0, 0),
+            (45.0 / 15) * (17.0 / 27) * (50.0 / 16), // MK4i L2.5 16 tooth
+            150.0 / 7,
+            3.125);
+        case SPRINT -> new ModuleConstants(
+            new Gains(0.25, 2.26, 0, 50, 0, 0),
+            new MotionProfileGains(4, 64, 640),
+            new Gains(0.16, 0.67, 0, 1.5, 0, 0),
+            (45.0 / 15) * (17.0 / 27) * (50.0 / 16), // MK4i L2.5 16 tooth
+            150.0 / 7,
+            3.125);
         case SIM -> new ModuleConstants(
             new Gains(0.25, 2.26, 0, 70, 0, 0),
             new MotionProfileGains(4, 64, 640),
@@ -171,6 +257,10 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new TrajectoryFollowerConstants(
             new PIDConstants(8, 0), new PIDConstants(4, 0));
+        case VISION -> new TrajectoryFollowerConstants(
+            new PIDConstants(8, 0), new PIDConstants(4, 0));
+        case SPRINT -> new TrajectoryFollowerConstants(
+            new PIDConstants(8, 0), new PIDConstants(4, 0));
         case SIM -> new TrajectoryFollowerConstants(new PIDConstants(8, 0), new PIDConstants(4, 0));
         default -> new TrajectoryFollowerConstants(new PIDConstants(0, 0), new PIDConstants(0, 0));
       };
@@ -180,6 +270,8 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         case SIM -> new HeadingControllerConstants(20, 0, 8, 20, 0.01);
+        case VISION -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
+        case SPRINT -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
 
