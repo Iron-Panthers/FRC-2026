@@ -1,5 +1,31 @@
 package frc.robot.subsystems.climb.climbElevator;
 
-public class ClimbElevator {
-    
+import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
+import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIO;
+
+
+public class ClimbElevator extends GenericSuperstructure<ClimbElevator.ClimbElevatorTarget>{
+    public enum ClimbElevatorTarget implements GenericSuperstructure.PositionTarget{
+        PLACEHOLDER1,
+        PLACEHOLDER2,
+        PLACEHOLDER3;
+
+        private double position = 0;
+
+
+        public ClimbElevator(String name, GenericSuperstructureIO superstructureIO) {
+            super(name, superstructureIO);
+        }
+
+        @Override
+        public double getPosition() {
+            return position;
+        }
+
+        @Override
+        public double getEpsilon() {
+            return 0.1;
+        }
+
+    }
 }
