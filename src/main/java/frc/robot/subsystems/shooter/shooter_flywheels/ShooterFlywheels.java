@@ -6,7 +6,7 @@ public class ShooterFlywheels extends GenericRollers<ShooterFlywheels.Target>{
     public enum Target implements GenericRollers.VoltageTarget {
         //TODO: need to change; from sprint 2025
         IDLE(0),
-        INTAKE(12),
+        SHOOT(12),
         HOLD(0.25),
         EJECT(-3),
         PASS(1);
