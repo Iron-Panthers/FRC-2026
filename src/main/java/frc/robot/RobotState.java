@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.IdealStartingState;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FlippingUtil;
@@ -221,43 +222,60 @@ public class RobotState {
    * @return
    */
   public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench){
-    Translation2d velocity = getVelocity();
+    // turn the pose2d into an Approach pose
     ApproachPose approachPose = new ApproachPose(approachPose2d);
+
+    // calculating the estimated pose and flipping it based on the current field
     Pose2d estimatedPose = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
       ? FlippingUtil.flipFieldPose(getEstimatedPose())
       : getEstimatedPose();
+
+    // find the angle from start to finish
     Rotation2d angle = approachPose.getPose().getTranslation().minus(estimatedPose.getTranslation()).getAngle();
+
+    // create a list of waypoints from the starting and ending position
     List<Waypoint> waypoints =
         PathPlannerPath.waypointsFromPoses(
           new Pose2d(estimatedPose.getTranslation(), angle),
           new Pose2d(approachPose.getPose().getTranslation(), angle));
+
     
-    boolean doWeFlipHorz = estimatedPose.getTranslation().getY() < 4;
-    Pose2d trenchPose = new Pose2d(4.6, 
-      doWeFlipHorz ? .7 : 7.44,
-      angle);
-    Pose2d bumpPose = new Pose2d(4.6, 
-      doWeFlipHorz ? 2.5 : 5.5,
-      angle.plus(new Rotation2d(45)));
-    
+    // do we actually have to go across the field or past a hub
     if(approachPose.getPose().getX() > 5.7 != estimatedPose.getX() > 5.7){
+      // figure out whether to go above of below the hub
+      boolean travelHigherPath = estimatedPose.getTranslation().getY() < 4;
+      
+      // get the trench posed based on what direction we want to go in
+      Pose2d trenchPose = new Pose2d(4.6, 
+        travelHigherPath ? .7 : 7.44,
+        angle);
+      // do the same with bumper pose
+      Pose2d bumpPose = new Pose2d(4.6, 
+        travelHigherPath ? 2.5 : 5.5,
+        angle.plus(new Rotation2d(45)));
+      
+      // calculate our new waypoints
       waypoints =
         PathPlannerPath.waypointsFromPoses(
           new Pose2d(estimatedPose.getTranslation(), angle),
           underTrench ? trenchPose : bumpPose,
           new Pose2d(approachPose.getPose().getTranslation(), angle));
     }
-    PathPlannerPath path =
-        new PathPlannerPath(waypoints,
-        DriveConstants.ALIGN_PATH_CONSTRAINTS, 
-        null,
-        new GoalEndState(
-          0.0, 
-          approachPose.getPose().getRotation())).flipPath();
+
+    // creating the path
+    // PathPlannerPath path =
+    //     new PathPlannerPath(waypoints,
+    //     DriveConstants.ALIGN_PATH_CONSTRAINTS, 
+    //     null,
+    //     new GoalEndState(
+    //       0.0, 
+    //       approachPose.getPose().getRotation())).flipPath();
+
     
     Logger.recordOutput("RobotState/EstimatedPose", estimatedPose);
     Logger.recordOutput("RobotState/ApproachPose", approachPose);
-    return AutoBuilder.followPath(path);
+    // return AutoBuilder.followPath(path);
+    return AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
   }
   public void addRobotSpeeds(ChassisSpeeds chassisSpeeds) {
     this.robotSpeeds = chassisSpeeds;
