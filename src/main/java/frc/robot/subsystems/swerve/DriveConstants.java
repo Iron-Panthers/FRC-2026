@@ -236,7 +236,13 @@ public class DriveConstants {
             287.0 / 11,
             3.125);
       };
-  public static final DriveTrainSimulationConfig mapleSimConfig =
+
+
+/**
+ * These are the configs for the maple sim drivebase
+ * This should be updated to be similar to the comp bot drivebase
+ */
+  public static final DriveTrainSimulationConfig mapleSimConfig = // TODO: update this to be similar to comp bot drive base
       DriveTrainSimulationConfig.Default()
           .withRobotMass(Kilograms.of(54.4311))
           .withCustomModuleTranslations(MODULE_TRANSLATIONS)
