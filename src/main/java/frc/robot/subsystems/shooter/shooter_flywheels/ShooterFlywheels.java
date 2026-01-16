@@ -4,7 +4,7 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterFlywheels extends GenericRollers<ShooterFlywheels.Target>{
     public enum Target implements GenericRollers.VoltageTarget {
-        //probably need to change; from sprint 2025
+        //TODO: need to change; from sprint 2025
         IDLE(0),
         INTAKE(12),
         HOLD(0.25),

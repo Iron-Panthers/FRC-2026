@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.shooter_flywheels;
 import frc.robot.Constants;
 
 public class ShooterFlywheelsConstants {
+    //TODO: update ids
     public static final int ID =
         switch (Constants.getRobotType()){
             case COMP -> 40;
