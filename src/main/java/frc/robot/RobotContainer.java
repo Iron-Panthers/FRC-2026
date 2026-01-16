@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.ApproachPoseCommand;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
@@ -162,7 +163,11 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.b().onTrue(RobotState.getInstance().approachPoseCommand(new Pose2d(10.406, 1.916, new Rotation2d(0)), true));
+    driverA.b().onTrue(RobotState.getApproachPoseCommand(swerve, new Pose2d(10.406, 1.916, new Rotation2d(0)), true));
+  }
+  
+  public Command killYourlelf(){
+    return RobotState.getInstance().getPathPlannerApproachPoseCommand(new Pose2d(10.406, 1.916, new Rotation2d(0)), true);
   }
 
   private void configureAutos() {

@@ -27,6 +27,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.ApproachPoseCommand;
+import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
 import java.util.ArrayList;
@@ -211,7 +214,13 @@ public class RobotState {
     return translateByVector(pose, mag, theta).transformBy(new Transform2d(0, 0, theta));
   }
 
-  public Command approachPoseCommand(Pose2d approachPose2d, boolean underTrench){
+  /**
+   * Gets the scuffed path planner built command for following a path to a certain pose
+   * @param approachPose2d
+   * @param underTrench
+   * @return
+   */
+  public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench){
     Translation2d velocity = getVelocity();
     ApproachPose approachPose = new ApproachPose(approachPose2d);
     Pose2d estimatedPose = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
@@ -220,35 +229,35 @@ public class RobotState {
     Rotation2d angle = approachPose.getPose().getTranslation().minus(estimatedPose.getTranslation()).getAngle();
     List<Waypoint> waypoints =
         PathPlannerPath.waypointsFromPoses(
-          new Pose2d(estimatedPose.getTranslation(),
-          angle),
+          new Pose2d(estimatedPose.getTranslation(), angle),
           new Pose2d(approachPose.getPose().getTranslation(), angle));
     
     boolean doWeFlipHorz = estimatedPose.getTranslation().getY() < 4;
     Pose2d trenchPose = new Pose2d(4.6, 
-      doWeFlipHorz ? 7.44 : 0.7,
-       angle);
+      doWeFlipHorz ? .7 : 7.44,
+      angle);
     Pose2d bumpPose = new Pose2d(4.6, 
-      doWeFlipHorz ? 5.5 : 2.5,
-       angle.plus(new Rotation2d(45)));
-    trenchPose = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
-      ? FlippingUtil.flipFieldPose(trenchPose)
-      : trenchPose;
-    bumpPose = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
-      ? FlippingUtil.flipFieldPose(bumpPose)
-      : bumpPose;
-    if(approachPose.getPose().getX() > 5.7 != approachPose.getPose().getX() > 5.7){ 
-      waypoints.add(1,PathPlannerPath.waypointsFromPoses(underTrench ? trenchPose : bumpPose).get(0));
+      doWeFlipHorz ? 2.5 : 5.5,
+      angle.plus(new Rotation2d(45)));
+    
+    if(approachPose.getPose().getX() > 5.7 != estimatedPose.getX() > 5.7){
+      waypoints =
+        PathPlannerPath.waypointsFromPoses(
+          new Pose2d(estimatedPose.getTranslation(), angle),
+          underTrench ? trenchPose : bumpPose,
+          new Pose2d(approachPose.getPose().getTranslation(), angle));
     }
     PathPlannerPath path =
         new PathPlannerPath(waypoints,
         DriveConstants.ALIGN_PATH_CONSTRAINTS, 
-        new IdealStartingState(velocity.getNorm(), estimatedPose.getRotation()),
+        null,
         new GoalEndState(
           0.0, 
-          approachPose.getPose().getRotation()));
+          approachPose.getPose().getRotation())).flipPath();
+    
+    Logger.recordOutput("RobotState/EstimatedPose", estimatedPose);
+    Logger.recordOutput("RobotState/ApproachPose", approachPose);
     return AutoBuilder.followPath(path);
-
   }
   public void addRobotSpeeds(ChassisSpeeds chassisSpeeds) {
     this.robotSpeeds = chassisSpeeds;
@@ -256,5 +265,25 @@ public class RobotState {
 
   public Pose2d getAlignPose() {
     return lastApproachPose;
+  }
+
+  /**
+   * Gets a cleaned up version of the approach pose command from pathplanner using the ApproachPoseCommand sequential command group
+   * @param drive
+   * @param approachPose
+   * @param underTrench
+   * @return
+   */
+  public static Command getApproachPoseCommand(Drive drive, Pose2d approachPose, boolean underTrench) {
+      Command poseAlignCommand = null;
+      try {
+        poseAlignCommand =
+            RobotState.getInstance().getPathPlannerApproachPoseCommand(approachPose, underTrench);
+      } catch (Exception e) {
+        e.printStackTrace();
+        System.out.println("Already at target.");
+        return new InstantCommand();
+      }
+      return new ApproachPoseCommand(drive, poseAlignCommand);
   }
 }
