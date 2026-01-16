@@ -103,10 +103,7 @@ public class RobotContainer {
           canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
         }
         case SIM -> {
-          driveSimulation =
-              new SwerveDriveSimulation(
-                  DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
-          SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
+          driveSimulation = RobotSimState.getInstance().getDriveSimulation();
           swerve =
               new Drive(
                   new GyroIOSim(driveSimulation.getGyroSimulation()),
