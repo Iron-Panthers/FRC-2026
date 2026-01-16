@@ -1,0 +1,101 @@
+package frc.robot.subsystems.shooter.shooter_hood;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
+import frc.robot.utility.LoggableMechanism3d;
+import org.littletonrobotics.junction.Logger;
+
+public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTarget>
+    implements LoggableMechanism3d {
+    public enum ShooterHoodTarget implements GenericSuperstructure.PositionTarget{
+        ZERO(0), //need to update
+        HALF(45), //need to update
+        UP(45); //need to update
+        
+        private double position;
+        private static final double EPSILON = IntakePivotConstants.POSITION_TARGET_EPSILON;
+
+        private ShooterHoodTarget(double position){
+            this.position = position;
+        }
+
+        public double getPosition() {
+            return position;
+        }
+
+        @Override
+        public double getEpsilon() {
+            return EPSILON;
+        }
+    
+    } //close enum
+    public ShooterHood(ShooterHoodIO io){
+        super("Shooter Hood", io);
+        setPositionTarget(ShooterHoodTarget.ZERO);
+        setControlMode(ControlMode.STOP);
+    }
+    
+    public LoggableMechanism3d loggableMechanism3dParent = null;
+
+    @Override
+    public void periodic(){
+        super.periodic();
+        Logger.recordOutput(
+            "Shooter/ShooterHood/PositionTargetRotations", //TODO: add naming convention to notion doc
+            getPositionTarget().getPosition() / 360d);
+    }
+
+    /**
+     * Function returns if the subsystem has reached its position target
+     * 
+     * @return whether the subsystem has reached its position target
+     */
+
+     //TODO fix the logic for reaching Target Position on Shooter
+    public boolean reachedTarget(){
+        return Math.abs(super.getPosition()- (super.getPositionTarget().getPosition() / 360d))
+            <= super.getPositionTarget().getEpsilon();
+    }
+
+    /**
+   * Get the current position in degrees
+   *
+   * @return the current position in degrees
+   */
+    public double getPosition() {
+        return super.getPosition() * 360.0;
+    }
+
+    @Override
+    public Pose3d getParentPosition(){
+        if (loggableMechanism3dParent != null){
+            return loggableMechanism3dParent.getDisplayPose3d();
+        }
+        return new Pose3d();
+    }
+
+
+    @Override
+    public void setParent(LoggableMechanism3d parent) {
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent cannot be null");
+        }
+        if (parent == this) {
+            throw new IllegalArgumentException("Parent cannot be itself");
+        }
+        this.loggableMechanism3dParent = parent;
+    }
+
+    //TODO make sure logic is correct for getting Display Pose3D
+    @Override
+    public Pose3d getDisplayPose3d() {
+        return getParentPosition()
+                .plus(ShooterHeadConstants.BASE_TO_INTAKE_PIVOT_TRANSFORM)
+                    new Transform3d(
+                        Translation3d.kZero, new Rotation3d(0, -Math.toRadians(getPosition() + 90), 0)));
+  }
+
+}//close class
