@@ -4,12 +4,10 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterFlywheels extends GenericRollers<ShooterFlywheels.Target>{
     public enum Target implements GenericRollers.VoltageTarget {
-        //TODO: need to change; from sprint 2025
+        //TODO: need to change; from sprint 2025 -- ive taken away a few states
         IDLE(0),
         SHOOT(12),
-        HOLD(0.25),
-        EJECT(-3),
-        PASS(1);
+        CLIMB(0);
 
         private double volts;
 

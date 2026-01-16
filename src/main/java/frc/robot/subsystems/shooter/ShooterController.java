@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.shooter.shooter_flywheels.ShooterFlywheels;
+import frc.robot.subsystems.shooter.shooter_hood.ShooterHood;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterController extends SubsystemBase {
@@ -18,11 +19,13 @@ public class ShooterController extends SubsystemBase {
     }
     private ShooterState targetState = ShooterState.IDLE;
 
-    //might need pivot + sensors defined here and in constructor
+    //might need sensors defined here and in constructor
     private final ShooterFlywheels shooterFlywheels;
+    private final ShooterHood shooterHood;
 
-    public ShooterController(ShooterFlywheels shooterFlywheels) {
+    public ShooterController(ShooterFlywheels shooterFlywheels, ShooterHood shooterHood) {
         this.shooterFlywheels = shooterFlywheels;
+        this.shooterHood = shooterHood;
     }
 
     @Override
@@ -31,15 +34,20 @@ public class ShooterController extends SubsystemBase {
         switch(targetState) {
             case IDLE -> {
                 shooterFlywheels.setVoltageTarget(ShooterFlywheels.Target.IDLE);
+                shooterHood.setVoltageTarget(ShooterHood.ShooterHoodTarget.ZERO);
             }
             case SHOOT -> {
                 shooterFlywheels.setVoltageTarget(ShooterFlywheels.Target.SHOOT);
+                shooterHood.setVoltageTarget(ShooterFlywheels.ShooterHoodTarget.UP);
             }
             case CLIMB -> {
                 shooterFlywheels.setVoltageTarget(ShooterFlywheels.Target.CLIMB);
+                shooterHood.setVoltageTarget(ShooterHood.ShooterHoodTarget.ZERO);
             }
         }
         shooterFlywheels.periodic();
+        shooterHood.periodic();
+        
         Logger.recordOutput("ShooterFlywheels/TargetState", targetState);
     }
 
