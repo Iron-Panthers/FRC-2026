@@ -69,7 +69,7 @@ public class VisionConstants {
                 new UnitDeviationParams(0.25, 0.07, 0.25), new UnitDeviationParams(0.15, 1, 1.5)));
       };
 
-  public static final int[] IGNORE_TAGS = {1, 2, 3, 4, 5, 12, 13, 14, 15, 16};
+  public static final int[] IGNORE_TAGS = {};
   // public static final int[] IGNORE_TAGS = {}; // removed
 
   // Fixed AprilTag field layout initialization

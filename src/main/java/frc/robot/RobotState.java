@@ -10,6 +10,8 @@ import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.pathfinding.Pathfinder;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -28,8 +30,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.ApproachPoseCommand;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
@@ -226,9 +228,10 @@ public class RobotState {
     ApproachPose approachPose = new ApproachPose(approachPose2d);
 
     // calculating the estimated pose and flipping it based on the current field
-    Pose2d estimatedPose = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
-      ? FlippingUtil.flipFieldPose(getEstimatedPose())
-      : getEstimatedPose();
+    // Pose2d estimatedPose = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
+    //   ? FlippingUtil.flipFieldPose(getEstimatedPose())
+    //   : getEstimatedPose();
+    Pose2d estimatedPose = getEstimatedPose();
 
     // find the angle from start to finish
     Rotation2d angle = approachPose.getPose().getTranslation().minus(estimatedPose.getTranslation()).getAngle();
@@ -263,19 +266,34 @@ public class RobotState {
     }
 
     // creating the path
-    // PathPlannerPath path =
-    //     new PathPlannerPath(waypoints,
-    //     DriveConstants.ALIGN_PATH_CONSTRAINTS, 
-    //     null,
-    //     new GoalEndState(
-    //       0.0, 
-    //       approachPose.getPose().getRotation())).flipPath();
+    PathPlannerPath path =
+        new PathPlannerPath(waypoints,
+        DriveConstants.ALIGN_PATH_CONSTRAINTS, 
+        null,
+        new GoalEndState(
+          0.0, 
+          approachPose.getPose().getRotation())).flipPath();
 
     
     Logger.recordOutput("RobotState/EstimatedPose", estimatedPose);
     Logger.recordOutput("RobotState/ApproachPose", approachPose);
-    // return AutoBuilder.followPath(path);
-    return AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
+    if(false)
+      return AutoBuilder.followPath(path);
+
+
+    Command finalPathfindingCommand = null; 
+
+
+    if(underTrench){
+      Pathfinding.setDynamicObstacles(DriveConstants.OBSTACLES_FOR_TRENCH_PATHFINDING, estimatedPose.getTranslation());
+      finalPathfindingCommand =  AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
+    }else{
+      Pathfinding.setDynamicObstacles(DriveConstants.OBSTACLES_FOR_BUMP_PATHFINDING, estimatedPose.getTranslation());
+      finalPathfindingCommand =  AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
+    }
+
+    return finalPathfindingCommand;
+
   }
   public void addRobotSpeeds(ChassisSpeeds chassisSpeeds) {
     this.robotSpeeds = chassisSpeeds;
@@ -283,25 +301,5 @@ public class RobotState {
 
   public Pose2d getAlignPose() {
     return lastApproachPose;
-  }
-
-  /**
-   * Gets a cleaned up version of the approach pose command from pathplanner using the ApproachPoseCommand sequential command group
-   * @param drive
-   * @param approachPose
-   * @param underTrench
-   * @return
-   */
-  public static Command getApproachPoseCommand(Drive drive, Pose2d approachPose, boolean underTrench) {
-      Command poseAlignCommand = null;
-      try {
-        poseAlignCommand =
-            RobotState.getInstance().getPathPlannerApproachPoseCommand(approachPose, underTrench);
-      } catch (Exception e) {
-        e.printStackTrace();
-        System.out.println("Already at target.");
-        return new InstantCommand();
-      }
-      return new ApproachPoseCommand(drive, poseAlignCommand);
   }
 }
