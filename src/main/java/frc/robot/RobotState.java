@@ -224,65 +224,10 @@ public class RobotState {
    * @return
    */
   public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench){
-    // turn the pose2d into an Approach pose
-    ApproachPose approachPose = new ApproachPose(approachPose2d);
-
-    // calculating the estimated pose and flipping it based on the current field
-    // Pose2d estimatedPose = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red
-    //   ? FlippingUtil.flipFieldPose(getEstimatedPose())
-    //   : getEstimatedPose();
-    Pose2d estimatedPose = getEstimatedPose();
-
-    // find the angle from start to finish
-    Rotation2d angle = approachPose.getPose().getTranslation().minus(estimatedPose.getTranslation()).getAngle();
-
-    // create a list of waypoints from the starting and ending position
-    List<Waypoint> waypoints =
-        PathPlannerPath.waypointsFromPoses(
-          new Pose2d(estimatedPose.getTranslation(), angle),
-          new Pose2d(approachPose.getPose().getTranslation(), angle));
-
-    
-    // do we actually have to go across the field or past a hub
-    if(approachPose.getPose().getX() > 5.7 != estimatedPose.getX() > 5.7){
-      // figure out whether to go above of below the hub
-      boolean travelHigherPath = estimatedPose.getTranslation().getY() < 4;
-      
-      // get the trench posed based on what direction we want to go in
-      Pose2d trenchPose = new Pose2d(4.6, 
-        travelHigherPath ? .7 : 7.44,
-        angle);
-      // do the same with bumper pose
-      Pose2d bumpPose = new Pose2d(4.6, 
-        travelHigherPath ? 2.5 : 5.5,
-        angle.plus(new Rotation2d(45)));
-      
-      // calculate our new waypoints
-      waypoints =
-        PathPlannerPath.waypointsFromPoses(
-          new Pose2d(estimatedPose.getTranslation(), angle),
-          underTrench ? trenchPose : bumpPose,
-          new Pose2d(approachPose.getPose().getTranslation(), angle));
-    }
-
-    // creating the path
-    PathPlannerPath path =
-        new PathPlannerPath(waypoints,
-        DriveConstants.ALIGN_PATH_CONSTRAINTS, 
-        null,
-        new GoalEndState(
-          0.0, 
-          approachPose.getPose().getRotation())).flipPath();
-
-    
     Logger.recordOutput("RobotState/EstimatedPose", estimatedPose);
-    Logger.recordOutput("RobotState/ApproachPose", approachPose);
-    if(false)
-      return AutoBuilder.followPath(path);
-
+    Logger.recordOutput("RobotState/ApproachPose", approachPose2d);
 
     Command finalPathfindingCommand = null; 
-
 
     if(underTrench){
       Pathfinding.setDynamicObstacles(DriveConstants.OBSTACLES_FOR_TRENCH_PATHFINDING, estimatedPose.getTranslation());
