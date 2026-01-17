@@ -30,6 +30,7 @@ import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
+import frc.robot.utility.BlankSimulatedArena;
 import frc.robot.utility.ElasticSetpoints;
 
 import java.util.function.BooleanSupplier;
@@ -103,7 +104,11 @@ public class RobotContainer {
           canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
         }
         case SIM -> {
-          driveSimulation = RobotSimState.getInstance().getDriveSimulation();
+          SimulatedArena.overrideInstance(new BlankSimulatedArena());
+          driveSimulation =
+              new SwerveDriveSimulation(
+                  DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
+          SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
           swerve =
               new Drive(
                   new GyroIOSim(driveSimulation.getGyroSimulation()),
