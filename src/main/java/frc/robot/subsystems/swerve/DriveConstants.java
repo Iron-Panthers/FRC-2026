@@ -39,6 +39,7 @@ public class DriveConstants {
         case COMP -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
             Units.inchesToMeters(22.5),
+            Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             3.75,
@@ -46,6 +47,7 @@ public class DriveConstants {
             6);
         case VISION -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
+            Units.inchesToMeters(22.5),
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
@@ -55,6 +57,7 @@ public class DriveConstants {
         case SPRINT -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
             Units.inchesToMeters(22.5),
+            Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             4.5,
@@ -62,6 +65,7 @@ public class DriveConstants {
             6);
         case SIM -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
+            Units.inchesToMeters(22.5),
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
@@ -73,10 +77,10 @@ public class DriveConstants {
 
   public static final Translation2d[] MODULE_TRANSLATIONS =
       new Translation2d[] {
-        new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, DRIVE_CONFIG.trackWidth() / 2.0),
-        new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, -DRIVE_CONFIG.trackWidth() / 2.0),
-        new Translation2d(-DRIVE_CONFIG.trackWidth() / 2.0, DRIVE_CONFIG.trackWidth() / 2.0),
-        new Translation2d(-DRIVE_CONFIG.trackWidth() / 2.0, -DRIVE_CONFIG.trackWidth() / 2.0)
+        new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, DRIVE_CONFIG.trackLength() / 2.0),
+        new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, -DRIVE_CONFIG.trackLength() / 2.0),
+        new Translation2d(-DRIVE_CONFIG.trackWidth() / 2.0, DRIVE_CONFIG.trackLength() / 2.0),
+        new Translation2d(-DRIVE_CONFIG.trackWidth() / 2.0, -DRIVE_CONFIG.trackLength() / 2.0)
       }; // meters relative to center, NWU convention; fl, fr, bl, br
 
   public static final SwerveDriveKinematics KINEMATICS =
@@ -150,28 +154,28 @@ public class DriveConstants {
         };
         case SPRINT -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(19, "FL Drive"),
-              CAN.at(18, "FL Steer"),
-              2,
+              CAN.at(5, "FL Drive"),
+              CAN.at(6, "FL Steer"),
+              1,
               new Rotation2d(-1.148),
               InvertedValue.Clockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(17, "FR Drive"),
-              CAN.at(16, "FR Steer"),
-              1,
+              CAN.at(11, "FR Drive"),
+              CAN.at(12, "FR Steer"),
+              3,
               new Rotation2d(-0.405),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(21, "BL Drive"),
-              CAN.at(20, "BLSteer"),
-              3,
+              CAN.at(9, "BL Drive"),
+              CAN.at(10, "BLSteer"),
+              4,
               new Rotation2d(1.0139),
               InvertedValue.Clockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(23, "BR Drive"), CAN.at(22, "BRSteer"), 4, new Rotation2d(-2.8148), InvertedValue.Clockwise_Positive, InvertedValue.Clockwise_Positive)
+              CAN.at(7, "BR Drive"), CAN.at(8, "BRSteer"), 2, new Rotation2d(-2.8148), InvertedValue.Clockwise_Positive, InvertedValue.Clockwise_Positive)
         };
         case SIM -> new ModuleConfig[] {
           new ModuleConfig(
@@ -340,6 +344,7 @@ public class DriveConstants {
   public record DrivebaseConfig(
       double wheelRadius,
       double trackWidth,
+      double trackLength,
       double bumperWidthX,
       double bumperWidthY,
       double maxLinearVelocity,
