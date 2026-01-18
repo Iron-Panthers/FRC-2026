@@ -1,5 +1,7 @@
 package frc.robot.subsystems.climb.climbElevator;
 
-public class ClimbElevatorIO {
+import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIO;
+
+public class ClimbElevatorIO implements GenericSuperstructureIO{   // :)
     
 }

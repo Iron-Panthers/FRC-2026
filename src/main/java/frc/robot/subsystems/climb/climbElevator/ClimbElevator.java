@@ -12,11 +12,6 @@ public class ClimbElevator extends GenericSuperstructure<ClimbElevator.ClimbElev
 
         private double position = 0;
 
-
-        public ClimbElevator(String name, GenericSuperstructureIO superstructureIO) {
-            super(name, superstructureIO);
-        }
-
         @Override
         public double getPosition() {
             return position;
@@ -27,5 +22,13 @@ public class ClimbElevator extends GenericSuperstructure<ClimbElevator.ClimbElev
             return 0.1;
         }
 
+        private ClimbElevatorTarget() {
+            //idk
+        }
+
+    }
+
+    public ClimbElevator(String name, GenericSuperstructureIO superstructureIO) {
+        super(name, superstructureIO);
     }
 }
