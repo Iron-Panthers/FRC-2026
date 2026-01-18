@@ -99,9 +99,6 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
-          rgb = new RGB(new RGBIOCANdle());
-          canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
         }
         case SIM -> {
           SimulatedArena.overrideInstance(new BlankSimulatedArena());
