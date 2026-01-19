@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import static frc.robot.subsystems.swerve.DriveConstants.HEADING_CONTROLLER_CONSTANTS;
 import static frc.robot.subsystems.swerve.DriveConstants.KINEMATICS;
 
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -30,7 +31,8 @@ public class Drive extends SubsystemBase {
   public enum DriveModes {
     TELEOP,
     TRAJECTORY,
-    AUTO_ALIGN;
+    AUTO_ALIGN,
+    DEFENSE;
   }
 
   private DriveModes driveMode = DriveModes.TELEOP;
@@ -118,20 +120,30 @@ public class Drive extends SubsystemBase {
           targetSpeeds.omegaRadiansPerSecond = autoAlignHeadingController.update();
         }
       }
+      case DEFENSE -> {
+        modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
+        modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(135))));
+        modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-225))));
+        modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(225))));
+      }
     }
+
     RobotState.getInstance().addRobotSpeeds(getRobotSpeeds());
     // run modules
     /* use kinematics to get desired module states */
-    ChassisSpeeds discretizedSpeeds =
-        ChassisSpeeds.discretize(targetSpeeds, Constants.PERIODIC_LOOP_SEC);
+    if (driveMode != DriveModes.DEFENSE){
+      ChassisSpeeds discretizedSpeeds =
+          ChassisSpeeds.discretize(targetSpeeds, Constants.PERIODIC_LOOP_SEC);
 
-    SwerveModuleState[] moduleTargetStates = KINEMATICS.toSwerveModuleStates(discretizedSpeeds);
+      SwerveModuleState[] moduleTargetStates = KINEMATICS.toSwerveModuleStates(discretizedSpeeds);
 
-    for (int i = 0; i < modules.length; i++) {
-      modules[i].runToSetpoint(moduleTargetStates[i]);
+      for (int i = 0; i < modules.length; i++) {
+        modules[i].runToSetpoint(moduleTargetStates[i]);
+      }
+
+      Logger.recordOutput("Swerve/ModuleTargetStates", moduleTargetStates);
     }
-
-    Logger.recordOutput("Swerve/ModuleTargetStates", moduleTargetStates);
+    
     Logger.recordOutput("Swerve/TargetSpeeds", targetSpeeds);
     Logger.recordOutput("Swerve/DriveMode", driveMode);
     Logger.recordOutput(
@@ -150,6 +162,10 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput("Swerve/PID/VelocityY", pidAutoAlignController.getYVel());
     }
   }
+
+  public void setDefenseMode(){
+      driveMode = DriveModes.DEFENSE;
+    }
 
   public void driveTeleopController(double xAxis, double yAxis, double omega, double acceleration) {
     if (DriverStation.isTeleopEnabled()) {
