@@ -208,10 +208,6 @@ public class RobotContainer {
       // Calculate target shooting state
       TargetShootingState targetState = robotState.calculateTargetShootingState();
       
-      System.out.println("=== Shooting Test ===");
-      System.out.println("Calculated Angle: " + targetState.shooterAngle().in(Units.Degrees) + " degrees");
-      System.out.println("Calculated Yaw: " + targetState.drivebaseYaw().getDegrees() + " degrees");
-      
       // Only shoot in simulation
       if (Constants.getRobotType() == Constants.RobotType.SIM) {
         // Get current robot pose and apply the calculated shooter angle and yaw
@@ -230,8 +226,6 @@ public class RobotContainer {
         
         // Shoot the fuel using the calculated parameters - velocity must match calculation!
         RobotSimState.getInstance().shootFuel(shooterPose, MetersPerSecond.of(10));
-        
-        System.out.println("Shot fired at 10 m/s!");
       }
       })
     );

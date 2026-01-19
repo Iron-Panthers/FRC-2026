@@ -320,15 +320,6 @@ public class RobotState {
       Translation2d toTarget = targetPosition3d.toTranslation2d().minus(shooterPosition2d);
       Rotation2d drivebaseYaw = new Rotation2d(toTarget.getX(), toTarget.getY());
       
-      // Debug output
-      System.out.println("=== Trajectory Calculation with Air Resistance ===");
-      System.out.println("Target Position: " + targetPosition3d);
-      System.out.println("Shooter Position 2D: " + shooterPosition2d);
-      System.out.println("Shooter Height: " + shooterHeight + " m");
-      System.out.println("Horizontal Distance: " + horizontalDistance + " m");
-      System.out.println("Vertical Distance: " + verticalDistance + " m");
-      System.out.println("Shooter Velocity: " + shooterVelocity + " m/s");
-      
       // Air resistance coefficient
       final double dragCoefficient = 0.03;
       
@@ -343,15 +334,9 @@ public class RobotState {
       // Calculate discriminant
       double discriminant = v4 - g * (g * x2 + 2 * verticalDistance * v2);
       
-      System.out.println("v^2: " + v2);
-      System.out.println("v^4: " + v4);
-      System.out.println("Discriminant: " + discriminant);
-      
       // Check if solution exists
       if (discriminant < 0 || horizontalDistance == 0) {
         // No solution - target out of range or at same position
-        System.out.println("NO SOLUTION - Target out of range or at same position!");
-        System.out.println("===================================");
         // Return a default high angle
         return new TargetShootingState(
           drivebaseYaw, 
@@ -368,7 +353,6 @@ public class RobotState {
       
       // Always use high trajectory
       double angleRadians = angleHigh;
-      System.out.println("Using HIGH trajectory as initial guess: " + Math.toDegrees(angleHigh) + " degrees");
       
       // Use iterative approach to adjust angle for air resistance
       int maxIterations = 20;
@@ -405,8 +389,6 @@ public class RobotState {
       
       double angleDegrees = Math.toDegrees(angleRadians);
       
-      System.out.println("Final Calculated Angle: " + angleDegrees + " degrees");
-      
       // Final simulation to get trajectory details
       double[] finalResult = simulateTrajectory(shooterVelocity, angleRadians, shooterHeight, dragCoefficient);
       double vx = shooterVelocity * Math.cos(angleRadians);
@@ -418,13 +400,13 @@ public class RobotState {
       double timeToApex = vy0 / g;
       double maxHeight = shooterHeight + vy0 * timeToApex - 0.5 * g * timeToApex * timeToApex;
       
-      System.out.println("Initial Velocity X: " + vx + " m/s");
-      System.out.println("Initial Velocity Y: " + vy0 + " m/s");
-      System.out.println("Approx Time to Target: " + timeToTarget + " s");
-      System.out.println("Approx Max Height: " + maxHeight + " m");
-      System.out.println("Final Landing Distance: " + String.format("%.2f", finalResult[0]) + " m");
-      System.out.println("Final Landing Height: " + String.format("%.2f", finalResult[1]) + " m");
-      System.out.println("Vertical Velocity at Target: " + verticalVelocityAtTarget + " m/s");
+      // System.out.println("Initial Velocity X: " + vx + " m/s");
+      // System.out.println("Initial Velocity Y: " + vy0 + " m/s");
+      // System.out.println("Approx Time to Target: " + timeToTarget + " s");
+      // System.out.println("Approx Max Height: " + maxHeight + " m");
+      // System.out.println("Final Landing Distance: " + String.format("%.2f", finalResult[0]) + " m");
+      // System.out.println("Final Landing Height: " + String.format("%.2f", finalResult[1]) + " m");
+      // System.out.println("Vertical Velocity at Target: " + verticalVelocityAtTarget + " m/s");
       
       // Verify that the ball will be traveling downward when it reaches the target
       if (verticalVelocityAtTarget >= 0) {
@@ -433,17 +415,9 @@ public class RobotState {
         System.out.println("OK: Ball is traveling downward at target");
       }
       
-      System.out.println("===================================");
-      
       // Convert to degrees and create the Angle unit
       Angle shooterAngle = edu.wpi.first.units.Units.Radians.of(angleRadians);
-      
-      Logger.recordOutput("ShooterDebug/CalculatedAngleDegrees", angleDegrees);
-      Logger.recordOutput("ShooterDebug/HorizontalDistance", horizontalDistance);
-      Logger.recordOutput("ShooterDebug/VerticalDistance", verticalDistance);
-      Logger.recordOutput("ShooterDebug/DragCoefficient", dragCoefficient);
-      Logger.recordOutput("ShooterDebug/FinalLandingDistance", finalResult[0]);
-      
+
       return new TargetShootingState(drivebaseYaw, shooterAngle);
     }
   }
