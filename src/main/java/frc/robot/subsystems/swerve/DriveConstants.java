@@ -41,6 +41,7 @@ public class DriveConstants {
         case COMP -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
             Units.inchesToMeters(22.5),
+            Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             3.75,
@@ -49,14 +50,16 @@ public class DriveConstants {
         case VISION -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
             Units.inchesToMeters(22.5),
+            Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             3.75,
             10,
             6);
-        case SPRINT -> new DrivebaseConfig(
+        case ALPHA -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
-            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(18.75),
+            Units.inchesToMeters(24.75),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             4.5,
@@ -64,6 +67,7 @@ public class DriveConstants {
             6);
         case SIM -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
+            Units.inchesToMeters(22.5),
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
@@ -75,10 +79,10 @@ public class DriveConstants {
 
   public static final Translation2d[] MODULE_TRANSLATIONS =
       new Translation2d[] {
-        new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, DRIVE_CONFIG.trackWidth() / 2.0),
-        new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, -DRIVE_CONFIG.trackWidth() / 2.0),
-        new Translation2d(-DRIVE_CONFIG.trackWidth() / 2.0, DRIVE_CONFIG.trackWidth() / 2.0),
-        new Translation2d(-DRIVE_CONFIG.trackWidth() / 2.0, -DRIVE_CONFIG.trackWidth() / 2.0)
+        new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, DRIVE_CONFIG.trackLength() / 2.0),
+        new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, -DRIVE_CONFIG.trackLength() / 2.0),
+        new Translation2d(-DRIVE_CONFIG.trackWidth() / 2.0, DRIVE_CONFIG.trackLength() / 2.0),
+        new Translation2d(-DRIVE_CONFIG.trackWidth() / 2.0, -DRIVE_CONFIG.trackLength() / 2.0)
       }; // meters relative to center, NWU convention; fl, fr, bl, br
 
   public static final SwerveDriveKinematics KINEMATICS =
@@ -150,30 +154,30 @@ public class DriveConstants {
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive)
         };
-        case SPRINT -> new ModuleConfig[] {
+        case ALPHA -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(19, "FL Drive"),
-              CAN.at(18, "FL Steer"),
-              2,
-              new Rotation2d(-1.148),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.CounterClockwise_Positive),
-          new ModuleConfig(
-              CAN.at(17, "FR Drive"),
-              CAN.at(16, "FR Steer"),
+              CAN.at(5, "FL Drive"),
+              CAN.at(6, "FL Steer"),
               1,
-              new Rotation2d(-0.405),
+              new Rotation2d(2.058602),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(21, "BL Drive"),
-              CAN.at(20, "BLSteer"),
+              CAN.at(11, "FR Drive"),
+              CAN.at(12, "FR Steer"),
               3,
-              new Rotation2d(1.0139),
+              new Rotation2d(-2.161379),
+              InvertedValue.Clockwise_Positive,
+              InvertedValue.Clockwise_Positive),
+          new ModuleConfig(
+              CAN.at(9, "BL Drive"),
+              CAN.at(10, "BLSteer"),
+              4,
+              new Rotation2d(0.48934),
               InvertedValue.Clockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(23, "BR Drive"), CAN.at(22, "BRSteer"), 4, new Rotation2d(-2.8148), InvertedValue.Clockwise_Positive, InvertedValue.Clockwise_Positive)
+              CAN.at(7, "BR Drive"), CAN.at(8, "BRSteer"), 2, new Rotation2d(-0.271515), InvertedValue.Clockwise_Positive, InvertedValue.Clockwise_Positive)
         };
         case SIM -> new ModuleConfig[] {
           new ModuleConfig(
@@ -223,7 +227,7 @@ public class DriveConstants {
             (30.0 / 15) * (25.0 / 32) * (54.0 / 14), // Mk5n L2.5 16 tooth
             287.0 / 11,
             3.125);
-        case SPRINT -> new ModuleConstants(
+        case ALPHA -> new ModuleConstants(
             new Gains(0.25, 2.26, 0, 50, 0, 0),
             new MotionProfileGains(4, 64, 640),
             new Gains(0.16, 0.67, 0, 1.5, 0, 0),
@@ -267,7 +271,7 @@ public class DriveConstants {
             new PIDConstants(8, 0), new PIDConstants(4, 0));
         case VISION -> new TrajectoryFollowerConstants(
             new PIDConstants(8, 0), new PIDConstants(4, 0));
-        case SPRINT -> new TrajectoryFollowerConstants(
+        case ALPHA -> new TrajectoryFollowerConstants(
             new PIDConstants(8, 0), new PIDConstants(4, 0));
         case SIM -> new TrajectoryFollowerConstants(new PIDConstants(8, 0), new PIDConstants(4, 0));
         default -> new TrajectoryFollowerConstants(new PIDConstants(0, 0), new PIDConstants(0, 0));
@@ -279,7 +283,7 @@ public class DriveConstants {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         case SIM -> new HeadingControllerConstants(20, 0, 8, 20, 0.01);
         case VISION -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
-        case SPRINT -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
+        case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
 
@@ -289,7 +293,7 @@ public class DriveConstants {
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
-        case SPRINT -> new PIDAutoAlignControllerConstants(
+        case ALPHA -> new PIDAutoAlignControllerConstants(
             7, 0, 0, 1, 1); /* FIXME: tune these constants */
         case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 2, 2);
         default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
@@ -358,6 +362,7 @@ public class DriveConstants {
   public record DrivebaseConfig(
       double wheelRadius,
       double trackWidth,
+      double trackLength,
       double bumperWidthX,
       double bumperWidthY,
       double maxLinearVelocity,
