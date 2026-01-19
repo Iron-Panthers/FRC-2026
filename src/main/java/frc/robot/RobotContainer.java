@@ -4,6 +4,10 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +35,8 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
@@ -121,7 +127,7 @@ public class RobotContainer {
                   new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
                   new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
 
-          SimulatedArena.getInstance().placeGamePiecesOnField();
+          SimulatedArena.getInstance().resetFieldForAuto();
         }
       }
     }
@@ -179,6 +185,10 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    
+    driverA.b().onTrue(new InstantCommand(() -> {
+      RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
+    }));
   }
 
   private void configureAutos() {
