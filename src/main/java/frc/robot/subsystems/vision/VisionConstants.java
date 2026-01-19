@@ -50,7 +50,7 @@ public class VisionConstants {
           // arducam-5 (back left)
           new Transform3d(-0.17, 0.298, 0.3651, new Rotation3d(0, 0, -Math.PI + Math.toRadians(12)))
         };
-        case SPRINT -> new Transform3d[] {
+        case ALPHA -> new Transform3d[] {
           // arducam-1 (Lower intake)
           new Transform3d(
               -0.305,

@@ -91,7 +91,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
         }
-        case SPRINT -> {
+        case ALPHA -> {
           swerve =
               new Drive(
                   new GyroIOPigeon2(),
