@@ -22,9 +22,8 @@ public class GyroIOPigeon2 implements GyroIO {
 
     yaw = pigeon.getYaw();
     yawVelocity = pigeon.getAngularVelocityZWorld();
-    // TODO: Why is this 100 Hz when everything else is 50 Hz?
     BaseStatusSignal.setUpdateFrequencyForAll(100, yaw, yawVelocity);
-    // TODO: Is this necessary?
+
     pigeon.optimizeBusUtilization();
   }
 
