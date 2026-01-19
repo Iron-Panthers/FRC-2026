@@ -14,8 +14,10 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
@@ -24,13 +26,21 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
+
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.dyn4j.geometry.Rotation;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -218,4 +228,35 @@ public class RobotState {
   public Pose2d getAlignPose() {
     return lastApproachPose;
   }
+
+
+  // methods that use the shootingAnglePredictor -- as an abstraction
+  private ShootingAnglePredictor shootingAnglePredictor;
+  public void initializeShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier) {
+    shootingAnglePredictor = new ShootingAnglePredictor(chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier);
+  }
+  public TargetShootingState calculateTargetShootingState(){
+    return shootingAnglePredictor.calculateTargetShootingState();
+  }
+
+  // shooting predictor
+  public class ShootingAnglePredictor {
+
+    // different variable suppliers -- used later for calculations
+    private Supplier<ChassisSpeeds> chassisSpeedsSupplier;
+    private Supplier<LinearVelocity> shooterVelocitySupplier;
+    private Supplier<Transform3d> shooterPositionSupplier;
+
+    public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier){
+      this.chassisSpeedsSupplier = chassisSpeedsSupplier;
+      this.shooterPositionSupplier = shooterPositionSupplier;
+      this.shooterVelocitySupplier = shooterVelocitySupplier;
+    }
+
+    public TargetShootingState calculateTargetShootingState(){
+      return null; // temp pass
+    }
+  }
+
+  public record TargetShootingState(Rotation2d drivebaseYaw, Angle shooterAngle) { }
 }

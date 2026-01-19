@@ -85,6 +85,5 @@ public class RobotSimState {
     );
 
     SimulatedArena.getInstance().addGamePieceProjectile(flyingFuel);
-    
    }
 }
