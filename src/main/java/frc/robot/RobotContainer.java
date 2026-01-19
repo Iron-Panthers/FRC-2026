@@ -35,6 +35,7 @@ import frc.robot.utility.ElasticSetpoints;
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -120,7 +121,7 @@ public class RobotContainer {
                   new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
                   new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
 
-          SimulatedArena.getInstance().resetFieldForAuto();
+          SimulatedArena.getInstance().placeGamePiecesOnField();
         }
       }
     }

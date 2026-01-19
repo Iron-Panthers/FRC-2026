@@ -2,7 +2,15 @@ package frc.robot;
 
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.Constants.RobotType;
 import frc.robot.subsystems.swerve.DriveConstants;
 
@@ -30,5 +38,27 @@ public class RobotSimState {
    SwerveDriveSimulation driveSimulation;
    public SwerveDriveSimulation getDriveSimulation(){
     return driveSimulation;
+   }
+
+   // Get attributes of physical drivebase
+   public Pose2d getRobotPose3d(){
+    return driveSimulation.getSimulatedDriveTrainPose();
+   }
+
+   public ChassisSpeeds getChassisSpeedsFieldRelative(){
+    return driveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative();
+   }
+
+   // Shooting utilities
+   public void shootFuel(Pose3d shooterEndpointPosition3d, LinearVelocity launchVelocity){
+    RebuiltFuelOnFly flyingFuel = new RebuiltFuelOnFly(
+        shooterEndpointPosition3d.getTranslation().toTranslation2d(), // position of the chassis where t
+        new Translation2d(0, 0),
+        getChassisSpeedsFieldRelative(),
+        new Rotation2d(shooterEndpointPosition3d.getRotation().getZ()), // the yaw rotation of the shooter
+        Units.Meters.of(shooterEndpointPosition3d.getZ()), // height of shot
+        launchVelocity, // launch velocity
+        Units.Radians.of(shooterEndpointPosition3d.getRotation().getY()) // gets the pitch of the shooter endpoint position -- for shooting angle
+    );
    }
 }
