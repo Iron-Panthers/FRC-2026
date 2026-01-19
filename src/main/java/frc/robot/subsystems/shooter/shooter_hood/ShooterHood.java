@@ -16,8 +16,8 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
         UP(45); //need to update
         
         private double position;
-        private static final double EPSILON = IntakePivotConstants.POSITION_TARGET_EPSILON;
-
+        private static final double EPSILON = ShooterHoodConstants.POSITION_TARGET_EPSILON;
+        
         private ShooterHoodTarget(double position){
             this.position = position;
         }
@@ -93,7 +93,8 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     @Override
     public Pose3d getDisplayPose3d() {
         return getParentPosition()
-                .plus(ShooterHeadConstants.BASE_TO_INTAKE_PIVOT_TRANSFORM)
+                .plus(ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM)
+                .plus(
                     new Transform3d(
                         Translation3d.kZero, new Rotation3d(0, -Math.toRadians(getPosition() + 90), 0)));
   }

@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -24,6 +25,8 @@ public class TeleopController {
   /* teleop control with specified yaw supplier, typically "arbitrary" yaw */
   public TeleopController(Supplier<Rotation2d> yawSupplier) {
     this.yawSupplier = yawSupplier;
+    SmartDashboard.putNumber("Turning Sensitivity", 1.5);
+
   }
 
   /* accept driver input from joysticks */
@@ -48,7 +51,7 @@ public class TeleopController {
     Translation2d linearVelocity = calculateLinearVelocity(controllerX, controllerY);
 
     double omega = MathUtil.applyDeadband(controllerOmega, 0.001);
-    omega = Math.copySign(Math.pow(Math.abs(omega), 1.5), omega);
+    omega = Math.copySign(Math.pow(Math.abs(omega), SmartDashboard.getNumber("Turning Sensitivity", 1.5)), omega);
 
     // acceleration limiting
     Translation2d linearVelocityDiff = linearVelocity.minus(pastLinearVelocity);
