@@ -2,6 +2,8 @@ package frc.robot.lib.generic_subsystems.rollers;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import com.ctre.phoenix6.signals.GravityTypeValue;
+
 public interface GenericRollersIO {
   @AutoLog
   class GenericRollersIOInputs {
@@ -17,4 +19,16 @@ public interface GenericRollersIO {
   default void runVelocity(double velocity) {}
 
   default void stop() {}
+
+  default void setSlot0(
+      double kP,
+      double kI,
+      double kD,
+      double kS,
+      double kV,
+      double kA,
+      double motionMagicAcceleration,
+      double motionMagicCruiseVelocity,
+      double jerk,
+      GravityTypeValue gravityTypeValue) {}
 }

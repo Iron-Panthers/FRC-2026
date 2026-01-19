@@ -33,16 +33,16 @@ public class ShooterController extends SubsystemBase {
         //TODO: update states for shooter controller
         switch(targetState) {
             case IDLE -> {
-                shooterFlywheels.setVoltageTarget(ShooterFlywheels.Target.IDLE);
-                shooterHood.setVoltageTarget(ShooterHood.ShooterHoodTarget.ZERO);
+                shooterFlywheels.setVelocityTarget(ShooterFlywheels.Target.IDLE);
+                shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
             }
             case SHOOT -> {
-                shooterFlywheels.setVoltageTarget(ShooterFlywheels.Target.SHOOT);
-                shooterHood.setVoltageTarget(ShooterFlywheels.ShooterHoodTarget.UP);
+                shooterFlywheels.setVelocityTarget(ShooterFlywheels.Target.SHOOT);
+                shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.UP);
             }
             case CLIMB -> {
-                shooterFlywheels.setVoltageTarget(ShooterFlywheels.Target.CLIMB);
-                shooterHood.setVoltageTarget(ShooterHood.ShooterHoodTarget.ZERO);
+                shooterFlywheels.setVelocityTarget(ShooterFlywheels.Target.CLIMB);
+                shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
             }
         }
         shooterFlywheels.periodic();
