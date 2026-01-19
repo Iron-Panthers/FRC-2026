@@ -19,6 +19,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.RobotType;
 import frc.robot.subsystems.swerve.DriveConstants;
 
@@ -76,6 +77,10 @@ public class RobotSimState {
         Units.Meters.of(shooterEndpointPosition3d.getZ()), // height of shot
         launchVelocity, // launch velocity
         Units.Radians.of(shooterEndpointPosition3d.getRotation().getY()) // gets the pitch of the shooter endpoint position -- for shooting angle
+    );
+
+    flyingFuel.withTargetPosition(() -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN).withTargetTolerance(
+        new Translation3d(.2,.2,.2) // just an arbitrary tolerance
     );
 
     // show trajectory

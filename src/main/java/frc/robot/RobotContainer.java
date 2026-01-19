@@ -6,6 +6,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -16,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
+import frc.robot.RobotState.TargetShootingState;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
@@ -154,6 +159,12 @@ public class RobotContainer {
       rgb = new RGB(new RGBIO() {});
     }
 
+    // init shooter with testing values
+    robotState.initializeShootingAnglePredictor(
+      () -> new ChassisSpeeds(0, 0, 0), // stationary
+      () -> MetersPerSecond.of(10), // test shooter velocity: 10 m/s
+      () -> new Transform3d(new Translation3d(0, 0, 0.5), new Rotation3d())); // shooter is 0.5m above robot center
+
     nameCommands();
     configureAutos();
     configureBindings();
@@ -190,6 +201,40 @@ public class RobotContainer {
     driverA.b().onTrue(new InstantCommand(() -> {
       RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
     }));
+
+    // Test command for shooting angle predictor
+    driverA.y().onTrue(new InstantCommand(() -> {
+      
+      // Calculate target shooting state
+      TargetShootingState targetState = robotState.calculateTargetShootingState();
+      
+      System.out.println("=== Shooting Test ===");
+      System.out.println("Calculated Angle: " + targetState.shooterAngle().in(Units.Degrees) + " degrees");
+      System.out.println("Calculated Yaw: " + targetState.drivebaseYaw().getDegrees() + " degrees");
+      
+      // Only shoot in simulation
+      if (Constants.getRobotType() == Constants.RobotType.SIM) {
+        // Get current robot pose and apply the calculated shooter angle and yaw
+        Pose3d robotPose3d = RobotSimState.getInstance().getRobotPose3d();
+        
+        // Create shooter endpoint position with calculated yaw and shooter angle
+        // Shooter is 0.5m above robot center
+        Pose3d shooterPose = new Pose3d(
+          robotPose3d.getTranslation().plus(new Translation3d(0, 0, 0.5)),
+          new Rotation3d(
+            0, // roll
+            targetState.shooterAngle().in(Units.Radians), // pitch (shooter angle)
+            targetState.drivebaseYaw().getRadians() // yaw
+          )
+        );
+        
+        // Shoot the fuel using the calculated parameters - velocity must match calculation!
+        RobotSimState.getInstance().shootFuel(shooterPose, MetersPerSecond.of(10));
+        
+        System.out.println("Shot fired at 10 m/s!");
+      }
+      })
+    );
   }
 
   private void configureAutos() {
