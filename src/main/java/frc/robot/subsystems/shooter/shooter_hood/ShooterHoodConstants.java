@@ -34,12 +34,64 @@ public class ShooterHoodConstants {
             default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         };
     
+        //TODO update Motion Magic
+    public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
+      switch (Constants.getRobotType()) {
+        case COMP -> new MotionMagicConfig(6, 10);
+        case SIM -> new MotionMagicConfig(7.5, 10);
+        default -> new MotionMagicConfig(0, 0);
+      };
+
     public record ShooterHoodConfig(
         int motorID, int canCoderID, double canCoderOffset, double reduction) {}
 
     public record PIDGains(
         double kP, double kI, double kD, double kS, double kV, double kA, double kG){}
     
-    
+    public record MotionMagicConfig(double accelerations, double cruiseVelocity){}
 
+    public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
+
+    public static final InvertedValue MOTOR_DIRECTION = InvertedValue.Clockwise_Positive;
+
+    public static final SensorDirectionValue CANCODER_DIRECTION = SensorDirectionValue.CounterClockwise_Positive;
+
+    public static final double POSITION_TARGET_EPSILON = 0.01;
+    public static final double SHOOTER_HOOD_LENGTH = 25; //in inches
+
+    // TODO Update Limits
+    public static final double UPPER_VOLT_LIMIT = 6;
+    public static final double LOWER_VOLT_LIMIT = -6;
+    public static final double SUPPLY_CURRENT_LIMIT = 30;
+
+    //TODO Change Limits
+    public static final double ZEROING_VOLTS = 1;
+    public static final double ZEROING_OFFSET = 0; //offset in degrees
+    public static final double ZEROING_VOLTAGE_THRESHOLD = 5;
+
+    public static final double SENSOR_DISCONTINUITY_POINT = 0.82;
+
+    //PHYSICAL CONSTANTS
+    public static final Transform3d BASE_TO_SHOOTER_HOOD_TRANSFORM = 
+      switch (Constants.getRobotType()){
+        default -> new Transform3d(
+            new Translation3d(
+                Units.inchesToMeters(0), Units.inchesToMeters(0d), Units.inchesToMeters(0d)),
+                new Rotation3d(0, 0,0));
+    };
+
+    public static record ShooterHoodPhysicalConstants(
+        double momentOfInertia, 
+        double lengthMeters,
+        double minAngleRads, 
+        double maxAngleRads, 
+        boolean simulatedGravity) {}
+
+        //TODO Add in phhysical constants
+    public static final ShooterHoodPhysicalConstants PHYSICAL_CONSTANTS = 
+        switch(Constants.getRobotType()){
+            case SIM -> new ShooterHoodPhysicalConstants(0,0,0,0,true);
+            case COMP -> new ShooterHoodPhysicalConstants(0,0,0,0,false);
+            default -> new ShooterHoodPhysicalConstants(0,0,0,0, false);
+        };
 }
