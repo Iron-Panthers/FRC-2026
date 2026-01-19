@@ -3,20 +3,20 @@ package frc.robot.subsystems.shooter.shooter_flywheels;
 import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterFlywheels extends GenericRollers<ShooterFlywheels.Target>{
-    public enum Target implements GenericRollers.VoltageTarget {
+    public enum Target implements GenericRollers.VelocityTarget {
         //TODO: need to change; from sprint 2025 -- ive taken away a few states
         IDLE(0),
         SHOOT(12),
         CLIMB(0);
 
-        private double volts;
+        private double velocity;
 
-        private Target(double volts) {
-            this.volts = volts;
+        private Target(double velocity) {
+            this.velocity = velocity;
         }
 
-        public double getVolts() {
-            return volts;
+        public double getVelocity() {
+            return velocity;
         }
     }
 
