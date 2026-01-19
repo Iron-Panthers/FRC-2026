@@ -15,6 +15,8 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FlippingUtil;
+
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -314,6 +316,22 @@ public class DriveConstants {
   public static final PathConstraints APPROACH_PATH_CONSTRAINTS =
       new PathConstraints(
           1.5, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
+
+
+  // pathfinding constants
+  public static final List<Pair<Translation2d, Translation2d>> OBSTACLES_FOR_TRENCH_PATHFINDING = List.of(
+    Pair.of(new Translation2d(4.039,6.590), new Translation2d(5.216,4.572)),
+    Pair.of(new Translation2d(4.039,3.472), new Translation2d(5.216,1.570)),
+    Pair.of(FlippingUtil.flipFieldPosition(new Translation2d(4.039,6.590)), FlippingUtil.flipFieldPosition(new Translation2d(5.216,4.572))),
+    Pair.of(FlippingUtil.flipFieldPosition(new Translation2d(4.039,3.472)), FlippingUtil.flipFieldPosition(new Translation2d(5.216,1.570)))
+  );
+
+  public static final List<Pair<Translation2d, Translation2d>> OBSTACLES_FOR_BUMP_PATHFINDING = List.of(
+    Pair.of(new Translation2d(4.039,8.117), new Translation2d(5.216,6.746)),
+    Pair.of(new Translation2d(4.039,1.337), new Translation2d(5.216,0)),
+    Pair.of(FlippingUtil.flipFieldPosition(new Translation2d(4.039,8.117)), FlippingUtil.flipFieldPosition(new Translation2d(5.216,6.746))),
+    Pair.of(FlippingUtil.flipFieldPosition(new Translation2d(4.039,1.337)), FlippingUtil.flipFieldPosition(new Translation2d(5.216,0)))
+  );
 
   public static final Translation2d BLUE_REEF_ORIGIN = new Translation2d(4.5, 4.025);
 
