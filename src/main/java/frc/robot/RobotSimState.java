@@ -44,7 +44,7 @@ public class RobotSimState {
 
 
    // Drive simulation
-   SwerveDriveSimulation driveSimulation;
+   private SwerveDriveSimulation driveSimulation;
    public SwerveDriveSimulation getDriveSimulation(){
     return driveSimulation;
    }

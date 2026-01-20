@@ -79,8 +79,6 @@ public class RobotContainer {
   private RGB rgb;
   private CANWatchdog canWatchdog;
 
-  private SwerveDriveSimulation driveSimulation = null;
-
   public RobotContainer() {
 
     if (Constants.getRobotMode() != Mode.REPLAY) {
@@ -117,11 +115,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
         }
         case SIM -> {
-          SimulatedArena.overrideInstance(new BlankSimulatedArena());
-          driveSimulation =
-              new SwerveDriveSimulation(
-                  DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
-          SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
+          SwerveDriveSimulation driveSimulation = RobotSimState.getInstance().getDriveSimulation();
           swerve =
               new Drive(
                   new GyroIOSim(driveSimulation.getGyroSimulation()),
@@ -203,7 +197,7 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), false));
+    driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
     
     driverA.b().onTrue(new InstantCommand(() -> {
       RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
@@ -323,7 +317,7 @@ public class RobotContainer {
 
     SimulatedArena.getInstance().simulationPeriodic();
     Logger.recordOutput(
-        "FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
+        "FieldSimulation/RobotPosition", RobotSimState.getInstance().getDriveSimulation().getSimulatedDriveTrainPose());
     Logger.recordOutput(
         "FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
   }
