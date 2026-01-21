@@ -52,7 +52,7 @@ public class ClimbElevatorIOTalonFX extends GenericSuperstructureIOTalonFX imple
     BaseStatusSignal.setUpdateFrequencyForAll(
         50, positionRotations2, velocityRPS2, appliedVolts2, supplyCurrent2, temp2);
 
-    setSlot0(
+    setSlot0()
         GAINS.kP(),
         GAINS.kI(),
         GAINS.kD(),
@@ -60,10 +60,14 @@ public class ClimbElevatorIOTalonFX extends GenericSuperstructureIOTalonFX imple
         GAINS.kV(),
         GAINS.kA(),
         GAINS.kG(),
-        MOTION_MAGIC_CONFIG.acceleration(),
+        MOTION_MAGIC_CONFIG.acceleration((),
         MOTION_MAGIC_CONFIG.cruiseVelocity(),
         MOTION_MAGIC_CONFIG.jerk(),
         GRAVITY_TYPE);
+    }
+    @Override 
+    public void runPosition() {
+
     }
 
     /* I copied this from ElevatorIOTalonFX.java in SIM-2025 but their GSIO has two motors and this one only has 1 :(
