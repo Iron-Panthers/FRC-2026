@@ -57,3 +57,6 @@ public class ClimbPivot extends GenericSuperstructure<ClimbPivot.ClimbPivotTarge
 }
   }
 }
+
+public class ClimbPivot{
+}
