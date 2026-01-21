@@ -21,6 +21,7 @@ import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
+import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.rgb.RGBIOCANdle;
@@ -56,6 +57,8 @@ public class RobotContainer {
   private RobotState robotState = RobotState.getInstance();
 
   private ElasticSetpoints elasticSetpoints = ElasticSetpoints.getInstance();
+
+  private ElasticUpdater matchTimerUpdater = new ElasticUpdater();
 
   // private SendableChooser<Command> autoChooser;
   private LoggedDashboardChooser<Command> autoChooser;
