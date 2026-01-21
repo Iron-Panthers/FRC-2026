@@ -2,9 +2,82 @@ package frc.robot.subsystems.climb.climbElevator;
 
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOTalonFX;
+import static frc.robot.subsystems.climb.climbElevator.ClimbElevatorConstants.*;
 
-public class ClimbElevatorIOTalonFX extends GenericSuperstructureIOTalonFX{
-    public ClimbElevatorIOTalonFX(GenericSuperstructureConfiguration superstructureConfig) {
-        super(superstructureConfig);
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
+
+public class ClimbElevatorIOTalonFX extends GenericSuperstructureIOTalonFX implements ClimbElevatorIO{
+    private final StatusSignal<Angle> positionRotations2;
+    private final StatusSignal<AngularVelocity> velocityRPS2;
+    private final StatusSignal<Voltage> appliedVolts2;
+    private final StatusSignal<Current> supplyCurrent2;
+    private final StatusSignal<Temperature> temp2;
+
+    protected TalonFX talon2;
+
+    public ClimbElevatorIOTalonFX() {
+        super(new GenericSuperstructureConfiguration()
+        .withID(CLIMB_ELEVATOR_CONFIG.motorID())
+        .withMotorDirection(MOTOR_DIRECTION)
+        .withSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT)
+        .withReduction(CLIMB_ELEVATOR_CONFIG.reduction())
+        .withUpperVoltageLimit(UPPER_VOLT_LIMIT)
+        .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
+        .withZeroingVolts(ZEROING_VOLTS)
+        .withZeroingOffset(ZEROING_OFFSET)
+        .withUpperExtensionLimit(UPPER_EXTENSION_LIMIT));
+
+    talon2 = new TalonFX(CLIMB_ELEVATOR_CONFIG.motorID2());
+
+    talon2.getConfigurator().apply(config);
+    talon2.setNeutralMode(NeutralModeValue.Brake);
+    //talon2.setControl(new Follower(talon.getDeviceID(), OPOSE_MOTOR));    //commented bc of error idky
+
+    velocityRPS2 = talon2.getVelocity();
+    appliedVolts2 = talon2.getMotorVoltage();
+    supplyCurrent2 = talon2.getSupplyCurrent();
+    temp2 = talon2.getDeviceTemp();
+    positionRotations2 = talon2.getPosition();
+    
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50, positionRotations2, velocityRPS2, appliedVolts2, supplyCurrent2, temp2);
+
+    setSlot0(
+        GAINS.kP(),
+        GAINS.kI(),
+        GAINS.kD(),
+        GAINS.kS(),
+        GAINS.kV(),
+        GAINS.kA(),
+        GAINS.kG(),
+        MOTION_MAGIC_CONFIG.acceleration(),
+        MOTION_MAGIC_CONFIG.cruiseVelocity(),
+        MOTION_MAGIC_CONFIG.jerk(),
+        GRAVITY_TYPE);
     }
+
+    /* I copied this from ElevatorIOTalonFX.java in SIM-2025 but their GSIO has two motors and this one only has 1 :(
+    @Override
+    public void updateSecondaryInputs(GenericSuperstructureIOInputsMotor2 inputs) {
+        inputs.connected2 =
+            BaseStatusSignal.refreshAll(
+                    positionRotations2, velocityRPS2, appliedVolts2, supplyCurrent2, temp2)
+                .isOK();
+        inputs.positionRotations2 = positionRotations2.getValueAsDouble();
+        inputs.velocityRotPerSec2 = velocityRPS2.getValueAsDouble();
+        inputs.appliedVolts2 = appliedVolts2.getValueAsDouble();
+        inputs.supplyCurrentAmps2 = supplyCurrent2.getValueAsDouble();
+        inputs.tempCelsius2 = temp2.getValueAsDouble();
+    }
+    */
 }
