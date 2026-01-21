@@ -1,6 +1,6 @@
-package frc.robot.subsystems.shooter.shooter_flywheels;
+package frc.robot.subsystems.shooter.shooter_accelerator_bottom;
 
-import static frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheelConstants.*;
+import static frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottomConstants.*;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -10,13 +10,13 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 //TODO: likely have to update shooterflywheelsiosim -- adjust values + motors might be wrong
 
-public class ShooterFlywheelsIOSim extends GenericRollersIOSim implements ShooterFlywheelIO {
+public class ShooterAcceleratorBottomIOSim extends GenericRollersIOSim implements ShooterAcceleratorBottomIO {
     
-    private final FlywheelSim shooterFlywheelsSim;
+    private final FlywheelSim shooterAcceleratorBottomSim;
 
-    public ShooterFlywheelsIOSim() {
+    public ShooterAcceleratorBottomIOSim() {
         super(ID, CURRENT_LIMIT_AMPS, INVERTED, BRAKE, REDUCTION);
-        shooterFlywheelsSim =
+        shooterAcceleratorBottomSim =
             new FlywheelSim(
                 LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), MOI, REDUCTION), 
                 DCMotor.getKrakenX60Foc(1));
@@ -28,11 +28,11 @@ public class ShooterFlywheelsIOSim extends GenericRollersIOSim implements Shoote
 
         double appliedVoltage = talon.getSimState().getMotorVoltage();
 
-        shooterFlywheelsSim.setInputVoltage(appliedVoltage);
-        shooterFlywheelsSim.update(0.02);
+        shooterAcceleratorBottomSim.setInputVoltage(appliedVoltage);
+        shooterAcceleratorBottomSim.update(0.02);
 
         double rotations = 0;
-        double velocityRPS = shooterFlywheelsSim.getAngularVelocityRadPerSec() / REDUCTION;
+        double velocityRPS = shooterAcceleratorBottomSim.getAngularVelocityRadPerSec() / REDUCTION;
 
         talon.getSimState().setRawRotorPosition(rotations);
         talon.getSimState().setRotorVelocity(velocityRPS);
