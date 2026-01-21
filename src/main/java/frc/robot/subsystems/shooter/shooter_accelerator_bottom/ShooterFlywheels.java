@@ -20,7 +20,7 @@ public class ShooterFlywheels extends GenericRollers<ShooterFlywheels.Target>{
         }
     }
 
-    public ShooterFlywheels(ShooterFlywheelsIO io) {
+    public ShooterFlywheels(ShooterFlywheelIO io) {
         super("Shooter Flywheels", io);
     }
 }

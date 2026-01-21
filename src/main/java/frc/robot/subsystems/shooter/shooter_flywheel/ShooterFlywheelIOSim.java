@@ -1,6 +1,6 @@
-package frc.robot.subsystems.shooter.shooter_flywheels;
+package frc.robot.subsystems.shooter.shooter_flywheel;
 
-import static frc.robot.subsystems.shooter.shooter_flywheels.ShooterFlywheelsConstants.*;
+import static frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheelConstants.*;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -10,11 +10,11 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 //TODO: likely have to update shooterflywheelsiosim -- adjust values + motors might be wrong
 
-public class ShooterFlywheelsIOSim extends GenericRollersIOSim implements ShooterFlywheelsIO {
+public class ShooterFlywheelIOSim extends GenericRollersIOSim implements ShooterFlywheelIO {
     
     private final FlywheelSim shooterFlywheelsSim;
 
-    public ShooterFlywheelsIOSim() {
+    public ShooterFlywheelIOSim() {
         super(ID, CURRENT_LIMIT_AMPS, INVERTED, BRAKE, REDUCTION);
         shooterFlywheelsSim =
             new FlywheelSim(

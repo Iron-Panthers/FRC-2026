@@ -1,5 +1,5 @@
-package frc.robot.subsystems.shooter.shooter_flywheels;
+package frc.robot.subsystems.shooter.shooter_flywheel;
 
 import frc.robot.lib.generic_subsystems.rollers.*;
 
-public interface ShooterFlywheelsIO extends GenericRollersIO {}
+public interface ShooterFlywheelIO extends GenericRollersIO {}

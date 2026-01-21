@@ -1,11 +1,11 @@
-package frc.robot.subsystems.shooter.shooter_flywheels;
+package frc.robot.subsystems.shooter.shooter_flywheel;
 
-import static frc.robot.subsystems.shooter.shooter_flywheels.ShooterFlywheelsConstants.*;
+import static frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheelConstants.*;
 
 import frc.robot.lib.generic_subsystems.rollers.*;
 
-public class ShooterFlywheelsIOTalonFX extends GenericRollersIOTalonFX implements ShooterFlywheelsIO {
-    public ShooterFlywheelsIOTalonFX() {
+public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements ShooterFlywheelIO {
+    public ShooterFlywheelIOTalonFX() {
         super(ID, CURRENT_LIMIT_AMPS, INVERTED, BRAKE, REDUCTION);
         setSlot0(
             GAINS.kP(),

@@ -3,7 +3,7 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.shooter.shooter_flywheels.ShooterFlywheels;
+import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel;
 import frc.robot.subsystems.shooter.shooter_hood.ShooterHood;
 import org.littletonrobotics.junction.Logger;
 
@@ -20,10 +20,10 @@ public class ShooterController extends SubsystemBase {
     private ShooterState targetState = ShooterState.IDLE;
 
     //might need sensors defined here and in constructor
-    private final ShooterFlywheels shooterFlywheels;
+    private final ShooterFlywheel shooterFlywheels;
     private final ShooterHood shooterHood;
 
-    public ShooterController(ShooterFlywheels shooterFlywheels, ShooterHood shooterHood) {
+    public ShooterController(ShooterFlywheel shooterFlywheels, ShooterHood shooterHood) {
         this.shooterFlywheels = shooterFlywheels;
         this.shooterHood = shooterHood;
     }
@@ -33,15 +33,15 @@ public class ShooterController extends SubsystemBase {
         //TODO: update states for shooter controller
         switch(targetState) {
             case IDLE -> {
-                shooterFlywheels.setVelocityTarget(ShooterFlywheels.Target.IDLE);
+                shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.IDLE);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
             }
             case SHOOT -> {
-                shooterFlywheels.setVelocityTarget(ShooterFlywheels.Target.SHOOT);
+                shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.SHOOT);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.UP);
             }
             case CLIMB -> {
-                shooterFlywheels.setVelocityTarget(ShooterFlywheels.Target.CLIMB);
+                shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.CLIMB);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
             }
         }
