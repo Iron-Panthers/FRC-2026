@@ -2,6 +2,11 @@ package frc.robot.subsystems.shooter.shooter_flywheel;
 
 import static frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheelConstants.*;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements ShooterFlywheelIO {
@@ -10,11 +15,12 @@ public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements
 
     public ShooterFlywheelIOTalonFX() {
         super(ID, CURRENT_LIMIT_AMPS, INVERTED, BRAKE, REDUCTION);
-        talon2 = new TalonFX(ELEVATOR_CONFIG.motorID2());
+        talon2 = new TalonFX(SHOOTER_FLYWHEEL_CONFIG.motorID2());
+        //TODO: not an existing constant
         talon2.getConfigurator().apply(config);
         talon2.setNeutralMode(NeutralModeValue.Brake);
-        talon2.setControl(new Follower(talon.getDeviceID(), OPPOSITE_MOTOR));
-        setOffSet();
+        talon2.setControl(new Follower(talon.getDeviceID(), OPPOSE_MOTOR ? MotorAlignmentValue.Aligned : MotorAlignmentValue.Opposed));
+        //setOffSet(); method from generic superstructure
 
         setSlot0(
             GAINS.kP(),

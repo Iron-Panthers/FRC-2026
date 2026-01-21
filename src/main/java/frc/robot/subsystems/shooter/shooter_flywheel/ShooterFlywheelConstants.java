@@ -61,4 +61,6 @@ public class ShooterFlywheelConstants {
     public record MotionMagicConfig(double accelerations, double cruiseVelocity){}
 
     public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
+
+    public static final boolean OPPOSE_MOTOR = true;
 }

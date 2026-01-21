@@ -18,7 +18,8 @@ import edu.wpi.first.units.measure.Voltage;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 
 public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
-  private final TalonFX talon;
+  protected final TalonFX talon;
+  protected final TalonFXConfiguration config;
 
   private final StatusSignal<Angle> position;
   private final StatusSignal<AngularVelocity> velocity;
@@ -36,7 +37,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
 
     mechanismReduction = reduction;
 
-    TalonFXConfiguration config = new TalonFXConfiguration();
+    config = new TalonFXConfiguration();
     config.MotorOutput.Inverted =
         inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
     config.MotorOutput.NeutralMode = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
