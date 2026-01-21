@@ -16,15 +16,14 @@ public class ClimbElevator extends GenericSuperstructure<ClimbElevator.ClimbElev
 
     public enum ClimbElevatorTarget 
         implements GenericSuperstructure.PositionTarget{
-        DEFAULT(0.67),
-        CLIMBED(6.7);
+        DEFAULT(0.0),
+        CLIMBED(10.0);
 
         private double position = 0;
 
         private static final double EPSILON = 
             ClimbElevatorConstants.POSITION_TARGET_EPSILON;
 
-            
         private ClimbElevatorTarget(double position) {
             this.position = position;
         }
@@ -34,7 +33,7 @@ public class ClimbElevator extends GenericSuperstructure<ClimbElevator.ClimbElev
             return position;
         }
 
-        @Override
+        @Override //you don't really need this but whatever
         public double getEpsilon() {
             return EPSILON;
         }
@@ -65,8 +64,8 @@ public class ClimbElevator extends GenericSuperstructure<ClimbElevator.ClimbElev
     @Override
     public void periodic() {
         //No second motor in GSIO.java
-        //superstructureIO.updateSecondaryInputs(inputs2);
-        //Logger.processInputs(name, inputs2);
+        superstructureIO.updateInputs(inputs);
+        Logger.processInputs(name, inputs);
 
         super.periodic();
 
