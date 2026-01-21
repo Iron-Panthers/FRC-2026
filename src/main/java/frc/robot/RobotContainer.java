@@ -34,6 +34,8 @@ import frc.robot.utility.ElasticSetpoints;
 import frc.robot.subsystems.shooter.shooter_hood.*;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.shooter_flywheel.*;
+import frc.robot.subsystems.shooter.shooter_accelerator_bottom.*;
+import frc.robot.subsystems.shooter.shooter_accelerator_top.*;
 
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
@@ -67,6 +69,8 @@ public class RobotContainer {
   private ShooterFlywheel shooterFlywheels;
   private ShooterHood shooterHood;
   private ShooterController shooterController;
+  private ShooterAcceleratorBottom shooterAcceleratorBottom;
+  private ShooterAcceleratorTop shooterAcceleratorTop;
 
   private SwerveDriveSimulation driveSimulation = null;
 
@@ -110,6 +114,10 @@ public class RobotContainer {
             new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
           shooterHood =
             new ShooterHood(new ShooterHoodIOSim());
+          shooterAcceleratorBottom = 
+            new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
+          shooterAcceleratorTop = 
+            new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
           SimulatedArena.getInstance().resetFieldForAuto();
         }
       }
@@ -144,7 +152,15 @@ public class RobotContainer {
       shooterHood = new ShooterHood(new ShooterHoodIO() {});
     }
 
-    shooterController = new ShooterController(shooterFlywheels, shooterHood);
+    if (shooterAcceleratorBottom == null) {
+      shooterAcceleratorBottom = new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIO() {});
+    }
+
+    if (shooterAcceleratorTop == null) {
+      shooterAcceleratorTop = new ShooterAcceleratorTop(new ShooterAcceleratorTopIO() {});
+    }
+
+    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop);
 
     nameCommands();
     configureAutos();
