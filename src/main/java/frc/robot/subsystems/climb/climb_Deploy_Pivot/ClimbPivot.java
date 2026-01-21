@@ -1,5 +1,7 @@
 package frc.robot.subsystems.climb.climbPivot;
 
+import org.littletonrobotics.junction.Logger;
+
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.subsystems.climb.*;
 
@@ -7,7 +9,7 @@ import frc.robot.subsystems.climb.*;
 public class ClimbPivot extends GenericSuperstructure<ClimbPivot.ClimbPivotTarget> { //FIX
   public enum ClimbPivotTarget implements GenericSuperstructure.PositionTarget { 
     BOTTOM(0.0),
-    TOP(0.0);
+    TOP(90.0);
 
     private double position = 0;
     private static final double EPSILON = ClimbPivotConstants.POSITION_TARGET_EPSILON;
@@ -54,9 +56,4 @@ public class ClimbPivot extends GenericSuperstructure<ClimbPivot.ClimbPivotTarge
   public double getPosition() {
     return super.getPosition() * 360.0;
   }
-}
-  }
-}
-
-public class ClimbPivot{
 }

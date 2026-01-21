@@ -20,7 +20,6 @@ public class ClimbPivotIOTalonFX extends GenericSuperstructureIOTalonFX implemen
             .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
             .withZeroingVolts(ZEROING_VOLTS)
             .withZeroingOffset(ZEROING_OFFSET)
-            .withZeroingVoltageThreshold(ZEROING_VOLTAGE_THRESHOLD)
             .withCANCoderID(CLIMB_PIVOT_CONFIG.canCoderID())
             .withCANCoderDirection(CANCODER_DIRECTION)
             .withCANCoderOffset(CLIMB_PIVOT_CONFIG.canCoderOffset())
@@ -38,15 +37,5 @@ public class ClimbPivotIOTalonFX extends GenericSuperstructureIOTalonFX implemen
         MOTION_MAGIC_CONFIG.cruiseVelocity(),
         0,
         GRAVITY_TYPE);
-  }
-
-  @AutoLogOutput(key = "Superstructure/Climb/Climb Pivot/ModdedRotations")
-  public double moddedRotations;
-
-  @Override
-  public void stop() {}
-
-  public void runVolts(double volts) {
-    talon.setControl(new VoltageOut(volts));
   }
 }

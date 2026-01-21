@@ -4,7 +4,6 @@ import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConf
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOTalonFX;
 import static frc.robot.subsystems.climb.climbElevator.ClimbElevatorConstants.*;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -17,26 +16,20 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 
 public class ClimbElevatorIOTalonFX extends GenericSuperstructureIOTalonFX implements ClimbElevatorIO{
-    private final StatusSignal<Angle> positionRotations2;
-    private final StatusSignal<AngularVelocity> velocityRPS2;
-    private final StatusSignal<Voltage> appliedVolts2;
-    private final StatusSignal<Current> supplyCurrent2;
-    private final StatusSignal<Temperature> temp2;
-
-    protected TalonFX talon2;
 
     public ClimbElevatorIOTalonFX() {
         super(new GenericSuperstructureConfiguration()
-        .withID(CLIMB_ELEVATOR_CONFIG.motorID())
-        .withMotorDirection(MOTOR_DIRECTION)
-        .withSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT)
-        .withReduction(CLIMB_ELEVATOR_CONFIG.reduction())
-        .withUpperVoltageLimit(UPPER_VOLT_LIMIT)
-        .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
-        .withZeroingVolts(ZEROING_VOLTS)
-        .withZeroingOffset(ZEROING_OFFSET)
-        .withUpperExtensionLimit(UPPER_EXTENSION_LIMIT));
+            .withID(CLIMB_ELEVATOR_CONFIG.motorID())
+            .withMotorDirection(MOTOR_DIRECTION)
+            .withSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT)
+            .withReduction(CLIMB_ELEVATOR_CONFIG.reduction())
+            .withUpperVoltageLimit(UPPER_VOLT_LIMIT)
+            .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
+            .withZeroingVolts(ZEROING_VOLTS)
+            .withZeroingOffset(ZEROING_OFFSET)
+            .withUpperExtensionLimit(UPPER_EXTENSION_LIMIT));
 
+<<<<<<< HEAD
     talon2 = new TalonFX(CLIMB_ELEVATOR_CONFIG.motorID2());
 
     talon2.getConfigurator().apply(config);
@@ -84,4 +77,19 @@ public class ClimbElevatorIOTalonFX extends GenericSuperstructureIOTalonFX imple
         inputs.tempCelsius2 = temp2.getValueAsDouble();
     }
     */
+=======
+        setSlot0(
+            GAINS.kP(),
+            GAINS.kI(),
+            GAINS.kD(),
+            GAINS.kS(),
+            GAINS.kV(),
+            GAINS.kA(),
+            GAINS.kG(),
+            MOTION_MAGIC_CONFIG.acceleration(),
+            MOTION_MAGIC_CONFIG.cruiseVelocity(),
+            MOTION_MAGIC_CONFIG.jerk(),
+            GRAVITY_TYPE);
+    }
+>>>>>>> origin/feat/climb
 }

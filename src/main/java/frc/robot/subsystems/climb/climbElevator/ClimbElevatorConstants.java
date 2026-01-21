@@ -13,10 +13,10 @@ public class ClimbElevatorConstants {
     public static final ClimbElevatorConfig CLIMB_ELEVATOR_CONFIG =
         switch (Constants.getRobotType()) {
             case COMP -> new ClimbElevatorConfig(
-                CAN.at(43, "ClimbElevator 1"), CAN.at(44, "ClimbElevator 2"), (58.0 / 14.0) / 6);
+                CAN.at(43, "ClimbElevator 1"), (58.0 / 14.0) / 6);
             case SIM -> new ClimbElevatorConfig(
-                CAN.at(43, "ClimbElevator 1"), CAN.at(44, "ClimbElevator 2"), (58.0 / 14.0));
-            default -> new ClimbElevatorConfig(0, 0, 1); // FIXME
+                CAN.at(43, "ClimbElevator 1"), (58.0 / 14.0));
+            default -> new ClimbElevatorConfig(0, 1); // FIXME
         };
 
     public static final PIDGains GAINS =
@@ -33,7 +33,7 @@ public class ClimbElevatorConstants {
             default -> new MotionMagicConfig(0, 0, 0);
         };
     
-    public record ClimbElevatorConfig(int motorID, int motorID2, double reduction) {}
+    public record ClimbElevatorConfig(int motorID, double reduction) {}
 
     public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
@@ -44,8 +44,7 @@ public class ClimbElevatorConstants {
 
     public static final InvertedValue MOTOR_DIRECTION = InvertedValue.CounterClockwise_Positive;
 
-    public static final boolean OPOSE_MOTOR = true;
-
+    // EPSILON
     public static final double POSITION_TARGET_EPSILON = 1;
 
     // SOFT LIMITS
@@ -60,14 +59,13 @@ public class ClimbElevatorConstants {
 
     public static final int ZEROING_CURRENT_LIMIT = 20;
 
+
     // ZEROING CONSTANTS
     public static final double ZEROING_VOLTS = -1;
 
-    public static final double ZEROING_OFFSET = 0; // offset in inches
+    public static final double ZEROING_OFFSET = 0;
 
     public static final double ZEROING_VOLTAGE_THRESHOLD = 4;
-
-    public static final double MIN_SAFE_HEIGHT_FOR_PIVOT = 15;
 
     public static record ClimbElevatorPhysicalConstants(
         double elevatorMassKg,
