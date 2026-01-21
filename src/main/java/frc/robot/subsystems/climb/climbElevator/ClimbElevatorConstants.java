@@ -44,8 +44,7 @@ public class ClimbElevatorConstants {
 
     public static final InvertedValue MOTOR_DIRECTION = InvertedValue.CounterClockwise_Positive;
 
-    public static final boolean OPOSE_MOTOR = true;
-
+    // EPSILON
     public static final double POSITION_TARGET_EPSILON = 1;
 
     // SOFT LIMITS
@@ -60,14 +59,13 @@ public class ClimbElevatorConstants {
 
     public static final int ZEROING_CURRENT_LIMIT = 20;
 
+
     // ZEROING CONSTANTS
     public static final double ZEROING_VOLTS = -1;
 
-    public static final double ZEROING_OFFSET = 0; // offset in inches
+    public static final double ZEROING_OFFSET = 0;
 
     public static final double ZEROING_VOLTAGE_THRESHOLD = 4;
-
-    public static final double MIN_SAFE_HEIGHT_FOR_PIVOT = 15;
 
     public static record ClimbElevatorPhysicalConstants(
         double elevatorMassKg,

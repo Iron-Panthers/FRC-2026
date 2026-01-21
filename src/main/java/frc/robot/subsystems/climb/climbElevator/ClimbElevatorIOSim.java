@@ -3,13 +3,12 @@ package frc.robot.subsystems.climb.climbElevator;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.simulation.ClimbElevatorSim;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOSim;
 import static frc.robot.subsystems.climb.climbElevator.ClimbElevatorConstants.*;
 
 public class ClimbElevatorIOSim extends GenericSuperstructureIOSim{
 
-    private final ClimbElevatorSim climbElevatorSim;
+    private final ElevatorSim climbElevatorSim;
     
     private final double reduction;
 
@@ -17,7 +16,7 @@ public class ClimbElevatorIOSim extends GenericSuperstructureIOSim{
         super(ClimbElevatorConstants.CLIMB_ELEVATOR_CONFIG.motorID());
         this.reduction = ClimbElevatorConstants.CLIMB_ELEVATOR_CONFIG.reduction();
         climbElevatorSim =
-            new ClimbElevatorSim(
+            new ElevatorSim(
                 DCMotor.getKrakenX60Foc(2),
                 reduction,
                 ClimbElevatorConstants.PHYSICAL_CONSTANTS.elevatorMassKg(),
@@ -68,7 +67,7 @@ public class ClimbElevatorIOSim extends GenericSuperstructureIOSim{
     talon.getSimState().setRawRotorPosition(rotations);
     talon.getSimState().setRotorVelocity(velocityRPS);
 
-    inputs.connected = true;  //error idky
+    inputs.isConnected = true;  //error idky
     inputs.positionRotations = rotations;
     inputs.velocityRotPerSec = velocityRPS;
     inputs.appliedVolts = appliedVoltage;

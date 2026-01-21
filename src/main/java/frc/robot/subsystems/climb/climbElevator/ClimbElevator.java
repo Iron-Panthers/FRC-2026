@@ -40,16 +40,13 @@ public class ClimbElevator extends GenericSuperstructure<ClimbElevator.ClimbElev
 
     }
 
+    // for zeroing
     private final LinearFilter supplyCurrentFilter;
-
-    private LoggableMechanism3d loggableMechanism3dParent = null;
-
     private double filteredSupplyCurrentAmps = 0;
 
-    /* Once again, no Motor2 in GSIO.java
-    private GenericSuperstructureIOInputsMotor2AutoLogged inputs2 =
-        new GenericSuperstructureIOInputsMotor2AutoLogged();
-    */
+    // for logging
+    private LoggableMechanism3d loggableMechanism3dParent = null;
+
 
     private boolean zeroing = false;
 
@@ -63,10 +60,6 @@ public class ClimbElevator extends GenericSuperstructure<ClimbElevator.ClimbElev
 
     @Override
     public void periodic() {
-        //No second motor in GSIO.java
-        superstructureIO.updateInputs(inputs);
-        Logger.processInputs(name, inputs);
-
         super.periodic();
 
         // for zeroing
@@ -79,20 +72,17 @@ public class ClimbElevator extends GenericSuperstructure<ClimbElevator.ClimbElev
             "Superstructure/" + name + "/Filtered supply current amps", getFilteredSupplyCurrentAmps());
     } 
 
+    // GETTERS
     public double getFilteredSupplyCurrentAmps() {
         return filteredSupplyCurrentAmps;
     }
-
-    public boolean aboveSafeHeightForPivot() {
-        return this.getPosition() > ClimbElevatorConstants.MIN_SAFE_HEIGHT_FOR_PIVOT;
-    }
-
-    public void setZeroing(boolean zeroing) {
-        this.zeroing = zeroing;
-    }
-
     public boolean isZeroing() {
         return zeroing;
+    }
+
+    // SETTERS
+    public void setZeroing(boolean zeroing) {
+        this.zeroing = zeroing;
     }
 
     // Loggable mechanism
@@ -109,22 +99,22 @@ public class ClimbElevator extends GenericSuperstructure<ClimbElevator.ClimbElev
                     new Rotation3d(0, 0, 0))); // The elevator doesn't rotate, duh
     }
 
-  @Override
-  public Pose3d getParentPosition() {
-    if (loggableMechanism3dParent != null) {
-      return loggableMechanism3dParent.getDisplayPose3d();
+    @Override
+    public Pose3d getParentPosition() {
+        if (loggableMechanism3dParent != null) {
+        return loggableMechanism3dParent.getDisplayPose3d();
+        }
+        return new Pose3d();
     }
-    return new Pose3d();
-  }
 
-  @Override
-  public void setParent(LoggableMechanism3d parent) {
-    if (parent == null) {
-      throw new IllegalArgumentException("Parent cannot be null");
+    @Override
+    public void setParent(LoggableMechanism3d parent) {
+        if (parent == null) {
+        throw new IllegalArgumentException("Parent cannot be null");
+        }
+        if (parent == this) {
+        throw new IllegalArgumentException("Parent cannot be itself");
+        }
+        this.loggableMechanism3dParent = parent;
     }
-    if (parent == this) {
-      throw new IllegalArgumentException("Parent cannot be itself");
-    }
-    this.loggableMechanism3dParent = parent;
-  }
 }
