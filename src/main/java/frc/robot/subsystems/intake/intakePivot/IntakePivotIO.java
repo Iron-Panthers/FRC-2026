@@ -1,5 +1,10 @@
 package frc.robot.subsystems.intake.intakePivot;
 
-public class IntakePivotIO {
-    
+import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIO;
+
+public interface IntakePivotIO extends GenericSuperstructureIO {
+
 }
+
+    
+
