@@ -67,8 +67,8 @@ public class ClimbElevatorIOTalonFX extends GenericSuperstructureIOTalonFX imple
     }
     @Override 
     public void runPosition() {
-
-    }
+        //what should go in here
+ }
 
     /* I copied this from ElevatorIOTalonFX.java in SIM-2025 but their GSIO has two motors and this one only has 1 :(
     @Override
