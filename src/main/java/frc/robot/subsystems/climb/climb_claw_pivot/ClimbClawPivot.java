@@ -1,4 +1,4 @@
-package frc.robot.subsystems.climb.climbPivot;
+package frc.robot.subsystems.climb.climb_claw_pivot;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -6,15 +6,15 @@ import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.subsystems.climb.*;
 
 
-public class ClimbPivot extends GenericSuperstructure<ClimbPivot.ClimbPivotTarget> { //FIX
-  public enum ClimbPivotTarget implements GenericSuperstructure.PositionTarget { 
+public class ClimbClawPivot extends GenericSuperstructure<ClimbClawPivot.ClimbClawPivotTarget> { //FIX
+  public enum ClimbClawPivotTarget implements GenericSuperstructure.PositionTarget { 
     BOTTOM(0.0),
     TOP(90.0);
 
     private double position = 0;
-    private static final double EPSILON = ClimbPivotConstants.POSITION_TARGET_EPSILON;
+    private static final double EPSILON = ClimbClawPivotConstants.POSITION_TARGET_EPSILON;
 
-    private ClimbPivotTarget(double position) {
+    private ClimbClawPivotTarget(double position) {
       this.position = position;
     }
 
@@ -28,9 +28,9 @@ public class ClimbPivot extends GenericSuperstructure<ClimbPivot.ClimbPivotTarge
     }
   }
 
-  public ClimbPivot(ClimbPivotIO io) {
-    super("Climb Pivot", io);
-    setPositionTarget(ClimbPivotTarget.TOP);
+  public ClimbClawPivot(ClimbClawPivotIO io) {
+    super("Climb Claw Pivot", io);
+    setPositionTarget(ClimbClawPivotTarget.TOP);
     setControlMode(ControlMode.STOP);
   }
 
@@ -39,7 +39,7 @@ public class ClimbPivot extends GenericSuperstructure<ClimbPivot.ClimbPivotTarge
     super.periodic();
 
     Logger.recordOutput(
-        "Superstructure/ClimbPivot/PositionTargetRotations", getPositionTarget().getPosition() / 360d);
+        "Superstructure/ClimbClawPivot/PositionTargetRotations", getPositionTarget().getPosition() / 360d);
   }
 
   /**

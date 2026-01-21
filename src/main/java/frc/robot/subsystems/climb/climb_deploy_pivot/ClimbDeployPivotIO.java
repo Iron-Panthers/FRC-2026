@@ -1,7 +1,7 @@
-package frc.robot.subsystems.climb.climbPivot;
+package frc.robot.subsystems.climb.climb_deploy_pivot;
 
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIO;
 
-public interface ClimbPivotIO extends GenericSuperstructureIO {
+public interface ClimbDeployPivotIO extends GenericSuperstructureIO {
   default void runVolts(double volts) {} ;
 }

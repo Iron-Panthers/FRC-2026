@@ -1,28 +1,28 @@
-package frc.robot.subsystems.climb.climbPivot;
+package frc.robot.subsystems.climb.climb_deploy_pivot;
 
-import static frc.robot.subsystems.climb.climbPivot.ClimbPivotConstants.*;
+import static frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotConstants.*;
 
 import com.ctre.phoenix6.controls.VoltageOut;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOTalonFX;
 import org.littletonrobotics.junction.AutoLogOutput;
 
-public class ClimbPivotIOTalonFX extends GenericSuperstructureIOTalonFX implements ClimbPivotIO {
+public class ClimbDeployPivotIOTalonFX extends GenericSuperstructureIOTalonFX implements ClimbDeployPivotIO {
 
-  public ClimbPivotIOTalonFX() {
+  public ClimbDeployPivotIOTalonFX() {
     super(
         new GenericSuperstructureConfiguration()
-            .withID(CLIMB_PIVOT_CONFIG.motorID())
+            .withID(CLIMB_DEPLOY_PIVOT_CONFIG.motorID())
             .withMotorDirection(MOTOR_DIRECTION)
             .withSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT)
-            .withReduction(CLIMB_PIVOT_CONFIG.reduction())
+            .withReduction(CLIMB_DEPLOY_PIVOT_CONFIG.reduction())
             .withUpperVoltageLimit(UPPER_VOLT_LIMIT)
             .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
             .withZeroingVolts(ZEROING_VOLTS)
             .withZeroingOffset(ZEROING_OFFSET)
-            .withCANCoderID(CLIMB_PIVOT_CONFIG.canCoderID())
+            .withCANCoderID(CLIMB_DEPLOY_PIVOT_CONFIG.canCoderID())
             .withCANCoderDirection(CANCODER_DIRECTION)
-            .withCANCoderOffset(CLIMB_PIVOT_CONFIG.canCoderOffset())
+            .withCANCoderOffset(CLIMB_DEPLOY_PIVOT_CONFIG.canCoderOffset())
             .withLowerExtensionLimit(LOWER_EXTENSION_LIMIT));
 
     setSlot0(
