@@ -50,7 +50,7 @@ public class VisionConstants {
           // arducam-5 (back left)
           new Transform3d(-0.17, 0.298, 0.3651, new Rotation3d(0, 0, -Math.PI + Math.toRadians(12)))
         };
-        case SPRINT -> new Transform3d[] {
+        case ALPHA -> new Transform3d[] {
           // arducam-1 (Lower intake)
           new Transform3d(
               -0.305,
@@ -103,7 +103,7 @@ public class VisionConstants {
                 new UnitDeviationParams(0.25, 0.07, 0.25), new UnitDeviationParams(0.15, 1, 1.5)));
       };
 
-  public static final int[] IGNORE_TAGS = {1, 2, 3, 4, 5, 12, 13, 14, 15, 16};
+  public static final int[] IGNORE_TAGS = {};
   // public static final int[] IGNORE_TAGS = {}; // removed
 
   // Fixed AprilTag field layout initialization
