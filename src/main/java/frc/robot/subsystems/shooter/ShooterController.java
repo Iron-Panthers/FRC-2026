@@ -41,20 +41,20 @@ public class ShooterController extends SubsystemBase {
             case IDLE -> {
                 shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.IDLE);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
-                shooterAcceleratorTop.setVelocityTarget(shooterAcceleratorTop.Target.IDLE);
-                shooterAcceleratorBottom.setVelocityTarget(shooterAcceleratorBottom.Target.IDLE);
+                shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.IDLE);
+                shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.IDLE);
             }
             case SHOOT -> {
                 shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.SHOOT);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.UP);
-                shooterAcceleratorTop.setVelocityTarget(shooterAcceleratorTop.Target.SHOOT);
-                shooterAcceleratorBottom.setVelocityTarget(shooterAcceleratorBottom.Target.SHOOT);
+                shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.SHOOT);
+                shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.SHOOT);
             }
             case CLIMB -> {
                 shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.CLIMB);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
-                shooterAcceleratorTop.setVelocityTarget(shooterAcceleratorTop.Target.CLIMB);
-                shooterAcceleratorBottom.setVelocityTarget(shooterAcceleratorBottom.Target.CLIMB);
+                shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.CLIMB);
+                shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.CLIMB);
             }
         }
         shooterFlywheels.periodic();

@@ -89,6 +89,15 @@ public class RobotContainer {
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
           rgb = new RGB(new RGBIOCANdle());
           canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
+          shooterFlywheels =
+            new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          shooterHood =
+            new ShooterHood(new ShooterHoodIOTalonFX());
+          shooterAcceleratorBottom = 
+            new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
+          shooterAcceleratorTop = 
+            new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
+          
         }
         case SIM -> {
           driveSimulation =
@@ -111,14 +120,15 @@ public class RobotContainer {
                   new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
                   new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
           shooterFlywheels =
-            new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+            new ShooterFlywheel(new ShooterFlywheelIOSim());
           shooterHood =
             new ShooterHood(new ShooterHoodIOSim());
           shooterAcceleratorBottom = 
-            new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
+            new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOSim());
           shooterAcceleratorTop = 
-            new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
+            new ShooterAcceleratorTop(new ShooterAcceleratorTopIOSim());
           SimulatedArena.getInstance().resetFieldForAuto();
+        
         }
       }
     }
