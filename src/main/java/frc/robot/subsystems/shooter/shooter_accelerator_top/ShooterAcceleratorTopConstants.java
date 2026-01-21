@@ -1,10 +1,10 @@
-package frc.robot.subsystems.shooter.shooter_flywheels;
+package frc.robot.subsystems.shooter.shooter_accelerator_top;
 
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import frc.robot.Constants;
 
-public class ShooterFlywheelsConstants {
+public class ShooterAcceleratorTopConstants {
     //TODO: update ids
     public static final int ID =
         switch (Constants.getRobotType()){
