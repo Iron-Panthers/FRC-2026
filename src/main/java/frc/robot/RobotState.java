@@ -7,8 +7,11 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.IdealStartingState;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.pathfinding.Pathfinder;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -27,6 +30,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
 import java.util.ArrayList;
@@ -48,8 +54,8 @@ public class RobotState {
   private static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
   private static final Pose2d initialPose =
       DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red
-          ? FlippingUtil.flipFieldPose(DriveConstants.INITAL_POSE)
-          : DriveConstants.INITAL_POSE;
+          ? FlippingUtil.flipFieldPose(DriveConstants.INITIAL_POSE)
+          : DriveConstants.INITIAL_POSE;
 
   private final Matrix<N3, N1> matrixQ = new Matrix<>(Nat.N3(), Nat.N1());
   private final Matrix<N3, N3> kalmanGain = new Matrix<>(Nat.N3(), Nat.N3());
@@ -211,6 +217,29 @@ public class RobotState {
     return translateByVector(pose, mag, theta).transformBy(new Transform2d(0, 0, theta));
   }
 
+  /**
+   * Gets the scuffed path planner built command for following a path to a certain pose
+   * @param approachPose2d
+   * @param underTrench
+   * @return
+   */
+  public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench){
+    Logger.recordOutput("RobotState/EstimatedPose", estimatedPose);
+    Logger.recordOutput("RobotState/ApproachPose", approachPose2d);
+
+    Command finalPathfindingCommand = null; 
+
+    if(underTrench){
+      Pathfinding.setDynamicObstacles(DriveConstants.OBSTACLES_FOR_TRENCH_PATHFINDING, estimatedPose.getTranslation());
+      finalPathfindingCommand =  AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
+    }else{
+      Pathfinding.setDynamicObstacles(DriveConstants.OBSTACLES_FOR_BUMP_PATHFINDING, estimatedPose.getTranslation());
+      finalPathfindingCommand =  AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
+    }
+
+    return finalPathfindingCommand;
+
+  }
   public void addRobotSpeeds(ChassisSpeeds chassisSpeeds) {
     this.robotSpeeds = chassisSpeeds;
   }
