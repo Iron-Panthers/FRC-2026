@@ -15,12 +15,12 @@ public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements
 
     public ShooterFlywheelIOTalonFX() {
         super(ID, CURRENT_LIMIT_AMPS, INVERTED, BRAKE, REDUCTION);
-        talon2 = new TalonFX(SHOOTER_FLYWHEEL_CONFIG.motorID2());
-        //TODO: not an existing constant
+
+        // initing second motor because why not
+        talon2 = new TalonFX(ID2);
         talon2.getConfigurator().apply(config);
-        talon2.setNeutralMode(NeutralModeValue.Brake);
+        talon2.setNeutralMode(BRAKE ? NeutralModeValue.Brake : NeutralModeValue.Coast);
         talon2.setControl(new Follower(talon.getDeviceID(), OPPOSE_MOTOR ? MotorAlignmentValue.Aligned : MotorAlignmentValue.Opposed));
-        //setOffSet(); method from generic superstructure
 
         setSlot0(
             GAINS.kP(),

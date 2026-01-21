@@ -57,7 +57,9 @@ public class ShooterHoodConstants {
     public static final SensorDirectionValue CANCODER_DIRECTION = SensorDirectionValue.CounterClockwise_Positive;
 
     public static final double POSITION_TARGET_EPSILON = 0.01;
-    public static final double SHOOTER_HOOD_LENGTH = 25; //in inches
+
+    /** Distance from center of hood rotation to hood end */
+    public static final double SHOOTER_HOOD_LENGTH = 10; //in inches
 
     // TODO Update Limits
     public static final double UPPER_VOLT_LIMIT = 6;
@@ -69,7 +71,7 @@ public class ShooterHoodConstants {
     public static final double ZEROING_OFFSET = 0; //offset in degrees
     public static final double ZEROING_VOLTAGE_THRESHOLD = 5;
 
-    public static final double SENSOR_DISCONTINUITY_POINT = 0.82;
+    public static final double SENSOR_DISCONTINUITY_POINT = 0.82; // TODO: do we need this
 
     //PHYSICAL CONSTANTS
     public static final Transform3d BASE_TO_SHOOTER_HOOD_TRANSFORM = 

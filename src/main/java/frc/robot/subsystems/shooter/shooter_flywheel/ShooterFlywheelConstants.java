@@ -12,6 +12,12 @@ public class ShooterFlywheelConstants {
             case SIM -> 32;
             default -> 0;
         };
+    public static final int ID2 =
+        switch (Constants.getRobotType()){
+            case COMP -> 41;
+            case SIM -> 33;
+            default -> 0;
+        };
     public static final int CURRENT_LIMIT_AMPS =
         switch (Constants.getRobotType()) {
             case COMP -> 40;

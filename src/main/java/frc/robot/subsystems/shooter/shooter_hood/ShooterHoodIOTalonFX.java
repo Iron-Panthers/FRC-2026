@@ -19,10 +19,9 @@ public class ShooterHoodIOTalonFX extends GenericSuperstructureIOTalonFX impleme
                 .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
                 .withZeroingVolts(ZEROING_VOLTS)
                 .withZeroingOffset(ZEROING_OFFSET)
-                //unsure if withZeroingVolts is correct
-                .withZeroingVolts(ZEROING_VOLTAGE_THRESHOLD)
                 .withCANCoderID(SHOOTER_HOOD_CONFIG.canCoderID())
-                .withCANCoderOffset(SHOOTER_HOOD_CONFIG.canCoderOffset())                    .withCANCoderDirection(CANCODER_DIRECTION)
+                .withCANCoderOffset(SHOOTER_HOOD_CONFIG.canCoderOffset())                    
+                .withCANCoderDirection(CANCODER_DIRECTION)
                 .withSensorDiscontinuityPoint(SENSOR_DISCONTINUITY_POINT));
         
         setSlot0(
@@ -37,23 +36,6 @@ public class ShooterHoodIOTalonFX extends GenericSuperstructureIOTalonFX impleme
             MOTION_MAGIC_CONFIG.cruiseVelocity(),
         0,
             GRAVITY_TYPE);
-}
-        @AutoLogOutput(key = "Shooter/ShooterHood/ModdedRotations")
-            public double moddedRotations;
-
-        @Override
-            public void runPosition(double position) {
-
-                position /= 360;
-                // position -= (1 / 2.25);
-                moddedRotations = position;
-                // moddedRotations =
-                //     position
-                //         - (talon.getPosition().getValueAsDouble()
-                //             // + 0.1
-                //             - ((talon.getPosition().getValueAsDouble()) % (1 / 2.25)));
-                // // - 0.1; // calculates how much the fricking encoder is off by (so sad)
-            super.runPosition(position);
-  }
+    }
 }
 

@@ -15,11 +15,14 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
         HALF(45), //need to update
         UP(45); //need to update
         
-        private double position;
+        private double position; // in rotations
         private static final double EPSILON = ShooterHoodConstants.POSITION_TARGET_EPSILON;
         
-        private ShooterHoodTarget(double position){
-            this.position = position;
+        /**
+         * @param positionDeg in degrees
+         */
+        private ShooterHoodTarget(double positionDeg){
+            this.position = positionDeg / 360d;
         }
 
         public double getPosition() {
@@ -45,7 +48,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
         super.periodic();
         Logger.recordOutput(
             "Shooter/ShooterHood/PositionTargetRotations", //TODO: add naming convention to notion doc
-            getPositionTarget().getPosition() / 360d);
+            getPositionTarget().getPosition());
     }
 
     /**
@@ -56,17 +59,8 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
 
      //TODO fix the logic for reaching Target Position on Shooter
     public boolean reachedTarget(){
-        return Math.abs(super.getPosition()- (super.getPositionTarget().getPosition() / 360d))
+        return Math.abs(super.getPosition()- (super.getPositionTarget().getPosition()))
             <= super.getPositionTarget().getEpsilon();
-    }
-
-    /**
-   * Get the current position in degrees
-   *
-   * @return the current position in degrees
-   */
-    public double getPosition() {
-        return super.getPosition() * 360.0;
     }
 
     @Override
@@ -96,7 +90,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
                 .plus(ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM)
                 .plus(
                     new Transform3d(
-                        Translation3d.kZero, new Rotation3d(0, -Math.toRadians(getPosition() + 90), 0)));
+                        Translation3d.kZero, new Rotation3d(0, -Math.toRadians(getPosition() * 360 + 90), 0)));
   }
 
 }//close class

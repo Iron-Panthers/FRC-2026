@@ -74,10 +74,5 @@ public class ShooterHoodIOSim extends GenericSuperstructureIOSim implements Shoo
         shooterHoodSim.setState(0, 0);
     }
 
-    @Override
-    public void runPosition(double position) {
-        super.runPosition(position / 360d); // convert degrees to rotations
-  }
-
 } 
     
