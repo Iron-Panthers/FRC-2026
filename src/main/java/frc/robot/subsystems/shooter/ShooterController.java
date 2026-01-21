@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel;
 import frc.robot.subsystems.shooter.shooter_hood.ShooterHood;
+import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom;
+import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterController extends SubsystemBase {
@@ -22,10 +24,14 @@ public class ShooterController extends SubsystemBase {
     //might need sensors defined here and in constructor
     private final ShooterFlywheel shooterFlywheels;
     private final ShooterHood shooterHood;
+    private final ShooterAcceleratorBottom shooterAcceleratorBottom;
+    private final ShooterAcceleratorTop shooterAcceleratorTop;
 
-    public ShooterController(ShooterFlywheel shooterFlywheels, ShooterHood shooterHood) {
+    public ShooterController(ShooterFlywheel shooterFlywheels, ShooterHood shooterHood, ShooterAcceleratorBottom shooterAcceleratorBottom, ShooterAcceleratorTop shooterAcceleratorTop) {
         this.shooterFlywheels = shooterFlywheels;
         this.shooterHood = shooterHood;
+        this.shooterAcceleratorBottom = shooterAcceleratorBottom;
+        this.shooterAcceleratorTop = shooterAcceleratorTop;
     }
 
     @Override
@@ -35,18 +41,26 @@ public class ShooterController extends SubsystemBase {
             case IDLE -> {
                 shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.IDLE);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
+                shooterAcceleratorTop.setVelocityTarget(shooterAcceleratorTop.Target.IDLE);
+                shooterAcceleratorBottom.setVelocityTarget(shooterAcceleratorBottom.Target.IDLE);
             }
             case SHOOT -> {
                 shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.SHOOT);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.UP);
+                shooterAcceleratorTop.setVelocityTarget(shooterAcceleratorTop.Target.SHOOT);
+                shooterAcceleratorBottom.setVelocityTarget(shooterAcceleratorBottom.Target.SHOOT);
             }
             case CLIMB -> {
                 shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.CLIMB);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
+                shooterAcceleratorTop.setVelocityTarget(shooterAcceleratorTop.Target.CLIMB);
+                shooterAcceleratorBottom.setVelocityTarget(shooterAcceleratorBottom.Target.CLIMB);
             }
         }
         shooterFlywheels.periodic();
         shooterHood.periodic();
+        shooterAcceleratorBottom.periodic();
+        shooterAcceleratorTop.periodic();
         
         Logger.recordOutput("ShooterFlywheels/TargetState", targetState);
     }
