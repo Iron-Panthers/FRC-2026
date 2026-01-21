@@ -53,9 +53,9 @@ public class DriveConstants {
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
-            3.75,
+            4,
             10,
-            6);
+            10);
         case ALPHA -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
             Units.inchesToMeters(18.75),
@@ -282,7 +282,7 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         case SIM -> new HeadingControllerConstants(20, 0, 8, 20, 0.01);
-        case VISION -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
+        case VISION -> new HeadingControllerConstants(6, 0, 5, 20, 0.01);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
@@ -292,7 +292,7 @@ public class DriveConstants {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
-            4, 0, 2, 2, 2); /*FIXME: tune these constants*/
+            15, 0, 0, 4, 4); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
             7, 0, 0, 1, 1); /* FIXME: tune these constants */
         case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 2, 2);
