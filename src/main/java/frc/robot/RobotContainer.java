@@ -205,9 +205,7 @@ public class RobotContainer {
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
 
-    driverB
-      .povRight()
-      .onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
+    driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
     
     
   }

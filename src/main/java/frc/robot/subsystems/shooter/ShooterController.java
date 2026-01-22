@@ -22,13 +22,13 @@ public class ShooterController extends SubsystemBase {
     private ShooterState targetState = ShooterState.IDLE;
 
     //might need sensors defined here and in constructor
-    private final ShooterFlywheel shooterFlywheels;
+    private final ShooterFlywheel shooterFlywheel;
     private final ShooterHood shooterHood;
     private final ShooterAcceleratorBottom shooterAcceleratorBottom;
     private final ShooterAcceleratorTop shooterAcceleratorTop;
 
-    public ShooterController(ShooterFlywheel shooterFlywheels, ShooterHood shooterHood, ShooterAcceleratorBottom shooterAcceleratorBottom, ShooterAcceleratorTop shooterAcceleratorTop) {
-        this.shooterFlywheels = shooterFlywheels;
+    public ShooterController(ShooterFlywheel shooterFlywheel, ShooterHood shooterHood, ShooterAcceleratorBottom shooterAcceleratorBottom, ShooterAcceleratorTop shooterAcceleratorTop) {
+        this.shooterFlywheel = shooterFlywheel;
         this.shooterHood = shooterHood;
         this.shooterAcceleratorBottom = shooterAcceleratorBottom;
         this.shooterAcceleratorTop = shooterAcceleratorTop;
@@ -37,32 +37,35 @@ public class ShooterController extends SubsystemBase {
     @Override
     public void periodic() {
         //TODO: update states for shooter controller
+        
+        shooterFlywheel.setVelocityTarget(ShooterFlywheel.Target.IDLE);
+
         switch(targetState) {
             case IDLE -> {
-                shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.IDLE);
+                shooterFlywheel.setVelocityTarget(ShooterFlywheel.Target.IDLE);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
                 shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.IDLE);
                 shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.IDLE);
             }
             case SHOOT -> {
-                shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.SHOOT);
+                shooterFlywheel.setVelocityTarget(ShooterFlywheel.Target.SHOOT);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.UP);
                 shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.SHOOT);
                 shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.SHOOT);
             }
             case CLIMB -> {
-                shooterFlywheels.setVelocityTarget(ShooterFlywheel.Target.CLIMB);
+                shooterFlywheel.setVelocityTarget(ShooterFlywheel.Target.CLIMB);
                 shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
                 shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.CLIMB);
                 shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.CLIMB);
             }
         }
-        shooterFlywheels.periodic();
+        shooterFlywheel.periodic();
         shooterHood.periodic();
         shooterAcceleratorBottom.periodic();
         shooterAcceleratorTop.periodic();
         
-        Logger.recordOutput("ShooterFlywheels/TargetState", targetState);
+        Logger.recordOutput("ShooterFlywheel/TargetState", targetState);
     }
 
     public ShooterState getTargetState() {

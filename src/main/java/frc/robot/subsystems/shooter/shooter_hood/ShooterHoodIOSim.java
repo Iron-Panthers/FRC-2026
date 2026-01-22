@@ -20,7 +20,7 @@ public class ShooterHoodIOSim extends GenericSuperstructureIOSim implements Shoo
 
         shooterHoodSim = 
             new SingleJointedArmSim(
-                  DCMotor.getKrakenX60Foc(1),
+                DCMotor.getKrakenX60Foc(1),
                 reduction,
                 ShooterHoodConstants.PHYSICAL_CONSTANTS.momentOfInertia(),
                 ShooterHoodConstants.PHYSICAL_CONSTANTS.lengthMeters(),

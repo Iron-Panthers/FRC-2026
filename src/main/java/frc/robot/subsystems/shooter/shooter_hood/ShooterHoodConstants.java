@@ -89,11 +89,11 @@ public class ShooterHoodConstants {
         double maxAngleRads, 
         boolean simulatedGravity) {}
 
-        //TODO Add in phhysical constants
+    //TODO Add in phhysical constants
     public static final ShooterHoodPhysicalConstants PHYSICAL_CONSTANTS = 
         switch(Constants.getRobotType()){
-            case SIM -> new ShooterHoodPhysicalConstants(0,0,0,0,true);
-            case COMP -> new ShooterHoodPhysicalConstants(0,0,0,0,false);
-            default -> new ShooterHoodPhysicalConstants(0,0,0,0, false);
+            case SIM -> new ShooterHoodPhysicalConstants(0.02, 0.706747, -1000.0, 1000, true);
+            case COMP -> new ShooterHoodPhysicalConstants(0.1, 0, 0, 0, false);
+            default -> new ShooterHoodPhysicalConstants(0.1, 0, 0, 0, false);
         };
 }
