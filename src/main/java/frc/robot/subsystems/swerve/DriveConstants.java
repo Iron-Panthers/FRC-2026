@@ -339,27 +339,7 @@ public class DriveConstants {
     Pair.of(FlippingUtil.flipFieldPosition(new Translation2d(4.039,8.117)), FlippingUtil.flipFieldPosition(new Translation2d(5.216,6.746))),
     Pair.of(FlippingUtil.flipFieldPosition(new Translation2d(4.039,1.337)), FlippingUtil.flipFieldPosition(new Translation2d(5.216,0)))
   );
-//   public static final Translation2d BLUE_REEF_ORIGIN = new Translation2d(4.5, 4.025);
 
-//   public static final Translation2d REEF_TRANSLATION2D =
-//       DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-//           ? new Translation2d(4.5, 4)
-//           : new Translation2d(13, 4);
-
-//   public static final Translation2d LEFT_CORNER =
-//       DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-//           ? new Translation2d(0, 8)
-//           : new Translation2d(17.5, 0);
-
-//   public static final Translation2d RIGHT_CORNER =
-//       DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-//           ? new Translation2d(0, 0)
-//           : new Translation2d(17.5, 8);
-
-//   public static final Translation2d CLIMB_ZONE_CENTER =
-//       DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-//           ? new Translation2d(8.765, 6)
-//           : new Translation2d(8.765, 2);
     public static final Translation3d BLUE_HUB_ORIGIN = new Translation3d(4.5974, 4.034536, 1.5748);
     public static final Translation3d RED_HUB_ORIGIN = new Translation3d(11.938, 4.034536, 1.5748);
 
