@@ -21,6 +21,12 @@ import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
+import frc.robot.subsystems.intake.intakePivot.IntakePivot;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
@@ -70,6 +76,8 @@ public class RobotContainer {
   private Vision vision;
   private RGB rgb;
   private CANWatchdog canWatchdog;
+  private IntakePivot intakePivot;
+  private IntakeRollers intakeRollers;
 
   private SwerveDriveSimulation driveSimulation = null;
 
@@ -130,6 +138,10 @@ public class RobotContainer {
           //         new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
           //         new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
 
+          // INTAKE
+          intakePivot = new IntakePivot(new IntakePivotIOSim());
+          intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
+
           SimulatedArena.getInstance().resetFieldForAuto();
         }
       }
@@ -154,6 +166,14 @@ public class RobotContainer {
 
     if (rgb == null) {
       rgb = new RGB(new RGBIO() {});
+    }
+
+    // INTAKE
+    if (intakePivot == null) {
+      intakePivot = new IntakePivot(new IntakePivotIO() { });
+    }
+    if( intakeRollers == null) {
+      intakeRollers = new IntakeRollers(new IntakeRollersIO() { });
     }
 
     nameCommands();
@@ -188,10 +208,10 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    // driverA.b().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(10.406, 1.916, new Rotation2d(0)), true));
-    // driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), false));
-    // driverA.b().whileTrue(new RunCommand(() -> swerve.setTargetHeading(RobotState.getInstance().getVelocity().getAngle()), swerve));
-
+    
+    driverA.b().onTrue(new InstantCommand(() -> {
+      intakePivot.setPositionTargetManual(.5);
+    }));
     driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
   }
   

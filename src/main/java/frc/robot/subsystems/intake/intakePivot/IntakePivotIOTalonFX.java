@@ -18,7 +18,6 @@ public class IntakePivotIOTalonFX extends GenericSuperstructureIOTalonFX impleme
             .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
             .withZeroingVolts(ZEROING_VOLTS)
             .withZeroingOffset(ZEROING_OFFSET)
-            //.withZeroingVoltageThreshold(ZEROING_VOLTAGE_THRESHOLD)
             .withCANCoderID(INTAKE_PIVOT_CONFIG.canCoderID())
             .withCANCoderOffset(INTAKE_PIVOT_CONFIG.canCoderOffset())
             .withCANCoderDirection(CANCODER_DIRECTION)
@@ -36,25 +35,6 @@ public class IntakePivotIOTalonFX extends GenericSuperstructureIOTalonFX impleme
         MOTION_MAGIC_CONFIG.cruiseVelocity(),
         0,
         GRAVITY_TYPE);
-  }
-
-  @AutoLogOutput(key = "Intake/IntakePivot/ModdedRotations")
-  public double moddedRotations;
-
-  @Override
-  public void runPosition(double position) {
-
-    position /= 360;
-    // position -= (1 / 2.25);
-    moddedRotations = position;
-    // moddedRotations =
-
-    //     position
-    //         - (talon.getPosition().getValueAsDouble()
-    //             // + 0.1
-    //             - ((talon.getPosition().getValueAsDouble()) % (1 / 2.25)));
-    // // - 0.1; // calculates how much the fricking encoder is off by (so sad)
-    super.runPosition(position);
   }
 }
 

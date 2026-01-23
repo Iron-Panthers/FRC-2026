@@ -71,10 +71,5 @@ public class IntakePivotIOSim extends GenericSuperstructureIOSim implements Inta
   public void setOffset() {
     intakePivotSim.setState(0, 0);
   }
-
-  @Override
-  public void runPosition(double position) {
-    super.runPosition(position / 360d); // convert degrees to rotations
-  }
 }
 
