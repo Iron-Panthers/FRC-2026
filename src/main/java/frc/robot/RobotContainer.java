@@ -165,7 +165,7 @@ public class RobotContainer {
 
     // init shooter with testing values
     robotState.initializeShootingAnglePredictor(
-      () -> new ChassisSpeeds(0, 0, 0), // stationary
+      () -> swerve.getRobotSpeeds(), // stationary
       () -> MetersPerSecond.of(10), // test shooter velocity: 10 m/s
       () -> new Transform3d(new Translation3d(0, 0, 0.5), new Rotation3d())); // shooter is 0.5m above robot center
 

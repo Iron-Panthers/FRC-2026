@@ -324,8 +324,10 @@ public class RobotState {
           robotChassisSpeeds.vyMetersPerSecond * timeOfFlight,
           0
         );
-        targetPosition3Transform3d = hubPosition3d.minus(robotMovement);
+        targetPosition3Transform3d = hubPosition3d.plus(robotMovement);
       }
+
+      Logger.recordOutput("ShootingAnglePredictor/TargetPosition", targetPosition3Transform3d);
 
       ShootingSolution finalShootingSolution = calculateStationaryShootingSolution(shooterPose3d, targetPosition3Transform3d, shooterVelocity);
 
