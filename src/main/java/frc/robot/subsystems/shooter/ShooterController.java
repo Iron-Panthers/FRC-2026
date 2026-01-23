@@ -37,13 +37,11 @@ public class ShooterController extends SubsystemBase {
     @Override
     public void periodic() {
         //TODO: update states for shooter controller
-        
-        shooterFlywheel.setVelocityTarget(ShooterFlywheel.Target.IDLE);
 
         switch(targetState) {
             case IDLE -> {
                 shooterFlywheel.setVelocityTarget(ShooterFlywheel.Target.IDLE);
-                shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
+                shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.BOTTOM);
                 shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.IDLE);
                 shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.IDLE);
             }
@@ -55,7 +53,7 @@ public class ShooterController extends SubsystemBase {
             }
             case CLIMB -> {
                 shooterFlywheel.setVelocityTarget(ShooterFlywheel.Target.CLIMB);
-                shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.ZERO);
+                shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.BOTTOM);
                 shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.CLIMB);
                 shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.CLIMB);
             }
