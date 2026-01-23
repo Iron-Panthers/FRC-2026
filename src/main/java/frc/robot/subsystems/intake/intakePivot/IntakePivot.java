@@ -1,7 +1,14 @@
 package frc.robot.subsystems.intake.intakePivot;
 
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotConstants;
+import frc.robot.utility.LoggableMechanism3d;
 
 public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget>{
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
@@ -64,7 +71,7 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
     return super.getPosition() * 360.0;
   }
 
-  @Override
+  // @Override
   public Pose3d getParentPosition() {
     if (loggableMechanism3dParent != null) {
       return loggableMechanism3dParent.getDisplayPose3d();
@@ -72,7 +79,7 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
     return new Pose3d();
   }
 
-  @Override
+  // @Override
   public void setParent(LoggableMechanism3d parent) {
     if (parent == null) {
       throw new IllegalArgumentException("Parent cannot be null");
@@ -83,7 +90,7 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
     this.loggableMechanism3dParent = parent;
   }
 
-  @Override
+  // @Override
   public Pose3d getDisplayPose3d() {
     return getParentPosition()
         .plus(IntakePivotConstants.BASE_TO_INTAKE_PIVOT_TRANSFORM)
