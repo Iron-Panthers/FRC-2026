@@ -1,11 +1,10 @@
 package frc.robot.subsystems.intake.intakeRollers;
 
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers;
-// import frc.robot.lib.generic_subsystems.rollers.GenericRollers.*;
 
-public class IntakeRollers extends GenericRollers<IntakeRollers.Target> {
+public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTarget> {
     
-    public enum Target implements GenericRollers.VoltageTarget{
+    public enum IntakeRollersTarget implements GenericRollers.VoltageTarget{
         ON(5.0),
         OFF(0.0),
         EJECT(-3.0),
@@ -13,7 +12,7 @@ public class IntakeRollers extends GenericRollers<IntakeRollers.Target> {
         
         private double volts;
         
-        private Target(double volts){
+        private IntakeRollersTarget(double volts){
             this.volts = volts;
         }
         public double getVolts(){
@@ -22,5 +21,6 @@ public class IntakeRollers extends GenericRollers<IntakeRollers.Target> {
     }
     public IntakeRollers(IntakeRollersIO intakeRollersIO) {
         super("Intake Rollers", intakeRollersIO);
+        setVoltageTarget(IntakeRollersTarget.OFF);
     }
 }

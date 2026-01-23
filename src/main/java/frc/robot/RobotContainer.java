@@ -21,12 +21,14 @@ import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
+import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
@@ -78,6 +80,7 @@ public class RobotContainer {
   private CANWatchdog canWatchdog;
   private IntakePivot intakePivot;
   private IntakeRollers intakeRollers;
+  private IntakeController intakeController;
 
   private SwerveDriveSimulation driveSimulation = null;
 
@@ -175,6 +178,7 @@ public class RobotContainer {
     if( intakeRollers == null) {
       intakeRollers = new IntakeRollers(new IntakeRollersIO() { });
     }
+    intakeController = new IntakeController(intakePivot, intakeRollers);
 
     nameCommands();
     configureAutos();
@@ -213,6 +217,7 @@ public class RobotContainer {
       intakePivot.setPositionTargetManual(.5);
     }));
     driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+    driverA.x().onTrue(new InstantCommand(() -> intakeRollers.setVoltageTarget(IntakeRollersTarget.EJECT)));
   }
   
   // public Command killYourlelf(){
