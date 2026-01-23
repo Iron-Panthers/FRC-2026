@@ -4,18 +4,33 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.PathPlannerApproachPoseCommand;
+import frc.robot.RobotState.TargetShootingState;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
+import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.rgb.RGBIOCANdle;
@@ -37,9 +52,12 @@ import frc.robot.subsystems.shooter.shooter_flywheel.*;
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.*;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.*;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -56,6 +74,8 @@ public class RobotContainer {
 
   private ElasticSetpoints elasticSetpoints = ElasticSetpoints.getInstance();
 
+  private ElasticUpdater matchTimerUpdater = new ElasticUpdater();
+
   // private SendableChooser<Command> autoChooser;
   private LoggedDashboardChooser<Command> autoChooser;
 
@@ -71,8 +91,6 @@ public class RobotContainer {
   private ShooterController shooterController;
   private ShooterAcceleratorBottom shooterAcceleratorBottom;
   private ShooterAcceleratorTop shooterAcceleratorTop;
-
-  private SwerveDriveSimulation driveSimulation = null;
 
   public RobotContainer() {
 
@@ -100,10 +118,7 @@ public class RobotContainer {
           
         }
         case SIM -> {
-          driveSimulation =
-              new SwerveDriveSimulation(
-                  DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
-          SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
+          SwerveDriveSimulation driveSimulation = RobotSimState.getInstance().getDriveSimulation();
           swerve =
               new Drive(
                   new GyroIOSim(driveSimulation.getGyroSimulation()),
@@ -119,6 +134,9 @@ public class RobotContainer {
               new Vision(
                   new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
                   new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
+
+          // SimulatedArena.getInstance().resetFieldForAuto();
+          SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
           shooterFlywheels =
             new ShooterFlywheel(new ShooterFlywheelIOSim());
           shooterHood =
@@ -127,8 +145,6 @@ public class RobotContainer {
             new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOSim());
           shooterAcceleratorTop = 
             new ShooterAcceleratorTop(new ShooterAcceleratorTopIOSim());
-          SimulatedArena.getInstance().resetFieldForAuto();
-        
         }
       }
     }
@@ -172,6 +188,12 @@ public class RobotContainer {
 
     shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop);
 
+    // init shooter with testing values
+    robotState.initializeShootingAnglePredictor(
+      () -> new ChassisSpeeds(0, 0, 0), // stationary
+      () -> MetersPerSecond.of(10), // test shooter velocity: 10 m/s
+      () -> new Transform3d(new Translation3d(0, 0, 0.5), new Rotation3d())); // shooter is 0.5m above robot center
+
     nameCommands();
     configureAutos();
     configureBindings();
@@ -204,10 +226,41 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
+    
+    driverA.b().onTrue(new InstantCommand(() -> {
+      RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
+    }));
 
+    driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+
+    // driverA.y().onTrue(new InstantCommand(() -> {
+      
+    //   // Calculate target shooting state
+    //   TargetShootingState targetState = robotState.calculateTargetShootingState();
+      
+    //   // Only shoot in simulation
+    //   if (Constants.getRobotType() == Constants.RobotType.SIM) {
+    //     // Get current robot pose and apply the calculated shooter angle and yaw
+    //     Pose3d robotPose3d = RobotSimState.getInstance().getRobotPose3d();
+        
+    //     // Create shooter endpoint position with calculated yaw and shooter angle
+    //     // Shooter is 0.5m above robot center
+    //     Pose3d shooterPose = new Pose3d(
+    //       robotPose3d.getTranslation().plus(new Translation3d(0, 0, 0.5)),
+    //       new Rotation3d(
+    //         0, // roll
+    //         targetState.shooterAngle().in(Units.Radians), // pitch (shooter angle)
+    //         targetState.drivebaseYaw().getRadians() // yaw
+    //       )
+    //     );
+        
+    //     // Shoot the fuel using the calculated parameters - velocity must match calculation!
+    //     RobotSimState.getInstance().shootFuel(shooterPose, MetersPerSecond.of(10));
+    //   }
+    //   })
+    // );
     driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
-    
-    
   }
 
   private void configureAutos() {
@@ -291,10 +344,8 @@ public class RobotContainer {
 
     SimulatedArena.getInstance().simulationPeriodic();
     Logger.recordOutput(
-        "FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
+        "FieldSimulation/RobotPosition", RobotSimState.getInstance().getDriveSimulation().getSimulatedDriveTrainPose());
     Logger.recordOutput(
-        "FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
-    Logger.recordOutput(
-        "FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+        "FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
   }
 }

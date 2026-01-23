@@ -20,6 +20,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -33,6 +34,8 @@ import java.util.List;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltHub;
 
 public class DriveConstants {
   // measures in meters (per sec) and radians (per sec)
@@ -53,9 +56,9 @@ public class DriveConstants {
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
-            3.75,
+            4,
             10,
-            6);
+            10);
         case ALPHA -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
             Units.inchesToMeters(18.75),
@@ -282,7 +285,7 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         case SIM -> new HeadingControllerConstants(20, 0, 8, 20, 0.01);
-        case VISION -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
+        case VISION -> new HeadingControllerConstants(6, 0, 5, 20, 0.01);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
@@ -292,7 +295,7 @@ public class DriveConstants {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
-            4, 0, 2, 2, 2); /*FIXME: tune these constants*/
+            15, 0, 0, 4, 4); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
             7, 0, 0, 1, 1); /* FIXME: tune these constants */
         case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 2, 2);
@@ -337,27 +340,8 @@ public class DriveConstants {
     Pair.of(FlippingUtil.flipFieldPosition(new Translation2d(4.039,1.337)), FlippingUtil.flipFieldPosition(new Translation2d(5.216,0)))
   );
 
-  public static final Translation2d BLUE_REEF_ORIGIN = new Translation2d(4.5, 4.025);
-
-  public static final Translation2d REEF_TRANSLATION2D =
-      DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-          ? new Translation2d(4.5, 4)
-          : new Translation2d(13, 4);
-
-  public static final Translation2d LEFT_CORNER =
-      DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-          ? new Translation2d(0, 8)
-          : new Translation2d(17.5, 0);
-
-  public static final Translation2d RIGHT_CORNER =
-      DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-          ? new Translation2d(0, 0)
-          : new Translation2d(17.5, 8);
-
-  public static final Translation2d CLIMB_ZONE_CENTER =
-      DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-          ? new Translation2d(8.765, 6)
-          : new Translation2d(8.765, 2);
+    public static final Translation3d BLUE_HUB_ORIGIN = new Translation3d(4.5974, 4.034536, 1.5748);
+    public static final Translation3d RED_HUB_ORIGIN = new Translation3d(11.938, 4.034536, 1.5748);
 
   public record DrivebaseConfig(
       double wheelRadius,
