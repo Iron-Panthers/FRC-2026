@@ -1,8 +1,8 @@
 package frc.robot.lib.generic_subsystems.rollers;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -10,11 +10,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public abstract class GenericRollersIOSim implements GenericRollersIO {
   protected final TalonFX talon;
 
-  private final VoltageOut voltageOutput = new VoltageOut(0).withUpdateFreqHz(0);
-
   private final NeutralOut neutralOutput = new NeutralOut();
-
   private final double mechanismReduction;
+  private final MotionMagicVelocityVoltage velocityControl = new MotionMagicVelocityVoltage(0).withUpdateFreqHz(0);
 
   public GenericRollersIOSim(
       int id, int currentLimitAmps, boolean inverted, boolean brake, double reduction) {
@@ -37,8 +35,8 @@ public abstract class GenericRollersIOSim implements GenericRollersIO {
   public abstract void updateInputs(GenericRollersIOInputs inputs);
 
   @Override
-  public void runVolts(double volts) {
-    talon.setControl(voltageOutput.withOutput(volts));
+  public void runVelocity(double velocity) {
+    talon.setControl(velocityControl.withVelocity(velocity));
   }
 
   @Override
