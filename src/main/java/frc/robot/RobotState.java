@@ -41,6 +41,9 @@ import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
+
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
@@ -280,176 +283,95 @@ public class RobotState {
     private Supplier<LinearVelocity> shooterVelocitySupplier;
     private Supplier<Transform3d> shooterPositionSupplier;
 
+    // Air resistance coefficient
+    final double AIR_DRAG_COEFFICIENT = 0.03;
+      final double GRAVITY = 9.81; // gravity in m/s^2
+
     public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier){
       this.chassisSpeedsSupplier = chassisSpeedsSupplier;
       this.shooterPositionSupplier = shooterPositionSupplier;
       this.shooterVelocitySupplier = shooterVelocitySupplier;
     }
 
-    /**
-     * Simulate trajectory with air resistance to find where projectile lands
-     * Returns [horizontal distance, final height, vertical velocity at end]
-     */
-    private double[] simulateTrajectory(double v0, double angleRadians, double initialHeight, double dragCoefficient) {
-      final double g = 9.81;
-      final double dt = 0.01; // time step in seconds
-      final double maxTime = 10.0; // max simulation time
-      
-      double vx = v0 * Math.cos(angleRadians);
-      double vy = v0 * Math.sin(angleRadians);
-      double x = 0;
-      double y = initialHeight;
-      double t = 0;
-      
-      while (t < maxTime && y >= 0) {
-        // Calculate air resistance force (proportional to velocity squared)
-        double v = Math.sqrt(vx * vx + vy * vy);
-        double dragX = -dragCoefficient * v * vx;
-        double dragY = -dragCoefficient * v * vy;
-        
-        // Update velocities
-        vx += dragX * dt;
-        vy += (dragY - g) * dt;
-        
-        // Update positions
-        x += vx * dt;
-        y += vy * dt;
-        t += dt;
-        
-        if (y < 0) break;
+    public TargetShootingState calculateTargetShootingState(){
+      // Figure out shooter pose3d
+      // Figure out target position
+      // Start loop 5
+      //  Figure out guess for angle and time of flight based on target position
+      //  Update target position based on tof
+
+      // Get target hub position
+      final Translation3d hubPosition3d = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == Alliance.Blue ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
+
+      // Get shooter position
+      Translation3d shooterPose3d = new Pose3d(getEstimatedPose()).transformBy(shooterPositionSupplier.get()).getTranslation();
+
+      Translation3d targetPosition3Transform3d = hubPosition3d;
+
+      double shooterVelocity = shooterVelocitySupplier.get().in(edu.wpi.first.units.Units.MetersPerSecond);
+
+      ChassisSpeeds robotChassisSpeeds = chassisSpeedsSupplier.get();
+
+      // loop 5 times
+      for(int i = 0; i < 5; i++) {
+        // calculate the angle and time of flight to get to a target position
+        ShootingSolution shootingSolution = calculateStationaryShootingSolution(shooterPose3d, targetPosition3Transform3d, shooterVelocity);
+
+        // adjust the target position based on where we are going to be by the time of flight
+        double timeOfFlight = shootingSolution.timeOfFlight;
+        Translation3d robotMovement = new Translation3d(
+          robotChassisSpeeds.vxMetersPerSecond * timeOfFlight,
+          robotChassisSpeeds.vyMetersPerSecond * timeOfFlight,
+          0
+        );
+        targetPosition3Transform3d = hubPosition3d.plus(robotMovement);
       }
-      
-      return new double[]{x, y, vy};
+
+      Logger.recordOutput("ShootingAnglePredictor/TargetPosition", targetPosition3Transform3d);
+
+      ShootingSolution finalShootingSolution = calculateStationaryShootingSolution(shooterPose3d, targetPosition3Transform3d, shooterVelocity);
+
+      return new TargetShootingState(finalShootingSolution.yawAngle, finalShootingSolution.pitchAngle);
     }
 
-    public TargetShootingState calculateTargetShootingState(){
-      // Target position at origin with 10m height
-      final Translation3d targetPosition3d = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == Alliance.Blue ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
-      
-      // Get current robot pose and shooter position
-      Pose2d robotPose = getEstimatedPose();
-      Transform3d shooterTransform = shooterPositionSupplier.get();
-      
-      // Calculate shooter 3D position in field coordinates
-      Pose3d robotPose3d = new Pose3d(robotPose);
-      Pose3d shooterPose3d = robotPose3d.transformBy(shooterTransform);
-      Translation2d shooterPosition2d = shooterPose3d.getTranslation().toTranslation2d();
-      double shooterHeight = shooterPose3d.getZ();
-      
-      // Calculate horizontal distance to target
-      double horizontalDistance = shooterPosition2d.getDistance(targetPosition3d.toTranslation2d());
-      
-      // Calculate vertical distance (height difference)
-      double verticalDistance = targetPosition3d.getZ() - shooterHeight;
-      
-      // Get shooter velocity (exit velocity of projectile)
-      double shooterVelocity = shooterVelocitySupplier.get().in(edu.wpi.first.units.Units.MetersPerSecond);
-      
-      // Calculate drivebase yaw - angle to face the target
-      Translation2d toTarget = targetPosition3d.toTranslation2d().minus(shooterPosition2d);
-      Rotation2d drivebaseYaw = new Rotation2d(toTarget.getX(), toTarget.getY());
-      
-      // Air resistance coefficient
-      final double dragCoefficient = 0.03;
-      
+    public ShootingSolution calculateStationaryShootingSolution(Translation3d currentPosition, Translation3d targetPosition, double shooterVelocity){
+      // figure out the yaw
+      Rotation2d yawAngle = new Rotation2d(Math.atan2(targetPosition.getY() - currentPosition.getY(), targetPosition.getX() - currentPosition.getX()));
+
+      // figure out the launch angle
+      double horizontalDistance = currentPosition.getDistance(targetPosition);
+      double verticalDistance = targetPosition.getZ() - currentPosition.getZ();
+
       // Calculate shooter angle using projectile motion equations
       // We need to solve: tan(theta) = (v^2 +/- sqrt(v^4 - g(gx^2 + 2yv^2))) / (gx)
       // where v = velocity, g = gravity, x = horizontal distance, y = vertical distance
-      final double g = 9.81; // gravity in m/s^2
       double v2 = shooterVelocity * shooterVelocity;
       double v4 = v2 * v2;
       double x2 = horizontalDistance * horizontalDistance;
       
       // Calculate discriminant
-      double discriminant = v4 - g * (g * x2 + 2 * verticalDistance * v2);
-      
+      double discriminant = v4 - GRAVITY * (GRAVITY * x2 + 2 * verticalDistance * v2);
+
       // Check if solution exists
       if (discriminant < 0 || horizontalDistance == 0) {
-        // No solution - target out of range or at same position
-        // Return a default high angle
-        return new TargetShootingState(
-          drivebaseYaw, 
-          edu.wpi.first.units.Units.Degrees.of(45)
-        );
+        // if no solution we just shoot at 45 and chill
+        return new ShootingSolution(yawAngle, Degrees.of(45), 0);
       }
-      
-      // Calculate the two possible angles (high and low trajectory) as initial guess
-      // Always use HIGH trajectory to ensure ball is traveling downward at target
-      double tanThetaLow = (v2 - Math.sqrt(discriminant)) / (g * horizontalDistance);
-      double tanThetaHigh = (v2 + Math.sqrt(discriminant)) / (g * horizontalDistance);
-      double angleLow = Math.atan(tanThetaLow);
-      double angleHigh = Math.atan(tanThetaHigh);
-      
-      // Always use high trajectory
-      double angleRadians = angleHigh;
-      
-      // Use iterative approach to adjust angle for air resistance
-      int maxIterations = 20;
-      double tolerance = 0.10; // 5cm tolerance
-      
-      for (int i = 0; i < maxIterations; i++) {
-        double[] result = simulateTrajectory(shooterVelocity, angleRadians, shooterHeight, dragCoefficient);
-        double landingX = result[0];
-        double landingY = result[1];
-        double landingVy = result[2];
-        
-        double error = horizontalDistance - landingX;
-        double heightError = targetPosition3d.getZ() - landingY;
-        
-        if (i % 10 == 0 || i == maxIterations - 1) {
-          System.out.println("Iteration " + i + ": angle=" + String.format("%.2f", Math.toDegrees(angleRadians)) + 
-                           "°, landingX=" + String.format("%.2f", landingX) + "m, error=" + String.format("%.2f", error) + "m");
-        }
-        
-        // Check if we're close enough
-        if (Math.abs(error) < tolerance && Math.abs(heightError) < tolerance && landingVy < 0) {
-          System.out.println("Converged in " + i + " iterations");
-          break;
-        }
-        
-        // Adjust angle based on error using adaptive step size
-        double adjustmentFactor = 0.005;
-        double adjustment = -error * adjustmentFactor;
-        angleRadians += adjustment;
-        
-        // Clamp angle to reasonable range (10-89 degrees) - allow very high angles for close shots
-        // angleRadians = Math.max(Math.toRadians(10), Math.min(Math.toRadians(89), angleRadians));
-      }
-      
-      double angleDegrees = Math.toDegrees(angleRadians);
-      
-      // Final simulation to get trajectory details
-      double[] finalResult = simulateTrajectory(shooterVelocity, angleRadians, shooterHeight, dragCoefficient);
-      double vx = shooterVelocity * Math.cos(angleRadians);
-      double vy0 = shooterVelocity * Math.sin(angleRadians);
-      double timeToTarget = horizontalDistance / vx;
-      double verticalVelocityAtTarget = finalResult[2];
-      
-      // Calculate max height (approximate since we have drag)
-      double timeToApex = vy0 / g;
-      double maxHeight = shooterHeight + vy0 * timeToApex - 0.5 * g * timeToApex * timeToApex;
-      
-      // System.out.println("Initial Velocity X: " + vx + " m/s");
-      // System.out.println("Initial Velocity Y: " + vy0 + " m/s");
-      // System.out.println("Approx Time to Target: " + timeToTarget + " s");
-      // System.out.println("Approx Max Height: " + maxHeight + " m");
-      // System.out.println("Final Landing Distance: " + String.format("%.2f", finalResult[0]) + " m");
-      // System.out.println("Final Landing Height: " + String.format("%.2f", finalResult[1]) + " m");
-      // System.out.println("Vertical Velocity at Target: " + verticalVelocityAtTarget + " m/s");
-      
-      // Verify that the ball will be traveling downward when it reaches the target
-      if (verticalVelocityAtTarget >= 0) {
-        System.out.println("WARNING: Ball not traveling downward at target!");
-      } else {
-        System.out.println("OK: Ball is traveling downward at target");
-      }
-      
-      // Convert to degrees and create the Angle unit
-      Angle shooterAngle = edu.wpi.first.units.Units.Radians.of(angleRadians);
 
-      return new TargetShootingState(drivebaseYaw, shooterAngle);
+      double tanTheta = (v2 + Math.sqrt(discriminant)) / (GRAVITY * horizontalDistance);
+
+      double angle = Math.atan(tanTheta);
+
+      Angle pitchAngle = Radians.of(angle);
+
+      // figure out time of flight
+      double vx = shooterVelocity * Math.cos(angle);
+      double timeOfFlight = horizontalDistance / vx;
+
+      return new ShootingSolution(yawAngle, pitchAngle, timeOfFlight);
     }
-  }
 
+    public record ShootingSolution(Rotation2d yawAngle, Angle pitchAngle, double timeOfFlight){}
+  }
   public record TargetShootingState(Rotation2d drivebaseYaw, Angle shooterAngle) { }
 }
