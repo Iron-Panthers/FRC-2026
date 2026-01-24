@@ -2,6 +2,7 @@ package frc.robot.lib.generic_subsystems.rollers;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -70,5 +71,41 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   @Override
   public void stop() {
     talon.setControl(neutralOutput);
+  }
+
+  /**
+   * Sets all of the PID and motion magic gains.
+   *
+   * @param kP Proportional gain
+   * @param kI Integral gain
+   * @param kD Derivative gain
+   * @param kS Static gain
+   * @param kV Velocity gain
+   * @param kA Acceleration gain
+   * @param kG Gravity gain
+   * @param motionMagicAcceleration Motion magic acceleration (rotations per second squared)
+   * @param motionMagicCruiseVelocity Motion magic cruise velocity (rotations per second)
+   * @param motionMagicJerk Motion magic jerk (rotations per second cubed)
+   * @param gravityTypeValue Gravity compensation type
+   */
+  @Override
+  public void setSlot0(
+      double kP,
+      double kI,
+      double kD,
+      double kS,
+      double kV,
+      double kA,
+      double kG) {
+    Slot0Configs gainsConfig = new Slot0Configs();
+    gainsConfig.kP = kP;
+    gainsConfig.kI = kI;
+    gainsConfig.kD = kD;
+    gainsConfig.kS = kS;
+    gainsConfig.kV = kV;
+    gainsConfig.kA = kA;
+    gainsConfig.kG = kG;
+
+    talon.getConfigurator().apply(gainsConfig);
   }
 }
