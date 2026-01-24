@@ -52,8 +52,8 @@ public class DriveConstants {
             6);
         case VISION -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
-            Units.inchesToMeters(22.5),
-            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(19.75),
+            Units.inchesToMeters(23.75),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             4,
@@ -61,8 +61,8 @@ public class DriveConstants {
             10);
         case ALPHA -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
-            Units.inchesToMeters(18.75),
-            Units.inchesToMeters(24.75),
+            Units.inchesToMeters(19.75),
+            Units.inchesToMeters(23.75),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             4.5,
@@ -132,30 +132,30 @@ public class DriveConstants {
               CAN.at(5, "FL Drive"),
               CAN.at(4, "FL Steer"),
               6,
-              new Rotation2d(-1.877592 - Math.PI),
+              new Rotation2d(-1.876059),
+              InvertedValue.CounterClockwise_Positive, // steer
+              InvertedValue.Clockwise_Positive), // drive
+          new ModuleConfig(
+              CAN.at(11, "FR Drive"),
+              CAN.at(10, "FR Steer"),
+              12,
+              new Rotation2d(0.619728),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(2, "FR Drive"),
-              CAN.at(1, "FR Steer"),
+              CAN.at(2, "BL Drive"),
+              CAN.at(1, "BL Steer"),
               3,
-              new Rotation2d(-2.32498),
-              InvertedValue.CounterClockwise_Positive,
-              InvertedValue.CounterClockwise_Positive),
-          new ModuleConfig(
-              CAN.at(8, "BL Drive"),
-              CAN.at(7, "BL Steer"),
-              9,
-              new Rotation2d(-2.212),
+              new Rotation2d(-2.323981),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(11, "BR Drive"),
-              CAN.at(10, "BR Steer"),
-              12,
-              new Rotation2d(2.15377 - Math.PI),
+              CAN.at(8, "BR Drive"),
+              CAN.at(7, "BR Steer"),
+              9,
+              new Rotation2d(-0.648874),
               InvertedValue.CounterClockwise_Positive,
-              InvertedValue.Clockwise_Positive)
+              InvertedValue.CounterClockwise_Positive)
         };
         case ALPHA -> new ModuleConfig[] {
           new ModuleConfig(
