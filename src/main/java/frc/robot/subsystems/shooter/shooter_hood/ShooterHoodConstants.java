@@ -56,7 +56,7 @@ public class ShooterHoodConstants {
 
     public static final SensorDirectionValue CANCODER_DIRECTION = SensorDirectionValue.CounterClockwise_Positive;
 
-    public static final double POSITION_TARGET_EPSILON = 0.01;
+    public static final double POSITION_TARGET_EPSILON = 0.05;
 
     /** Distance from center of hood rotation to hood end */
     public static final double SHOOTER_HOOD_LENGTH = 10; //in inches
@@ -78,7 +78,7 @@ public class ShooterHoodConstants {
       switch (Constants.getRobotType()){
         default -> new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(0), Units.inchesToMeters(0d), Units.inchesToMeters(0d)),
+                Units.inchesToMeters(2.469), Units.inchesToMeters(12), Units.inchesToMeters(20.5)),
                 new Rotation3d(0, 0,0));
     };
 
@@ -92,7 +92,7 @@ public class ShooterHoodConstants {
     //TODO Add in phhysical constants
     public static final ShooterHoodPhysicalConstants PHYSICAL_CONSTANTS = 
         switch(Constants.getRobotType()){
-            case SIM -> new ShooterHoodPhysicalConstants(0.02, 0.706747, -1000.0, 1000, true);
+            case SIM -> new ShooterHoodPhysicalConstants(0.01, Units.inchesToMeters(SHOOTER_HOOD_LENGTH), Units.degreesToRadians(0), Units.degreesToRadians(360), true);
             case COMP -> new ShooterHoodPhysicalConstants(0.1, 0, 0, 0, false);
             default -> new ShooterHoodPhysicalConstants(0.1, 0, 0, 0, false);
         };

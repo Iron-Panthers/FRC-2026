@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.utility.LoggableMechanism3d;
+
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTarget>
@@ -84,13 +86,14 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     }
 
     //TODO make sure logic is correct for getting Display Pose3D
+    @AutoLogOutput(key = "Shooter/ShooterHood/DisplayPose3d")
     @Override
     public Pose3d getDisplayPose3d() {
         return getParentPosition()
                 .plus(ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM)
                 .plus(
                     new Transform3d(
-                        Translation3d.kZero, new Rotation3d(0, -Math.toRadians(getPosition() * 360 + 90), 0)));
+                        Translation3d.kZero, new Rotation3d( -Math.toRadians(getPosition() * 360),0, 0)));
   }
 
 }//close class
