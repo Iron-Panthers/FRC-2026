@@ -33,7 +33,7 @@ public class IntakePivotConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case COMP -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0.4);
-        case SIM -> new PIDGains(40, 0, 0, 0, 3.6144, 0.1807, 0.53);
+        case SIM -> new PIDGains(100, 0, 0, 0, 3.6144, 0.1807, 0.53);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
@@ -73,13 +73,13 @@ public class IntakePivotConstants {
       switch (Constants.getRobotType()) {
         default -> new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(0), Units.inchesToMeters(0d), Units.inchesToMeters(0d)),
+                Units.inchesToMeters(-10.940786), Units.inchesToMeters(-0.1875), Units.inchesToMeters(7.191913)),
             new Rotation3d(0, 0, 0));
       };
 
   public static final IntakePivotPhysicalConstants PHYSICAL_CONSTANTS =
       switch (Constants.getRobotType()) {
-        case SIM -> new IntakePivotPhysicalConstants(0.02, 0.706747, -1000.0, 1000, true);
+        case SIM -> new IntakePivotPhysicalConstants(0.01, 0.706747, -1000.0, 1000, true);
         case COMP -> new IntakePivotPhysicalConstants(0.1, 0, 0, 0, false);
         default -> new IntakePivotPhysicalConstants(0.1, 0, 0, 0, false);
       };

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake.intakePivot;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;
@@ -10,14 +11,10 @@ import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotConstants;
 import frc.robot.utility.LoggableMechanism3d;
 
-public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget>{
+public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget> implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(-18), // the numbers are from 2025 sprint bot
-    
-    STOW(94),
-    L1(94),
-    PASS(94),
-    CLIMB(0);
+    INTAKE(0), // the numbers are from 2025 sprint bot
+    STOW(100);
 
     private double position;
     private static final double EPSILON = IntakePivotConstants.POSITION_TARGET_EPSILON;
@@ -52,7 +49,7 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
         getPositionTarget().getPosition());
   }
 
-  // @Override
+  @Override
   public Pose3d getParentPosition() {
     if (loggableMechanism3dParent != null) {
       return loggableMechanism3dParent.getDisplayPose3d();
@@ -60,7 +57,7 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
     return new Pose3d();
   }
 
-  // @Override
+  @Override
   public void setParent(LoggableMechanism3d parent) {
     if (parent == null) {
       throw new IllegalArgumentException("Parent cannot be null");
@@ -71,13 +68,14 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
     this.loggableMechanism3dParent = parent;
   }
 
-  // @Override
+  @AutoLogOutput(key = "Intake/IntakePivot/DisplayPose3d")
+  @Override
   public Pose3d getDisplayPose3d() {
     return getParentPosition()
         .plus(IntakePivotConstants.BASE_TO_INTAKE_PIVOT_TRANSFORM)
         .plus(
             new Transform3d(
-                Translation3d.kZero, new Rotation3d(0, -Math.toRadians(getPosition() + 90), 0)));
+                Translation3d.kZero, new Rotation3d(0, Math.toRadians(getPosition()*360), 0)));
   }
 }
 

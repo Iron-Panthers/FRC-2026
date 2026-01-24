@@ -180,6 +180,15 @@ public class RobotContainer {
       rgb = new RGB(new RGBIO() {});
     }
 
+    // INTAKE
+    if( intakePivot == null) {
+      intakePivot = new IntakePivot( new IntakePivotIO() {});
+    }
+    if( intakeRollers == null) {
+      intakeRollers = new IntakeRollers( new IntakeRollersIO() {});
+    }
+    intakeController = new IntakeController(intakePivot, intakeRollers);
+
     // init shooter with testing values
     robotState.initializeShootingAnglePredictor(
       () -> swerve.getRobotSpeeds(), // stationary
