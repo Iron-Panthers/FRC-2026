@@ -207,34 +207,34 @@ public class RobotContainer {
       RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
     }));
 
-    // driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+    driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
 
-    driverA.y().onTrue(new InstantCommand(() -> {
+    // driverA.y().onTrue(new InstantCommand(() -> {
       
-      // Calculate target shooting state
-      TargetShootingState targetState = robotState.calculateTargetShootingState();
+    //   // Calculate target shooting state
+    //   TargetShootingState targetState = robotState.calculateTargetShootingState();
       
-      // Only shoot in simulation
-      if (Constants.getRobotType() == Constants.RobotType.SIM) {
-        // Get current robot pose and apply the calculated shooter angle and yaw
-        Pose3d robotPose3d = RobotSimState.getInstance().getRobotPose3d();
+    //   // Only shoot in simulation
+    //   if (Constants.getRobotType() == Constants.RobotType.SIM) {
+    //     // Get current robot pose and apply the calculated shooter angle and yaw
+    //     Pose3d robotPose3d = RobotSimState.getInstance().getRobotPose3d();
         
-        // Create shooter endpoint position with calculated yaw and shooter angle
-        // Shooter is 0.5m above robot center
-        Pose3d shooterPose = new Pose3d(
-          robotPose3d.getTranslation().plus(new Translation3d(0, 0, 0.5)),
-          new Rotation3d(
-            0, // roll
-            targetState.shooterAngle().in(Units.Radians), // pitch (shooter angle)
-            targetState.drivebaseYaw().getRadians() // yaw
-          )
-        );
+    //     // Create shooter endpoint position with calculated yaw and shooter angle
+    //     // Shooter is 0.5m above robot center
+    //     Pose3d shooterPose = new Pose3d(
+    //       robotPose3d.getTranslation().plus(new Translation3d(0, 0, 0.5)),
+    //       new Rotation3d(
+    //         0, // roll
+    //         targetState.shooterAngle().in(Units.Radians), // pitch (shooter angle)
+    //         targetState.drivebaseYaw().getRadians() // yaw
+    //       )
+    //     );
         
-        // Shoot the fuel using the calculated parameters - velocity must match calculation!
-        RobotSimState.getInstance().shootFuel(shooterPose, MetersPerSecond.of(10));
-      }
-      })
-    );
+    //     // Shoot the fuel using the calculated parameters - velocity must match calculation!
+    //     RobotSimState.getInstance().shootFuel(shooterPose, MetersPerSecond.of(10));
+    //   }
+    //   })
+    // );
   }
 
   private void configureAutos() {
