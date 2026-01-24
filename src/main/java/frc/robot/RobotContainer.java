@@ -179,6 +179,12 @@ public class RobotContainer {
       rgb = new RGB(new RGBIO() {});
     }
 
+    // init shooter with testing values
+    robotState.initializeShootingAnglePredictor(
+      () -> swerve.getRobotSpeeds(), // stationary
+      () -> MetersPerSecond.of(10), // test shooter velocity: 10 m/s
+      () -> new Transform3d(new Translation3d(0, 0, 0.5), new Rotation3d())); // shooter is 0.5m above robot center
+
     nameCommands();
     configureAutos();
     configureBindings();
@@ -296,6 +302,8 @@ public class RobotContainer {
   /** Ran every 20 milliseconds */
   public void updateSimulation() {
     if (Constants.getRobotMode() != Constants.Mode.SIM) return;
+
+    Logger.recordOutput("Testing/BlankPose3d", new Pose3d());
 
     SimulatedArena.getInstance().simulationPeriodic();
     Logger.recordOutput(
