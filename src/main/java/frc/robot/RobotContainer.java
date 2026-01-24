@@ -31,6 +31,7 @@ import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
 import frc.robot.subsystems.intake.IntakeController;
+import frc.robot.subsystems.intake.IntakeController.IntakeControllerState;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
@@ -222,6 +223,8 @@ public class RobotContainer {
     // driverA.b().whileTrue(new RunCommand(() -> swerve.setTargetHeading(RobotState.getInstance().getVelocity().getAngle()), swerve));
 
     driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+
+    driverA.b().onTrue(new InstantCommand(() -> {intakeController.setTargetState(IntakeControllerState.INTAKE);}));
   }
 
   private void configureAutos() {
