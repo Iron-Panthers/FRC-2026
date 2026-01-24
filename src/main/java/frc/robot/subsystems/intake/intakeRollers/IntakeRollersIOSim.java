@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIOSim;
 import static frc.robot.subsystems.intake.intakeRollers.IntakeRollersConstants.*;
 
-public class IntakeRollersIOSim extends GenericRollersIOSim {
+public class IntakeRollersIOSim extends GenericRollersIOSim implements IntakeRollersIO {
     private final FlywheelSim intakeRollersSim;
 
   public IntakeRollersIOSim() {
@@ -33,7 +33,6 @@ public class IntakeRollersIOSim extends GenericRollersIOSim {
 
     // Divides our angular velocity by our reduction
     double velocityRPS = intakeRollersSim.getAngularVelocityRadPerSec() / REDUCTION;
-    // FIXME: Doesn't work when reduction is 1
 
     talon.getSimState().setRawRotorPosition(rotations);
     talon.getSimState().setRotorVelocity(velocityRPS);

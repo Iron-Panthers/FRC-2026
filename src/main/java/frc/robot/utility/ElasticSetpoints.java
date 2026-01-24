@@ -54,7 +54,7 @@ public class ElasticSetpoints extends SubsystemBase {
     }
     return setpoints.get(name);
   }
-
+ 
   public void periodic() {
     // This method will be called once per scheduler run
     for (String key : setpoints.keySet()) {
