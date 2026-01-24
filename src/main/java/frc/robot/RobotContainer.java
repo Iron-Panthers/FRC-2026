@@ -5,6 +5,14 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.PathPlannerApproachPoseCommand;
+import frc.robot.RobotState.TargetShootingState;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
@@ -47,9 +56,12 @@ import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.BlankSimulatedArena;
 import frc.robot.utility.ElasticSetpoints;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -81,8 +93,6 @@ public class RobotContainer {
   private IntakePivot intakePivot;
   private IntakeRollers intakeRollers;
   private IntakeController intakeController;
-
-  private SwerveDriveSimulation driveSimulation = null;
 
   public RobotContainer() {
 
@@ -120,11 +130,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
         }
         case SIM -> {
-          SimulatedArena.overrideInstance(new BlankSimulatedArena());
-          driveSimulation =
-              new SwerveDriveSimulation(
-                  DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
-          SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
+          SwerveDriveSimulation driveSimulation = RobotSimState.getInstance().getDriveSimulation();
           swerve =
               new Drive(
                   new GyroIOSim(driveSimulation.getGyroSimulation()),
@@ -136,16 +142,18 @@ public class RobotContainer {
                       DriveConstants.MODULE_CONFIGS[2], driveSimulation.getModules()[2]),
                   new ModuleIOTalonFXSim(
                       DriveConstants.MODULE_CONFIGS[3], driveSimulation.getModules()[3]));
-          // vision =
-          //     new Vision(
-          //         new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
-          //         new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
+          vision =
+              new Vision(
+                  new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
+                  new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
 
           // INTAKE
           intakePivot = new IntakePivot(new IntakePivotIOSim());
           intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
 
           SimulatedArena.getInstance().resetFieldForAuto();
+          // SimulatedArena.getInstance().resetFieldForAuto();
+          SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
         }
       }
     }
@@ -170,15 +178,6 @@ public class RobotContainer {
     if (rgb == null) {
       rgb = new RGB(new RGBIO() {});
     }
-
-    // INTAKE
-    if (intakePivot == null) {
-      intakePivot = new IntakePivot(new IntakePivotIO() { });
-    }
-    if( intakeRollers == null) {
-      intakeRollers = new IntakeRollers(new IntakeRollersIO() { });
-    }
-    intakeController = new IntakeController(intakePivot, intakeRollers);
 
     nameCommands();
     configureAutos();
@@ -212,17 +211,12 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    
-    driverA.b().onTrue(new InstantCommand(() -> {
-      intakePivot.setPositionTargetManual(.5);
-    }));
+    // driverA.b().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(10.406, 1.916, new Rotation2d(0)), true));
+    // driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), false));
+    // driverA.b().whileTrue(new RunCommand(() -> swerve.setTargetHeading(RobotState.getInstance().getVelocity().getAngle()), swerve));
+
     driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
-    driverA.x().onTrue(new InstantCommand(() -> intakeRollers.setVoltageTarget(IntakeRollersTarget.EJECT)));
   }
-  
-  // public Command killYourlelf(){
-  //   return RobotState.getInstance().getPathPlannerApproachPoseCommand(new Pose2d(10.406, 1.916, new Rotation2d(0)), true);
-  // }
 
   private void configureAutos() {
     RobotConfig robotConfig;
@@ -305,10 +299,8 @@ public class RobotContainer {
 
     SimulatedArena.getInstance().simulationPeriodic();
     Logger.recordOutput(
-        "FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
+        "FieldSimulation/RobotPosition", RobotSimState.getInstance().getDriveSimulation().getSimulatedDriveTrainPose());
     Logger.recordOutput(
-        "FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
-    Logger.recordOutput(
-        "FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+        "FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
   }
 }

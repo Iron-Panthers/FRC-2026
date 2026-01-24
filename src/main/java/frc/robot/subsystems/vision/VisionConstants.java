@@ -126,7 +126,7 @@ public class VisionConstants {
         });
     APRIL_TAG_FIELD_LAYOUT =
         new AprilTagFieldLayout(
-            aprilTags, defaultFieldLayout.getFieldWidth(), defaultFieldLayout.getFieldWidth());
+            aprilTags, defaultFieldLayout.getFieldLength(), defaultFieldLayout.getFieldWidth());
   }
 
   public static record TagCountDeviation(
