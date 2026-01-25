@@ -151,7 +151,6 @@ public class RobotContainer {
           intakePivot = new IntakePivot(new IntakePivotIOSim());
           intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
 
-          SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
           shooterFlywheels =
             new ShooterFlywheel(new ShooterFlywheelIOSim());
           shooterHood =
@@ -160,6 +159,8 @@ public class RobotContainer {
             new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOSim());
           shooterAcceleratorTop = 
             new ShooterAcceleratorTop(new ShooterAcceleratorTopIOSim());
+
+          SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
         }
       }
     }

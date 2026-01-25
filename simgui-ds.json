@@ -8,10 +8,12 @@
     {
       "axisConfig": [
         {
-          "incKey": 68
+          "decKey": 68,
+          "incKey": 65
         },
         {
-          "decKey": 87
+          "decKey": 83,
+          "incKey": 87
         },
         {
           "decKey": 69,
@@ -27,7 +29,7 @@
         88,
         67,
         86,
-        83,
+        -1,
         -1,
         -1,
         -1,
