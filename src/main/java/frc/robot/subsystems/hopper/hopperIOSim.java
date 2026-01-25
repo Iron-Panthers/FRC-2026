@@ -1,14 +1,14 @@
 package frc.robot.subsystems.hopper;
-import static frc.robot.subsystems.hopper.hopperConstants.*;
+import static frc.robot.subsystems.hopper.HopperConstants.*;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.lib.generic_subsystems.rollers.*;
-public class hopperIOSim extends GenericRollersIOSim {
+public class HopperIOSim extends GenericRollersIOSim {
     private final FlywheelSim intakeRollersSim;
 
-  public hopperIOSim() {
+  public HopperIOSim() {
     super(ID, CURRENT_LIMIT_AMPS, INVERTED, BRAKE, REDUCTION);
     intakeRollersSim =
         new FlywheelSim(

@@ -1,10 +1,20 @@
 package frc.robot.subsystems.hopper;
-import static frc.robot.subsystems.hopper.hopperConstants.*;
+import static frc.robot.subsystems.hopper.HopperConstants.*;
 
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIOTalonFX;
 
-public class hopperIOTalonFX extends GenericRollersIOTalonFX{
-    public hopperIOTalonFX() {
-        super(ID, CURRENT_LIMIT_AMPS, INVERTED, BRAKE, REDUCTION);
-      }
+public class HopperIOTalonFX extends GenericRollersIOTalonFX{
+    public HopperIOTalonFX() {
+      super(HOPPER_CONFIG.motorID(), CURRENT_LIMIT_AMPS, HOPPER_CONFIG.inverted(), HOPPER_CONFIG.brake(), HOPPER_CONFIG.reduction());
+      super.setSlot0(
+            GAINS.kP(),
+            GAINS.kI(),
+            GAINS.kD(),
+            GAINS.kS(),
+            GAINS.kV(),
+            GAINS.kA(),
+            GAINS.kG()
+
+        );
+    }
 }

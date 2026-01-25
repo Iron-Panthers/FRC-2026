@@ -3,7 +3,7 @@ package frc.robot.subsystems.hopper;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIO;
 
-public class hopper extends GenericRollers{
+public class Hopper extends GenericRollers{
     public enum Target implements GenericRollers.VelocityTarget{
         Idle(0),
         Intake(1);
@@ -20,7 +20,7 @@ public class hopper extends GenericRollers{
         }
     
         }
-        public hopper(GenericRollersIO IntakeRollersIO){
+        public Hopper(GenericRollersIO IntakeRollersIO){
             super("hopper", IntakeRollersIO);
         }
    
