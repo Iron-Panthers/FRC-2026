@@ -18,14 +18,14 @@ public class IntakePivotConstants {
       switch (Constants.getRobotType()) {
         case COMP -> new IntakePivotConfig(
             // Reduction between sensor and mechansim
-            CAN.at(30, "Intake Pivot"),
-            CAN.at(31, "Intake Pivot Encoder"),
+            CAN.at(32, "Intake Pivot"),
+            CAN.at(33, "Intake Pivot Encoder"),
             -0.01444,
             2.25); // (36/16
           // is the reduction for the encoder)
         case SIM -> new IntakePivotConfig(
             // Reduction between motor and mechansim
-            CAN.at(8, "Intake Pivot"), 0, 0, 12 * 0.3750);
+            CAN.at(9, "Intake Pivot"), 0, 0, 12 * 0.3750);
         default -> new IntakePivotConfig(0, 0, 0, 1);
       };
 
