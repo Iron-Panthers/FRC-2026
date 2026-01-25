@@ -152,8 +152,6 @@ public class RobotContainer {
           intakePivot = new IntakePivot(new IntakePivotIOSim());
           intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
 
-          SimulatedArena.getInstance().resetFieldForAuto();
-          // SimulatedArena.getInstance().resetFieldForAuto();
           SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
         }
       }
