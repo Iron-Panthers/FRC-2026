@@ -14,12 +14,12 @@ public class ShooterFlywheelConstants {
             CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, true); 
       };
 
-    //TODO: update pid constants for shooter flywheels
-    public static final PIDGains GAINS =
-        switch(Constants.getRobotType()){
-            case SIM -> new PIDGains(0,0,0,0,0,0);
-            default -> new PIDGains(0,0,0,0,0,0);
-        };
+  // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
+  public static final PIDGains GAINS =
+      switch (Constants.getRobotType()) {
+        case SIM -> new PIDGains(1, 0, 0, 0, 1, 0, 0);
+        default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
+      };
 
 
     public static final boolean OPPOSE_MOTOR = true;
@@ -31,19 +31,19 @@ public class ShooterFlywheelConstants {
             default -> 40;
         };
 
-    public static final IntakeRollerPhysicalConstants PHYSICAL_CONSTANTS =
+    public static final ShooterFlywheelPhysicalConstants PHYSICAL_CONSTANTS =
         switch (Constants.getRobotType()) {
-            case SIM -> new IntakeRollerPhysicalConstants(0.01);
-            case COMP -> new IntakeRollerPhysicalConstants(0.1);
-            default -> new IntakeRollerPhysicalConstants(0.1);
+            case SIM -> new ShooterFlywheelPhysicalConstants(0.01);
+            case COMP -> new ShooterFlywheelPhysicalConstants(0.1);
+            default -> new ShooterFlywheelPhysicalConstants(0.1);
         };
 
     //RECORDS
   public record ShooterFlywheelConfig(
       int motorID1, int motorID2, double reduction, boolean inverted, boolean brake) {}
-    public record PIDGains(
-        double kP, double kI, double kD, double kS, double kV, double kA){}
-  public static record IntakeRollerPhysicalConstants(
+  public record PIDGains(
+      double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
+  public static record ShooterFlywheelPhysicalConstants(
       double momentOfInertia) {}
 
 

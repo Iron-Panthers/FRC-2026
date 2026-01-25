@@ -6,18 +6,16 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterAcceleratorTopIOTalonFX extends GenericRollersIOTalonFX implements ShooterAcceleratorTopIO {
     public ShooterAcceleratorTopIOTalonFX() {
-        super(ID, CURRENT_LIMIT_AMPS, INVERTED, BRAKE, REDUCTION);
-        setSlot0(
+        super(SHOOTER_ACCELERATOR_TOP_CONFIG.motorID(), CURRENT_LIMIT_AMPS, SHOOTER_ACCELERATOR_TOP_CONFIG.inverted(), SHOOTER_ACCELERATOR_TOP_CONFIG.brake(), SHOOTER_ACCELERATOR_TOP_CONFIG.reduction());
+        super.setSlot0(
             GAINS.kP(),
             GAINS.kI(),
             GAINS.kD(),
             GAINS.kS(),
             GAINS.kV(),
             GAINS.kA(),
-            MOTION_MAGIC_CONFIG.accelerations(),
-            MOTION_MAGIC_CONFIG.cruiseVelocity(),
-            0,
-            GRAVITY_TYPE
+            GAINS.kG()
+
         );
     }
 }

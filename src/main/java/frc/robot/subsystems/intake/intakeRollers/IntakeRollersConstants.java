@@ -13,7 +13,7 @@ public class IntakeRollersConstants {
             CAN.at(64, "Intake Roller"), 1, false, true); 
         default -> new IntakeRollerConfig(
             CAN.at(36, "Intake Roller"), 1, false, true); 
-      };
+    };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
   public static final PIDGains GAINS =
