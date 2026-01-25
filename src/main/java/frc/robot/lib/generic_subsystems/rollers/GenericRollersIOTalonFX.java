@@ -4,6 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -99,10 +100,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
       double kS,
       double kV,
       double kA,
-      double motionMagicAcceleration,
-      double motionMagicCruiseVelocity,
-      double motionMagicJerk,
-      GravityTypeValue gravityTypeValue) {
+      double kG) {
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
@@ -110,14 +108,8 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     gainsConfig.kS = kS;
     gainsConfig.kV = kV;
     gainsConfig.kA = kA;
-    gainsConfig.GravityType = gravityTypeValue;
-
-    MotionMagicConfigs motionMagicConfig = new MotionMagicConfigs();
-    motionMagicConfig.MotionMagicAcceleration = motionMagicAcceleration;
-    motionMagicConfig.MotionMagicCruiseVelocity = motionMagicCruiseVelocity;
-    motionMagicConfig.MotionMagicJerk = motionMagicJerk;
+    gainsConfig.kG = kG;
 
     talon.getConfigurator().apply(gainsConfig);
-    talon.getConfigurator().apply(motionMagicConfig);
   }
 }

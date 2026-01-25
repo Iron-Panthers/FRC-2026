@@ -30,6 +30,15 @@ import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
+import frc.robot.subsystems.intake.IntakeController;
+import frc.robot.subsystems.intake.IntakeController.IntakeControllerState;
+import frc.robot.subsystems.intake.intakePivot.IntakePivot;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
@@ -86,6 +95,9 @@ public class RobotContainer {
   private Vision vision;
   private RGB rgb;
   private CANWatchdog canWatchdog;
+  private IntakePivot intakePivot;
+  private IntakeRollers intakeRollers;
+  private IntakeController intakeController;
   private ShooterFlywheel shooterFlywheels;
   private ShooterHood shooterHood;
   private ShooterController shooterController;
@@ -135,7 +147,10 @@ public class RobotContainer {
                   new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
                   new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
 
-          // SimulatedArena.getInstance().resetFieldForAuto();
+          // INTAKE
+          intakePivot = new IntakePivot(new IntakePivotIOSim());
+          intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
+
           SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
           shooterFlywheels =
             new ShooterFlywheel(new ShooterFlywheelIOSim());
@@ -170,6 +185,15 @@ public class RobotContainer {
       rgb = new RGB(new RGBIO() {});
     }
 
+    // INTAKE
+    if( intakePivot == null) {
+      intakePivot = new IntakePivot( new IntakePivotIO() {});
+    }
+    if( intakeRollers == null) {
+      intakeRollers = new IntakeRollers( new IntakeRollersIO() {});
+    }
+    intakeController = new IntakeController(intakePivot, intakeRollers);
+
     if (shooterFlywheels == null) {
       shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIO() {});
     }
@@ -190,7 +214,7 @@ public class RobotContainer {
 
     // init shooter with testing values
     robotState.initializeShootingAnglePredictor(
-      () -> new ChassisSpeeds(0, 0, 0), // stationary
+      () -> swerve.getRobotSpeeds(), // stationary
       () -> MetersPerSecond.of(10), // test shooter velocity: 10 m/s
       () -> new Transform3d(new Translation3d(0, 0, 0.5), new Rotation3d())); // shooter is 0.5m above robot center
 
@@ -228,9 +252,9 @@ public class RobotContainer {
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
     
-    // driverA.b().onTrue(new InstantCommand(() -> {
-    //   RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
-    // }));
+    driverA.b().onTrue(new InstantCommand(() -> {
+      RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
+    }));
 
     driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
 

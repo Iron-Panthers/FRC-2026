@@ -3,70 +3,48 @@ package frc.robot.subsystems.shooter.shooter_flywheel;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
 
 public class ShooterFlywheelConstants {
-    //TODO: update ids
-    public static final int ID =
-        switch (Constants.getRobotType()){
-            case COMP -> 40;
-            case SIM -> 32;
-            default -> 0;
+  public static final ShooterFlywheelConfig SHOOTER_FLYWHEEL_CONFIG =
+      switch (Constants.getRobotType()) {
+        case SIM -> new ShooterFlywheelConfig(
+            CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, true); 
+        default -> new ShooterFlywheelConfig(
+            CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, true); 
+      };
+
+    //TODO: update pid constants for shooter flywheels
+    public static final PIDGains GAINS =
+        switch(Constants.getRobotType()){
+            case SIM -> new PIDGains(0,0,0,0,0,0);
+            default -> new PIDGains(0,0,0,0,0,0);
         };
-    public static final int ID2 =
-        switch (Constants.getRobotType()){
-            case COMP -> 41;
-            case SIM -> 33;
-            default -> 0;
-        };
+
+
+    public static final boolean OPPOSE_MOTOR = true;
+
     public static final int CURRENT_LIMIT_AMPS =
         switch (Constants.getRobotType()) {
             case COMP -> 40;
             case SIM -> 40;
             default -> 40;
         };
-    public static final boolean INVERTED =
+
+    public static final IntakeRollerPhysicalConstants PHYSICAL_CONSTANTS =
         switch (Constants.getRobotType()) {
-            case COMP -> true;
-            case SIM -> true;
-            default -> true;
-        };
-    public static final boolean BRAKE =
-        switch (Constants.getRobotType()) {
-            default -> true;
-        };
-    public static final double REDUCTION =
-        switch (Constants.getRobotType()) {
-            case COMP -> 5;
-            case SIM -> 5;
-            default -> 1;
+            case SIM -> new IntakeRollerPhysicalConstants(0.01);
+            case COMP -> new IntakeRollerPhysicalConstants(0.1);
+            default -> new IntakeRollerPhysicalConstants(0.1);
         };
 
-    //TODO: update pid constants for shooter flywheels
-    public static final PIDGains GAINS =
-        switch(Constants.getRobotType()){
-            case COMP -> new PIDGains(0,0,0,0,0,0);
-            case SIM -> new PIDGains(0,0,0,0,0,0);
-            default -> new PIDGains(0,0,0,0,0,0);
-        };
-    public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
-      switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(0, 0);
-        case SIM -> new MotionMagicConfig(0, 0);
-        default -> new MotionMagicConfig(0, 0);
-      };
-
-
-    //idk if we need the stuff below; from 2025 sprint
-    public static final double MOI = 0.000105;
-    public static final double FILTERED_SUPPLY_CURRENT_THRESHOLD_INTAKING = 23;
-
-    //implementing constant
+    //RECORDS
+  public record ShooterFlywheelConfig(
+      int motorID1, int motorID2, double reduction, boolean inverted, boolean brake) {}
     public record PIDGains(
         double kP, double kI, double kD, double kS, double kV, double kA){}
-    
-    public record MotionMagicConfig(double accelerations, double cruiseVelocity){}
+  public static record IntakeRollerPhysicalConstants(
+      double momentOfInertia) {}
 
-    public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-    public static final boolean OPPOSE_MOTOR = true;
 }

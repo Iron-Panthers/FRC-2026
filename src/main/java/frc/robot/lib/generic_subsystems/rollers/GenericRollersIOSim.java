@@ -1,10 +1,10 @@
 package frc.robot.lib.generic_subsystems.rollers;
 
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -15,7 +15,7 @@ public abstract class GenericRollersIOSim implements GenericRollersIO {
 
   private final NeutralOut neutralOutput = new NeutralOut();
   private final double mechanismReduction;
-  private final MotionMagicVelocityVoltage velocityControl = new MotionMagicVelocityVoltage(0).withUpdateFreqHz(0);
+  private final VelocityVoltage velocityControl = new VelocityVoltage(0).withUpdateFreqHz(0);
 
   public GenericRollersIOSim(
       int id, int currentLimitAmps, boolean inverted, boolean brake, double reduction) {
@@ -47,6 +47,18 @@ public abstract class GenericRollersIOSim implements GenericRollersIO {
     talon.setControl(neutralOutput);
   }
 
+  /**
+   * Sets all of the PID and motion magic gains.
+   *
+   * @param kP Proportional gain
+   * @param kI Integral gain
+   * @param kD Derivative gain
+   * @param kS Static gain
+   * @param kV Velocity gain
+   * @param kA Acceleration gain
+   * @param kG Gravity gain
+   * @param gravityTypeValue Gravity compensation type
+   */
   @Override
   public void setSlot0(
       double kP,
@@ -55,10 +67,7 @@ public abstract class GenericRollersIOSim implements GenericRollersIO {
       double kS,
       double kV,
       double kA,
-      double motionMagicAcceleration,
-      double motionMagicCruiseVelocity,
-      double motionMagicJerk,
-      GravityTypeValue gravityTypeValue) {
+      double kG) {
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
@@ -66,14 +75,8 @@ public abstract class GenericRollersIOSim implements GenericRollersIO {
     gainsConfig.kS = kS;
     gainsConfig.kV = kV;
     gainsConfig.kA = kA;
-    gainsConfig.GravityType = gravityTypeValue;
-
-    MotionMagicConfigs motionMagicConfig = new MotionMagicConfigs();
-    motionMagicConfig.MotionMagicAcceleration = motionMagicAcceleration;
-    motionMagicConfig.MotionMagicCruiseVelocity = motionMagicCruiseVelocity;
-    motionMagicConfig.MotionMagicJerk = motionMagicJerk;
+    gainsConfig.kG = kG;
 
     talon.getConfigurator().apply(gainsConfig);
-    talon.getConfigurator().apply(motionMagicConfig);
   }
 }
