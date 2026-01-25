@@ -2,8 +2,8 @@ package frc.robot.subsystems.shooter.shooter_accelerator_top;
 
 import frc.robot.lib.generic_subsystems.rollers.*;
 
-public class ShooterAcceleratorTop extends GenericRollers<ShooterAcceleratorTop.Target>{
-    public enum Target implements GenericRollers.VelocityTarget {
+public class ShooterAcceleratorTop extends GenericRollers<ShooterAcceleratorTop.ShooterAcceleratorTopTarget>{
+    public enum ShooterAcceleratorTopTarget implements GenericRollers.VelocityTarget {
         //TODO: need to change; from sprint 2025 -- ive taken away a few states
         IDLE(0),
         SHOOT(12),
@@ -11,7 +11,7 @@ public class ShooterAcceleratorTop extends GenericRollers<ShooterAcceleratorTop.
 
         private double velocity;
 
-        private Target(double velocity) {
+        private ShooterAcceleratorTopTarget(double velocity) {
             this.velocity = velocity;
         }
 
@@ -21,6 +21,6 @@ public class ShooterAcceleratorTop extends GenericRollers<ShooterAcceleratorTop.
     }
 
     public ShooterAcceleratorTop(ShooterAcceleratorTopIO io) {
-        super("Shooter Flywheels", io);
+        super("Shooter/Shooter Accelerator Top", io);
     }
 }

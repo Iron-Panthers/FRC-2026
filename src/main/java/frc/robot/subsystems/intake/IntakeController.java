@@ -1,5 +1,7 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot.IntakePivotTarget;
@@ -55,5 +57,9 @@ public class IntakeController extends SubsystemBase {
     }
     public IntakeControllerState getTargetState(){
         return targetState;
+    }
+
+    public Command setTargetStateCommand(IntakeControllerState targetState){
+        return new InstantCommand(() -> setTargetState(targetState), this);
     }
 }

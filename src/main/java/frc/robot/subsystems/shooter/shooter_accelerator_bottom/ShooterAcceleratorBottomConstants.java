@@ -17,7 +17,7 @@ public class ShooterAcceleratorBottomConstants {
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case SIM -> new PIDGains(1, 0, 0, 0, 1, 0, 0);
+        case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 

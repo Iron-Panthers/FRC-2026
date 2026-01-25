@@ -4,20 +4,57 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel;
+import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel.ShooterFlywheelTarget;
 import frc.robot.subsystems.shooter.shooter_hood.ShooterHood;
+import frc.robot.subsystems.shooter.shooter_hood.ShooterHood.ShooterHoodTarget;
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom;
+import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom.ShooterAcceleratorBottomTarget;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop;
+import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop.ShooterAcceleratorTopTarget;
+
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterController extends SubsystemBase {
     public enum ShooterState {
         //TO-DO: update states
-        //idle: no spin
-        IDLE,
-        //shoot: spinning to shoot
-        SHOOT,
-        //climb: no spin
-        CLIMB;
+        /**idle: no spin*/
+        IDLE(
+            ShooterHoodTarget.BOTTOM,
+            ShooterFlywheelTarget.IDLE,
+            ShooterAcceleratorTopTarget.IDLE,
+            ShooterAcceleratorBottomTarget.IDLE
+        ),
+        /**shoot: spinning to shoot*/
+        SHOOT(
+            ShooterHoodTarget.UP,
+            ShooterFlywheelTarget.SHOOT,
+            ShooterAcceleratorTopTarget.SHOOT,
+            ShooterAcceleratorBottomTarget.SHOOT
+        ),
+        /**climb: no spin*/
+        CLIMB(
+            ShooterHoodTarget.BOTTOM,
+            ShooterFlywheelTarget.CLIMB,
+            ShooterAcceleratorTopTarget.CLIMB,
+            ShooterAcceleratorBottomTarget.CLIMB
+        );
+
+        public final ShooterHoodTarget hoodTarget;
+        public final ShooterFlywheelTarget flywheelTarget;
+        public final ShooterAcceleratorTopTarget acceleratorTopTarget;
+        public final ShooterAcceleratorBottomTarget acceleratorBottomTarget;
+
+        private ShooterState(
+            ShooterHoodTarget hoodTarget,
+            ShooterFlywheelTarget flywheelTarget,
+            ShooterAcceleratorTopTarget topTarget,
+            ShooterAcceleratorBottomTarget bottomTarget
+        ) {
+            this.hoodTarget = hoodTarget;
+            this.flywheelTarget = flywheelTarget;
+            this.acceleratorTopTarget = topTarget;
+            this.acceleratorBottomTarget = bottomTarget;
+        }
     }
     private ShooterState targetState = ShooterState.IDLE;
 
@@ -37,27 +74,11 @@ public class ShooterController extends SubsystemBase {
     @Override
     public void periodic() {
         //TODO: update states for shooter controller
+        shooterHood.setPositionTarget(targetState.hoodTarget);
+        shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+        shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
+        shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
 
-        switch(targetState) {
-            case IDLE -> {
-                shooterFlywheel.setVelocityTarget(ShooterFlywheel.Target.IDLE);
-                shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.BOTTOM);
-                shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.IDLE);
-                shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.IDLE);
-            }
-            case SHOOT -> {
-                shooterFlywheel.setVelocityTarget(ShooterFlywheel.Target.SHOOT);
-                shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.UP);
-                shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.SHOOT);
-                shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.SHOOT);
-            }
-            case CLIMB -> {
-                shooterFlywheel.setVelocityTarget(ShooterFlywheel.Target.CLIMB);
-                shooterHood.setPositionTarget(ShooterHood.ShooterHoodTarget.BOTTOM);
-                shooterAcceleratorTop.setVelocityTarget(ShooterAcceleratorTop.Target.CLIMB);
-                shooterAcceleratorBottom.setVelocityTarget(ShooterAcceleratorBottom.Target.CLIMB);
-            }
-        }
         shooterFlywheel.periodic();
         shooterHood.periodic();
         shooterAcceleratorBottom.periodic();

@@ -285,7 +285,12 @@ public class RobotContainer {
     //   }
     //   })
     // );
-    driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
+    // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+
+    driverB.x().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
+    driverB.y().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.IDLE));
   }
 
   private void configureAutos() {

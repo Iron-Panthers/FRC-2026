@@ -38,7 +38,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     
     } //close enum
     public ShooterHood(ShooterHoodIO io){
-        super("Shooter Hood", io);
+        super("Shooter/Shooter Hood", io);
         setPositionTarget(ShooterHoodTarget.BOTTOM);
         setControlMode(ControlMode.STOP);
     }
