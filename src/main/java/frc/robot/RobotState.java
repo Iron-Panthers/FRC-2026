@@ -272,7 +272,10 @@ public class RobotState {
     shootingAnglePredictor = new ShootingAnglePredictor(chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier);
   }
   public TargetShootingState calculateTargetShootingState(){
-    return shootingAnglePredictor.calculateTargetShootingState();
+    TargetShootingState targetShootingState = shootingAnglePredictor.calculateTargetShootingState();
+    Logger.recordOutput("RobotState/TargetShootingState/DrivebaseYaw", targetShootingState.drivebaseYaw());
+    Logger.recordOutput("RobotState/TargetShootingState/ShooterAngle", targetShootingState.shooterAngle());
+    return targetShootingState;
   }
 
   // shooting predictor
@@ -324,7 +327,7 @@ public class RobotState {
           robotChassisSpeeds.vyMetersPerSecond * timeOfFlight,
           0
         );
-        targetPosition3Transform3d = hubPosition3d.plus(robotMovement);
+        targetPosition3Transform3d = hubPosition3d.minus(robotMovement);
       }
 
       Logger.recordOutput("ShootingAnglePredictor/TargetPosition", targetPosition3Transform3d);

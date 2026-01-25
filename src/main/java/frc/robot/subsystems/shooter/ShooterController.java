@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,6 +12,9 @@ import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAccelerato
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom.ShooterAcceleratorBottomTarget;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop.ShooterAcceleratorTopTarget;
+import frc.robot.RobotState;
+
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -26,7 +30,7 @@ public class ShooterController extends SubsystemBase {
         ),
         /**shoot: spinning to shoot*/
         SHOOT(
-            ShooterHoodTarget.UP,
+            ShooterHoodTarget.BOTTOM,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTopTarget.SHOOT,
             ShooterAcceleratorBottomTarget.SHOOT
@@ -56,28 +60,40 @@ public class ShooterController extends SubsystemBase {
             this.acceleratorBottomTarget = bottomTarget;
         }
     }
-    private ShooterState targetState = ShooterState.IDLE;
+    private ShooterState targetState = ShooterState.SHOOT;
 
     //might need sensors defined here and in constructor
     private final ShooterFlywheel shooterFlywheel;
     private final ShooterHood shooterHood;
     private final ShooterAcceleratorBottom shooterAcceleratorBottom;
     private final ShooterAcceleratorTop shooterAcceleratorTop;
+    private final Supplier<Double> autoShooterAngleSupplier;
 
-    public ShooterController(ShooterFlywheel shooterFlywheel, ShooterHood shooterHood, ShooterAcceleratorBottom shooterAcceleratorBottom, ShooterAcceleratorTop shooterAcceleratorTop) {
+    public ShooterController(ShooterFlywheel shooterFlywheel, ShooterHood shooterHood, ShooterAcceleratorBottom shooterAcceleratorBottom, ShooterAcceleratorTop shooterAcceleratorTop, Supplier<Double> autoShooterAngleSupplier) {
         this.shooterFlywheel = shooterFlywheel;
         this.shooterHood = shooterHood;
         this.shooterAcceleratorBottom = shooterAcceleratorBottom;
         this.shooterAcceleratorTop = shooterAcceleratorTop;
+        this.autoShooterAngleSupplier = autoShooterAngleSupplier;
     }
 
     @Override
     public void periodic() {
         //TODO: update states for shooter controller
-        shooterHood.setPositionTarget(targetState.hoodTarget);
-        shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
-        shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
-        shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
+        switch (targetState) {
+            case SHOOT -> {
+                shooterHood.setPositionTargetManual(.25 - RobotState.getInstance().calculateTargetShootingState().shooterAngle().in(Units.Rotations));
+                shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+                shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
+                shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
+            }
+            default -> {
+                shooterHood.setPositionTarget(targetState.hoodTarget);
+                shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+                shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
+                shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
+            }
+        }
 
         shooterFlywheel.periodic();
         shooterHood.periodic();

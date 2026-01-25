@@ -13,7 +13,7 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
 
   private final String name;
   private final GenericRollersIO rollerIO;
-  private GenericRollersIOInputsAutoLogged inputs = new GenericRollersIOInputsAutoLogged();
+  protected GenericRollersIOInputsAutoLogged inputs = new GenericRollersIOInputsAutoLogged();
 
   private G velocityTarget;
 

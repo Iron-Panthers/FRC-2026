@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -211,13 +212,15 @@ public class RobotContainer {
       shooterAcceleratorTop = new ShooterAcceleratorTop(new ShooterAcceleratorTopIO() {});
     }
 
-    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop);
+    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop, () -> {
+      return robotState.calculateTargetShootingState().shooterAngle().in(Units.Rotations);
+    });
 
     // init shooter with testing values
-    robotState.initializeShootingAnglePredictor(
-      () -> swerve.getRobotSpeeds(), // stationary
-      () -> MetersPerSecond.of(10), // test shooter velocity: 10 m/s
-      () -> new Transform3d(new Translation3d(0, 0, 0.5), new Rotation3d())); // shooter is 0.5m above robot center
+    RobotState.getInstance().initializeShootingAnglePredictor(
+      () -> ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotSpeeds(), RobotState.getInstance().getEstimatedPose().getRotation()), 
+      () -> shooterFlywheels.getCurrentVelocity(),
+      () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM); // shooter is 0.5m above robot center
 
     nameCommands();
     configureAutos();
@@ -240,11 +243,21 @@ public class RobotContainer {
         swerve
             .run(
                 () -> {
+                  double rotationInput = driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis();
                   swerve.driveTeleopController(
                       -driverA.getLeftY(),
                       -driverA.getLeftX(),
-                      driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis(),
+                      rotationInput,
                       DriveConstants.DRIVE_CONFIG.maxLinearAcceleration());
+                  
+                  // Only apply heading control when NOT manually rotating
+                  // If driver is providing rotation input, clear heading control to allow manual rotation
+                  if (Math.abs(rotationInput) > 0.05) {
+                    swerve.clearHeadingControl();
+                  } else {
+                    // When not manually rotating, set heading to be 90 degrees offset from target shooting state
+                    swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(90))));
+                  }
                 })
             .withName("Drive Teleop"));
 
@@ -252,39 +265,26 @@ public class RobotContainer {
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
-    
-    driverA.b().onTrue(new InstantCommand(() -> {
-      RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
-    }));
 
-    driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+    // driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
 
-    // driverA.y().onTrue(new InstantCommand(() -> {
-      
-    //   // Calculate target shooting state
-    //   TargetShootingState targetState = robotState.calculateTargetShootingState();
-      
-    //   // Only shoot in simulation
-    //   if (Constants.getRobotType() == Constants.RobotType.SIM) {
-    //     // Get current robot pose and apply the calculated shooter angle and yaw
-    //     Pose3d robotPose3d = RobotSimState.getInstance().getRobotPose3d();
-        
-    //     // Create shooter endpoint position with calculated yaw and shooter angle
-    //     // Shooter is 0.5m above robot center
-    //     Pose3d shooterPose = new Pose3d(
-    //       robotPose3d.getTranslation().plus(new Translation3d(0, 0, 0.5)),
-    //       new Rotation3d(
-    //         0, // roll
-    //         targetState.shooterAngle().in(Units.Radians), // pitch (shooter angle)
-    //         targetState.drivebaseYaw().getRadians() // yaw
-    //       )
-    //     );
-        
-    //     // Shoot the fuel using the calculated parameters - velocity must match calculation!
-    //     RobotSimState.getInstance().shootFuel(shooterPose, MetersPerSecond.of(10));
-    //   }
-    //   })
-    // );
+    driverA.y().onTrue(new InstantCommand(() -> {
+      // Only shoot in simulation
+      if (Constants.getRobotType() == Constants.RobotType.SIM) {
+
+        Transform3d shooterPose = ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+          new Translation3d(),
+          new Rotation3d(0, 0, Math.PI/2)
+        )); // rotation because of how the modeled shooter was in sim litterally just that i fear
+
+        Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
+        LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
+
+        // Shoot the fuel using the calculated parameters - velocity must match calculation!
+        RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
+      }
+      })
+    );
     // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
     driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
     driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));

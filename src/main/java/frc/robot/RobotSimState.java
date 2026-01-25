@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.util.List;
 
+import org.dyn4j.geometry.Transform;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.*;
@@ -64,8 +65,12 @@ public class RobotSimState {
    }
 
    // Shooting utilities
-   public void shootFuel(Angle shooterAngle, LinearVelocity launchVelocity){
-    shootFuel(getRobotPose3d().plus(new Transform3d(0, 0, 1, new Rotation3d(0,shooterAngle.in(Units.Radians),0))), launchVelocity);
+   public void shootFuel(Angle launchAngle, Transform3d shooterTransform3d, LinearVelocity launchVelocity){
+    Transform3d shooterEndpointPosition3d = new Transform3d(
+        shooterTransform3d.getTranslation(),
+        new Rotation3d(0, launchAngle.in(Units.Radians), shooterTransform3d.getRotation().getZ())
+    );
+    shootFuel(getRobotPose3d().plus(shooterEndpointPosition3d), launchVelocity);
    }
 
    public void shootFuel(Pose3d shooterEndpointPosition3d, LinearVelocity launchVelocity){

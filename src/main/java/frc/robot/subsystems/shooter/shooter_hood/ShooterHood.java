@@ -93,7 +93,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
                 .plus(ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM)
                 .plus(
                     new Transform3d(
-                        Translation3d.kZero, new Rotation3d( -Math.toRadians(getPosition() * 360),0, 0)));
+                        Translation3d.kZero, new Rotation3d(-Math.toRadians(getPosition() * 360), 0, 0)));
   }
 
 }//close class

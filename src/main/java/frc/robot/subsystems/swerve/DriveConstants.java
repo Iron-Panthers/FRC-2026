@@ -74,10 +74,10 @@ public class DriveConstants {
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
-            3.3, // 3.75,
-            9,
+            3.75, // 3.75,
+            10,
             // TODO: make it actually max acceleration in m/s^2
-            1.63); // (multiply by max velocity to get m/s^2)
+            6); // (multiply by max velocity to get m/s^2)
       };
 
   public static final Translation2d[] MODULE_TRANSLATIONS =
@@ -284,7 +284,7 @@ public class DriveConstants {
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
-        case SIM -> new HeadingControllerConstants(20, 0, 8, 20, 0.01);
+        case SIM -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         case VISION -> new HeadingControllerConstants(6, 0, 5, 20, 0.01);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
