@@ -14,7 +14,6 @@ public class HopperIOTalonFX extends GenericRollersIOTalonFX{
             GAINS.kV(),
             GAINS.kA(),
             GAINS.kG()
-
         );
     }
 }

@@ -9,10 +9,10 @@ public class HopperIOSim extends GenericRollersIOSim {
     private final FlywheelSim intakeRollersSim;
 
   public HopperIOSim() {
-    super(ID, CURRENT_LIMIT_AMPS, INVERTED, BRAKE, REDUCTION);
+    super(HOPPER_CONFIG.motorID(), CURRENT_LIMIT_AMPS, HOPPER_CONFIG.inverted(), HOPPER_CONFIG.brake(), HOPPER_CONFIG.reduction());
     intakeRollersSim =
         new FlywheelSim(
-            LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), MOI, REDUCTION),
+            LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), PHYSICAL_CONSTANTS.momentOfIntertia(), HOPPER_CONFIG.reduction()),
             DCMotor.getKrakenX60Foc(1));
   }
 
@@ -30,7 +30,7 @@ public class HopperIOSim extends GenericRollersIOSim {
     double rotations = 0; // can't really be simulated
 
     // Divides our angular velocity by our reduction
-    double velocityRPS = intakeRollersSim.getAngularVelocityRadPerSec() / REDUCTION;
+    double velocityRPS = intakeRollersSim.getAngularVelocityRadPerSec() / HOPPER_CONFIG.reduction();
     // FIXME: Doesn't work when reduction is 1
 
     talon.getSimState().setRawRotorPosition(rotations);

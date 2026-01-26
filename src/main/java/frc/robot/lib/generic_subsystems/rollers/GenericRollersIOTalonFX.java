@@ -13,6 +13,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.configs.Slot0Configs;
 
 public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   private final TalonFX talon;
@@ -70,5 +71,26 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   @Override
   public void stop() {
     talon.setControl(neutralOutput);
+  }
+
+  @Override
+  public void setSlot0(
+      double kP,
+      double kI,
+      double kD,
+      double kS,
+      double kV,
+      double kA,
+      double kG) {
+    Slot0Configs gainsConfig = new Slot0Configs();
+    gainsConfig.kP = kP;
+    gainsConfig.kI = kI;
+    gainsConfig.kD = kD;
+    gainsConfig.kS = kS;
+    gainsConfig.kV = kV;
+    gainsConfig.kA = kA;
+    gainsConfig.kG = kG;
+
+    talon.getConfigurator().apply(gainsConfig);
   }
 }
