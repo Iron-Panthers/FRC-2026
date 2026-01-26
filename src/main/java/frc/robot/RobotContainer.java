@@ -31,6 +31,15 @@ import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
+import frc.robot.subsystems.intake.IntakeController;
+import frc.robot.subsystems.intake.IntakeController.IntakeControllerState;
+import frc.robot.subsystems.intake.intakePivot.IntakePivot;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
@@ -47,8 +56,12 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
-import frc.robot.utility.BlankSimulatedArena;
 import frc.robot.utility.ElasticSetpoints;
+import frc.robot.subsystems.shooter.shooter_hood.*;
+import frc.robot.subsystems.shooter.ShooterController;
+import frc.robot.subsystems.shooter.shooter_flywheel.*;
+import frc.robot.subsystems.shooter.shooter_accelerator_bottom.*;
+import frc.robot.subsystems.shooter.shooter_accelerator_top.*;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
@@ -84,6 +97,14 @@ public class RobotContainer {
   private Vision vision;
   private RGB rgb;
   private CANWatchdog canWatchdog;
+  private IntakePivot intakePivot;
+  private IntakeRollers intakeRollers;
+  private IntakeController intakeController;
+  private ShooterFlywheel shooterFlywheels;
+  private ShooterHood shooterHood;
+  private ShooterController shooterController;
+  private ShooterAcceleratorBottom shooterAcceleratorBottom;
+  private ShooterAcceleratorTop shooterAcceleratorTop;
 
   public RobotContainer() {
 
@@ -100,6 +121,15 @@ public class RobotContainer {
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
           rgb = new RGB(new RGBIOCANdle());
           canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
+          shooterFlywheels =
+            new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          shooterHood =
+            new ShooterHood(new ShooterHoodIOTalonFX());
+          shooterAcceleratorBottom = 
+            new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
+          shooterAcceleratorTop = 
+            new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
+          
         }
         case VISION -> {
           swerve =
@@ -138,7 +168,19 @@ public class RobotContainer {
                   new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
                   new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
 
-          // SimulatedArena.getInstance().resetFieldForAuto();
+          // INTAKE
+          intakePivot = new IntakePivot(new IntakePivotIOSim());
+          intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
+
+          shooterFlywheels =
+            new ShooterFlywheel(new ShooterFlywheelIOSim());
+          shooterHood =
+            new ShooterHood(new ShooterHoodIOSim());
+          shooterAcceleratorBottom = 
+            new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOSim());
+          shooterAcceleratorTop = 
+            new ShooterAcceleratorTop(new ShooterAcceleratorTopIOSim());
+
           SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
         }
       }
@@ -165,9 +207,36 @@ public class RobotContainer {
       rgb = new RGB(new RGBIO() {});
     }
 
+    // INTAKE
+    if( intakePivot == null) {
+      intakePivot = new IntakePivot( new IntakePivotIO() {});
+    }
+    if( intakeRollers == null) {
+      intakeRollers = new IntakeRollers( new IntakeRollersIO() {});
+    }
+    intakeController = new IntakeController(intakePivot, intakeRollers);
+
+    if (shooterFlywheels == null) {
+      shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIO() {});
+    }
+
+    if (shooterHood == null) {
+      shooterHood = new ShooterHood(new ShooterHoodIO() {});
+    }
+
+    if (shooterAcceleratorBottom == null) {
+      shooterAcceleratorBottom = new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIO() {});
+    }
+
+    if (shooterAcceleratorTop == null) {
+      shooterAcceleratorTop = new ShooterAcceleratorTop(new ShooterAcceleratorTopIO() {});
+    }
+
+    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop);
+
     // init shooter with testing values
     robotState.initializeShootingAnglePredictor(
-      () -> new ChassisSpeeds(0, 0, 0), // stationary
+      () -> swerve.getRobotSpeeds(), // stationary
       () -> MetersPerSecond.of(10), // test shooter velocity: 10 m/s
       () -> new Transform3d(new Translation3d(0, 0, 0.5), new Rotation3d())); // shooter is 0.5m above robot center
 
@@ -237,6 +306,12 @@ public class RobotContainer {
     //   }
     //   })
     // );
+    // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+
+    driverB.x().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
+    driverB.y().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.IDLE));
   }
 
   private void configureAutos() {
@@ -318,6 +393,8 @@ public class RobotContainer {
   /** Ran every 20 milliseconds */
   public void updateSimulation() {
     if (Constants.getRobotMode() != Constants.Mode.SIM) return;
+
+    Logger.recordOutput("Testing/BlankPose3d", new Pose3d());
 
     SimulatedArena.getInstance().simulationPeriodic();
     Logger.recordOutput(
