@@ -27,6 +27,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.commands.PathPlannerApproachPoseCommand;
 import frc.robot.RobotState.TargetShootingState;
 import frc.robot.commands.VibrateHIDCommand;
+import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
@@ -44,6 +45,7 @@ import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.BlankSimulatedArena;
 import frc.robot.utility.ElasticSetpoints;
@@ -107,7 +109,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
+          vision = new Vision(new VisionIOPhotonvision("arducam-4", 0), new VisionIOPhotonvision("arducam-5", 1));
         }
         case ALPHA -> {
           swerve =
@@ -276,6 +278,7 @@ public class RobotContainer {
 
     autoChooser =
         new LoggedDashboardChooser<Command>("Auto Chooser", AutoBuilder.buildAutoChooser());
+    VisionTuningCommands.addTuningCommandsToAutoChooser(vision, autoChooser);
     SmartDashboard.putData("Auto Chooser", autoChooser.getSendableChooser());
   }
 
