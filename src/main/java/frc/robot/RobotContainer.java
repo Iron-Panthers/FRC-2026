@@ -220,7 +220,7 @@ public class RobotContainer {
     RobotState.getInstance().initializeShootingAnglePredictor(
       () -> ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotSpeeds(), RobotState.getInstance().getEstimatedPose().getRotation()), 
       () -> shooterFlywheels.getCurrentVelocity(),
-      () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM); // shooter is 0.5m above robot center
+      () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(-90)); 
 
     nameCommands();
     configureAutos();

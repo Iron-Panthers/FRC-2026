@@ -19,6 +19,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -42,6 +43,7 @@ import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.Radians;
 
 import java.lang.annotation.Target;
@@ -268,8 +270,8 @@ public class RobotState {
 
   // methods that use the shootingAnglePredictor -- as an abstraction
   private ShootingAnglePredictor shootingAnglePredictor;
-  public void initializeShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier) {
-    shootingAnglePredictor = new ShootingAnglePredictor(chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier);
+  public void initializeShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw) {
+    shootingAnglePredictor = new ShootingAnglePredictor(chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier, shooterYaw);
   }
   public TargetShootingState calculateTargetShootingState(){
     TargetShootingState targetShootingState = shootingAnglePredictor.calculateTargetShootingState();
@@ -290,9 +292,9 @@ public class RobotState {
     final double AIR_DRAG_COEFFICIENT = 0.03;
       final double GRAVITY = 9.81; // gravity in m/s^2
 
-    public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier){
+    public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw){
       this.chassisSpeedsSupplier = chassisSpeedsSupplier;
-      this.shooterPositionSupplier = shooterPositionSupplier;
+      this.shooterPositionSupplier = () -> (new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, shooterYaw.in(Radian)))).plus(shooterPositionSupplier.get());
       this.shooterVelocitySupplier = shooterVelocitySupplier;
     }
 
@@ -307,32 +309,45 @@ public class RobotState {
       final Translation3d hubPosition3d = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == Alliance.Blue ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
 
       // Get shooter position
-      Translation3d shooterPose3d = new Pose3d(getEstimatedPose()).transformBy(shooterPositionSupplier.get()).getTranslation();
-
-      Translation3d targetPosition3Transform3d = hubPosition3d;
+      Pose3d initialRobotPose3d = new Pose3d(getEstimatedPose());
+      Pose3d translatedRobotPose3d = initialRobotPose3d; // this is our translated robot pose accounting for movement during time of flight
+      Pose3d shooterPose3d = initialRobotPose3d.plus(shooterPositionSupplier.get());
 
       double shooterVelocity = shooterVelocitySupplier.get().in(edu.wpi.first.units.Units.MetersPerSecond);
 
       ChassisSpeeds robotChassisSpeeds = chassisSpeedsSupplier.get();
 
+      // For debug
+      ArrayList<Pose3d> debugPoses = new ArrayList<>();
+      debugPoses.add(shooterPose3d);
+
       // loop 5 times
       for(int i = 0; i < 5; i++) {
         // calculate the angle and time of flight to get to a target position
-        ShootingSolution shootingSolution = calculateStationaryShootingSolution(shooterPose3d, targetPosition3Transform3d, shooterVelocity);
+        ShootingSolution shootingSolution = calculateStationaryShootingSolution(shooterPose3d.getTranslation(), hubPosition3d, shooterVelocity);
 
         // adjust the target position based on where we are going to be by the time of flight
         double timeOfFlight = shootingSolution.timeOfFlight;
+
         Translation3d robotMovement = new Translation3d(
           robotChassisSpeeds.vxMetersPerSecond * timeOfFlight,
           robotChassisSpeeds.vyMetersPerSecond * timeOfFlight,
           0
         );
-        targetPosition3Transform3d = hubPosition3d.minus(robotMovement);
+
+        // update the next target based on where we think we will be
+        translatedRobotPose3d = new Pose3d(initialRobotPose3d.getTranslation().plus(robotMovement), new Rotation3d(shootingSolution.yawAngle));
+        // update shooter pose based on our new robot position and rotation
+        shooterPose3d = translatedRobotPose3d.plus(shooterPositionSupplier.get());
+
+        debugPoses.add(shooterPose3d);
       }
 
-      Logger.recordOutput("ShootingAnglePredictor/TargetPosition", targetPosition3Transform3d);
+      Logger.recordOutput("ShootingAnglePredictor/Robot Translated Position", translatedRobotPose3d);
+      Logger.recordOutput("ShootingAnglePredictor/Target Position", new Pose3d(hubPosition3d, new Rotation3d()));
+      Logger.recordOutput("ShootingAnglePredictor/Shooter Poses", debugPoses.toArray(Pose3d[]::new));
 
-      ShootingSolution finalShootingSolution = calculateStationaryShootingSolution(shooterPose3d, targetPosition3Transform3d, shooterVelocity);
+      ShootingSolution finalShootingSolution = calculateStationaryShootingSolution(shooterPose3d.getTranslation(), hubPosition3d, shooterVelocity);
 
       return new TargetShootingState(finalShootingSolution.yawAngle, finalShootingSolution.pitchAngle);
     }
@@ -342,7 +357,7 @@ public class RobotState {
       Rotation2d yawAngle = new Rotation2d(Math.atan2(targetPosition.getY() - currentPosition.getY(), targetPosition.getX() - currentPosition.getX()));
 
       // figure out the launch angle
-      double horizontalDistance = currentPosition.getDistance(targetPosition);
+      double horizontalDistance = currentPosition.toTranslation2d().getDistance(targetPosition.toTranslation2d());
       double verticalDistance = targetPosition.getZ() - currentPosition.getZ();
 
       // Calculate shooter angle using projectile motion equations
