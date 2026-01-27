@@ -26,9 +26,12 @@ public class GyroIOPigeon2 implements GyroIO {
 
     yaw = pigeon.getYaw();
     yawVelocity = pigeon.getAngularVelocityZWorld();
-    accelerationX = pigeon.getAccelerationX();
-    accelerationY = pigeon.getAccelerationY();
-    accelerationZ = pigeon.getAccelerationZ();
+    // accelerationX = pigeon.getAccelerationX();
+    // accelerationY = pigeon.getAccelerationY();
+    // accelerationZ = pigeon.getAccelerationZ();
+    accelerationX = new StatusSignal<LinearAcceleration>(null, null, null);
+    accelerationY = new StatusSignal<LinearAcceleration>(null, null, null);
+    accelerationZ = new StatusSignal<LinearAcceleration>(null, null, null);
     BaseStatusSignal.setUpdateFrequencyForAll(100, yaw, yawVelocity);
     
     pigeon.optimizeBusUtilization();
