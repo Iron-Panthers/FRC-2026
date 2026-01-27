@@ -18,5 +18,8 @@ public class GyroIOSim implements GyroIO {
     inputs.yawPosition = gyroSimulation.getGyroReading();
     inputs.yawVelocityRadPerSec =
         Units.degreesToRadians(gyroSimulation.getMeasuredAngularVelocity().in(RadiansPerSecond));
+    inputs.accelerationX = 0;
+    inputs.accelerationY = 0;
+    inputs.accelerationZ = 0;
   }
 }

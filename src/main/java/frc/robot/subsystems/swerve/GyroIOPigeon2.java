@@ -8,11 +8,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearAcceleration;
 
 public class GyroIOPigeon2 implements GyroIO {
   private final Pigeon2 pigeon;
   private final StatusSignal<Angle> yaw;
   private final StatusSignal<AngularVelocity> yawVelocity;
+  private final StatusSignal<LinearAcceleration> accelerationX;
+  private final StatusSignal<LinearAcceleration> accelerationY;
+  private final StatusSignal<LinearAcceleration> accelerationZ;
 
   public GyroIOPigeon2() {
     pigeon = new Pigeon2(DriveConstants.GYRO_ID);
@@ -22,8 +26,11 @@ public class GyroIOPigeon2 implements GyroIO {
 
     yaw = pigeon.getYaw();
     yawVelocity = pigeon.getAngularVelocityZWorld();
+    accelerationX = pigeon.getAccelerationX();
+    accelerationY = pigeon.getAccelerationY();
+    accelerationZ = pigeon.getAccelerationZ();
     BaseStatusSignal.setUpdateFrequencyForAll(100, yaw, yawVelocity);
-
+    
     pigeon.optimizeBusUtilization();
   }
 
@@ -32,5 +39,8 @@ public class GyroIOPigeon2 implements GyroIO {
     inputs.isConnected = BaseStatusSignal.refreshAll(yaw, yawVelocity).isOK();
     inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
     inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
+    inputs.accelerationX = accelerationX.getValueAsDouble();
+    inputs.accelerationY = accelerationY.getValueAsDouble();
+    inputs.accelerationZ = accelerationZ.getValueAsDouble();
   }
 }
