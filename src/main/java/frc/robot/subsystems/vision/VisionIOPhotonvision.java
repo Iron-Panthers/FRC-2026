@@ -21,7 +21,7 @@ public class VisionIOPhotonvision implements VisionIO {
         new PhotonPoseEstimator(
             VisionConstants.APRIL_TAG_FIELD_LAYOUT,
             PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-            VisionConstants.CAMERA_TRANSFORM[index - 1]);
+            VisionConstants.CAMERA_TRANSFORM[index]);
   }
 
   @Override
