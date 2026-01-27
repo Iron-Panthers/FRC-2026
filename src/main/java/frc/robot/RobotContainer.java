@@ -277,7 +277,8 @@ public class RobotContainer {
           new Rotation3d(0, 0, Math.PI/2)
         )); // rotation because of how the modeled shooter was in sim litterally just that i fear
 
-        Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
+        // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
+        Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
         LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
 
         // Shoot the fuel using the calculated parameters - velocity must match calculation!

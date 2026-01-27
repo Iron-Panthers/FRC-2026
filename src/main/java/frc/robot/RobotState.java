@@ -367,6 +367,9 @@ public class RobotState {
       double v4 = v2 * v2;
       double x2 = horizontalDistance * horizontalDistance;
       
+      Logger.recordOutput("ShootingAnglePredictor/Vert Dist", verticalDistance);
+      Logger.recordOutput("ShootingAnglePredictor/Shooter Velocity", shooterVelocity);
+
       // Calculate discriminant
       double discriminant = v4 - GRAVITY * (GRAVITY * x2 + 2 * verticalDistance * v2);
 
