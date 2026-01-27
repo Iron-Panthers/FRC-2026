@@ -289,8 +289,8 @@ public class RobotState {
     private Supplier<Transform3d> shooterPositionSupplier;
 
     // Air resistance coefficient
-    final double AIR_DRAG_COEFFICIENT = 0.03;
-      final double GRAVITY = 9.81; // gravity in m/s^2
+    final double AIR_DRAG_COEFFICIENT = 0.02;
+    final double GRAVITY = 9.81; // gravity in m/s^2
 
     public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw){
       this.chassisSpeedsSupplier = chassisSpeedsSupplier;
@@ -360,37 +360,91 @@ public class RobotState {
       double horizontalDistance = currentPosition.toTranslation2d().getDistance(targetPosition.toTranslation2d());
       double verticalDistance = targetPosition.getZ() - currentPosition.getZ();
 
-      // Calculate shooter angle using projectile motion equations
-      // We need to solve: tan(theta) = (v^2 +/- sqrt(v^4 - g(gx^2 + 2yv^2))) / (gx)
-      // where v = velocity, g = gravity, x = horizontal distance, y = vertical distance
-      double v2 = shooterVelocity * shooterVelocity;
-      double v4 = v2 * v2;
-      double x2 = horizontalDistance * horizontalDistance;
-      
       Logger.recordOutput("ShootingAnglePredictor/Vert Dist", verticalDistance);
       Logger.recordOutput("ShootingAnglePredictor/Shooter Velocity", shooterVelocity);
 
-      // Calculate discriminant
-      double discriminant = v4 - GRAVITY * (GRAVITY * x2 + 2 * verticalDistance * v2);
-
-      // Check if solution exists
-      if (discriminant < 0 || horizontalDistance == 0) {
+      // Use iterative simulation to account for air resistance
+      IterativeShootingResult result = simulateProjectileWithDrag(horizontalDistance, verticalDistance, shooterVelocity);
+      if (!result.success) {
         // if no solution we just shoot at 45 and chill
         return new ShootingSolution(yawAngle, Degrees.of(45), 0);
       }
 
-      double tanTheta = (v2 + Math.sqrt(discriminant)) / (GRAVITY * horizontalDistance);
-
-      double angle = Math.atan(tanTheta);
-
-      Angle pitchAngle = Radians.of(angle);
-
-      // figure out time of flight
-      double vx = shooterVelocity * Math.cos(angle);
-      double timeOfFlight = horizontalDistance / vx;
+      Angle pitchAngle = Radians.of(result.angleRad);
+      double timeOfFlight = result.timeOfFlight;
 
       return new ShootingSolution(yawAngle, pitchAngle, timeOfFlight);
     }
+
+    /**
+     * Iteratively simulates projectile motion with quadratic air resistance to find the required launch angle and time of flight.
+     * Returns an object with the angle (in radians) and time of flight (in seconds).
+     */
+    private IterativeShootingResult simulateProjectileWithDrag(double horizontalDistance, double verticalDistance, double shooterVelocity) {
+      final int maxIterations = 30;
+      final double tolerance = 0.01; // meters vertical error
+      final double kP = 0.01; // Proportional gain for angle adjustment
+      final double minAngle = Math.toRadians(10);
+      final double maxAngle = Math.toRadians(90);
+      final double g = GRAVITY;
+      final double k = AIR_DRAG_COEFFICIENT;
+
+      // Initial guess: angle without drag
+      double v2 = shooterVelocity * shooterVelocity;
+      double v4 = v2 * v2;
+      double x2 = horizontalDistance * horizontalDistance;
+      double discriminant = v4 - g * (g * x2 + 2 * verticalDistance * v2);
+      double angleGuess = Math.toRadians(45);
+      if (discriminant > 0 && horizontalDistance > 0) {
+        double tanTheta = (v2 + Math.sqrt(discriminant)) / (g * horizontalDistance);
+        angleGuess = Math.atan(tanTheta);
+      }
+
+      boolean found = false;
+      double bestAngle = angleGuess;
+      double bestTime = 0;
+      double angle = angleGuess;
+
+      System.out.println("Initial angle guess (rad): " + Math.toDegrees(angleGuess));
+
+      // Try a range of angles around the guess
+      for (int iter = 0; iter < maxIterations; iter++) {
+        // Simulate projectile until x >= horizontalDistance
+        double dt = 0.005;
+        double x = 0, y = 0;
+        double vx = shooterVelocity * Math.cos(angle);
+        double vy = shooterVelocity * Math.sin(angle);
+        double t = 0;
+        boolean reached = false;
+        while (y >= 0 && x < horizontalDistance && t < 10.0) {
+          double v = Math.sqrt(vx * vx + vy * vy);
+          double ax = -k * v * vx;
+          double ay = -g - k * v * vy;
+          vx += ax * dt;
+          vy += ay * dt;
+          x += vx * dt;
+          y += vy * dt;
+          t += dt;
+        }
+        double verticalErr = y - verticalDistance;
+        angle += verticalErr * kP;
+
+        System.out.println("Step: " + iter + " Angle (deg): " + Math.toDegrees(angle) + " Final y (m): " + y + " Time of flight (s): " + t + " Vertical Err (m): " + verticalErr);
+
+        // Only consider if projectile is descending at target (vy < 0)
+        if (vy >= 0) continue;
+        if (Math.abs(verticalErr) < Math.abs(tolerance)) {
+          found = true;
+          bestAngle = angle;
+          bestTime = t;
+          break;
+        }
+      }
+      return new IterativeShootingResult(found, bestAngle, bestTime);
+    }
+
+
+    private static record IterativeShootingResult(boolean success, double angleRad, double timeOfFlight){}
 
     public record ShootingSolution(Rotation2d yawAngle, Angle pitchAngle, double timeOfFlight){}
   }

@@ -13,7 +13,7 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
     public enum ShooterFlywheelTarget implements GenericRollers.VelocityTarget {
         //TODO: need to change; from sprint 2025 -- ive taken away a few states
         IDLE(0),
-        SHOOT(80),
+        SHOOT(120),
         CLIMB(0);
 
         private double velocity;
