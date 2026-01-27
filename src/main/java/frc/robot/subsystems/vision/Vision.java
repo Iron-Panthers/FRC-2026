@@ -65,7 +65,6 @@ public class Vision extends SubsystemBase {
                 || Math.abs(observation.estimatedPose().getZ())
                     > Z_ERROR_CUTOFF // Must have realistic Z
                 // coordinate
-
                 // Must be within the field boundaries
                 || observation.estimatedPose().getX() < 0.0
                 || observation.estimatedPose().getX() > APRIL_TAG_FIELD_LAYOUT.getFieldLength()
