@@ -120,9 +120,9 @@ public class RobotState {
   }
 
   public void addVisionMeasurement(VisionMeasurement measurement, Matrix<N3, N1> visionStdDevs) {
-    //poseEstimator.setVisionMeasurementStdDevs(visionStdDevs);
-    //poseEstimator.addVisionMeasurement(measurement.visionPose(), measurement.timestamp());
-    //estimatedPose = poseEstimator.getEstimatedPosition();
+    poseEstimator.setVisionMeasurementStdDevs(visionStdDevs);
+    poseEstimator.addVisionMeasurement(measurement.visionPose(), measurement.timestamp());
+    estimatedPose = poseEstimator.getEstimatedPosition();
   }
 
   public void resetPose(Pose2d pose) {
