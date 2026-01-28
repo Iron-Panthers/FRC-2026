@@ -74,11 +74,12 @@ public class ShooterController extends SubsystemBase {
     @Override
     public void periodic() {
         //TODO: update states for shooter controller
+        // if stopped, set all to stop 
         shooterHood.setPositionTarget(targetState.hoodTarget);
         shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
         shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
         shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
-
+        
         shooterFlywheel.periodic();
         shooterHood.periodic();
         shooterAcceleratorBottom.periodic();

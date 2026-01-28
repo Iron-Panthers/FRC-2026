@@ -62,6 +62,8 @@ import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.shooter_flywheel.*;
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.*;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.*;
+import frc.robot.lib.generic_subsystems.superstructure.*;
+import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.*;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
@@ -307,11 +309,15 @@ public class RobotContainer {
     //   })
     // );
     // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
-    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
-    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
 
-    driverB.x().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
-    driverB.y().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.IDLE));
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+    // bindings for climb subsystem
+    //driverB.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOP_CLIMB));
+    //driverB.y().onTrue(climbController.setTargetCommand(ClimbState.CLIMB));
+
+    driverB.rightBumper().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+    
+    //TODO: left bumper, x
   }
 
   private void configureAutos() {
