@@ -382,7 +382,7 @@ public class RobotState {
      */
     private IterativeShootingResult simulateProjectileWithDrag(double horizontalDistance, double verticalDistance, double shooterVelocity) {
       final int maxIterations = 30;
-      final double tolerance = 0.01; // meters vertical error
+      final double tolerance = 0.1; // meters vertical error
       final double kP = 0.01; // Proportional gain for angle adjustment
       final double minAngle = Math.toRadians(10);
       final double maxAngle = Math.toRadians(90);
