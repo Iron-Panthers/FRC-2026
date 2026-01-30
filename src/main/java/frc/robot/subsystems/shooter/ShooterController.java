@@ -11,9 +11,11 @@ import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAccelerato
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom.ShooterAcceleratorBottomTarget;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop.ShooterAcceleratorTopTarget;
+import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
 import frc.robot.lib.generic_subsystems.superstructure.*;
 
 import org.littletonrobotics.junction.Logger;
+
 
 public class ShooterController extends SubsystemBase {
     public enum ShooterState {
@@ -45,6 +47,7 @@ public class ShooterController extends SubsystemBase {
         public final ShooterAcceleratorTopTarget acceleratorTopTarget;
         public final ShooterAcceleratorBottomTarget acceleratorBottomTarget;
 
+
         private ShooterState(
             ShooterHoodTarget hoodTarget,
             ShooterFlywheelTarget flywheelTarget,
@@ -58,14 +61,13 @@ public class ShooterController extends SubsystemBase {
         }
     }
     private ShooterState targetState = ShooterState.IDLE;
+        private boolean stopped = false;
 
     //might need sensors defined here and in constructor
     private final ShooterFlywheel shooterFlywheel;
     private final ShooterHood shooterHood;
     private final ShooterAcceleratorBottom shooterAcceleratorBottom;
     private final ShooterAcceleratorTop shooterAcceleratorTop;
-
-    private boolean isStopped = false;
 
     public ShooterController(ShooterFlywheel shooterFlywheel, ShooterHood shooterHood, ShooterAcceleratorBottom shooterAcceleratorBottom, ShooterAcceleratorTop shooterAcceleratorTop) {
         this.shooterFlywheel = shooterFlywheel;
@@ -79,15 +81,18 @@ public class ShooterController extends SubsystemBase {
         //TODO: update states for shooter controller
         // if stopped, set all to stop 
 
-        if (isStopped) {
-            //set the controlmode to stop within each part of shooter
+        if (stopped){
+            shooterHood.setControlMode(GenericSuperstructure.ControlMode.STOP);
+            shooterFlywheel.setControlMode(ControlMode.STOP);
+            shooterAcceleratorBottom.setControlMode(ControlMode.STOP);
+            shooterAcceleratorTop.setControlMode(ControlMode.STOP);
         }
-
-        shooterHood.setPositionTarget(targetState.hoodTarget);
-        shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
-        shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
-        shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
-
+        else {
+            shooterHood.setPositionTarget(targetState.hoodTarget);
+            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+            shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
+            shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
+        }
         shooterFlywheel.periodic();
         shooterHood.periodic();
         shooterAcceleratorBottom.periodic();
@@ -101,8 +106,8 @@ public class ShooterController extends SubsystemBase {
     }
 
     public void setTargetState(ShooterState targetState) {
+        setStopped(false);
         this.targetState = targetState;
-        this.isStopped = false;
     }
 
     public Command setTargetCommand(ShooterState target) {
@@ -117,10 +122,10 @@ public class ShooterController extends SubsystemBase {
     }
 
     public void setStopped(boolean stopped){
-        isStopped = stopped;
+        this.stopped = stopped;
     }
 
-    public Command setStoppedCommand(boolean stopped) {
-        return new InstantCommand(() -> setStopped(stopped));
+    public Command setStoppedCommand(boolean stopped){
+        return new InstantCommand(()-> setStopped(stopped));
     }
 }

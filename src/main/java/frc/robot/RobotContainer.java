@@ -316,13 +316,6 @@ public class RobotContainer {
     driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
     
-    driverA.rightTrigger().whileTrue(new RunCommand(() -> {
-      swerve.setTargetHeading(RobotState.getInstance().getAlignPose().getRotation().plus(Rotation2d.fromDegrees(90)));
-    }));
-    driverA.leftTrigger().whileTrue(new RunCommand(() -> {
-      swerve.setTargetHeading(RobotState.getInstance().getAlignPose().getRotation().minus(Rotation2d.fromDegrees(90)));
-    }));
-
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     //driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
     //  .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
@@ -336,8 +329,10 @@ public class RobotContainer {
     //  intakeController.setTargetStateCommand(IntakeControllerState.INTAKE) : intakeController.setTargetStateCommand(IntakeControllerState.STOW));
 
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE));
-    driverB.x().onTrue(shooterController.setStoppedCommand(true));
-    driverB.x().onTrue(new InstantCommand(() -> { CommandScheduler.getInstance().cancelAll(); }));
+    driverB.x().onTrue(shooterController.setStoppedCommand(true)
+      .alongWith(intakeController.setStoppedCommand(true))
+      //.alongWith(climbController.setStoppedCommand(true)) -- climb is not yet merged into dev so this isnt gonna work
+    );
   }
 
   private void configureAutos() {

@@ -7,6 +7,8 @@ import frc.robot.subsystems.intake.intakePivot.IntakePivot;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot.IntakePivotTarget;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
+import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
+import frc.robot.lib.generic_subsystems.superstructure.*;
 
 public class IntakeController extends SubsystemBase {
 
@@ -32,6 +34,7 @@ public class IntakeController extends SubsystemBase {
     }
 
     private IntakeControllerState targetState = IntakeControllerState.STOW;
+    private boolean stopped = false;
 
     private final IntakePivot intakePivot;
     private final IntakeRollers intakeRollers;
@@ -43,9 +46,14 @@ public class IntakeController extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // set target states to those in the current controller state
-        intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
-        intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
+        if (stopped){
+            intakeRollers.setControlMode(ControlMode.STOP);
+            intakePivot.setControlMode(GenericSuperstructure.ControlMode.STOP);
+        } else {
+            // set target states to those in the current controller state
+            intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
+            intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
+        }
 
         intakePivot.periodic();
         intakeRollers.periodic();
@@ -54,6 +62,7 @@ public class IntakeController extends SubsystemBase {
 
     // GETTTERS AND SETTERS
     public void setTargetState(IntakeControllerState targetState){
+        setStopped(false);
         this.targetState = targetState;
     }
     public IntakeControllerState getTargetState(){
@@ -62,5 +71,13 @@ public class IntakeController extends SubsystemBase {
 
     public Command setTargetStateCommand(IntakeControllerState targetState){
         return new InstantCommand(() -> setTargetState(targetState), this);
+    }
+
+    public void setStopped(boolean stopped){
+        this.stopped = stopped;
+    }
+
+    public Command setStoppedCommand(boolean stopped){
+        return new InstantCommand(() -> setStopped(stopped));
     }
 }
