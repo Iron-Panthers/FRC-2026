@@ -24,7 +24,7 @@ import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
-import frc.robot.subsystems.rgb.RGBIOCANdle;
+import frc.robot.subsystems.rgb.RGBIOAddressableLED;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.GyroIO;
@@ -86,7 +86,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
-          rgb = new RGB(new RGBIOCANdle());
+          rgb = new RGB(new RGBIOAddressableLED());
           canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
         }
         case VISION -> {
