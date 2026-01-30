@@ -11,6 +11,7 @@ import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAccelerato
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom.ShooterAcceleratorBottomTarget;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop.ShooterAcceleratorTopTarget;
+import frc.robot.lib.generic_subsystems.superstructure.*;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -64,6 +65,8 @@ public class ShooterController extends SubsystemBase {
     private final ShooterAcceleratorBottom shooterAcceleratorBottom;
     private final ShooterAcceleratorTop shooterAcceleratorTop;
 
+    private boolean isStopped = false;
+
     public ShooterController(ShooterFlywheel shooterFlywheel, ShooterHood shooterHood, ShooterAcceleratorBottom shooterAcceleratorBottom, ShooterAcceleratorTop shooterAcceleratorTop) {
         this.shooterFlywheel = shooterFlywheel;
         this.shooterHood = shooterHood;
@@ -75,11 +78,16 @@ public class ShooterController extends SubsystemBase {
     public void periodic() {
         //TODO: update states for shooter controller
         // if stopped, set all to stop 
+
+        if (isStopped) {
+            //set the controlmode to stop within each part of shooter
+        }
+
         shooterHood.setPositionTarget(targetState.hoodTarget);
         shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
         shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
         shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
-        
+
         shooterFlywheel.periodic();
         shooterHood.periodic();
         shooterAcceleratorBottom.periodic();
@@ -94,6 +102,7 @@ public class ShooterController extends SubsystemBase {
 
     public void setTargetState(ShooterState targetState) {
         this.targetState = targetState;
+        this.isStopped = false;
     }
 
     public Command setTargetCommand(ShooterState target) {
@@ -105,5 +114,13 @@ public class ShooterController extends SubsystemBase {
             .withTimeout(.02);
             //.andThen(new WaitUntilCommand(this::shooterReachedTarget))
             //TODO: not sure if we are making this method or not bc it was used for pivot
+    }
+
+    public void setStopped(boolean stopped){
+        isStopped = stopped;
+    }
+
+    public Command setStoppedCommand(boolean stopped) {
+        return new InstantCommand(() -> setStopped(stopped));
     }
 }

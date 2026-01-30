@@ -59,11 +59,12 @@ import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
 import frc.robot.subsystems.shooter.shooter_hood.*;
 import frc.robot.subsystems.shooter.ShooterController;
+import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 import frc.robot.subsystems.shooter.shooter_flywheel.*;
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.*;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.*;
 import frc.robot.lib.generic_subsystems.superstructure.*;
-import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.*;
+import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
@@ -316,7 +317,7 @@ public class RobotContainer {
     //driverB.y().onTrue(climbController.setTargetCommand(ClimbState.CLIMB));
 
     driverB.rightBumper().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
-    
+    driverB.x().onTrue(shooterController.setStoppedCommand(true));
     //TODO: left bumper, x
   }
 
