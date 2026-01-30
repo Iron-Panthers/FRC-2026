@@ -9,7 +9,11 @@ import frc.robot.subsystems.climb.*;
 public class ClimbDeployPivot extends GenericSuperstructure<ClimbDeployPivot.ClimbDeployPivotTarget> { //FIX
   public enum ClimbDeployPivotTarget implements GenericSuperstructure.PositionTarget { 
     BOTTOM(0.0),
-    TOP(90.0);
+    TOP(0.3),
+    STOW(-0.02),
+    IDLE(0.0),
+    INTAKE(0.0),
+    CLAWED(2.0);
 
     private double position = 0;
     private static final double EPSILON = ClimbDeployPivotConstants.POSITION_TARGET_EPSILON;

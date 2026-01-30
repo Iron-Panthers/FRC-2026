@@ -7,14 +7,26 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
 import frc.robot.subsystems.climb.*;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot.ClimbClawPivotTarget;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot.ClimbDeployPivotTarget;
 
 public class ClimbController extends SubsystemBase    {
   public enum ClimbState {
-    IDLE,
-    INTAKE,
-    CLIMB,
-    STOP_INTAKE,
-    STOP_CLIMB;
+    IDLE(ClimbDeployPivotTarget.IDLE, ClimbClawPivotTarget.IDLE),
+    INTAKE(ClimbDeployPivotTarget.INTAKE, ClimbClawPivotTarget.INTAKE),
+    CLIMB(ClimbDeployPivotTarget.TOP, ClimbClawPivotTarget.TOP),
+    STOP_INTAKE(ClimbDeployPivotTarget.IDLE, ClimbClawPivotTarget.IDLE),
+    STOP_CLIMB(ClimbDeployPivotTarget.IDLE, ClimbClawPivotTarget.IDLE);
+
+    private ClimbDeployPivotTarget deployTarget;
+    private ClimbClawPivotTarget clawTarget;
+
+    private ClimbState(ClimbDeployPivotTarget deployTarget, ClimbClawPivotTarget clawTarget) {
+      this.deployTarget = deployTarget;
+      this.clawTarget = clawTarget;
+    }
   }
 
   private ClimbClawPivot climbClawPivot;
@@ -31,33 +43,68 @@ public class ClimbController extends SubsystemBase    {
 
   @Override
   public void periodic() {
+    
     switch (targetState) {
       case IDLE -> {
-        climbClawPivot.setPositionTarget(Climb)
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.BOTTOM);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.BOTTOM);
+      }
+      case INTAKE -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.STOW);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.STOW);
+      }
+      case CLIMB -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.TOP);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.TOP);
+      }
+      case STOP_INTAKE -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.INTAKE);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.INTAKE);
+      }
+      case STOP_CLIMB -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.IDLE);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.IDLE);
       }
     }
 
     climbClawPivot.periodic();
     climbDeployPivot.periodic();
+
+    if (climbClawPivot.getPosition() > ClimbClawPivotTarget.TOP.getPosition()) {
+      setTargetState(ClimbState.STOP_CLIMB);
+    }
   }
 
-        public Command setPositionTargetCommand(ClimbClawPivotTarget climbClawPivotTarget) {
-          return new InstantCommand(
-              () -> {
-                ClimbClawPivotTarget.setPositionTarget(climbClawPivotTargetarget);
-              });
-        }
+  public void setTargetState (ClimbState targetState) {
+    this.targetState = targetState;
+  }
 
-        public ClimbClawTarget getClimbTarget() {
-          return ClimbClawPivot.getPositionTarget();
-        }
+  public Command setTargetCommand(ClimbState target) {
+    return new InstantCommand(
+        () -> {
+          this.targetState = target;
+        });
+  }
 
-        public void setClimbTarget(ClimbTarget target) {
-          climb.setControlMode(ControlMode.POSITION);
-          climb.setPositionTarget(target);
-        }
+  public ClimbClawPivotTarget getClimbClawPivotTarget() {
+    return climbClawPivot.getPositionTarget();
+  }
 
-        public void setStopped(boolean stopped) {
-          climb.setControlMode(ControlMode.STOP);
-        }
+  public ClimbDeployPivotTarget getClimbDeployPivotTarget() {
+    return climbDeployPivot.getPositionTarget();
+  }
+
+  public void setClimbTarget(ClimbState target) {
+    climbClawPivot.setControlMode(ControlMode.POSITION);
+    climbClawPivot.setPositionTarget(target.clawTarget);
+
+    climbDeployPivot.setControlMode(ControlMode.POSITION);
+    climbDeployPivot.setPositionTarget(target.deployTarget);
+  }
+
+  public void setStopped(boolean stopped) {
+    climbClawPivot.setControlMode(ControlMode.STOP);
+
+    climbDeployPivot.setControlMode(ControlMode.STOP);
+  }
 }

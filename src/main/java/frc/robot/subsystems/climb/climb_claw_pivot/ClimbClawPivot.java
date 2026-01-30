@@ -9,7 +9,11 @@ import frc.robot.subsystems.climb.*;
 public class ClimbClawPivot extends GenericSuperstructure<ClimbClawPivot.ClimbClawPivotTarget> { //FIX
   public enum ClimbClawPivotTarget implements GenericSuperstructure.PositionTarget { 
     BOTTOM(0.0),
-    TOP(90.0);
+    TOP(0.3),
+    STOW(-0.02),
+    IDLE(0.0),
+    INTAKE(0.0),
+    CLAWED(2.0);
 
     private double position = 0;
     private static final double EPSILON = ClimbClawPivotConstants.POSITION_TARGET_EPSILON;
@@ -30,7 +34,7 @@ public class ClimbClawPivot extends GenericSuperstructure<ClimbClawPivot.ClimbCl
 
   public ClimbClawPivot(ClimbClawPivotIO io) {
     super("Climb Claw Pivot", io);
-    setPositionTarget(ClimbClawPivotTarget.TOP);
+    setPositionTarget(ClimbClawPivotTarget.BOTTOM);
     setControlMode(ControlMode.STOP);
   }
 
