@@ -311,14 +311,26 @@ public class RobotContainer {
     // );
     // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
 
-    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
-    // bindings for climb subsystem
-    //driverB.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOP_CLIMB));
-    //driverB.y().onTrue(climbController.setTargetCommand(ClimbState.CLIMB));
 
-    driverB.rightBumper().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+    //IDEAL BUTTON BINDINGS; climb-related stuff commented because climb is not yet merged
+    driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
+    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+    
+
+    //driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
+    //  .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
+    // bindings for climb subsystem
+    //driverB.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOW));
+
+    //driverB.y().onTrue(intakeController.getTargetState() == IntakeControllerState.STOW ?
+    //  climbController.setTargetCommand(ClimbState.CLIMB) : climbController.setTargetCommand(ClimbState.STOW));
+
+    //driverB.rightBumper().onTrue(climbController.getTargetState() == ClimbState.STOW ?
+    //  intakeController.setTargetStateCommand(IntakeControllerState.INTAKE) : intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+
+    driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE));
     driverB.x().onTrue(shooterController.setStoppedCommand(true));
-    //TODO: left bumper, x
+    driverB.x().onTrue(new InstantCommand(() -> { CommandScheduler.getInstance().cancelAll(); }));
   }
 
   private void configureAutos() {
