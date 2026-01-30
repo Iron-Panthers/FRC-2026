@@ -1,5 +1,6 @@
 package frc.robot.lib.generic_subsystems.rollers;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -67,7 +68,10 @@ public abstract class GenericRollersIOSim implements GenericRollersIO {
       double kS,
       double kV,
       double kA,
-      double kG) {
+      double kG,
+      double motionMagicAcceleration,
+      double motionMagicCruiseVelocity,
+      double motionMagicJerk) {
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
@@ -77,6 +81,12 @@ public abstract class GenericRollersIOSim implements GenericRollersIO {
     gainsConfig.kA = kA;
     gainsConfig.kG = kG;
 
+    MotionMagicConfigs motionMagicConfig = new MotionMagicConfigs();
+    motionMagicConfig.MotionMagicAcceleration = motionMagicAcceleration;
+    motionMagicConfig.MotionMagicCruiseVelocity = motionMagicCruiseVelocity;
+    motionMagicConfig.MotionMagicJerk = motionMagicJerk;
+
     talon.getConfigurator().apply(gainsConfig);
+    talon.getConfigurator().apply(motionMagicConfig);
   }
 }

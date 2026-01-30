@@ -42,9 +42,9 @@ public class DriveConstants {
   public static final DrivebaseConfig DRIVE_CONFIG =
       switch (getRobotType()) {
         case COMP -> new DrivebaseConfig(
-            Units.inchesToMeters(1.925),
-            Units.inchesToMeters(22.5),
-            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(1.97),
+            Units.inchesToMeters(19.75),
+            Units.inchesToMeters(23.75),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             3.75,

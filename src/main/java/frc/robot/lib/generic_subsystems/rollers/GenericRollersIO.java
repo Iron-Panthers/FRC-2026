@@ -27,6 +27,9 @@ public interface GenericRollersIO {
       double kS,
       double kV,
       double kA,
-      double kG
+      double kG,
+      double motionMagicAcceleration,
+      double motionMagicCruiseVelocity,
+      double motionMagicJerk
   ) {}
 }

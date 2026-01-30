@@ -14,7 +14,10 @@ public class ShooterAcceleratorTopIOTalonFX extends GenericRollersIOTalonFX impl
             GAINS.kS(),
             GAINS.kV(),
             GAINS.kA(),
-            GAINS.kG()
+            GAINS.kG(),
+            MOTION_MAGIC_CONFIG.accelerations(),
+            MOTION_MAGIC_CONFIG.cruiseVelocity(),
+            0
 
         );
     }

@@ -272,13 +272,15 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
+    // driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
     
-    driverA.b().onTrue(new InstantCommand(() -> {
-      RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
-    }));
+    // driverA.b().onTrue(new InstantCommand(() -> {
+    //   RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
+    // }));
 
-    driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+    driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+    driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
 
     // driverA.y().onTrue(new InstantCommand(() -> {
       

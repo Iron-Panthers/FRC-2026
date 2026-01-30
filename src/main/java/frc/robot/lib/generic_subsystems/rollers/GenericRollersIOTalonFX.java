@@ -90,7 +90,6 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
    * @param motionMagicAcceleration Motion magic acceleration (rotations per second squared)
    * @param motionMagicCruiseVelocity Motion magic cruise velocity (rotations per second)
    * @param motionMagicJerk Motion magic jerk (rotations per second cubed)
-   * @param gravityTypeValue Gravity compensation type
    */
   @Override
   public void setSlot0(
@@ -100,7 +99,10 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
       double kS,
       double kV,
       double kA,
-      double kG) {
+      double kG,
+      double motionMagicAcceleration,
+      double motionMagicCruiseVelocity,
+      double motionMagicJerk) {
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
@@ -109,7 +111,13 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     gainsConfig.kV = kV;
     gainsConfig.kA = kA;
     gainsConfig.kG = kG;
+    
+    MotionMagicConfigs motionMagicConfig = new MotionMagicConfigs();
+    motionMagicConfig.MotionMagicAcceleration = motionMagicAcceleration;
+    motionMagicConfig.MotionMagicCruiseVelocity = motionMagicCruiseVelocity;
+    motionMagicConfig.MotionMagicJerk = motionMagicJerk;
 
     talon.getConfigurator().apply(gainsConfig);
+    talon.getConfigurator().apply(motionMagicConfig);
   }
 }
