@@ -3,6 +3,8 @@ package frc.robot.subsystems.canWatchdog;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
 public class CANWatchdogConstants {
   public static final String REQUEST = "http://localhost:1250/?action=getdevices";
   public static final int SCAN_DELAY_MS = 97;

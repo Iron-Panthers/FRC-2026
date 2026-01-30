@@ -2,10 +2,13 @@ package frc.robot.lib.generic_subsystems.rollers;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
@@ -13,17 +16,19 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 
 public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
-  private final TalonFX talon;
+  protected final TalonFX talon;
+  protected final TalonFXConfiguration config;
 
   private final StatusSignal<Angle> position;
   private final StatusSignal<AngularVelocity> velocity;
   private final StatusSignal<Voltage> appliedVolts;
   private final StatusSignal<Current> supplyCurrent;
 
-  private final VoltageOut voltageOutput = new VoltageOut(0).withUpdateFreqHz(0);
   private final NeutralOut neutralOutput = new NeutralOut();
+  private final MotionMagicVelocityVoltage velocityControl = new MotionMagicVelocityVoltage(0).withUpdateFreqHz(0);
 
   private final double mechanismReduction;
 
@@ -33,7 +38,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
 
     mechanismReduction = reduction;
 
-    TalonFXConfiguration config = new TalonFXConfiguration();
+    config = new TalonFXConfiguration();
     config.MotorOutput.Inverted =
         inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
     config.MotorOutput.NeutralMode = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
@@ -63,12 +68,48 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   }
 
   @Override
-  public void runVolts(double volts) {
-    talon.setControl(voltageOutput.withOutput(volts));
+  public void runVelocity(double velocity) {
+    talon.setControl(velocityControl.withVelocity(velocity));
   }
 
   @Override
   public void stop() {
     talon.setControl(neutralOutput);
+  }
+
+  /**
+   * Sets all of the PID and motion magic gains.
+   *
+   * @param kP Proportional gain
+   * @param kI Integral gain
+   * @param kD Derivative gain
+   * @param kS Static gain
+   * @param kV Velocity gain
+   * @param kA Acceleration gain
+   * @param kG Gravity gain
+   * @param motionMagicAcceleration Motion magic acceleration (rotations per second squared)
+   * @param motionMagicCruiseVelocity Motion magic cruise velocity (rotations per second)
+   * @param motionMagicJerk Motion magic jerk (rotations per second cubed)
+   * @param gravityTypeValue Gravity compensation type
+   */
+  @Override
+  public void setSlot0(
+      double kP,
+      double kI,
+      double kD,
+      double kS,
+      double kV,
+      double kA,
+      double kG) {
+    Slot0Configs gainsConfig = new Slot0Configs();
+    gainsConfig.kP = kP;
+    gainsConfig.kI = kI;
+    gainsConfig.kD = kD;
+    gainsConfig.kS = kS;
+    gainsConfig.kV = kV;
+    gainsConfig.kA = kA;
+    gainsConfig.kG = kG;
+
+    talon.getConfigurator().apply(gainsConfig);
   }
 }
