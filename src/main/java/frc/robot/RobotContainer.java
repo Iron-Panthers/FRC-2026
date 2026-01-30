@@ -316,6 +316,12 @@ public class RobotContainer {
     driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
     
+    driverA.rightTrigger().whileTrue(new RunCommand(() -> {
+      swerve.setTargetHeading(RobotState.getInstance().getAlignPose().getRotation().plus(Rotation2d.fromDegrees(90)));
+    }));
+    driverA.leftTrigger().whileTrue(new RunCommand(() -> {
+      swerve.setTargetHeading(RobotState.getInstance().getAlignPose().getRotation().minus(Rotation2d.fromDegrees(90)));
+    }));
 
     //driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
     //  .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
