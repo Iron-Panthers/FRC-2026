@@ -19,6 +19,7 @@ public class IntakeRollersConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, 1, 0, 0);
+        case COMP -> new PIDGains(0.01, 0, 0, 0.42, 0.054, 0.0164, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
