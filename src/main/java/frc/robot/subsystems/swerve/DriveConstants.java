@@ -4,7 +4,14 @@ import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
-import static frc.robot.Constants.*;
+import static frc.robot.Constants.getRobotType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.pathplanner.lib.config.PIDConstants;
@@ -20,6 +27,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -28,11 +36,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
-import java.util.ArrayList;
-import java.util.List;
-import org.ironmaple.simulation.drivesims.COTS;
-import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
-import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 
 public class DriveConstants {
   // measures in meters (per sec) and radians (per sec)
@@ -48,18 +51,18 @@ public class DriveConstants {
             10,
             6);
         case VISION -> new DrivebaseConfig(
-            Units.inchesToMeters(1.925),
-            Units.inchesToMeters(22.5),
-            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(1.97),
+            Units.inchesToMeters(19.75),
+            Units.inchesToMeters(23.75),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
-            3.75,
+            4,
             10,
-            6);
+            10);
         case ALPHA -> new DrivebaseConfig(
             Units.inchesToMeters(1.925),
-            Units.inchesToMeters(18.75),
-            Units.inchesToMeters(24.75),
+            Units.inchesToMeters(19.75),
+            Units.inchesToMeters(23.75),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             4.5,
@@ -96,63 +99,63 @@ public class DriveConstants {
         // TODO: Check that InvertedValue.(Counter)Clockwise_Positive is for true or false
         case COMP -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(5, "FL Drive"),
-              CAN.at(4, "FL Steer"),
-              6,
-              new Rotation2d(-1.877592 - Math.PI),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.CounterClockwise_Positive),
-          new ModuleConfig(
-              CAN.at(2, "FR Drive"),
-              CAN.at(1, "FR Steer"),
+              CAN.at(17, "FL Drive"),
+              CAN.at(1, "FL Steer"),
               3,
-              new Rotation2d(-2.32498),
-              InvertedValue.Clockwise_Positive,
+              new Rotation2d(1.549321),
+              InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(8, "BL Drive"),
-              CAN.at(7, "BL Steer"),
-              9,
-              new Rotation2d(-2.212),
-              InvertedValue.Clockwise_Positive,
+              CAN.at(44, "FR Drive"),
+              CAN.at(4, "FR Steer"),
+              6,
+              new Rotation2d(0.415709),
+              InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(11, "BR Drive"),
-              CAN.at(10, "BR Steer"),
+              CAN.at(18, "BL Drive"),
+              CAN.at(0, "BL Steer"),
               12,
-              new Rotation2d(2.15377 - Math.PI),
-              InvertedValue.Clockwise_Positive,
-              InvertedValue.Clockwise_Positive)
+              new Rotation2d(2.096952),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.Clockwise_Positive),
+          new ModuleConfig(
+              CAN.at(8, "BR Drive"),
+              CAN.at(20, "BR Steer"),
+              25,
+              new Rotation2d(1.402058),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.CounterClockwise_Positive)
         };
         case VISION -> new ModuleConfig[] {
           new ModuleConfig(
               CAN.at(5, "FL Drive"),
               CAN.at(4, "FL Steer"),
               6,
-              new Rotation2d(-1.877592 - Math.PI),
+              new Rotation2d(-1.876059),
+              InvertedValue.CounterClockwise_Positive, // steer
+              InvertedValue.Clockwise_Positive), // drive
+          new ModuleConfig(
+              CAN.at(11, "FR Drive"),
+              CAN.at(10, "FR Steer"),
+              12,
+              new Rotation2d(0.619728),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(2, "FR Drive"),
-              CAN.at(1, "FR Steer"),
+              CAN.at(2, "BL Drive"),
+              CAN.at(1, "BL Steer"),
               3,
-              new Rotation2d(-2.32498),
-              InvertedValue.CounterClockwise_Positive,
-              InvertedValue.CounterClockwise_Positive),
-          new ModuleConfig(
-              CAN.at(8, "BL Drive"),
-              CAN.at(7, "BL Steer"),
-              9,
-              new Rotation2d(-2.212),
+              new Rotation2d(-2.323981),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(11, "BR Drive"),
-              CAN.at(10, "BR Steer"),
-              12,
-              new Rotation2d(2.15377 - Math.PI),
+              CAN.at(8, "BR Drive"),
+              CAN.at(7, "BR Steer"),
+              9,
+              new Rotation2d(-0.648874),
               InvertedValue.CounterClockwise_Positive,
-              InvertedValue.Clockwise_Positive)
+              InvertedValue.CounterClockwise_Positive)
         };
         case ALPHA -> new ModuleConfig[] {
           new ModuleConfig(
@@ -282,7 +285,7 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         case SIM -> new HeadingControllerConstants(20, 0, 8, 20, 0.01);
-        case VISION -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
+        case VISION -> new HeadingControllerConstants(6, 0, 5, 20, 0.01);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
@@ -292,7 +295,7 @@ public class DriveConstants {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
-            4, 0, 2, 2, 2); /*FIXME: tune these constants*/
+            15, 0, 0, 4, 4); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
             7, 0, 0, 1, 1); /* FIXME: tune these constants */
         case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 2, 2);
@@ -337,27 +340,8 @@ public class DriveConstants {
     Pair.of(FlippingUtil.flipFieldPosition(new Translation2d(4.039,1.337)), FlippingUtil.flipFieldPosition(new Translation2d(5.216,0)))
   );
 
-  public static final Translation2d BLUE_REEF_ORIGIN = new Translation2d(4.5, 4.025);
-
-  public static final Translation2d REEF_TRANSLATION2D =
-      DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-          ? new Translation2d(4.5, 4)
-          : new Translation2d(13, 4);
-
-  public static final Translation2d LEFT_CORNER =
-      DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-          ? new Translation2d(0, 8)
-          : new Translation2d(17.5, 0);
-
-  public static final Translation2d RIGHT_CORNER =
-      DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-          ? new Translation2d(0, 0)
-          : new Translation2d(17.5, 8);
-
-  public static final Translation2d CLIMB_ZONE_CENTER =
-      DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue
-          ? new Translation2d(8.765, 6)
-          : new Translation2d(8.765, 2);
+    public static final Translation3d BLUE_HUB_ORIGIN = new Translation3d(4.5974, 4.034536, 1.5748);
+    public static final Translation3d RED_HUB_ORIGIN = new Translation3d(11.938, 4.034536, 1.5748);
 
   public record DrivebaseConfig(
       double wheelRadius,
