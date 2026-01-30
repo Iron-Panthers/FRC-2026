@@ -14,11 +14,13 @@ import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot.ClimbDeplo
 
 public class ClimbController extends SubsystemBase    {
   public enum ClimbState {
-    IDLE(ClimbDeployPivotTarget.IDLE, ClimbClawPivotTarget.IDLE),
-    INTAKE(ClimbDeployPivotTarget.INTAKE, ClimbClawPivotTarget.INTAKE),
-    CLIMB(ClimbDeployPivotTarget.TOP, ClimbClawPivotTarget.TOP),
-    STOP_INTAKE(ClimbDeployPivotTarget.IDLE, ClimbClawPivotTarget.IDLE),
-    STOP_CLIMB(ClimbDeployPivotTarget.IDLE, ClimbClawPivotTarget.IDLE);
+    STOW(ClimbDeployPivotTarget.STOW, ClimbClawPivotTarget.STOW),
+    DEPLOY(ClimbDeployPivotTarget.DEPLOY, ClimbClawPivotTarget.DEPLOY),
+    L1(ClimbDeployPivotTarget.L1, ClimbClawPivotTarget.L1),
+    L2(ClimbDeployPivotTarget.L2, ClimbClawPivotTarget.L2),
+    L3(ClimbDeployPivotTarget.L3, ClimbClawPivotTarget.L3);
+
+    //stow deploy l1 l2 l3
 
     private ClimbDeployPivotTarget deployTarget;
     private ClimbClawPivotTarget clawTarget;
@@ -33,7 +35,7 @@ public class ClimbController extends SubsystemBase    {
 
   private ClimbDeployPivot climbDeployPivot;
 
-  private ClimbState targetState = ClimbState.IDLE;
+  private ClimbState targetState = ClimbState.STOW;
 
   /** Creates a new ClimbController. */
   public ClimbController(ClimbClawPivot claw, ClimbDeployPivot deploy) {
@@ -45,25 +47,25 @@ public class ClimbController extends SubsystemBase    {
   public void periodic() {
     
     switch (targetState) {
-      case IDLE -> {
-        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.BOTTOM);
-        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.BOTTOM);
-      }
-      case INTAKE -> {
+      case STOW -> {
         climbClawPivot.setPositionTarget(ClimbClawPivotTarget.STOW);
         climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.STOW);
       }
-      case CLIMB -> {
-        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.TOP);
-        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.TOP);
+      case DEPLOY -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.DEPLOY);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.DEPLOY);
       }
-      case STOP_INTAKE -> {
-        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.INTAKE);
-        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.INTAKE);
+      case L1 -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.L1);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.L1);
       }
-      case STOP_CLIMB -> {
-        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.IDLE);
-        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.IDLE);
+      case L2 -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.L2);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.L2);
+      }
+      case L3 -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.L3);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.L3);
       }
     }
 
