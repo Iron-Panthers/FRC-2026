@@ -240,7 +240,7 @@ public class RobotContainer {
     // init shooter with testing values
     RobotState.getInstance().initializeShootingAnglePredictor(
       () -> ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotSpeeds(), RobotState.getInstance().getEstimatedPose().getRotation()), 
-      () -> shooterFlywheels.getCurrentVelocity(),
+      () -> MetersPerSecond.of(12),
       () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(-90)); 
 
     nameCommands();
@@ -289,24 +289,24 @@ public class RobotContainer {
 
     // driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
 
-    driverA.y().onTrue(new InstantCommand(() -> {
-      // Only shoot in simulation
-      if (Constants.getRobotType() == Constants.RobotType.SIM) {
+    // driverA.y().onTrue(new InstantCommand(() -> {
+    //   // Only shoot in simulation
+    //   if (Constants.getRobotType() == Constants.RobotType.SIM) {
 
-        Transform3d shooterPose = ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
-          new Translation3d(),
-          new Rotation3d(0, 0, Math.PI/2)
-        )); // rotation because of how the modeled shooter was in sim litterally just that i fear
+    //     Transform3d shooterPose = ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+    //       new Translation3d(),
+    //       new Rotation3d(0, 0, Math.PI/2)
+    //     )); // rotation because of how the modeled shooter was in sim litterally just that i fear
 
-        // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
-        Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
-        LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
+    //     // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
+    //     Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
+    //     LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
 
-        // Shoot the fuel using the calculated parameters - velocity must match calculation!
-        RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
-      }
-      })
-    );
+    //     // Shoot the fuel using the calculated parameters - velocity must match calculation!
+    //     RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
+    //   }
+    //   })
+    // );
     // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
     driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
     driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));

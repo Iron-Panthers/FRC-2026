@@ -269,6 +269,7 @@ public class RobotState {
 
 
   // methods that use the shootingAnglePredictor -- as an abstraction
+
   private ShootingAnglePredictor shootingAnglePredictor;
   public void initializeShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw) {
     shootingAnglePredictor = new ShootingAnglePredictor(chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier, shooterYaw);
@@ -322,7 +323,7 @@ public class RobotState {
       debugPoses.add(shooterPose3d);
 
       // loop 5 times
-      for(int i = 0; i < 5; i++) {
+      for(int i = 0; i < 3; i++) {
         // calculate the angle and time of flight to get to a target position
         ShootingSolution shootingSolution = calculateStationaryShootingSolution(shooterPose3d.getTranslation(), hubPosition3d, shooterVelocity);
 
@@ -381,9 +382,9 @@ public class RobotState {
      * Returns an object with the angle (in radians) and time of flight (in seconds).
      */
     private IterativeShootingResult simulateProjectileWithDrag(double horizontalDistance, double verticalDistance, double shooterVelocity) {
-      final int maxIterations = 30;
+      final int maxIterations = 10;
       final double tolerance = 0.1; // meters vertical error
-      final double kP = 0.01; // Proportional gain for angle adjustment
+      final double kP = 0.05; // Proportional gain for angle adjustment
       final double minAngle = Math.toRadians(10);
       final double maxAngle = Math.toRadians(90);
       final double g = GRAVITY;
@@ -410,7 +411,7 @@ public class RobotState {
       // Try a range of angles around the guess
       for (int iter = 0; iter < maxIterations; iter++) {
         // Simulate projectile until x >= horizontalDistance
-        double dt = 0.005;
+        double dt = 0.5;
         double x = 0, y = 0;
         double vx = shooterVelocity * Math.cos(angle);
         double vy = shooterVelocity * Math.sin(angle);
@@ -440,7 +441,7 @@ public class RobotState {
           break;
         }
       }
-      return new IterativeShootingResult(found, bestAngle, bestTime);
+      return new IterativeShootingResult(true, bestAngle, bestTime);
     }
 
 
