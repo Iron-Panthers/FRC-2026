@@ -315,8 +315,7 @@ public class RobotContainer {
     //IDEAL BUTTON BINDINGS; climb-related stuff commented because climb is not yet merged
     driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
-    
-
+    driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     //driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
     //  .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
     // bindings for climb subsystem
