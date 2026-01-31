@@ -13,8 +13,9 @@ import frc.robot.lib.generic_subsystems.superstructure.*;
 public class IntakeController extends SubsystemBase {
 
     public enum IntakeControllerState{
-        INTAKE(IntakePivotTarget.INTAKE, IntakeRollersTarget.ON),
         STOW(IntakePivotTarget.STOW, IntakeRollersTarget.OFF),
+        OUT(IntakePivotTarget.INTAKE, IntakeRollersTarget.OFF),
+        INTAKE(IntakePivotTarget.INTAKE, IntakeRollersTarget.ON),
         REVERSE(IntakePivotTarget.INTAKE, IntakeRollersTarget.EJECT);
 
         private IntakePivotTarget intakePivotTarget;
