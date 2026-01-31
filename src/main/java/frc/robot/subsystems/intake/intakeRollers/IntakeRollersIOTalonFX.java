@@ -31,7 +31,7 @@ public class IntakeRollersIOTalonFX extends GenericRollersIOTalonFX implements I
         talon2 = new TalonFX(INTAKE_ROLLER_CONFIG.motorID2());
         talon2.getConfigurator().apply(config);
         talon2.setNeutralMode(INTAKE_ROLLER_CONFIG.brake() ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-        talon2.setControl(new Follower(talon.getDeviceID(), OPPOSE_MOTOR ? MotorAlignmentValue.Aligned : MotorAlignmentValue.Opposed));
+        talon2.setControl(new Follower(talon.getDeviceID(), OPPOSE_MOTOR ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned));
     }    
     
     

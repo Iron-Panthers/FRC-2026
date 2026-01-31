@@ -39,6 +39,7 @@ import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.rgb.RGB;
@@ -129,7 +130,7 @@ public class RobotContainer {
           //   new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
           // shooterAcceleratorTop = 
           //   new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
-          
+          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
         }
         case VISION -> {
           swerve =

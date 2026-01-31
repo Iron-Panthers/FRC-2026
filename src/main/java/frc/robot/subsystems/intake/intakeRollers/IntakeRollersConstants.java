@@ -12,7 +12,7 @@ public class IntakeRollersConstants {
         case SIM -> new IntakeRollerConfig(
             CAN.at(64, "Intake Roller"), CAN.at(65, "Intake Roller 2"), 2, false, true); 
         case COMP -> new IntakeRollerConfig(
-            CAN.at(31, "Intake Roller"), CAN.at(32, "Intake Roller 2"), 2, false, false);
+            CAN.at(21, "Intake Roller"), CAN.at(32, "Intake Roller 2"), 2, true, false);
         default -> new IntakeRollerConfig(
             CAN.at(0, "Intake Roller"), CAN.at(0, "Intake Roller 2"), 2, false, true); 
     };
@@ -30,8 +30,8 @@ public class IntakeRollersConstants {
 
 
   // CURRENT LIMITS
-  public static final double UPPER_VOLT_LIMIT = 6;
-  public static final double LOWER_VOLT_LIMIT = -6;
+  public static final double UPPER_VOLT_LIMIT = 13;
+  public static final double LOWER_VOLT_LIMIT = -13;
   public static final int CURRENT_LIMIT_AMPS = 10;
 
   public static final IntakeRollerPhysicalConstants PHYSICAL_CONSTANTS =
