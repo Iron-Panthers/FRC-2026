@@ -92,6 +92,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
       xVel = 0;
       yVel = 0;
     }
+
     Logger.recordOutput("Swerve/PIDAutoalign/Angle", currToTargAngle);
     Logger.recordOutput("Swerve/PIDAutoalign/OriginAngle", startToTargAngle);
     Logger.recordOutput("Swerve/PIDAutoalign/SetpointPos", magController.getSetpoint().position);
