@@ -165,8 +165,8 @@ public class RobotContainer {
                       DriveConstants.MODULE_CONFIGS[3], driveSimulation.getModules()[3]));
           vision =
               new Vision(
-                  new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
-                  new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
+                  new VisionIOPhotonvisionSim("arducam-4",3, driveSimulation::getSimulatedDriveTrainPose));
+                  // new VisionIOPhotonvisionSim("arducam-5", 4, driveSimulation::getSimulatedDriveTrainPose));
 
           // INTAKE
           intakePivot = new IntakePivot(new IntakePivotIOSim());
@@ -272,7 +272,7 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
 
     driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
+    driverA.x().whileTrue(swerve.setTargetPositionCommand(new Pose2d(2.499, 3.977, Rotation2d.k180deg)));
     
     driverA.b().onTrue(new InstantCommand(() -> {
       RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));

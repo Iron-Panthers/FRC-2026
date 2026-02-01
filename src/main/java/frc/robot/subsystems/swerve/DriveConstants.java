@@ -129,7 +129,7 @@ public class DriveConstants {
         };
         case VISION -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(5, "FL Drive"),
+              CAN.at(3, "FL Drive"),
               CAN.at(4, "FL Steer"),
               6,
               new Rotation2d(-1.876059),
@@ -150,7 +150,7 @@ public class DriveConstants {
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(8, "BR Drive"),
+              CAN.at(6, "BR Drive"),
               CAN.at(7, "BR Steer"),
               9,
               new Rotation2d(-0.648874),
@@ -295,7 +295,7 @@ public class DriveConstants {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
-            15, 0, 0, 4, 4); /*FIXME: tune these constants*/
+            4, 0, 0, 2, 4); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
             7, 0, 0, 1, 1); /* FIXME: tune these constants */
         case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 2, 2);
