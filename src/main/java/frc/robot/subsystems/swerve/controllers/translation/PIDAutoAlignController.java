@@ -92,6 +92,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
       xVel = 0;
       yVel = 0;
     }
+
     Logger.recordOutput("Swerve/PIDAutoalign/Angle", currToTargAngle);
     Logger.recordOutput("Swerve/PIDAutoalign/OriginAngle", startToTargAngle);
     Logger.recordOutput("Swerve/PIDAutoalign/SetpointPos", magController.getSetpoint().position);
@@ -125,7 +126,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
     calculateLinearMovement();
     Logger.recordOutput("Swerve/PIDAutoalign/XVel", xVel);
     Logger.recordOutput("Swerve/PIDAutoalign/YVel", yVel);
-    return ChassisSpeeds.fromFieldRelativeSpeeds(-xVel, -yVel, 0, yawSupplier.get());
+    return ChassisSpeeds.fromFieldRelativeSpeeds(-xVel, -yVel, 0, positionSupplier.get().getRotation().plus(Rotation2d.k180deg));
   }
   // log your data in advantage kit
   public Pose2d getTargetPosition() {
