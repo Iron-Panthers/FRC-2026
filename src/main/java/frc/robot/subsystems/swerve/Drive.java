@@ -57,8 +57,6 @@ public class Drive extends SubsystemBase {
   private TeleopHeadingController headingController = null;
   private PIDAutoAlignController pidAutoAlignController = null;
   private AutoAlignHeadingController autoAlignHeadingController = null;
-  
-  SwerveModulePosition[] pastWheelPositions = new SwerveModulePosition[4];
 
   public Drive(GyroIO gyroIO, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
     this.gyroIO = gyroIO;
@@ -86,16 +84,11 @@ public class Drive extends SubsystemBase {
       module.updateInputs();
     }
 
-    
     // pass odometry data to robotstate
     SwerveModulePosition[] wheelPositions =
-    Math.sqrt(Math.pow(gyroInputs.pitchPosition.getDegrees(), 2) + Math.pow(gyroInputs.rollPosition.getDegrees(), 2)) >= 10 ?
-        pastWheelPositions :
         Arrays.stream(modules)
             .map(module -> module.getModulePosition())
             .toArray(SwerveModulePosition[]::new);
-
-    pastWheelPositions = wheelPositions;
 
     RobotState.getInstance()
         .addOdometryMeasurement(
