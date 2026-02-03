@@ -1,5 +1,7 @@
 package frc.robot.lib.generic_subsystems.superstructure;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
 
 public class GenericSuperstructureConfiguration extends GenericMechanismConfiguration {
@@ -29,7 +31,7 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
    *
    * @return itself
    */
-  public GenericMechanismConfiguration withUpperExtensionLimit(double upperExtensionLimit) {
+  public GenericSuperstructureConfiguration withUpperExtensionLimit(double upperExtensionLimit) {
     this.upperExtensionLimit = upperExtensionLimit;
     this.upperExtensionLimitEnabled = true;
     return this;
@@ -61,7 +63,7 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
    *
    * @return itself
    */
-  public GenericMechanismConfiguration withLowerExtensionLimit(double lowerExtensionLimit) {
+  public GenericSuperstructureConfiguration withLowerExtensionLimit(double lowerExtensionLimit) {
     this.lowerExtensionLimit = lowerExtensionLimit;
     this.lowerExtensionLimitEnabled = true;
     return this;
@@ -91,7 +93,7 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
    *
    * @return itself
    */
-  public GenericMechanismConfiguration withUpperVoltageLimit(double upperVoltLimit) {
+  public GenericSuperstructureConfiguration withUpperVoltageLimit(double upperVoltLimit) {
     this.upperVoltLimit = upperVoltLimit;
     return this;
   }
@@ -120,7 +122,7 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
    *
    * @return itself
    */
-  public GenericMechanismConfiguration withLowerVoltageLimit(double lowerVoltLimit) {
+  public GenericSuperstructureConfiguration withLowerVoltageLimit(double lowerVoltLimit) {
     this.lowerVoltLimit = lowerVoltLimit;
     return this;
   }
@@ -143,7 +145,7 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
    *
    * @return itself
    */
-  public GenericMechanismConfiguration withZeroingVolts(double zeroingVolts) {
+  public GenericSuperstructureConfiguration withZeroingVolts(double zeroingVolts) {
     this.zeroingVolts = zeroingVolts;
     return this;
   }
@@ -166,7 +168,7 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
    *
    * @return itself
    */
-  public GenericMechanismConfiguration withZeroingOffset(double zeroingOffset) {
+  public GenericSuperstructureConfiguration withZeroingOffset(double zeroingOffset) {
     this.zeroingOffset = zeroingOffset;
     return this;
   }
@@ -179,9 +181,52 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
    *
    * @return itself
    */
-  public GenericMechanismConfiguration withSensorDiscontinuityPoint(
+  public GenericSuperstructureConfiguration withSensorDiscontinuityPoint(
       double sensorDiscontinuityPoint) {
     this.sensorDiscontinuityPoint = sensorDiscontinuityPoint;
+    return this;
+  }
+
+  // Override parent class methods to return GenericSuperstructureConfiguration for method chaining
+  @Override
+  public GenericSuperstructureConfiguration withID(int id) {
+    super.withID(id);
+    return this;
+  }
+
+  @Override
+  public GenericSuperstructureConfiguration withMotorDirection(InvertedValue motorDirection) {
+    super.withMotorDirection(motorDirection);
+    return this;
+  }
+
+  @Override
+  public GenericSuperstructureConfiguration withSupplyCurrentLimit(double supplyCurrentLimit) {
+    super.withSupplyCurrentLimit(supplyCurrentLimit);
+    return this;
+  }
+
+  @Override
+  public GenericSuperstructureConfiguration withCANCoderID(int canCoderID) {
+    super.withCANCoderID(canCoderID);
+    return this;
+  }
+
+  @Override
+  public GenericSuperstructureConfiguration withCANCoderOffset(double canCoderOffset) {
+    super.withCANCoderOffset(canCoderOffset);
+    return this;
+  }
+
+  @Override
+  public GenericSuperstructureConfiguration withCANCoderDirection(SensorDirectionValue canCoderDirection) {
+    super.withCANCoderDirection(canCoderDirection);
+    return this;
+  }
+
+  @Override
+  public GenericSuperstructureConfiguration withReduction(double reduction) {
+    super.withReduction(reduction);
     return this;
   }
 

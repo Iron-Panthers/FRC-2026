@@ -2,11 +2,20 @@ package frc.robot.subsystems.shooter.shooter_accelerator_bottom;
 
 import static frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottomConstants.*;
 
+import com.ctre.phoenix6.signals.InvertedValue;
+
 import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterAcceleratorBottomIOTalonFX extends GenericRollersIOTalonFX implements ShooterAcceleratorBottomIO {
     public ShooterAcceleratorBottomIOTalonFX() {
-        super(SHOOTER_ACCELERATOR_BOTTOM_CONFIG.motorID(), CURRENT_LIMIT_AMPS, SHOOTER_ACCELERATOR_BOTTOM_CONFIG.inverted(), SHOOTER_ACCELERATOR_BOTTOM_CONFIG.brake(), SHOOTER_ACCELERATOR_BOTTOM_CONFIG.reduction());
+        super(
+            new GenericRollersConfiguration()
+                .withID(SHOOTER_ACCELERATOR_BOTTOM_CONFIG.motorID())
+                .withSupplyCurrentLimit(CURRENT_LIMIT_AMPS)
+                .withMotorDirection(SHOOTER_ACCELERATOR_BOTTOM_CONFIG.inverted() ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
+                .withNeutralMode(SHOOTER_ACCELERATOR_BOTTOM_CONFIG.brake())
+                .withReduction(SHOOTER_ACCELERATOR_BOTTOM_CONFIG.reduction())
+        );
         super.setSlot0(
             GAINS.kP(),
             GAINS.kI(),

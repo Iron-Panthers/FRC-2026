@@ -3,7 +3,10 @@ package frc.robot.lib.generic_subsystems;
 import java.util.ArrayList;
 
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+
+import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
 
 public abstract class GenericMechanismConfiguration {
 
@@ -198,7 +201,7 @@ public abstract class GenericMechanismConfiguration {
   }
 
 
-  public record FollowerMotorConfig(int id, InvertedValue inverted) {
+  public record FollowerMotorConfig(int id, MotorAlignmentValue motorAlignmentValue) {
   }
   public ArrayList<FollowerMotorConfig> followerMotors = new ArrayList<>();
 
@@ -209,8 +212,8 @@ public abstract class GenericMechanismConfiguration {
    * @param inverted Inversion state of the follower motor
    * @return itself
    */
-  public GenericMechanismConfiguration withAdditionalFollowerMotor(int id, InvertedValue inverted) {
-    this.followerMotors.add(new FollowerMotorConfig(id, inverted));
+  public GenericMechanismConfiguration withAdditionalFollowerMotor(int id, MotorAlignmentValue motorAlignmentValue) {
+    this.followerMotors.add(new FollowerMotorConfig(id, motorAlignmentValue));
     return this;
   }
   

@@ -1,7 +1,8 @@
 package frc.robot.lib.generic_subsystems.rollers;
 
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
 
 public class GenericRollersConfiguration extends GenericMechanismConfiguration{
@@ -13,8 +14,51 @@ public class GenericRollersConfiguration extends GenericMechanismConfiguration{
      * @param brake
      * @return
      */
-    public GenericRollersConfiguration withNeutralMode(boolean brake){ {
+    public GenericRollersConfiguration withNeutralMode(boolean brake){ 
         this.neutralMode = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+        return this;
+    }
+
+    // Override parent class methods to return GenericRollersConfiguration for method chaining
+    @Override
+    public GenericRollersConfiguration withID(int id) {
+        super.withID(id);
+        return this;
+    }
+
+    @Override
+    public GenericRollersConfiguration withMotorDirection(InvertedValue motorDirection) {
+        super.withMotorDirection(motorDirection);
+        return this;
+    }
+
+    @Override
+    public GenericRollersConfiguration withSupplyCurrentLimit(double supplyCurrentLimit) {
+        super.withSupplyCurrentLimit(supplyCurrentLimit);
+        return this;
+    }
+
+    @Override
+    public GenericRollersConfiguration withCANCoderID(int canCoderID) {
+        super.withCANCoderID(canCoderID);
+        return this;
+    }
+
+    @Override
+    public GenericRollersConfiguration withCANCoderOffset(double canCoderOffset) {
+        super.withCANCoderOffset(canCoderOffset);
+        return this;
+    }
+
+    @Override
+    public GenericRollersConfiguration withCANCoderDirection(SensorDirectionValue canCoderDirection) {
+        super.withCANCoderDirection(canCoderDirection);
+        return this;
+    }
+
+    @Override
+    public GenericRollersConfiguration withReduction(double reduction) {
+        super.withReduction(reduction);
         return this;
     }
 }

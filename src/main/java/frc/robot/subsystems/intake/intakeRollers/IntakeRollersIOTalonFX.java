@@ -1,10 +1,12 @@
 package frc.robot.subsystems.intake.intakeRollers;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
+import frc.robot.lib.generic_subsystems.rollers.GenericRollersConfiguration;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIOTalonFX;
 import static frc.robot.subsystems.intake.intakeRollers.IntakeRollersConstants.*;
 
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -13,7 +15,14 @@ public class IntakeRollersIOTalonFX extends GenericRollersIOTalonFX implements I
     protected TalonFX talon2;
 
     public IntakeRollersIOTalonFX() {
-        super(INTAKE_ROLLER_CONFIG.motorID(), CURRENT_LIMIT_AMPS, INTAKE_ROLLER_CONFIG.inverted(), INTAKE_ROLLER_CONFIG.brake(), INTAKE_ROLLER_CONFIG.reduction());
+        super(
+            new GenericRollersConfiguration()
+                .withID(INTAKE_ROLLER_CONFIG.motorID())
+                .withSupplyCurrentLimit(CURRENT_LIMIT_AMPS)
+                .withMotorDirection(INTAKE_ROLLER_CONFIG.inverted() ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
+                .withNeutralMode(INTAKE_ROLLER_CONFIG.brake())
+                .withReduction(INTAKE_ROLLER_CONFIG.reduction())
+        );
         super.setSlot0(
             GAINS.kP(),
             GAINS.kI(),

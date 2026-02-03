@@ -18,6 +18,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 
 public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
@@ -48,11 +50,22 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
     talon.getConfigurator().apply(config);
 
+    // Initialize follower motors
+    followerMotors = new ArrayList<>();
+    for(GenericRollersConfiguration.FollowerMotorConfig followerConfig : rollersConfig.followerMotors) {
+      TalonFX followerTalon = new TalonFX(followerConfig.id());
+      followerTalon.setControl(new Follower(rollersConfig.id, followerConfig.motorAlignmentValue()));
+      followerTalon.setNeutralMode(rollersConfig.neutralMode);
+      followerTalon.getConfigurator().apply(config);
+      followerMotors.add(followerTalon);
+    }
+
     position = talon.getPosition();
     velocity = talon.getVelocity();
     appliedVolts = talon.getMotorVoltage();
     supplyCurrent = talon.getSupplyCurrent();
     BaseStatusSignal.setUpdateFrequencyForAll(50, position, velocity, appliedVolts, supplyCurrent);
+
 
     talon.optimizeBusUtilization();
   }

@@ -4,6 +4,7 @@ import static frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheelConst
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -14,7 +15,14 @@ public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements
     protected TalonFX talon2;
 
     public ShooterFlywheelIOTalonFX() {
-        super(SHOOTER_FLYWHEEL_CONFIG.motorID1(), CURRENT_LIMIT_AMPS, SHOOTER_FLYWHEEL_CONFIG.inverted(), SHOOTER_FLYWHEEL_CONFIG.brake(), SHOOTER_FLYWHEEL_CONFIG.reduction());
+        super(
+            new GenericRollersConfiguration()
+                .withID(SHOOTER_FLYWHEEL_CONFIG.motorID1())
+                .withSupplyCurrentLimit(CURRENT_LIMIT_AMPS)
+                .withMotorDirection(SHOOTER_FLYWHEEL_CONFIG.inverted() ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
+                .withNeutralMode(SHOOTER_FLYWHEEL_CONFIG.brake())
+                .withReduction(SHOOTER_FLYWHEEL_CONFIG.reduction())
+        );
         super.setSlot0(
             GAINS.kP(),
             GAINS.kI(),
