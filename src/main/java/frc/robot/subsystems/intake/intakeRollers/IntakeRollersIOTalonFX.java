@@ -22,7 +22,9 @@ public class IntakeRollersIOTalonFX extends GenericRollersIOTalonFX implements I
                 .withMotorDirection(INTAKE_ROLLER_CONFIG.inverted() ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
                 .withNeutralMode(INTAKE_ROLLER_CONFIG.brake())
                 .withReduction(INTAKE_ROLLER_CONFIG.reduction())
+                .withAdditionalFollowerMotor(INTAKE_ROLLER_CONFIG.motorID2(), OPPOSE_MOTOR ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned)
         );
+
         super.setSlot0(
             GAINS.kP(),
             GAINS.kI(),
@@ -35,12 +37,6 @@ public class IntakeRollersIOTalonFX extends GenericRollersIOTalonFX implements I
             MOTION_MAGIC_CONFIG.cruiseVelocity(),
             0
         );
-        
-        // initing second motor because why not
-        talon2 = new TalonFX(INTAKE_ROLLER_CONFIG.motorID2());
-        talon2.getConfigurator().apply(config);
-        talon2.setNeutralMode(INTAKE_ROLLER_CONFIG.brake() ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-        talon2.setControl(new Follower(talon.getDeviceID(), OPPOSE_MOTOR ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned));
     }    
     
     

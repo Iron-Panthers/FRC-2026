@@ -1,6 +1,7 @@
 package frc.robot.lib.generic_subsystems.rollers;
 
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
@@ -59,6 +60,12 @@ public class GenericRollersConfiguration extends GenericMechanismConfiguration{
     @Override
     public GenericRollersConfiguration withReduction(double reduction) {
         super.withReduction(reduction);
+        return this;
+    }
+
+    @Override
+    public GenericRollersConfiguration withAdditionalFollowerMotor(int id, MotorAlignmentValue motorAlignmentValue) {
+        super.withAdditionalFollowerMotor(id, motorAlignmentValue);
         return this;
     }
 }
