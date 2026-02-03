@@ -21,6 +21,8 @@ public class VisionConstants {
   public static final double AMBIGUITY_CUTOFF = 0.1;
   public static final double Z_ERROR_CUTOFF = 0.5;
 
+  public static final Matrix<N3, N1> VISION_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1); //not real values, copy and psated :)
+
   // index 0 -> arducam-1, etc
   public static final Transform3d[] CAMERA_TRANSFORM =
       switch (getRobotType()) {
