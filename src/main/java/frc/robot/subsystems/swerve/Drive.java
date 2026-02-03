@@ -52,6 +52,8 @@ public class Drive extends SubsystemBase {
   private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
   private ChassisSpeeds trajectorySpeeds = new ChassisSpeeds();
 
+  private Pose2d targetPosition = new Pose2d();
+
   // controllers
   private final TeleopTranslationController teleopController;
   private TeleopHeadingController headingController = null;
@@ -107,11 +109,29 @@ public class Drive extends SubsystemBase {
         }
       }
       case TRAJECTORY -> {
-        targetSpeeds = trajectorySpeeds;
-        // Only snap to heading during teleop
-        if (headingController != null && DriverStation.isTeleopEnabled()) {
-          setTargetHeading(RobotState.getInstance().getAlignPose().getRotation());
-          targetSpeeds.omegaRadiansPerSecond = headingController.update() + 0.0001;
+        Logger.recordOutput("Swerve/Imbeingverysilly", RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(targetPosition.getTranslation()));
+        if (RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(targetPosition.getTranslation())
+         <= DriveConstants.PATHPLANNER_PID_OFFSET){
+          if (pidAutoAlignController != null) {
+            targetSpeeds = pidAutoAlignController.update();
+            targetSpeeds.omegaRadiansPerSecond = autoAlignHeadingController.update();
+          }else{
+            setPIDAutoAlignTargetPosition(DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red
+          ? FlippingUtil.flipFieldPose(targetPosition)
+          : targetPosition);
+            targetSpeeds = pidAutoAlignController.update();
+            targetSpeeds.omegaRadiansPerSecond = autoAlignHeadingController.update();
+          }
+        }else{
+
+        //awjajwkrd spacei s necerssary
+        
+          targetSpeeds = trajectorySpeeds;
+          // Only snap to heading during teleop
+          if (headingController != null && DriverStation.isTeleopEnabled()) {
+            setTargetHeading(RobotState.getInstance().getAlignPose().getRotation());
+            targetSpeeds.omegaRadiansPerSecond = headingController.update() + 0.0001;
+          }
         }
       }
       case AUTO_ALIGN -> {
@@ -231,7 +251,12 @@ public class Drive extends SubsystemBase {
     headingController = null;
   }
 
-  public Pose2d setTargetPosition(Pose2d targetPosition) {
+  public void setTargetPosition(Pose2d targetPosition){
+    this.targetPosition = targetPosition;
+  }
+
+  public Pose2d setPIDAutoAlignTargetPosition(Pose2d targetPosition) {
+    setTargetPosition(targetPosition);
     targetPosition = DriverStation.getAlliance().isPresent()
                         && DriverStation.getAlliance().get() == Alliance.Blue
                     ? targetPosition
@@ -272,7 +297,7 @@ public class Drive extends SubsystemBase {
 
   public Command setTargetPositionCommand(Pose2d targetPosition) {
     return new FunctionalCommand(
-        () -> setTargetPosition(targetPosition),
+        () -> setPIDAutoAlignTargetPosition(targetPosition),
         () -> {},
         (t) -> clearTargetPositionController(),
         () -> false,

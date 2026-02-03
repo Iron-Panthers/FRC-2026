@@ -304,11 +304,16 @@ public class DriveConstants {
             4, 0, 0, 2, 4); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
             7, 0, 0, 1, 1); /* FIXME: tune these constants */
+<<<<<<< Updated upstream
         case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 3.3, 2);
+=======
+        case SIM -> new PIDAutoAlignControllerConstants(7, 0.0, 0.0, 3, 4);
+>>>>>>> Stashed changes
         default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
       };
   public static final double ROTATION_FINISH_PERCENT = 0.9;
-  public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
+
+  public static final double PATHPLANNER_PID_OFFSET = 0.6;
 
   public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
 

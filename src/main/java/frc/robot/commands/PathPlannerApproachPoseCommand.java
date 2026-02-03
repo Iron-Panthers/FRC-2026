@@ -4,7 +4,11 @@
 
 package frc.robot.commands;
 
+import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotState;
@@ -23,6 +27,7 @@ public class PathPlannerApproachPoseCommand extends Command {
     this.drive = drive;
     this.approachPose = approachPose;
     this.underTrench = underTrench;
+    drive.setTargetPosition(approachPose); // :)
 
     // addRequirements(drive); // I'm pretty sure this isn't needed because the pose align command already
   }
