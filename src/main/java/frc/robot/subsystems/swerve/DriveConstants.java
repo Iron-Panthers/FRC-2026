@@ -23,13 +23,17 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FlippingUtil;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -80,7 +84,9 @@ public class DriveConstants {
             1.63); // (multiply by max velocity to get m/s^2)
       };
 
-  public static final Translation2d[] MODULE_TRANSLATIONS =
+    public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
+  
+    public static final Translation2d[] MODULE_TRANSLATIONS =
       new Translation2d[] {
         new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, DRIVE_CONFIG.trackLength() / 2.0),
         new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, -DRIVE_CONFIG.trackLength() / 2.0),
@@ -129,7 +135,7 @@ public class DriveConstants {
         };
         case VISION -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(5, "FL Drive"),
+              CAN.at(3, "FL Drive"),
               CAN.at(4, "FL Steer"),
               6,
               new Rotation2d(-1.876059),
@@ -150,10 +156,10 @@ public class DriveConstants {
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(8, "BR Drive"),
-              CAN.at(7, "BR Steer"),
+              CAN.at(38, "BR Drive"),
+              CAN.at(6, "BR Steer"),
               9,
-              new Rotation2d(-0.648874),
+              new Rotation2d(1.078388),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive)
         };
@@ -295,10 +301,10 @@ public class DriveConstants {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
-            15, 0, 0, 4, 4); /*FIXME: tune these constants*/
+            4, 0, 0, 2, 4); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
             7, 0, 0, 1, 1); /* FIXME: tune these constants */
-        case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 2, 2);
+        case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 3.3, 2);
         default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
       };
   public static final double ROTATION_FINISH_PERCENT = 0.9;
