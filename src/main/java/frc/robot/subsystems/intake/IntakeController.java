@@ -14,7 +14,7 @@ public class IntakeController extends SubsystemBase {
 
     public enum IntakeControllerState{
         STOW(IntakePivotTarget.STOW, IntakeRollersTarget.OFF),
-        OUT(IntakePivotTarget.INTAKE, IntakeRollersTarget.OFF),
+        IDLE(IntakePivotTarget.INTAKE, IntakeRollersTarget.OFF),
         INTAKE(IntakePivotTarget.INTAKE, IntakeRollersTarget.ON),
         REVERSE(IntakePivotTarget.INTAKE, IntakeRollersTarget.EJECT);
 

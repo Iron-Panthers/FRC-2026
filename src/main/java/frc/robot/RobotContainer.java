@@ -279,7 +279,6 @@ public class RobotContainer {
 
     configureDriverAButtons();
     configureDriverBButtons();
-    driverA.start().onTrue(swerve.zeroGyroCommand());
     
     // driverA.y().onTrue(new InstantCommand(() -> {
       
@@ -316,16 +315,19 @@ public class RobotContainer {
   }
 
   private void configureDriverAButtons() {
+    driverA.start().onTrue(swerve.zeroGyroCommand());
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
-    driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.OUT));
+    //driverA.b().onTrue(climbController.setTargetStateCommand(ClimbControllerState.STOW)
+      //.andThen(intakeController.setTargetStateCommand(IntakeControllerState.OUT)));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetCommand(ShooterState.SHOOT)));
   }
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE));
+    driverB.leftBumper().onFalse(intakeController.setTargetStateCommand(IntakeControllerState.IDLE));
     // TODO: the code below all has something to do with climb, which hasn't been merged into dev, so they're commented for now
 
     // driverB.x().onTrue(shooterController.setStoppedCommand(true)
