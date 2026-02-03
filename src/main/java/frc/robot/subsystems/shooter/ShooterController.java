@@ -11,8 +11,11 @@ import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAccelerato
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom.ShooterAcceleratorBottomTarget;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop.ShooterAcceleratorTopTarget;
+import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
+import frc.robot.lib.generic_subsystems.superstructure.*;
 
 import org.littletonrobotics.junction.Logger;
+
 
 public class ShooterController extends SubsystemBase {
     public enum ShooterState {
@@ -44,6 +47,7 @@ public class ShooterController extends SubsystemBase {
         public final ShooterAcceleratorTopTarget acceleratorTopTarget;
         public final ShooterAcceleratorBottomTarget acceleratorBottomTarget;
 
+
         private ShooterState(
             ShooterHoodTarget hoodTarget,
             ShooterFlywheelTarget flywheelTarget,
@@ -57,6 +61,7 @@ public class ShooterController extends SubsystemBase {
         }
     }
     private ShooterState targetState = ShooterState.IDLE;
+        private boolean stopped = false;
 
     //might need sensors defined here and in constructor
     private final ShooterFlywheel shooterFlywheel;
@@ -74,11 +79,20 @@ public class ShooterController extends SubsystemBase {
     @Override
     public void periodic() {
         //TODO: update states for shooter controller
-        shooterHood.setPositionTarget(targetState.hoodTarget);
-        shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
-        shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
-        shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
+        // if stopped, set all to stop 
 
+        if (stopped){
+            shooterHood.setControlMode(GenericSuperstructure.ControlMode.STOP);
+            shooterFlywheel.setControlMode(ControlMode.STOP);
+            shooterAcceleratorBottom.setControlMode(ControlMode.STOP);
+            shooterAcceleratorTop.setControlMode(ControlMode.STOP);
+        }
+        else {
+            shooterHood.setPositionTarget(targetState.hoodTarget);
+            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+            shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
+            shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
+        }
         shooterFlywheel.periodic();
         shooterHood.periodic();
         shooterAcceleratorBottom.periodic();
@@ -92,6 +106,7 @@ public class ShooterController extends SubsystemBase {
     }
 
     public void setTargetState(ShooterState targetState) {
+        setStopped(false);
         this.targetState = targetState;
     }
 
@@ -104,5 +119,13 @@ public class ShooterController extends SubsystemBase {
             .withTimeout(.02);
             //.andThen(new WaitUntilCommand(this::shooterReachedTarget))
             //TODO: not sure if we are making this method or not bc it was used for pivot
+    }
+
+    public void setStopped(boolean stopped){
+        this.stopped = stopped;
+    }
+
+    public Command setStoppedCommand(boolean stopped){
+        return new InstantCommand(()-> setStopped(stopped));
     }
 }
