@@ -32,7 +32,6 @@ public class ClimbController extends SubsystemBase    {
   }
 
   private ClimbClawPivot climbClawPivot;
-
   private ClimbDeployPivot climbDeployPivot;
 
   private ClimbState targetState = ClimbState.STOW;
@@ -45,29 +44,8 @@ public class ClimbController extends SubsystemBase    {
 
   @Override
   public void periodic() {
-    
-    switch (targetState) {
-      case STOW -> {
-        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.STOW);
-        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.STOW);
-      }
-      case DEPLOY -> {
-        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.DEPLOY);
-        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.DEPLOY);
-      }
-      case L1 -> {
-        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.L1);
-        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.L1);
-      }
-      case L2 -> {
-        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.L2);
-        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.L2);
-      }
-      case L3 -> {
-        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.L3);
-        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.L3);
-      }
-    }
+    climbClawPivot.setPositionTarget(targetState.clawTarget);
+    climbDeployPivot.setPositionTarget(targetState.deployTarget);
 
     climbClawPivot.periodic();
     climbDeployPivot.periodic();
@@ -97,16 +75,15 @@ public class ClimbController extends SubsystemBase    {
   }
 
   public void setClimbTarget(ClimbState target) {
-    climbClawPivot.setControlMode(ControlMode.POSITION);
-    climbClawPivot.setPositionTarget(target.clawTarget);
+    targetState = target;
+  }
 
-    climbDeployPivot.setControlMode(ControlMode.POSITION);
-    climbDeployPivot.setPositionTarget(target.deployTarget);
+  public ClimbState getClimbState() {
+    return targetState;
   }
 
   public void setStopped(boolean stopped) {
     climbClawPivot.setControlMode(ControlMode.STOP);
-
     climbDeployPivot.setControlMode(ControlMode.STOP);
   }
 }

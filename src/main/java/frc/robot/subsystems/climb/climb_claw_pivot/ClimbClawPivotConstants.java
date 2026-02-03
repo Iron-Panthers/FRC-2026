@@ -10,9 +10,9 @@ public class ClimbClawPivotConstants {
   // TODO: Change values
   public static final ClimbClawPivotConfig CLIMB_CLAW_PIVOT_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new ClimbClawPivotConfig(CAN.at(0, "insertNameHere"), 0, 0, 0);
-        case SIM -> new ClimbClawPivotConfig(0, 0, 0, 0);
-        default -> new ClimbClawPivotConfig(0, 0, 0, 0);
+        case COMP -> new ClimbClawPivotConfig(CAN.at(0, "insertNameHere"), 0, 0, 1);
+        case SIM -> new ClimbClawPivotConfig(0, 0, 0, 1);
+        default -> new ClimbClawPivotConfig(0, 0, 0, 1);
       };
   // TODO: Change values
   public static final PIDGains GAINS =
@@ -71,9 +71,9 @@ public class ClimbClawPivotConstants {
   // TODO: Change all values below
   public static final ClimbClawPivotPhysicalConstants PHYSICAL_CONSTANTS = 
   switch (Constants.getRobotType()) {
-  case SIM -> new ClimbClawPivotPhysicalConstants(0, 0, 0, 0, false);
-  case COMP -> new ClimbClawPivotPhysicalConstants(0, 0, 0, 0, false);
-      };
+    case SIM -> new ClimbClawPivotPhysicalConstants(.001, 0, 0, 0, false);
+    default -> new ClimbClawPivotPhysicalConstants(.001, 0, 0, 0, false);
+  };
 
   public static final double SUPERSTRUCTURETEMP_LENGTH = 0; // inches //TODO: Change value
 }

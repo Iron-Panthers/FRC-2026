@@ -34,7 +34,7 @@ public class ClimbClawPivot extends GenericSuperstructure<ClimbClawPivot.ClimbCl
   }
 
   public ClimbClawPivot(ClimbClawPivotIO io) {
-    super("Climb Claw Pivot", io);
+    super("Climb/Climb Claw Pivot", io);
     setPositionTarget(ClimbClawPivotTarget.STOW);
     setControlMode(ControlMode.STOP);
   }
@@ -44,21 +44,6 @@ public class ClimbClawPivot extends GenericSuperstructure<ClimbClawPivot.ClimbCl
     super.periodic();
 
     Logger.recordOutput(
-        "Superstructure/ClimbClawPivot/PositionTargetRotations", getPositionTarget().getPosition() / 360d);
-  }
-
-  /**
-   * This function returns whether or not the subsystem has reached its position target
-   *
-   * @return whether the subsystem has reached its position target
-   */
-  public boolean reachedTarget() {
-    return Math.abs(super.getPosition() - (super.getPositionTarget().getPosition() / 360d))
-        <= super.getPositionTarget().getEpsilon();
-  }
-
-  /** Returns the position of the arm in DEGREES */
-  public double getPosition() {
-    return super.getPosition() * 360.0;
+        "Superstructure/ClimbClawPivot/PositionTargetRotations", getPositionTarget().getPosition());
   }
 }

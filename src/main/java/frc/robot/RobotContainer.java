@@ -31,6 +31,14 @@ import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
+import frc.robot.subsystems.climb.ClimbController;
+import frc.robot.subsystems.climb.ClimbController.ClimbState;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIO;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIOSim;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIO;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeControllerState;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
@@ -105,6 +113,9 @@ public class RobotContainer {
   private ShooterController shooterController;
   private ShooterAcceleratorBottom shooterAcceleratorBottom;
   private ShooterAcceleratorTop shooterAcceleratorTop;
+  private ClimbClawPivot climbClawPivot;
+  private ClimbDeployPivot climbDeployPivot;
+  private ClimbController climbController;
 
   public RobotContainer() {
 
@@ -181,6 +192,9 @@ public class RobotContainer {
           shooterAcceleratorTop = 
             new ShooterAcceleratorTop(new ShooterAcceleratorTopIOSim());
 
+          climbClawPivot = new ClimbClawPivot(new ClimbClawPivotIOSim());
+          climbDeployPivot = new ClimbDeployPivot(new ClimbDeployPivotIOSim());
+
           SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
         }
       }
@@ -233,6 +247,16 @@ public class RobotContainer {
     }
 
     shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop);
+
+
+    // init climb
+    if( climbClawPivot == null) {
+      climbClawPivot = new ClimbClawPivot( new ClimbClawPivotIO() {});
+    }
+    if( climbDeployPivot == null) {
+      climbDeployPivot = new ClimbDeployPivot( new ClimbDeployPivotIO() {});
+    }
+    climbController = new ClimbController(climbClawPivot, climbDeployPivot);
 
     // init shooter with testing values
     robotState.initializeShootingAnglePredictor(
@@ -307,11 +331,7 @@ public class RobotContainer {
     //   })
     // );
     // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
-    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
-    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
-
-    driverB.x().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
-    driverB.y().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.IDLE));
+    driverB.a().onTrue(climbController.setTargetCommand(ClimbState.DEPLOY));
   }
 
   private void configureAutos() {

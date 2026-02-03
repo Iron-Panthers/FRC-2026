@@ -8,12 +8,12 @@ import frc.robot.subsystems.climb.*;
 
 public class ClimbDeployPivot extends GenericSuperstructure<ClimbDeployPivot.ClimbDeployPivotTarget> { //FIX
   public enum ClimbDeployPivotTarget implements GenericSuperstructure.PositionTarget { 
+    // IN ROTATIONS
     STOW(-0.02),
     DEPLOY(1.0),
     L1(1.0),
     L2(1.0),
     L3(1.0);
-
     //stow deploy l1 l2 l3
 
     private double position = 0;
@@ -34,7 +34,7 @@ public class ClimbDeployPivot extends GenericSuperstructure<ClimbDeployPivot.Cli
   }
 
   public ClimbDeployPivot(ClimbDeployPivotIO io) {
-    super("Climb Deploy Pivot", io);
+    super("Climb/Climb Deploy Pivot", io);
     setPositionTarget(ClimbDeployPivotTarget.STOW);
     setControlMode(ControlMode.STOP);
   }
@@ -45,20 +45,5 @@ public class ClimbDeployPivot extends GenericSuperstructure<ClimbDeployPivot.Cli
 
     Logger.recordOutput(
         "Superstructure/ClimbDeployPivot/PositionTargetRotations", getPositionTarget().getPosition() / 360d);
-  }
-
-  /**
-   * This function returns whether or not the subsystem has reached its position target
-   *
-   * @return whether the subsystem has reached its position target
-   */
-  public boolean reachedTarget() {
-    return Math.abs(super.getPosition() - (super.getPositionTarget().getPosition() / 360d))
-        <= super.getPositionTarget().getEpsilon();
-  }
-
-  /** Returns the position of the arm in DEGREES */
-  public double getPosition() {
-    return super.getPosition() * 360.0;
   }
 }

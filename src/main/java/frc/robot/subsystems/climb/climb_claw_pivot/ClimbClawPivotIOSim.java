@@ -71,10 +71,4 @@ public class ClimbClawPivotIOSim extends GenericSuperstructureIOSim implements C
   public void setOffset() {
     climbClawPivotSim.setState(0, 0);
   }
-
-  /** Move move the arm to a position with the given degrees */
-  @Override
-  public void runPosition(double position) {
-    super.runPosition(position / 360d); // convert degrees to rotations
-  }
 }
