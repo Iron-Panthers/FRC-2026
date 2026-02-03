@@ -1,5 +1,7 @@
 package frc.robot.lib.generic_subsystems.rollers;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -20,6 +22,7 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 
 public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   protected final TalonFX talon;
+  protected final ArrayList<TalonFX> followerMotors;
   protected final TalonFXConfiguration config;
 
   private final StatusSignal<Angle> position;
@@ -32,17 +35,16 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
 
   private final double mechanismReduction;
 
-  public GenericRollersIOTalonFX(
-      int id, int currentLimitAmps, boolean inverted, boolean brake, double reduction) {
-    talon = new TalonFX(id);
+  public GenericRollersIOTalonFX(GenericRollersConfiguration rollersConfig) {
+    talon = new TalonFX(rollersConfig.id);
 
-    mechanismReduction = reduction;
+    mechanismReduction = rollersConfig.reduction;
 
     config = new TalonFXConfiguration();
     config.MotorOutput.Inverted =
-        inverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
-    config.MotorOutput.NeutralMode = brake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-    config.CurrentLimits.SupplyCurrentLimit = currentLimitAmps;
+        rollersConfig.motorDirection;
+    config.MotorOutput.NeutralMode = rollersConfig.neutralMode;
+    config.CurrentLimits.SupplyCurrentLimit = rollersConfig.supplyCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
     talon.getConfigurator().apply(config);
 
