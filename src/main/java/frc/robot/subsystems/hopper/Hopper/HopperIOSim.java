@@ -1,5 +1,6 @@
-package frc.robot.subsystems.hopper;
-import static frc.robot.subsystems.hopper.HopperConstants.*;
+package frc.robot.subsystems.hopper.Hopper;
+import static frc.robot.subsystems.hopper.Hopper.HopperConstants.*;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;

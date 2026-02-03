@@ -1,5 +1,5 @@
-package frc.robot.subsystems.hopper;
-import static frc.robot.subsystems.hopper.HopperConstants.*;
+package frc.robot.subsystems.hopper.Hopper;
+import static frc.robot.subsystems.hopper.Hopper.HopperConstants.*;
 
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIOTalonFX;
 
