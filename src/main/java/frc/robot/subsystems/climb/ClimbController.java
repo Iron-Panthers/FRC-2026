@@ -72,8 +72,8 @@ public class ClimbController extends SubsystemBase    {
     climbClawPivot.periodic();
     climbDeployPivot.periodic();
 
-    if (climbClawPivot.getPosition() > ClimbClawPivotTarget.TOP.getPosition()) {
-      setTargetState(ClimbState.STOP_CLIMB);
+    if (climbClawPivot.getPosition() > ClimbClawPivotTarget.L3.getPosition()) {
+      setTargetState(ClimbState.STOW);
     }
   }
 
