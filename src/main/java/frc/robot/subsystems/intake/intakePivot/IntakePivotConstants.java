@@ -1,7 +1,5 @@
 package frc.robot.subsystems.intake.intakePivot;
 
-
-
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -13,27 +11,25 @@ import frc.robot.Constants;
 import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
 
 public class IntakePivotConstants {
-  // MOTOR AND SENSOR CONFIGURATION
   public static final IntakePivotConfig INTAKE_PIVOT_CONFIG =
       switch (Constants.getRobotType()) {
         case COMP -> new IntakePivotConfig(
             // Reduction between sensor and mechansim
-            CAN.at(32, "Intake Pivot"),
-            CAN.at(33, "Intake Pivot Encoder"),
+            CAN.at(30, "Intake Pivot"),
+            CAN.at(31, "Intake Pivot Encoder"),
             -0.01444,
             2.25); // (36/16
           // is the reduction for the encoder)
         case SIM -> new IntakePivotConfig(
             // Reduction between motor and mechansim
-            CAN.at(9, "Intake Pivot"), 0, 0, 12 * 0.3750);
+            CAN.at(8, "Intake Pivot"), 0, 0, 12 * 0.3750);
         default -> new IntakePivotConfig(0, 0, 0, 1);
       };
 
-  // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case COMP -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0.4);
-        case SIM -> new PIDGains(100, 0, 0, 0, 3.6144, 0.1807, 0.53);
+        case SIM -> new PIDGains(40, 0, 0, 0, 3.6144, 0.1807, 0.53);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
@@ -44,15 +40,23 @@ public class IntakePivotConstants {
         default -> new MotionMagicConfig(0, 0);
       };
 
-  // GRAVITY COMPENSATION AND MOTOR DIRECTION
+  public record IntakePivotConfig(
+      int motorID, int canCoderID, double canCoderOffset, double reduction) {}
+
+  public record PIDGains(
+      double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
+
+  public record MotionMagicConfig(double acceleration, double cruiseVelocity) {}
+
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
   public static final InvertedValue MOTOR_DIRECTION = InvertedValue.Clockwise_Positive;
 
-  public static final SensorDirectionValue CANCODER_DIRECTION = SensorDirectionValue.CounterClockwise_Positive;
+  public static final SensorDirectionValue CANCODER_DIRECTION =
+      SensorDirectionValue.CounterClockwise_Positive;
 
-  // EPSILON
   public static final double POSITION_TARGET_EPSILON = 0.01;
+  public static final double INTAKE_PIVOT_LENGTH = 25; // inches
 
   // CURRENT LIMITS
   public static final double UPPER_VOLT_LIMIT = 6;
@@ -73,29 +77,21 @@ public class IntakePivotConstants {
       switch (Constants.getRobotType()) {
         default -> new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(-10.940786), Units.inchesToMeters(-0.1875), Units.inchesToMeters(7.191913)),
+                Units.inchesToMeters(0), Units.inchesToMeters(0d), Units.inchesToMeters(0d)),
             new Rotation3d(0, 0, 0));
       };
 
-  public static final IntakePivotPhysicalConstants PHYSICAL_CONSTANTS =
-      switch (Constants.getRobotType()) {
-        case SIM -> new IntakePivotPhysicalConstants(0.01, 0.706747, -1000.0, 1000, true);
-        case COMP -> new IntakePivotPhysicalConstants(0.1, 0, 0, 0, false);
-        default -> new IntakePivotPhysicalConstants(0.1, 0, 0, 0, false);
-      };
-
-  // RECORDS
-  public record IntakePivotConfig(
-      int motorID, int canCoderID, double canCoderOffset, double reduction) {}
-
-  public record PIDGains(
-      double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
-
-  public record MotionMagicConfig(double acceleration, double cruiseVelocity) {}
   public static record IntakePivotPhysicalConstants(
       double momentOfInertia,
       double lengthMeters,
       double minAngleRads,
       double maxAngleRads,
       boolean simulateGravity) {}
+
+  public static final IntakePivotPhysicalConstants PHYSICAL_CONSTANTS =
+      switch (Constants.getRobotType()) {
+        case SIM -> new IntakePivotPhysicalConstants(0.02, 0.706747, -1000.0, 1000, true);
+        case COMP -> new IntakePivotPhysicalConstants(0.1, 0, 0, 0, false);
+        default -> new IntakePivotPhysicalConstants(0.1, 0, 0, 0, false);
+      };
 }
