@@ -56,7 +56,6 @@ public class IntakePivotConstants {
       SensorDirectionValue.CounterClockwise_Positive;
 
   public static final double POSITION_TARGET_EPSILON = 0.01;
-  public static final double INTAKE_PIVOT_LENGTH = 25; // inches
 
   // CURRENT LIMITS
   public static final double UPPER_VOLT_LIMIT = 6;
