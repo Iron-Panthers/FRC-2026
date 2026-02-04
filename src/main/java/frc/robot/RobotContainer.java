@@ -27,6 +27,7 @@ import frc.robot.Constants.Mode;
 import frc.robot.commands.PathPlannerApproachPoseCommand;
 import frc.robot.RobotState.TargetShootingState;
 import frc.robot.commands.VibrateHIDCommand;
+import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
@@ -56,15 +57,20 @@ import frc.robot.subsystems.swerve.GyroIOSim;
 import frc.robot.subsystems.swerve.ModuleIO;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
+import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
 import frc.robot.subsystems.shooter.shooter_hood.*;
 import frc.robot.subsystems.shooter.ShooterController;
+import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 import frc.robot.subsystems.shooter.shooter_flywheel.*;
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.*;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.*;
+import frc.robot.lib.generic_subsystems.superstructure.*;
+import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
@@ -124,17 +130,36 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
-          rgb = new RGB(new RGBIOCANdle());
-          canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
-          shooterFlywheels =
-            new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
-          shooterHood =
-            new ShooterHood(new ShooterHoodIOTalonFX());
-          shooterAcceleratorBottom = 
-            new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
-          shooterAcceleratorTop = 
-            new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
+          // rgb = new RGB(new RGBIOCANdle());
+          // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
+          // shooterFlywheels =
+          //   new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          // shooterHood =
+          //   new ShooterHood(new ShooterHoodIOTalonFX());
+          // shooterAcceleratorBottom = 
+          //   new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
+          // shooterAcceleratorTop = 
+          //   new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
           
+        }
+        case VISION -> {
+          swerve =
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
+          vision = new Vision(new VisionIOPhotonvision("arducam-4", 0), new VisionIOPhotonvision("arducam-5", 1));
+        }
+        case ALPHA -> {
+          swerve =
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
         }
         case SIM -> {
           SwerveDriveSimulation driveSimulation = RobotSimState.getInstance().getDriveSimulation();
@@ -151,8 +176,8 @@ public class RobotContainer {
                       DriveConstants.MODULE_CONFIGS[3], driveSimulation.getModules()[3]));
           vision =
               new Vision(
-                  new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
-                  new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
+                  new VisionIOPhotonvisionSim("arducam-4",0, driveSimulation::getSimulatedDriveTrainPose),
+                  new VisionIOPhotonvisionSim("arducam-5", 1, driveSimulation::getSimulatedDriveTrainPose));
 
           // INTAKE
           intakePivot = new IntakePivot(new IntakePivotIOSim());
@@ -261,20 +286,16 @@ public class RobotContainer {
                       -driverA.getLeftX(),
                       driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis(),
                       DriveConstants.DRIVE_CONFIG.maxLinearAcceleration());
+                    if (Math.abs(driverA.getLeftTriggerAxis()) > 0.1
+                    || Math.abs(driverA.getRightTriggerAxis()) > 0.1) {
+                      swerve.clearHeadingControl();
+                    }
                 })
             .withName("Drive Teleop"));
 
-    driverA.start().onTrue(swerve.zeroGyroCommand());
-
-    driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
+    configureDriverAButtons();
+    configureDriverBButtons();
     
-    driverA.b().onTrue(new InstantCommand(() -> {
-      RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
-    }));
-
-    driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
-
     // driverA.y().onTrue(new InstantCommand(() -> {
       
     //   // Calculate target shooting state
@@ -307,8 +328,39 @@ public class RobotContainer {
     // driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
     driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
 
-    driverB.x().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
-    driverB.y().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.IDLE));
+    //IDEAL BUTTON BINDINGS; climb-related stuff commented because climb is not yet merged
+    
+//swerve.settargetheadingcommand, shoot 0 for aim pass
+// + test in sim
+  }
+
+  private void configureDriverAButtons() {
+    driverA.start().onTrue(swerve.zeroGyroCommand());
+    driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
+    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+    //driverA.b().onTrue(climbController.setTargetStateCommand(ClimbControllerState.STOW)
+      //.andThen(intakeController.setTargetStateCommand(IntakeControllerState.OUT)));
+    driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+    driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
+      .andThen(shooterController.setTargetCommand(ShooterState.SHOOT)));
+  }
+  private void configureDriverBButtons() {
+    driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE));
+    driverB.leftBumper().onFalse(intakeController.setTargetStateCommand(IntakeControllerState.IDLE));
+    // TODO: the code below all has something to do with climb, which hasn't been merged into dev, so they're commented for now
+
+    // driverB.x().onTrue(shooterController.setStoppedCommand(true)
+      // .alongWith(intakeController.setStoppedCommand(true))
+      // .alongWith(climbController.setStoppedCeommand(true))
+    // driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
+    //   .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
+    // driverB.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOW));
+    // driverB.y().onTrue(intakeController.getTargetState() == IntakeControllerState.STOW ?
+    //   climbController.setTargetCommand(ClimbState.CLIMB) : climbController.setTargetCommand(ClimbState.STOW));
+    // driverB.rightBumper().onTrue(climbController.getTargetState() == ClimbState.STOW ?
+    //   intakeController.setTargetStateCommand(IntakeControllerState.INTAKE) : intakeController.setTargetStateCommand(IntakeControllerState.STOW));   
+    // );
   }
 
   private void configureAutos() {
@@ -350,6 +402,7 @@ public class RobotContainer {
 
     autoChooser =
         new LoggedDashboardChooser<Command>("Auto Chooser", AutoBuilder.buildAutoChooser());
+    VisionTuningCommands.addTuningCommandsToAutoChooser(vision, autoChooser);
     SmartDashboard.putData("Auto Chooser", autoChooser.getSendableChooser());
   }
 

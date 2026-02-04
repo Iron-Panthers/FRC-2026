@@ -9,13 +9,19 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import frc.robot.Robot;
+
 import java.util.List;
 
 public class VisionConstants {
   public static final double AMBIGUITY_CUTOFF = 0.1;
   public static final double Z_ERROR_CUTOFF = 0.5;
+
+  public static final Matrix<N3, N1> VISION_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1); //not real values, copy and psated :)
 
   // index 0 -> arducam-1, etc
   public static final Transform3d[] CAMERA_TRANSFORM =
@@ -37,18 +43,19 @@ public class VisionConstants {
         };
         case VISION -> new Transform3d[] {
           // arducam-1 (front left)
-          new Transform3d(
-              0.299, 0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), Math.toRadians(55))),
+          // new Transform3d(new Translation3d(), new Rotation3d()),
+          new Transform3d(new Translation3d(0.4219891379261578 - Units.inchesToMeters(4), 0.10887153688779888, 0.48291456142117706), new Rotation3d(0.05809703484961512, -0.25210328052613, -0.15674754278844813)),
           // arducam-2 (front center)
-          new Transform3d(0.3017, 0, 0.3373, new Rotation3d(0, -Math.toRadians(35), 0)),
+          new Transform3d(new Translation3d(0.42331372439056836 - Units.inchesToMeters(4), -0.13898825541229506, 0.4727338620375543), new Rotation3d(-0.07349738757716055, -0.2743445020047346, 0.22780794700963716))
+          // new Transform3d(new Translation3d(), new Rotation3d())
           // arducam-3 (front right)
-          new Transform3d(
-              0.299, -0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), -Math.toRadians(55))),
-          // arducam-4 (back right)
-          new Transform3d(
-              -0.17, -0.298, 0.3651, new Rotation3d(0, 0, Math.PI - Math.toRadians(12))),
-          // arducam-5 (back left)
-          new Transform3d(-0.17, 0.298, 0.3651, new Rotation3d(0, 0, -Math.PI + Math.toRadians(12)))
+          // new Transform3d(
+          //     0.299, -0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), -Math.toRadians(55))),
+          // // arducam-4 (back right)
+          // new Transform3d(
+          //     -0.17, -0.298, 0.3651, new Rotation3d(0, 0, Math.PI - Math.toRadians(12))),
+          // // arducam-5 (back left)
+          // new Transform3d(-0.17, 0.298, 0.3651, new Rotation3d(0, 0, -Math.PI + Math.toRadians(12)))
         };
         case ALPHA -> new Transform3d[] {
           // arducam-1 (Lower intake)
