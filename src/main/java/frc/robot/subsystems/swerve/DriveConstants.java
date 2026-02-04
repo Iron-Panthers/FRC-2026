@@ -301,7 +301,7 @@ public class DriveConstants {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
-            4, 0, 0, 2, 4); /*FIXME: tune these constants*/
+            7, 0, 0, 4, 4); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
             7, 0, 0, 1, 1); /* FIXME: tune these constants */
 
@@ -310,7 +310,7 @@ public class DriveConstants {
       };
   public static final double ROTATION_FINISH_PERCENT = 0.9;
 
-  public static final double PATHPLANNER_PID_OFFSET = 0.6;
+  public static final double PATHPLANNER_PID_OFFSET = 20;
 
   public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
 

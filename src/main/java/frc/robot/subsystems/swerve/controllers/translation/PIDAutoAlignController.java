@@ -74,7 +74,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
     // x and y, but we have to pslit them at a larger level
     double pidOutput = magController.calculate(magTranslCurrPos, magTranslTargPos);
     double magVel = pidOutput + magController.getSetpoint().velocity;
-    magVel = (Math.abs(magVel) < 0.02 ? 0 : magVel);
+    magVel = (Math.abs(magVel) < 0.01 ? 0 : magVel);
     yVel =
         magVel
             * currToTargAngle.getSin()

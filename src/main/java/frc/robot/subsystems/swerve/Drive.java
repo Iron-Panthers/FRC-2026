@@ -116,9 +116,7 @@ public class Drive extends SubsystemBase {
             targetSpeeds = pidAutoAlignController.update();
             targetSpeeds.omegaRadiansPerSecond = autoAlignHeadingController.update();
           }else{
-            setPIDAutoAlignTargetPosition(DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red
-          ? FlippingUtil.flipFieldPose(targetPosition)
-          : targetPosition);
+            setPIDAutoAlignTargetPosition(targetPosition);
             targetSpeeds = pidAutoAlignController.update();
             targetSpeeds.omegaRadiansPerSecond = autoAlignHeadingController.update();
           }
@@ -257,10 +255,7 @@ public class Drive extends SubsystemBase {
 
   public Pose2d setPIDAutoAlignTargetPosition(Pose2d targetPosition) {
     setTargetPosition(targetPosition);
-    targetPosition = DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == Alliance.Blue
-                    ? targetPosition
-                    : FlippingUtil.flipFieldPose(targetPosition);
+
     clearHeadingControl();
     driveMode = DriveModes.AUTO_ALIGN;
     if (pidAutoAlignController == null) {
@@ -276,7 +271,7 @@ public class Drive extends SubsystemBase {
     if (autoAlignHeadingController == null) {
       autoAlignHeadingController =
           new AutoAlignHeadingController(
-              () -> fieldRelativeYaw,
+              () -> RobotState.getInstance().getEstimatedPose().getRotation(),
               targetPosition.getRotation(),
               pidAutoAlignController.calculateTimeLeft(),
               DriveConstants.ROTATION_FINISH_PERCENT);
