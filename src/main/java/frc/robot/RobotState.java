@@ -13,18 +13,25 @@ import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.FlippingUtil;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.interpolation.Interpolatable;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -35,6 +42,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -44,6 +52,7 @@ import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
 import frc.robot.subsystems.vision.VisionConstants;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.Radians;
 
 import java.lang.annotation.Target;
@@ -58,6 +67,7 @@ import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltHub;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /* based on wpimath/../PoseEstimator.java */
 public class RobotState {
@@ -200,12 +210,16 @@ public class RobotState {
 
 
   // methods that use the shootingAnglePredictor -- as an abstraction
+
   private ShootingAnglePredictor shootingAnglePredictor;
-  public void initializeShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier) {
-    shootingAnglePredictor = new ShootingAnglePredictor(chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier);
+  public void initializeShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw) {
+    shootingAnglePredictor = new ShootingAnglePredictor(chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier, shooterYaw);
   }
   public TargetShootingState calculateTargetShootingState(){
-    return shootingAnglePredictor.calculateTargetShootingState();
+    TargetShootingState targetShootingState = shootingAnglePredictor.calculateTargetShootingState();
+    Logger.recordOutput("RobotState/TargetShootingState/DrivebaseYaw", targetShootingState.drivebaseYaw());
+    Logger.recordOutput("RobotState/TargetShootingState/ShooterAngle", targetShootingState.shooterAngle());
+    return targetShootingState;
   }
 
   // shooting predictor
@@ -216,95 +230,128 @@ public class RobotState {
     private Supplier<LinearVelocity> shooterVelocitySupplier;
     private Supplier<Transform3d> shooterPositionSupplier;
 
-    // Air resistance coefficient
-    final double AIR_DRAG_COEFFICIENT = 0.03;
-      final double GRAVITY = 9.81; // gravity in m/s^2
 
-    public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier){
+    // Moving average filters for smooth velocity measurements
+    private final LinearFilter vxFilter = LinearFilter.movingAverage(5);
+    private final LinearFilter vyFilter = LinearFilter.movingAverage(5);
+
+    private final InterpolatingTreeMap<Double, HoodParams> shooterTable = 
+        new InterpolatingTreeMap<>(
+            InverseInterpolator.forDouble(),
+            HoodParams::interpolate
+        );
+
+    public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw){
       this.chassisSpeedsSupplier = chassisSpeedsSupplier;
-      this.shooterPositionSupplier = shooterPositionSupplier;
+      this.shooterPositionSupplier = () -> (new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, shooterYaw.in(Radian)))).plus(shooterPositionSupplier.get());
       this.shooterVelocitySupplier = shooterVelocitySupplier;
+
+      initializeShooterTable();
+    }
+
+    public void initializeShooterTable(){
+      this.shooterTable.clear();
+      this.shooterTable.put(1.3, new HoodParams(88, 1.621));
+      this.shooterTable.put(2.0, new HoodParams(84.5, 1.621));
+      this.shooterTable.put(2.5, new HoodParams(82, 1.601));
+      this.shooterTable.put(3.0, new HoodParams(79.5, 1.602));
+      this.shooterTable.put(3.5, new HoodParams(77.5, 1.581));
+      this.shooterTable.put(4.0, new HoodParams(75.5, 1.561));
+      this.shooterTable.put(4.5, new HoodParams(74, 1.561));
     }
 
     public TargetShootingState calculateTargetShootingState(){
-      // Figure out shooter pose3d
-      // Figure out target position
-      // Start loop 5
-      //  Figure out guess for angle and time of flight based on target position
-      //  Update target position based on tof
+
+      initializeShooterTable();
 
       // Get target hub position
       final Translation3d hubPosition3d = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == Alliance.Blue ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
 
-      // Get shooter position
-      Translation3d shooterPose3d = new Pose3d(getEstimatedPose()).transformBy(shooterPositionSupplier.get()).getTranslation();
-
-      Translation3d targetPosition3Transform3d = hubPosition3d;
-
-      double shooterVelocity = shooterVelocitySupplier.get().in(edu.wpi.first.units.Units.MetersPerSecond);
-
-      ChassisSpeeds robotChassisSpeeds = chassisSpeedsSupplier.get();
-
-      // loop 5 times
-      for(int i = 0; i < 5; i++) {
-        // calculate the angle and time of flight to get to a target position
-        ShootingSolution shootingSolution = calculateStationaryShootingSolution(shooterPose3d, targetPosition3Transform3d, shooterVelocity);
-
-        // adjust the target position based on where we are going to be by the time of flight
-        double timeOfFlight = shootingSolution.timeOfFlight;
-        Translation3d robotMovement = new Translation3d(
-          robotChassisSpeeds.vxMetersPerSecond * timeOfFlight,
-          robotChassisSpeeds.vyMetersPerSecond * timeOfFlight,
-          0
-        );
-        targetPosition3Transform3d = hubPosition3d.plus(robotMovement);
-      }
-
-      Logger.recordOutput("ShootingAnglePredictor/TargetPosition", targetPosition3Transform3d);
-
-      ShootingSolution finalShootingSolution = calculateStationaryShootingSolution(shooterPose3d, targetPosition3Transform3d, shooterVelocity);
-
-      return new TargetShootingState(finalShootingSolution.yawAngle, finalShootingSolution.pitchAngle);
-    }
-
-    public ShootingSolution calculateStationaryShootingSolution(Translation3d currentPosition, Translation3d targetPosition, double shooterVelocity){
-      // figure out the yaw
-      Rotation2d yawAngle = new Rotation2d(Math.atan2(targetPosition.getY() - currentPosition.getY(), targetPosition.getX() - currentPosition.getX()));
-
-      // figure out the launch angle
-      double horizontalDistance = currentPosition.getDistance(targetPosition);
-      double verticalDistance = targetPosition.getZ() - currentPosition.getZ();
-
-      // Calculate shooter angle using projectile motion equations
-      // We need to solve: tan(theta) = (v^2 +/- sqrt(v^4 - g(gx^2 + 2yv^2))) / (gx)
-      // where v = velocity, g = gravity, x = horizontal distance, y = vertical distance
-      double v2 = shooterVelocity * shooterVelocity;
-      double v4 = v2 * v2;
-      double x2 = horizontalDistance * horizontalDistance;
+      // Get chassis speeds and apply moving average filter for smoothness
+      ChassisSpeeds rawSpeeds = chassisSpeedsSupplier.get();
+      double filteredVx = vxFilter.calculate(rawSpeeds.vxMetersPerSecond);
+      double filteredVy = vyFilter.calculate(rawSpeeds.vyMetersPerSecond);
       
-      // Calculate discriminant
-      double discriminant = v4 - GRAVITY * (GRAVITY * x2 + 2 * verticalDistance * v2);
+      Translation2d robotVelocity = new Translation2d(filteredVx, filteredVy);
 
-      // Check if solution exists
-      if (discriminant < 0 || horizontalDistance == 0) {
-        // if no solution we just shoot at 45 and chill
-        return new ShootingSolution(yawAngle, Degrees.of(45), 0);
-      }
+      // Log the raw and filtered velocities for tuning
+      Logger.recordOutput("ShootingPredictor/RawVx", rawSpeeds.vxMetersPerSecond);
+      Logger.recordOutput("ShootingPredictor/RawVy", rawSpeeds.vyMetersPerSecond);
+      Logger.recordOutput("ShootingPredictor/FilteredVx", filteredVx);
+      Logger.recordOutput("ShootingPredictor/FilteredVy", filteredVy);
 
-      double tanTheta = (v2 + Math.sqrt(discriminant)) / (GRAVITY * horizontalDistance);
+      // Get the initial important things
+      Pose3d robotPose3d = new Pose3d(getEstimatedPose());
 
-      double angle = Math.atan(tanTheta);
+      double latencyCompensation = .17; // Tune later // TODO: make this an actual constant (if you change it later this is the one for sim)
 
-      Angle pitchAngle = Radians.of(angle);
+        // 1. Project future position
+        Translation2d futurePos = robotPose3d.getTranslation().toTranslation2d().plus(
+            robotVelocity.times(latencyCompensation)
+        );
 
-      // figure out time of flight
-      double vx = shooterVelocity * Math.cos(angle);
-      double timeOfFlight = horizontalDistance / vx;
+        // 2. Get target vector
+        Translation2d toGoal = hubPosition3d.toTranslation2d().minus(futurePos);
+        double distance = toGoal.getNorm();
+        Translation2d targetDirection = toGoal.div(distance);
 
-      return new ShootingSolution(yawAngle, pitchAngle, timeOfFlight);
+        // 3. Look up baseline velocity from table
+        HoodParams baseline = shooterTable.get(distance);
+        double baselineVelocity = distance / baseline.timeOfFlight;
+
+        // 4. Build target velocity vector
+        Translation2d targetVelocity = targetDirection.times(baselineVelocity);
+
+        // 5. THE MAGIC: subtract robot velocity
+        Translation2d shotVelocity = targetVelocity.minus(robotVelocity);
+
+        // 6. Extract results
+        Rotation2d turretAngle = shotVelocity.getAngle();
+        double requiredVelocity = shotVelocity.getNorm();
+
+        // 7. Use table in reverse: velocity → effective distance → RPM
+        double adjustedHoodAngle = calculateAdjustedHood(distance, requiredVelocity);
+
+        Logger.recordOutput("ShootingPredictor/Distance", distance);
+        Logger.recordOutput("ShootingPredictor/TurretAngle", turretAngle);
+        Logger.recordOutput("ShootingPredictor/RequiredVelocity", requiredVelocity);
+        Logger.recordOutput("ShootingPredictor/AdjustedHoodAngle", adjustedHoodAngle);
+
+      return new TargetShootingState(turretAngle, Degrees.of(adjustedHoodAngle));
     }
 
-    public record ShootingSolution(Rotation2d yawAngle, Angle pitchAngle, double timeOfFlight){}
+    // Calculate total velocity from baseline measurement
+    // v_total = v_horizontal / cos(hood_angle)
+    public double getTotalVelocity(double distance) {
+        HoodParams params = shooterTable.get(distance);
+        double vHoriz = distance / params.timeOfFlight;
+        return vHoriz / Math.cos(Math.toRadians(params.shooterAngle));
+    }
+
+
+    public double calculateAdjustedHood(double distance, double requiredHorizontalVelocity) {
+        double totalVelocity = getTotalVelocity(distance);
+
+        // Clamp to physical limits
+        double ratio = MathUtil.clamp(
+            requiredHorizontalVelocity / totalVelocity,
+            0.0,
+            1.0
+        );
+        return Math.toDegrees(Math.acos(ratio));
+    }
+
+    // Simple data class for the LUT
+    // shooter angle in degrees, time of flight in seconds
+    public record HoodParams(double shooterAngle, double timeOfFlight) implements Interpolatable<HoodParams> {
+      @Override
+      public HoodParams interpolate(HoodParams endValue, double t) {
+        return new HoodParams(
+          MathUtil.interpolate(this.shooterAngle, endValue.shooterAngle, t),
+          MathUtil.interpolate(this.timeOfFlight, endValue.timeOfFlight, t)
+        );
+      }
+    }
   }
   public record TargetShootingState(Rotation2d drivebaseYaw, Angle shooterAngle) { }
 }
