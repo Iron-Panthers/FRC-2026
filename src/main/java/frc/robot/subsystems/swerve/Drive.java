@@ -236,6 +236,10 @@ public class Drive extends SubsystemBase {
   }
 
   public Pose2d setTargetPosition(Pose2d targetPosition) {
+    targetPosition = DriverStation.getAlliance().isPresent()
+                        && DriverStation.getAlliance().get() == Alliance.Blue
+                    ? targetPosition
+                    : FlippingUtil.flipFieldPose(targetPosition);
     clearHeadingControl();
     driveMode = DriveModes.AUTO_ALIGN;
     if (pidAutoAlignController == null) {
