@@ -64,7 +64,7 @@ public class ShooterController extends SubsystemBase {
             this.acceleratorBottomTarget = bottomTarget;
         }
     }
-    private ShooterState targetState = ShooterState.SHOOT;
+    private ShooterState targetState = ShooterState.IDLE;
         private boolean stopped = false;
 
     //might need sensors defined here and in constructor
@@ -72,14 +72,12 @@ public class ShooterController extends SubsystemBase {
     private final ShooterHood shooterHood;
     private final ShooterAcceleratorBottom shooterAcceleratorBottom;
     private final ShooterAcceleratorTop shooterAcceleratorTop;
-    private final Supplier<Double> autoShooterAngleSupplier;
 
-    public ShooterController(ShooterFlywheel shooterFlywheel, ShooterHood shooterHood, ShooterAcceleratorBottom shooterAcceleratorBottom, ShooterAcceleratorTop shooterAcceleratorTop, Supplier<Double> autoShooterAngleSupplier) {
+    public ShooterController(ShooterFlywheel shooterFlywheel, ShooterHood shooterHood, ShooterAcceleratorBottom shooterAcceleratorBottom, ShooterAcceleratorTop shooterAcceleratorTop) {
         this.shooterFlywheel = shooterFlywheel;
         this.shooterHood = shooterHood;
         this.shooterAcceleratorBottom = shooterAcceleratorBottom;
         this.shooterAcceleratorTop = shooterAcceleratorTop;
-        this.autoShooterAngleSupplier = autoShooterAngleSupplier;
     }
 
     @Override
@@ -92,6 +90,13 @@ public class ShooterController extends SubsystemBase {
             shooterFlywheel.setControlMode(ControlMode.STOP);
             shooterAcceleratorBottom.setControlMode(ControlMode.STOP);
             shooterAcceleratorTop.setControlMode(ControlMode.STOP);
+        }
+        else if (targetState == ShooterState.SHOOT) {
+            // If shooting, update the hood target based on the calculated shooter angle
+            shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
+            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+            shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
+            shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
         }
         else {
             shooterHood.setPositionTarget(targetState.hoodTarget);

@@ -1,12 +1,19 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static frc.robot.subsystems.swerve.DriveConstants.DRIVE_CONFIG;
+
 import java.util.List;
 
 import org.dyn4j.geometry.Transform;
+import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.*;
 import org.ironmaple.utils.FieldMirroringUtils;
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,11 +33,23 @@ import frc.robot.Constants.RobotType;
 import frc.robot.subsystems.swerve.DriveConstants;
 
 public class RobotSimState {
+
+
+    public static final int INTAKE_FUEL_CAPACITY = 20;
+
    private RobotSimState(){
-          driveSimulation =
-              new SwerveDriveSimulation(
-                  DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
-          SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
+        SimulatedArena.overrideInstance(new Arena2026Rebuilt(false));
+        SimulatedArena.getInstance().resetFieldForAuto();
+
+        driveSimulation =
+            new SwerveDriveSimulation(
+                DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
+        SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
+
+        // intake
+        intakeSimulation = IntakeSimulation.OverTheBumperIntake("Fuel", driveSimulation, Meters.of(DriveConstants.DRIVE_CONFIG.bumperWidthX()), Meters.of(.3), IntakeSimulation.IntakeSide.BACK, INTAKE_FUEL_CAPACITY);
+        // load the intake initially
+        intakeSimulation.addGamePiecesToIntake(INTAKE_FUEL_CAPACITY);
    } 
 
    // Singleton instance
@@ -75,6 +94,9 @@ public class RobotSimState {
    }
 
    public void shootFuel(Pose3d shooterEndpointPosition3d, LinearVelocity launchVelocity){
+    if(!intakeSimulation.obtainGamePieceFromIntake()) return; // remove fuel from intake when shooting
+
+
     // Record start time to measure flight duration
     final double startTime = Timer.getFPGATimestamp();
     
@@ -110,5 +132,85 @@ public class RobotSimState {
     );
 
     SimulatedArena.getInstance().addGamePieceProjectile(flyingFuel);
+   }
+
+
+   // Intake simulation
+   private final IntakeSimulation intakeSimulation;
+
+   public void setIntakeState(boolean extended){
+    if(extended){
+        intakeSimulation.startIntake();
+    }
+    else{
+        intakeSimulation.stopIntake();
+    }
+   }
+
+   public Pose3d[] getIntakeGamePieces(){
+    int gamePieceAmount = intakeSimulation.getGamePiecesAmount();
+    Pose3d[] gamePiecePoses = new Pose3d[gamePieceAmount];
+    double spacing = Units.Inches.of(5.91).in(Units.Meters); // arbitrary spacing between game pieces in the intake
+    for(int i = 0; i < gamePieceAmount; i++){
+        gamePiecePoses[i] = new Pose3d(new Translation3d(driveSimulation.getSimulatedDriveTrainPose().getX(), driveSimulation.getSimulatedDriveTrainPose().getY(), i * spacing), new Rotation3d());
+    }
+    return gamePiecePoses;
+   }
+
+   // Automatic shooter state tracking
+   private boolean isShooterRunning = false;
+   private double lastShootTime = 0.0;
+   private double shootIntervalSeconds = 0.0;
+
+   /**
+    * Tells the RobotSimState that the shooter is currently running and should shoot fuel automatically.
+    * @param shotsPerSecond The rate at which to shoot fuel (e.g., 2.0 for 2 shots per second)
+    * @param shooterAngle The angle at which to shoot
+    * @param shooterTransform3d The 3D transform of the shooter relative to the robot
+    * @param launchVelocity The velocity at which to launch the fuel
+    */
+   public void setShooterRunning(boolean running, double shotsPerSecond, Angle shooterAngle, Transform3d shooterTransform3d, LinearVelocity launchVelocity) {
+       if (running && !isShooterRunning) {
+           // Starting the shooter
+           isShooterRunning = true;
+           shootIntervalSeconds = 1.0 / shotsPerSecond;
+           lastShootTime = Timer.getFPGATimestamp();
+       } else if (!running) {
+           // Stopping the shooter
+           isShooterRunning = false;
+       }
+       
+       // Store the shooting parameters for use in periodic
+       this.currentShooterAngle = shooterAngle;
+       this.currentShooterTransform = shooterTransform3d;
+       this.currentLaunchVelocity = launchVelocity;
+   }
+
+   // Store current shooting parameters
+   private Angle currentShooterAngle = Units.Radians.of(0);
+   private Transform3d currentShooterTransform = new Transform3d();
+   private LinearVelocity currentLaunchVelocity = MetersPerSecond.of(0);
+
+   /**
+    * Should be called periodically (e.g., in Robot.java's simulationPeriodic).
+    * Handles automatic shooting when the shooter is running.
+    */
+   public void periodicShooter() {
+       if (!isShooterRunning) {
+           return;
+       }
+
+       double currentTime = Timer.getFPGATimestamp();
+       if (currentTime - lastShootTime >= shootIntervalSeconds) {
+           // Time to shoot another ball
+           shootFuel(currentShooterAngle, currentShooterTransform, currentLaunchVelocity);
+           lastShootTime = currentTime;
+           Logger.recordOutput("RobotSimState/AutoShooterActive", true);
+       }
+   }
+
+   @AutoLogOutput(key = "RobotSimState/ShooterRunning")
+   public boolean isShooterRunning() {
+       return isShooterRunning;
    }
 }
