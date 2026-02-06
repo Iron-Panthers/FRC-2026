@@ -3,6 +3,8 @@ package frc.robot.subsystems.climb.climb_deploy_pivot;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+
+import edu.wpi.first.units.Units;
 import frc.robot.Constants;
 import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
 
@@ -51,8 +53,8 @@ public class ClimbDeployPivotConstants {
 
   // CURRENT LIMITS
   // TODO: Change following values below
-  public static final double UPPER_VOLT_LIMIT = 0;
-  public static final double LOWER_VOLT_LIMIT = 0;
+  public static final double UPPER_VOLT_LIMIT = 6;
+  public static final double LOWER_VOLT_LIMIT = -6;
   public static final double SUPPLY_CURRENT_LIMIT = 0;
 
   //ZEROING CONSTANTS
@@ -71,9 +73,7 @@ public class ClimbDeployPivotConstants {
   // TODO: Change all values below
   public static final ClimbDeployPivotPhysicalConstants PHYSICAL_CONSTANTS = 
   switch (Constants.getRobotType()) {
-    case SIM -> new ClimbDeployPivotPhysicalConstants(.001, 0, 0, 0, false);
-    default -> new ClimbDeployPivotPhysicalConstants(.001, 0, 0, 0, false);
+    case SIM -> new ClimbDeployPivotPhysicalConstants(.001, Units.Inches.of(25).in(Units.Meters), 0, 0, false);
+    default -> new ClimbDeployPivotPhysicalConstants(.001, Units.Inches.of(25).in(Units.Meters), 0, 0, false);
   };
-
-  public static final double SUPERSTRUCTURETEMP_LENGTH = 0; // inches //TODO: Change value
 }

@@ -39,6 +39,7 @@ import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIOSim;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIO;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot.ClimbDeployPivotTarget;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeControllerState;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
@@ -302,7 +303,9 @@ public class RobotContainer {
       RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
     }));
 
-    driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+    // driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+
+    driverA.y().onTrue(climbController.setTargetCommand(ClimbController.ClimbState.DEPLOY));
 
     // driverA.y().onTrue(new InstantCommand(() -> {
       
