@@ -252,7 +252,6 @@ public class DriveConstants {
             3.125);
       };
 
-
 /**
  * These are the configs for the maple sim drivebase
  * This should be updated to be similar to the comp bot drivebase
@@ -310,6 +309,11 @@ public class DriveConstants {
   public static final double ROTATION_FINISH_PERCENT = 0.9;
 
   public static final double PATHPLANNER_PID_OFFSET = 0.7;
+                                                                                                                                       
+  public static final double AUTOALIGN_POSITION_DEADBAND = 0.01;
+
+  public static final double AUTOALIGN_VELOCITY_DEADBAND = 0.01;
+
 
   public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
 
@@ -388,7 +392,6 @@ public class DriveConstants {
 
   public record PIDAutoAlignControllerConstants(
       double kP, double kI, double kD, double maxVelocity, double maxAcceleration) {}
-
   public record ApproachPose(Pose2d pose) {
     public static ApproachPose[] fromPose2ds(Pose2d... poses) {
       List<ApproachPose> approachPoses = new ArrayList<ApproachPose>();

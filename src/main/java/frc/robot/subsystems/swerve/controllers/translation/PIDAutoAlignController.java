@@ -1,6 +1,8 @@
 package frc.robot.subsystems.swerve.controllers.translation;
 
 import static frc.robot.subsystems.swerve.DriveConstants.PID_AUTOALIGN_CONSTANTS;
+import static frc.robot.subsystems.swerve.DriveConstants.AUTOALIGN_POSITION_DEADBAND;
+import static frc.robot.subsystems.swerve.DriveConstants.AUTOALIGN_VELOCITY_DEADBAND;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -74,7 +76,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
     // x and y, but we have to pslit them at a larger level
     double pidOutput = magController.calculate(magTranslCurrPos, magTranslTargPos);
     double magVel = pidOutput + magController.getSetpoint().velocity;
-    magVel = (Math.abs(magVel) < 0.01 ? 0 : magVel);
+    magVel = (Math.abs(magVel) < AUTOALIGN_VELOCITY_DEADBAND ? 0 : magVel);
     yVel =
         magVel
             * currToTargAngle.getSin()
@@ -88,7 +90,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
                 ? 1
                 : -1);
     if (positionSupplier.get().getTranslation().getDistance(targetPosition.getTranslation())
-        < 0.01) {
+        < AUTOALIGN_POSITION_DEADBAND) {
       xVel = 0;
       yVel = 0;
     }

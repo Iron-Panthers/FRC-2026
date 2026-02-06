@@ -36,7 +36,7 @@ public class VisionIOPhotonvision implements VisionIO {
       PhotonPipelineResult frame = results.get(frameIndex);
       if (!frame.hasTargets()) continue;
 
-      Optional<EstimatedRobotPose> optEstimation = estimator.update(frame);
+  Optional<EstimatedRobotPose> optEstimation = estimator.update(frame);
       if (optEstimation.isEmpty()) continue;
       EstimatedRobotPose estimation = optEstimation.get();
 
