@@ -170,8 +170,6 @@ public class PIDAutoAlignController extends BaseTranslationController {
     Rotation2d currentVelAngle = new Rotation2d(Math.atan2(y, x));
     Rotation2d angleDiff = targetAngle.minus(currentVelAngle);
     double forwardVelocity = Math.cos(angleDiff.getRadians()) * vel.getNorm();
-    System.out.println("Forward Velocity: " + vel.getX());
-    System.out.println("Angle Diff: " + angleDiff.getDegrees());
     return forwardVelocity;
   }
 }

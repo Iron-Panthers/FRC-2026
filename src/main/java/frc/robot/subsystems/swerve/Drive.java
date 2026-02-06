@@ -109,28 +109,8 @@ public class Drive extends SubsystemBase {
         }
       }
       case TRAJECTORY -> {
-        Logger.recordOutput("Swerve/Imbeingverysilly", RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(targetPosition.getTranslation()));
-        if (RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(targetPosition.getTranslation())
-         <= DriveConstants.PATHPLANNER_PID_OFFSET){
-          if (pidAutoAlignController != null) {
-            targetSpeeds = pidAutoAlignController.update();
-            targetSpeeds.omegaRadiansPerSecond = autoAlignHeadingController.update();
-          }else{
-            setPIDAutoAlignTargetPosition(targetPosition);
-            targetSpeeds = pidAutoAlignController.update();
-            targetSpeeds.omegaRadiansPerSecond = autoAlignHeadingController.update();
-          }
-        }else{
-
-        //awjajwkrd spacei s necerssary
-        
-          targetSpeeds = trajectorySpeeds;
-          // Only snap to heading during teleop
-          if (headingController != null && DriverStation.isTeleopEnabled()) {
-            setTargetHeading(RobotState.getInstance().getAlignPose().getRotation());
-            targetSpeeds.omegaRadiansPerSecond = headingController.update() + 0.0001;
-          }
-        }
+        Logger.recordOutput("Swerve/DistanceFromSetpoint", RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(targetPosition.getTranslation()));
+        targetSpeeds = trajectorySpeeds;
       }
       case AUTO_ALIGN -> {
         if (pidAutoAlignController != null) {
@@ -281,7 +261,6 @@ public class Drive extends SubsystemBase {
           pidAutoAlignController.calculateTimeLeft(),
           DriveConstants.ROTATION_FINISH_PERCENT);
     }
-
     return targetPosition;
   }
 
@@ -307,4 +286,7 @@ public class Drive extends SubsystemBase {
     return (degrees % 360 + 360) % 360;
   }
 
+  public boolean isPIDAutoAlign() {
+    return driveMode == DriveModes.AUTO_ALIGN;
+  }
 }

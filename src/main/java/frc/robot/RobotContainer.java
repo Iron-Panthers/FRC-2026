@@ -279,7 +279,7 @@ public class RobotContainer {
 
     configureDriverAButtons();
     configureDriverBButtons();
-    driverA.b().whileTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(13.6,4.27, new Rotation2d(0)), true));
+    driverA.b().whileTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(14.392,3.8, new Rotation2d(Math.PI)), true));
     // driverA.b().onTrue(new InstantCommand(() -> {
     //   RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
     // }));
