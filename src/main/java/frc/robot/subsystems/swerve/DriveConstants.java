@@ -290,7 +290,7 @@ public class DriveConstants {
       switch (getRobotType()) {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         case SIM -> new HeadingControllerConstants(6, 0, 8, 20, 0.01);
-        case VISION -> new HeadingControllerConstants(6, 0, 5, 20, 0.01);
+        case VISION -> new HeadingControllerConstants(1, 0, 5, 20, 0.01);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
@@ -300,7 +300,7 @@ public class DriveConstants {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
-            7, 0, 0, 3.3, 4); /*FIXME: tune these constants*/
+            13, 0, 0, 3.3, 4); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
             7, 0, 0, 1, 1); /* FIXME: tune these constants */
         case SIM -> new PIDAutoAlignControllerConstants(7, 0.0, 0.0, 3, 4);
@@ -308,7 +308,7 @@ public class DriveConstants {
       };
   public static final double ROTATION_FINISH_PERCENT = 0.9;
 
-  public static final double PATHPLANNER_PID_OFFSET = 0.7;
+  public static final double PATHPLANNER_PID_OFFSET = 10;
                                                                                                                                        
   public static final double AUTOALIGN_POSITION_DEADBAND = 0.01;
 
