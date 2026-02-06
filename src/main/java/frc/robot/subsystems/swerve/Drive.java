@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -137,6 +138,9 @@ public class Drive extends SubsystemBase {
 
       SwerveModuleState[] moduleTargetStates = KINEMATICS.toSwerveModuleStates(discretizedSpeeds);
 
+      SwerveDriveKinematics.desaturateWheelSpeeds(
+          moduleTargetStates, DriveConstants.DRIVE_CONFIG.maxLinearVelocity());
+
       for (int i = 0; i < modules.length; i++) {
         modules[i].runToSetpoint(moduleTargetStates[i]);
       }
@@ -232,6 +236,10 @@ public class Drive extends SubsystemBase {
   }
 
   public Pose2d setTargetPosition(Pose2d targetPosition) {
+    targetPosition = DriverStation.getAlliance().isPresent()
+                        && DriverStation.getAlliance().get() == Alliance.Blue
+                    ? targetPosition
+                    : FlippingUtil.flipFieldPose(targetPosition);
     clearHeadingControl();
     driveMode = DriveModes.AUTO_ALIGN;
     if (pidAutoAlignController == null) {

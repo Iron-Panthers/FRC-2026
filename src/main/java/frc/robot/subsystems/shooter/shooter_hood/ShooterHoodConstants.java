@@ -30,7 +30,7 @@ public class ShooterHoodConstants {
     public static final PIDGains GAINS = 
         switch(Constants.getRobotType()){
             case COMP -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0.4);
-            case SIM -> new PIDGains(40, 0, 0, 0, 3.6144, 0.1807, 0.53);
+            case SIM -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0);
             default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         };
     
@@ -54,7 +54,7 @@ public class ShooterHoodConstants {
 
     public static final InvertedValue MOTOR_DIRECTION = InvertedValue.Clockwise_Positive;
 
-    public static final SensorDirectionValue CANCODER_DIRECTION = SensorDirectionValue.CounterClockwise_Positive;
+    public static final SensorDirectionValue CANCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
 
     public static final double POSITION_TARGET_EPSILON = 0.05;
 
@@ -92,7 +92,7 @@ public class ShooterHoodConstants {
     //TODO Add in phhysical constants
     public static final ShooterHoodPhysicalConstants PHYSICAL_CONSTANTS = 
         switch(Constants.getRobotType()){
-            case SIM -> new ShooterHoodPhysicalConstants(0.01, Units.inchesToMeters(SHOOTER_HOOD_LENGTH), Units.degreesToRadians(0), Units.degreesToRadians(360), true);
+            case SIM -> new ShooterHoodPhysicalConstants(0.001, Units.inchesToMeters(SHOOTER_HOOD_LENGTH), Units.degreesToRadians(0), Units.degreesToRadians(360), false);
             case COMP -> new ShooterHoodPhysicalConstants(0.1, 0, 0, 0, false);
             default -> new ShooterHoodPhysicalConstants(0.1, 0, 0, 0, false);
         };
