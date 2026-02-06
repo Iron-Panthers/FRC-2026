@@ -41,22 +41,12 @@ public class IntakeRollersConstants {
         default -> new IntakeRollerPhysicalConstants(0.1);
       };
 
-  //TODO update Motion Magic
-    public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
-      switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(220*4, 220);
-        case SIM -> new MotionMagicConfig(220*4, 220);
-        default -> new MotionMagicConfig(0, 0);
-      };
-
   // RECORDS
   public record IntakeRollerConfig(
       int motorID, int motorID2, double reduction, boolean inverted, boolean brake) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
-
-  public record MotionMagicConfig(double accelerations, double cruiseVelocity){}
 
   public static record IntakeRollerPhysicalConstants(
       double momentOfInertia) {}
