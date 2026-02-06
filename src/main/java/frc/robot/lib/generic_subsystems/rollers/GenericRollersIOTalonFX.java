@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -29,7 +30,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   private final StatusSignal<Current> supplyCurrent;
 
   private final NeutralOut neutralOutput = new NeutralOut();
-  private final MotionMagicVelocityVoltage velocityControl = new MotionMagicVelocityVoltage(0).withUpdateFreqHz(0);
+  private final VelocityVoltage velocityControl = new VelocityVoltage(0).withUpdateFreqHz(0);
 
   private final double mechanismReduction;
 
@@ -88,10 +89,6 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
    * @param kV Velocity gain
    * @param kA Acceleration gain
    * @param kG Gravity gain
-   * @param motionMagicAcceleration Motion magic acceleration (rotations per second squared)
-   * @param motionMagicCruiseVelocity Motion magic cruise velocity (rotations per second)
-   * @param motionMagicJerk Motion magic jerk (rotations per second cubed)
-   * @param gravityTypeValue Gravity compensation type
    */
   @Override
   public void setSlot0(

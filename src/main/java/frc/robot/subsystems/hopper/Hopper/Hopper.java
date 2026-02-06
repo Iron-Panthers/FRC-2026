@@ -20,8 +20,6 @@ public class Hopper extends GenericRollers<Hopper.HopperTarget>{
         } 
     }
 
-    public static final int IDLE = 0;
-
     public Hopper(GenericRollersIO IntakeRollersIO){
         super("Hopper", IntakeRollersIO);
     }

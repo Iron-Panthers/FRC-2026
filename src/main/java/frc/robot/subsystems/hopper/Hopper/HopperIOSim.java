@@ -7,11 +7,20 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.lib.generic_subsystems.rollers.*;
 public class HopperIOSim extends GenericRollersIOSim {
-    private final FlywheelSim intakeRollersSim;
+private final FlywheelSim hopperSim;
 
   public HopperIOSim() {
     super(HOPPER_CONFIG.motorID(), CURRENT_LIMIT_AMPS, HOPPER_CONFIG.inverted(), HOPPER_CONFIG.brake(), HOPPER_CONFIG.reduction());
-    intakeRollersSim =
+    super.setSlot0(
+            GAINS.kP(),
+            GAINS.kI(),
+            GAINS.kD(),
+            GAINS.kS(),
+            GAINS.kV(),
+            GAINS.kA(),
+            GAINS.kG()
+    );
+    hopperSim =
         new FlywheelSim(
             LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), PHYSICAL_CONSTANTS.momentOfIntertia(), HOPPER_CONFIG.reduction()),
             DCMotor.getKrakenX60Foc(1));
@@ -25,13 +34,13 @@ public class HopperIOSim extends GenericRollersIOSim {
     double appliedVelocity = talon.getSimState().getMotorVoltage();
 
     // Simulate physics
-    intakeRollersSim.setInputVoltage(appliedVelocity);
-    intakeRollersSim.update(0.02);
+    hopperSim.setInputVoltage(appliedVelocity);
+    hopperSim.update(0.02);
 
     double rotations = 0; // can't really be simulated
 
     // Divides our angular velocity by our reduction
-    double velocityRPS = intakeRollersSim.getAngularVelocityRadPerSec() / HOPPER_CONFIG.reduction();
+    double velocityRPS = hopperSim.getAngularVelocityRadPerSec() / HOPPER_CONFIG.reduction();
     // FIXME: Doesn't work when reduction is 1
 
     talon.getSimState().setRawRotorPosition(rotations);
