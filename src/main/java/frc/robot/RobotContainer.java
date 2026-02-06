@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.PathPlannerApproachPoseCommand;
-import frc.robot.RobotState.TargetShootingState;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
@@ -284,17 +283,6 @@ public class RobotContainer {
     configureDriverAButtons();
     configureDriverBButtons();
 
-    driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
-    
-    driverA.b().onTrue(new InstantCommand(() -> {
-      RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
-    }));
-
-    driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
-    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
-    driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
-
     // driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
 
     // driverA.y().onTrue(new InstantCommand(() -> {
@@ -328,6 +316,8 @@ public class RobotContainer {
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+    driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+
     //driverA.b().onTrue(climbController.setTargetStateCommand(ClimbControllerState.STOW)
       //.andThen(intakeController.setTargetStateCommand(IntakeControllerState.OUT)));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));

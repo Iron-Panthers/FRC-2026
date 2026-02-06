@@ -29,12 +29,7 @@ public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements
             GAINS.kD(),
             GAINS.kS(),
             GAINS.kV(),
-            GAINS.kA(),
-            GAINS.kG(),
-            MOTION_MAGIC_CONFIG.accelerations(),
-            MOTION_MAGIC_CONFIG.cruiseVelocity(),
-            0
-        );
+            GAINS.kA());
 
         // initing second motor because why not
         talon2 = new TalonFX(SHOOTER_FLYWHEEL_CONFIG.motorID2());

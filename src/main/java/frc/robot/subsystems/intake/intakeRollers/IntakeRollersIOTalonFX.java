@@ -31,12 +31,7 @@ public class IntakeRollersIOTalonFX extends GenericRollersIOTalonFX implements I
             GAINS.kD(),
             GAINS.kS(),
             GAINS.kV(),
-            GAINS.kA(),
-            GAINS.kG(),
-            MOTION_MAGIC_CONFIG.accelerations(),
-            MOTION_MAGIC_CONFIG.cruiseVelocity(),
-            0
-        );
+            GAINS.kA());
     }    
     
     

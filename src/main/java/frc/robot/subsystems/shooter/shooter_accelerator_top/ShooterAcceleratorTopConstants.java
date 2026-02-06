@@ -37,20 +37,12 @@ public class ShooterAcceleratorTopConstants {
             case COMP -> new ShooterAcceleratorTopPhysicalConstants(0.1);
             default -> new ShooterAcceleratorTopPhysicalConstants(0.1);
         };
-     //TODO update Motion Magic
-    public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
-      switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(0, 0);
-        case SIM -> new MotionMagicConfig(0, 0);
-        default -> new MotionMagicConfig(0, 0);
-      };
 
     //RECORDS
   public record ShooterAcceleratorTopConfig(
       int motorID, double reduction, boolean inverted, boolean brake) {}
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}    
-    public record MotionMagicConfig(double accelerations, double cruiseVelocity){}
   public static record ShooterAcceleratorTopPhysicalConstants(
       double momentOfInertia) {}
 

@@ -38,20 +38,11 @@ public class ShooterFlywheelConstants {
             default -> new ShooterFlywheelPhysicalConstants(0.1, .1);
         };
 
-    //TODO update Motion Magic
-    public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
-      switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(0, 0);
-        case SIM -> new MotionMagicConfig(0, 0);
-        default -> new MotionMagicConfig(0, 0);
-      };
-
     //RECORDS
   public record ShooterFlywheelConfig(
       int motorID1, int motorID2, double reduction, boolean inverted, boolean brake) {}
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
-  public record MotionMagicConfig(double accelerations, double cruiseVelocity){}
   public static record ShooterFlywheelPhysicalConstants(
       double momentOfInertia, double circumferenceMeters) {}
 

@@ -113,11 +113,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
       double kD,
       double kS,
       double kV,
-      double kA,
-      double kG,
-      double motionMagicAcceleration,
-      double motionMagicCruiseVelocity,
-      double motionMagicJerk) {
+      double kA) {
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
@@ -125,14 +121,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     gainsConfig.kS = kS;
     gainsConfig.kV = kV;
     gainsConfig.kA = kA;
-    gainsConfig.kG = kG;
-    
-    MotionMagicConfigs motionMagicConfig = new MotionMagicConfigs();
-    motionMagicConfig.MotionMagicAcceleration = motionMagicAcceleration;
-    motionMagicConfig.MotionMagicCruiseVelocity = motionMagicCruiseVelocity;
-    motionMagicConfig.MotionMagicJerk = motionMagicJerk;
-
+  
     talon.getConfigurator().apply(gainsConfig);
-    talon.getConfigurator().apply(motionMagicConfig);
   }
 }
