@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
 import frc.robot.subsystems.climb.*;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotConstants;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot.ClimbClawPivotTarget;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot.ClimbDeployPivotTarget;
@@ -102,7 +103,12 @@ public class ClimbController extends SubsystemBase    {
             new LoggedMechanismLigament2d(
                 "Climb Deploy Pivot",
                 Units.Inches.of(ClimbDeployPivotConstants.PHYSICAL_CONSTANTS.lengthMeters()).in(Units.Meters),
-                Units.Degrees.of(climbDeployPivot.getPosition()).in(Units.Degrees) - 90));
+                Units.Degrees.of(climbDeployPivot.getPosition()).in(Units.Degrees) - 90))
+        .append(
+            new LoggedMechanismLigament2d(
+                "Climb Claw Pivot",
+                Units.Inches.of(ClimbClawPivotConstants.PHYSICAL_CONSTANTS.lengthMeters()).in(Units.Meters),
+                Units.Degrees.of(climbClawPivot.getPosition()).in(Units.Degrees) - 90));
     return mech;
   }
 

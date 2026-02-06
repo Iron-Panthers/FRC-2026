@@ -1,5 +1,6 @@
 package frc.robot.subsystems.climb.climb_claw_pivot;
 
+import edu.wpi.first.units.Units;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -18,7 +19,7 @@ public class ClimbClawPivotConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case COMP -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
-        case SIM -> new PIDGains(1, 0, 0, 0, 1, 0, 0);
+        case SIM -> new PIDGains(7.5, 0, 0, 0, 1, 0.0, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
   // TODO: Change values
@@ -71,7 +72,7 @@ public class ClimbClawPivotConstants {
   // TODO: Change all values below
   public static final ClimbClawPivotPhysicalConstants PHYSICAL_CONSTANTS = 
   switch (Constants.getRobotType()) {
-    case SIM -> new ClimbClawPivotPhysicalConstants(.001, 0.3, -1000, 2000, false); // TODO: set to accurate physical limits
+    case SIM -> new ClimbClawPivotPhysicalConstants(.001, Units.Inches.of(25).in(Units.Meters), -1000, 2000, false); // TODO: set to accurate physical limits
     default -> new ClimbClawPivotPhysicalConstants(.001, 0, 0, 0, false);
   };
 

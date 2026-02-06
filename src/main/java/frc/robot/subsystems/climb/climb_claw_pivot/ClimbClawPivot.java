@@ -18,7 +18,7 @@ public class ClimbClawPivot extends GenericSuperstructure<ClimbClawPivot.ClimbCl
 
     private double position = 0;
     private static final double EPSILON = ClimbClawPivotConstants.POSITION_TARGET_EPSILON;
-
+    
     private ClimbClawPivotTarget(double position) {
       this.position = position;
     }

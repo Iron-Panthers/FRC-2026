@@ -36,6 +36,7 @@ import frc.robot.subsystems.climb.ClimbController.ClimbState;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIO;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIOSim;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot.ClimbClawPivotTarget;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIO;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
