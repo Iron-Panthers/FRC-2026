@@ -323,6 +323,7 @@ public class RobotContainer {
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
     //driverA.b().onTrue(climbController.setTargetStateCommand(ClimbControllerState.STOW)
       //.andThen(intakeController.setTargetStateCommand(IntakeControllerState.OUT)));
+    driverA.b().whileTrue(swerve.setTargetPositionCommand(() -> RobotState.getInstance().getShootingPose()));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetCommand(ShooterState.SHOOT)));

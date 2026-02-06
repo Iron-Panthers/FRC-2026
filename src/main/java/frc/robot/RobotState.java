@@ -4,20 +4,21 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
+
+import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
+
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.GoalEndState;
-import com.pathplanner.lib.path.IdealStartingState;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
-import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -44,11 +45,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
-import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
 import frc.robot.subsystems.vision.VisionConstants;
 
 import static edu.wpi.first.units.Units.Degrees;
@@ -354,4 +351,55 @@ public class RobotState {
     }
   }
   public record TargetShootingState(Rotation2d drivebaseYaw, Angle shooterAngle) { }
+
+  public Pose2d getShootingPose(){
+    Pose2d shootingPoseOne = getShootingPose(2.0);
+    Pose2d shootingPoseTwo = getShootingPose(4.0); //edit forf climb
+    Pose2d flippedEstimatedPose = DriverStation.getAlliance().isPresent()
+                        && DriverStation.getAlliance().get() == Alliance.Red
+                    ? FlippingUtil.flipFieldPose(estimatedPose)
+                    : estimatedPose;
+    Logger.recordOutput("RobotState/ShootingPoseOne", shootingPoseOne);
+    Logger.recordOutput("RobotState/ShootingPoseTwo", shootingPoseTwo);
+    if (shootingPoseOne.getTranslation().getDistance(flippedEstimatedPose.getTranslation()) <
+        shootingPoseTwo.getTranslation().getDistance(flippedEstimatedPose.getTranslation())){
+      return shootingPoseOne;
+    } else {
+      return shootingPoseTwo;
+    }
+  }
+
+  public Pose2d getShootingPose(double distanceTargetToHub){
+    Pose2d flippedEstimatedPose = DriverStation.getAlliance().isPresent()
+                        && DriverStation.getAlliance().get() == Alliance.Red
+                    ? FlippingUtil.flipFieldPose(estimatedPose)
+                    : estimatedPose;
+    Translation2d hubCoords = new Pose2d(4.62, 4.03, new Rotation2d()).getTranslation();
+    Translation2d translHubCoords = hubCoords.minus(flippedEstimatedPose.getTranslation());
+    double distanceToHub = translHubCoords.getNorm();
+    double angle = Math.atan2(translHubCoords.getY(), translHubCoords.getX());
+
+    if (distanceTargetToHub >= 2.5 && (angle > -35.64/180*Math.PI  && Math.abs(angle) < 28.25/180*Math.PI)){
+      distanceTargetToHub = 2;
+    }
+    
+    double y = -distanceTargetToHub*Math.sin(angle) + translHubCoords.getY() + flippedEstimatedPose.getY();
+    double x = -distanceTargetToHub*Math.cos(angle) + translHubCoords.getX() + flippedEstimatedPose.getX();
+
+    if (y > 7.307){
+      return new Pose2d(2.326, 7.307, new Rotation2d(Math.atan2(hubCoords.getY() - 7.307, hubCoords.getX() - 2.326)));
+    }
+    if (y < 0.753){
+      return new Pose2d(2.326, 0.753, new Rotation2d(Math.atan2(hubCoords.getY() - 0.753, hubCoords.getX() - 2.326)));
+    }
+    if (x > 3.322){
+      if (angle > 0){
+        return new Pose2d(3.322, 2.502, new Rotation2d(Math.atan2(hubCoords.getY() - 2.502, hubCoords.getX() - 3.322)));
+      }
+      if (angle < 0){
+        return new Pose2d(3.322, 5.522, new Rotation2d(Math.atan2(hubCoords.getY() - 5.522, hubCoords.getX() - 3.322)));
+      }
+    }
+    return new Pose2d(x, y, new Rotation2d(angle));
+  }
 }
