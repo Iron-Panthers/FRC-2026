@@ -69,6 +69,7 @@ import frc.robot.lib.generic_subsystems.superstructure.*;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
@@ -437,7 +438,7 @@ public class RobotContainer {
     Logger.recordOutput("FieldSimulation/Robot Fuel", RobotSimState.getInstance().getIntakeGamePieces());
 
     // Update the shooting logic with the correct rollers
-    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAcceleratorTop.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
           new Translation3d(),
           new Rotation3d(0, 0, Math.PI/2)
         )), shooterFlywheels.getCurrentVelocity());
