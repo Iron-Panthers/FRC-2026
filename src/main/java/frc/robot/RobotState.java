@@ -283,7 +283,7 @@ public class RobotState {
       // Get the initial important things
       Pose3d robotPose3d = new Pose3d(getEstimatedPose());
 
-      double latencyCompensation = 0; // Tune later
+      double latencyCompensation = .17; // Tune later // TODO: make this an actual constant (if you change it later this is the one for sim)
 
         // 1. Project future position
         Translation2d futurePos = robotPose3d.getTranslation().toTranslation2d().plus(

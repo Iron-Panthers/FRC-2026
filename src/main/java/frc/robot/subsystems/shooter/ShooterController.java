@@ -64,7 +64,7 @@ public class ShooterController extends SubsystemBase {
             this.acceleratorBottomTarget = bottomTarget;
         }
     }
-    private ShooterState targetState = ShooterState.IDLE;
+    private ShooterState targetState = ShooterState.SHOOT;
         private boolean stopped = false;
 
     //might need sensors defined here and in constructor
