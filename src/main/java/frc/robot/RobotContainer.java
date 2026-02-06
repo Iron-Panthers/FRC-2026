@@ -268,49 +268,46 @@ public class RobotContainer {
         swerve
             .run(
                 () -> {
-                  double rotationInput = driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis();
                   swerve.driveTeleopController(
                       -driverA.getLeftY(),
                       -driverA.getLeftX(),
-                      rotationInput,
+                      driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis(),
                       DriveConstants.DRIVE_CONFIG.maxLinearAcceleration());
-                  
-                  // Only apply heading control when NOT manually rotating
-                  // If driver is providing rotation input, clear heading control to allow manual rotation
-                  if (Math.abs(rotationInput) > 0.05) {
-                    swerve.clearHeadingControl();
-                  } else {
-                    // When not manually rotating, set heading to be 90 degrees offset from target shooting state
-                    swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(90))));
-                  }
+                    if (Math.abs(driverA.getLeftTriggerAxis()) > 0.1
+                    || Math.abs(driverA.getRightTriggerAxis()) > 0.1) {
+                      swerve.clearHeadingControl();
+                    }
                 })
             .withName("Drive Teleop"));
 
-    driverA.start().onTrue(swerve.zeroGyroCommand());
+    configureDriverAButtons();
+    configureDriverBButtons();
 
-    driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
+    // driverA.start().onTrue(swerve.zeroGyroCommand());
+
+    // driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    // driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
 
     // driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
 
-    driverA.y().onTrue(new InstantCommand(() -> {
-      // Only shoot in simulation
-      if (Constants.getRobotType() == Constants.RobotType.SIM) {
+    // driverA.y().onTrue(new InstantCommand(() -> {
+    //   // Only shoot in simulation
+    //   if (Constants.getRobotType() == Constants.RobotType.SIM) {
 
-        Transform3d shooterPose = ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
-          new Translation3d(),
-          new Rotation3d(0, 0, Math.PI/2)
-        )); // rotation because of how the modeled shooter was in sim litterally just that i fear
+    //     Transform3d shooterPose = ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+    //       new Translation3d(),
+    //       new Rotation3d(0, 0, Math.PI/2)
+    //     )); // rotation because of how the modeled shooter was in sim litterally just that i fear
 
-        // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
-        Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
-        LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
+    //     // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
+    //     Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
+    //     LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
 
-        // Shoot the fuel using the calculated parameters - velocity must match calculation!
-        RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
-      }
-      })
-    );
+    //     // Shoot the fuel using the calculated parameters - velocity must match calculation!
+    //     RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
+    //   }
+    //   })
+    // );
     // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
 
     //IDEAL BUTTON BINDINGS; climb-related stuff commented because climb is not yet merged
@@ -329,6 +326,11 @@ public class RobotContainer {
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetCommand(ShooterState.SHOOT)));
+    driverA.rightBumper().or(driverA.rightBumper()).whileTrue( // automatically go to the right orientation to shoot
+      new RunCommand(() -> {
+          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(90))));
+      })
+    );
   }
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE));

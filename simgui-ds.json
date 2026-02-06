@@ -23,14 +23,14 @@
         }
       ],
       "axisCount": 3,
-      "buttonCount": 4,
+      "buttonCount": 6,
       "buttonKeys": [
         90,
         88,
         67,
         86,
-        -1,
-        -1,
+        91,
+        93,
         -1,
         -1,
         -1,

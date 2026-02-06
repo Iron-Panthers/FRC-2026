@@ -23,7 +23,7 @@ public class Module {
 
   public void runToSetpoint(SwerveModuleState targetState) {
     targetState.optimize(getSteerHeading());
-    // REMOVED cosineScale() - it was slowing translation when rotating
+    targetState.cosineScale(getSteerHeading());
     moduleIO.runSteerPositionSetpoint(targetState.angle.getRadians());
 
     double driveVelocityRads =
