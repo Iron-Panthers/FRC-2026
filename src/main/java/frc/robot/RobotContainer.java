@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.PathPlannerApproachPoseCommand;
-import frc.robot.RobotState.TargetShootingState;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
@@ -40,6 +39,7 @@ import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.rgb.RGB;
@@ -134,7 +134,7 @@ public class RobotContainer {
           //   new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
           // shooterAcceleratorTop = 
           //   new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
-          
+          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
         }
         case VISION -> {
           swerve =
@@ -283,11 +283,6 @@ public class RobotContainer {
     configureDriverAButtons();
     configureDriverBButtons();
 
-    // driverA.start().onTrue(swerve.zeroGyroCommand());
-
-    // driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    // driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
-
     // driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
 
     // driverA.y().onTrue(new InstantCommand(() -> {
@@ -321,6 +316,8 @@ public class RobotContainer {
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+    driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+
     //driverA.b().onTrue(climbController.setTargetStateCommand(ClimbControllerState.STOW)
       //.andThen(intakeController.setTargetStateCommand(IntakeControllerState.OUT)));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));

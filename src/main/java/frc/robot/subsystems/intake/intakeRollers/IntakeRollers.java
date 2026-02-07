@@ -5,7 +5,7 @@ import frc.robot.lib.generic_subsystems.rollers.GenericRollers;
 public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTarget> {
     
     public enum IntakeRollersTarget implements GenericRollers.VelocityTarget{
-        ON(5.0),
+        ON(220),
         OFF(0.0),
         EJECT(-3.0),
         HOLD(1.0);
