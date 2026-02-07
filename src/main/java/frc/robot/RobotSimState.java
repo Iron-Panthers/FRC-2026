@@ -38,13 +38,20 @@ public class RobotSimState {
     public static final int INTAKE_FUEL_CAPACITY = 20;
 
    private RobotSimState(){
-        SimulatedArena.overrideInstance(new Arena2026Rebuilt(false));
-        SimulatedArena.getInstance().resetFieldForAuto();
+        // init the arena
+        Arena2026Rebuilt arena = new Arena2026Rebuilt(false);
+        arena.resetFieldForAuto();
 
+        // start the cloock
+        arena.setShouldRunClock(true);
+
+        // Add the drive simulation
         driveSimulation =
             new SwerveDriveSimulation(
                 DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
-        SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
+        arena.addDriveTrainSimulation(driveSimulation);
+
+        SimulatedArena.overrideInstance(arena);
 
         // intake
         intakeSimulation = IntakeSimulation.OverTheBumperIntake("Fuel", driveSimulation, Meters.of(DriveConstants.DRIVE_CONFIG.bumperWidthX()), Meters.of(.3), IntakeSimulation.IntakeSide.BACK, INTAKE_FUEL_CAPACITY);
