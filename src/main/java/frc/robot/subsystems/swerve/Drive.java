@@ -200,10 +200,9 @@ public class Drive extends SubsystemBase {
             .yawPosition
             .minus(
                 RobotState.isAllianceRed()
-                    ? RobotState.getInstance().getEstimatedPose().getRotation()
-                    : FlippingUtil.flipFieldRotation(
-                        RobotState.getInstance().getEstimatedPose().getRotation()))
-            .minus(Rotation2d.kPi);
+                    ? FlippingUtil.flipFieldRotation(
+                        RobotState.getInstance().getEstimatedPose().getRotation())
+                    : RobotState.getInstance().getEstimatedPose().getRotation());
   }
 
   @AutoLogOutput(key = "Swerve/ModuleStates")
