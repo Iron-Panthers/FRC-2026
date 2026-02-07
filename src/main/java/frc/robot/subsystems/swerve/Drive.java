@@ -199,12 +199,10 @@ public class Drive extends SubsystemBase {
         gyroInputs
             .yawPosition
             .minus(
-                DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == Alliance.Blue
+                RobotState.isAllianceRed()
                     ? FlippingUtil.flipFieldRotation(
                         RobotState.getInstance().getEstimatedPose().getRotation())
-                    : RobotState.getInstance().getEstimatedPose().getRotation())
-            .minus(Rotation2d.kPi);
+                    : RobotState.getInstance().getEstimatedPose().getRotation());
   }
 
   @AutoLogOutput(key = "Swerve/ModuleStates")

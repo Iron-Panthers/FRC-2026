@@ -356,20 +356,6 @@ public class RobotContainer {
 
     var passRobotConfig = robotConfig; // workaround TODO: is it necessary?
 
-    BooleanSupplier isRedAlliance =
-        () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red
-          // alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
-          return false;
-        };
-
     AutoBuilder.configure(
         () -> RobotState.getInstance().getEstimatedPose(),
         (pose) -> RobotState.getInstance().resetPose(pose),
@@ -379,7 +365,7 @@ public class RobotContainer {
         },
         DriveConstants.HOLONOMIC_DRIVE_CONTROLLER,
         passRobotConfig,
-        isRedAlliance,
+        () -> RobotState.isAllianceRed(),
         swerve);
 
     autoChooser =
