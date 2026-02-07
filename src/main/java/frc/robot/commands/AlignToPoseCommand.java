@@ -19,14 +19,14 @@ import frc.robot.subsystems.swerve.Drive.DriveModes;
 import frc.robot.subsystems.swerve.DriveConstants;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class PathPlannerApproachPoseCommand extends Command {
+public class AlignToPoseCommand extends Command {
   private Command poseAlignCommand;
   private Drive drive;
   private Supplier<Pose2d> approachPose;
   private Pose2d currentApproachPose;
   private boolean underTrench;
 
-  public PathPlannerApproachPoseCommand(Drive drive, Supplier<Pose2d> approachPose, boolean underTrench) {
+  public AlignToPoseCommand(Drive drive, Supplier<Pose2d> approachPose, boolean underTrench) {
     // all of this jank is basically so that we can get a command that generates the pose on the fly and still figure out when it ends
     this.drive = drive;
     this.approachPose = RobotState.isAllianceRed()

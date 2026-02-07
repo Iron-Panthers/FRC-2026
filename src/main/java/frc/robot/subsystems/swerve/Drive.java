@@ -281,14 +281,6 @@ public class Drive extends SubsystemBase {
         () -> false,
         this);
   }
-  public Command setTargetPositionCommand(Supplier<Pose2d> targetPositionSupplier) {
-    return new FunctionalCommand(
-        () -> setTargetPosition(targetPositionSupplier.get()),
-        () -> {},
-        (t) -> clearTargetPositionController(),
-        () -> false,
-        this);
-  }
 
   public boolean isTeleop() {
     return driveMode == DriveModes.TELEOP;

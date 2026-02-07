@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
-import frc.robot.commands.PathPlannerApproachPoseCommand;
+import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
@@ -318,7 +318,7 @@ public class RobotContainer {
 
     //driverA.b().onTrue(climbController.setTargetStateCommand(ClimbControllerState.STOW)
       //.andThen(intakeController.setTargetStateCommand(IntakeControllerState.OUT)));
-    driverA.rightBumper().whileTrue(new PathPlannerApproachPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
+    driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetCommand(ShooterState.SHOOT)));
