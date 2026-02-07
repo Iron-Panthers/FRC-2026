@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.PathPlannerApproachPoseCommand;
-import frc.robot.RobotState.TargetShootingState;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
@@ -40,6 +39,7 @@ import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.rgb.RGB;
@@ -134,7 +134,7 @@ public class RobotContainer {
           //   new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
           // shooterAcceleratorTop = 
           //   new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
-          
+          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
         }
         case VISION -> {
           swerve =
@@ -170,8 +170,8 @@ public class RobotContainer {
                       DriveConstants.MODULE_CONFIGS[3], driveSimulation.getModules()[3]));
           vision =
               new Vision(
-                  new VisionIOPhotonvisionSim("arducam-4",0, driveSimulation::getSimulatedDriveTrainPose),
-                  new VisionIOPhotonvisionSim("arducam-5", 1, driveSimulation::getSimulatedDriveTrainPose));
+                  new VisionIOPhotonvisionSim("arducam-3",3, driveSimulation::getSimulatedDriveTrainPose));
+                  new VisionIOPhotonvisionSim("arducam-4", 4, driveSimulation::getSimulatedDriveTrainPose);
 
           // INTAKE
           intakePivot = new IntakePivot(new IntakePivotIOSim());
@@ -282,14 +282,7 @@ public class RobotContainer {
 
     configureDriverAButtons();
     configureDriverBButtons();
-
-    // driverA.start().onTrue(swerve.zeroGyroCommand());
-
-    // driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    // driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), true));
-
-    // driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
-
+    driverA.b().whileTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(14.392,3.8, new Rotation2d(Math.PI)), true));
     // driverA.y().onTrue(new InstantCommand(() -> {
     //   // Only shoot in simulation
     //   if (Constants.getRobotType() == Constants.RobotType.SIM) {
@@ -321,6 +314,8 @@ public class RobotContainer {
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+    driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+
     //driverA.b().onTrue(climbController.setTargetStateCommand(ClimbControllerState.STOW)
       //.andThen(intakeController.setTargetStateCommand(IntakeControllerState.OUT)));
     driverA.b().whileTrue(swerve.setTargetPositionCommand(() -> RobotState.getInstance().getShootingPose()));
@@ -362,20 +357,6 @@ public class RobotContainer {
 
     var passRobotConfig = robotConfig; // workaround TODO: is it necessary?
 
-    BooleanSupplier isRedAlliance =
-        () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red
-          // alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
-          return false;
-        };
-
     AutoBuilder.configure(
         () -> RobotState.getInstance().getEstimatedPose(),
         (pose) -> RobotState.getInstance().resetPose(pose),
@@ -385,7 +366,7 @@ public class RobotContainer {
         },
         DriveConstants.HOLONOMIC_DRIVE_CONTROLLER,
         passRobotConfig,
-        isRedAlliance,
+        () -> RobotState.isAllianceRed(),
         swerve);
 
     autoChooser =

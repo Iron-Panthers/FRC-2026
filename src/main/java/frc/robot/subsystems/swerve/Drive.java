@@ -55,6 +55,8 @@ public class Drive extends SubsystemBase {
   private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
   private ChassisSpeeds trajectorySpeeds = new ChassisSpeeds();
 
+  private Pose2d targetPosition = new Pose2d();
+
   // controllers
   private final TeleopTranslationController teleopController;
   private TeleopHeadingController headingController = null;
@@ -110,12 +112,8 @@ public class Drive extends SubsystemBase {
         }
       }
       case TRAJECTORY -> {
+        Logger.recordOutput("Swerve/DistanceFromSetpoint", RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(targetPosition.getTranslation()));
         targetSpeeds = trajectorySpeeds;
-        // Only snap to heading during teleop
-        if (headingController != null && DriverStation.isTeleopEnabled()) {
-          setTargetHeading(RobotState.getInstance().getAlignPose().getRotation());
-          targetSpeeds.omegaRadiansPerSecond = headingController.update() + 0.0001;
-        }
       }
       case AUTO_ALIGN -> {
         if (pidAutoAlignController != null) {
@@ -203,12 +201,10 @@ public class Drive extends SubsystemBase {
         gyroInputs
             .yawPosition
             .minus(
-                DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == Alliance.Blue
+                RobotState.isAllianceRed()
                     ? FlippingUtil.flipFieldRotation(
                         RobotState.getInstance().getEstimatedPose().getRotation())
-                    : RobotState.getInstance().getEstimatedPose().getRotation())
-            .minus(Rotation2d.kPi);
+                    : RobotState.getInstance().getEstimatedPose().getRotation());
   }
 
   @AutoLogOutput(key = "Swerve/ModuleStates")
@@ -237,11 +233,13 @@ public class Drive extends SubsystemBase {
     headingController = null;
   }
 
-  public Pose2d setTargetPosition(Pose2d targetPosition) {
-    targetPosition = DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == Alliance.Blue
-                    ? targetPosition
-                    : FlippingUtil.flipFieldPose(targetPosition);
+  public void setTargetPosition(Pose2d targetPosition){
+    this.targetPosition = targetPosition;
+  }
+
+  public Pose2d setPIDAutoAlignTargetPosition(Pose2d targetPosition) {
+    setTargetPosition(targetPosition);
+
     clearHeadingControl();
     driveMode = DriveModes.AUTO_ALIGN;
     if (pidAutoAlignController == null) {
@@ -257,7 +255,7 @@ public class Drive extends SubsystemBase {
     if (autoAlignHeadingController == null) {
       autoAlignHeadingController =
           new AutoAlignHeadingController(
-              () -> fieldRelativeYaw,
+              () -> RobotState.getInstance().getEstimatedPose().getRotation(),
               targetPosition.getRotation(),
               pidAutoAlignController.calculateTimeLeft(),
               DriveConstants.ROTATION_FINISH_PERCENT);
@@ -267,7 +265,6 @@ public class Drive extends SubsystemBase {
           pidAutoAlignController.calculateTimeLeft(),
           DriveConstants.ROTATION_FINISH_PERCENT);
     }
-
     return targetPosition;
   }
 
@@ -278,7 +275,7 @@ public class Drive extends SubsystemBase {
 
   public Command setTargetPositionCommand(Pose2d targetPosition) {
     return new FunctionalCommand(
-        () -> setTargetPosition(targetPosition),
+        () -> setPIDAutoAlignTargetPosition(targetPosition),
         () -> {},
         (t) -> clearTargetPositionController(),
         () -> false,
@@ -301,4 +298,7 @@ public class Drive extends SubsystemBase {
     return (degrees % 360 + 360) % 360;
   }
 
+  public boolean isPIDAutoAlign() {
+    return driveMode == DriveModes.AUTO_ALIGN;
+  }
 }
