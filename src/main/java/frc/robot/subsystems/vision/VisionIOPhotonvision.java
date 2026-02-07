@@ -37,9 +37,9 @@ public class VisionIOPhotonvision implements VisionIO {
 
       Optional<EstimatedRobotPose> optEstimation;
       if (frame.multitagResult.isEmpty()){
-        optEstimation = estimator.estimateCoprocMultiTagPose(frame);
-      } else {
         optEstimation = estimator.estimateLowestAmbiguityPose(frame);
+      } else {
+        optEstimation = estimator.estimateCoprocMultiTagPose(frame);
       };
       if (optEstimation.isEmpty()) continue;
       EstimatedRobotPose estimation = optEstimation.get();
