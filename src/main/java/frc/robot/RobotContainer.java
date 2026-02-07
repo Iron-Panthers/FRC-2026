@@ -282,7 +282,7 @@ public class RobotContainer {
 
     configureDriverAButtons();
     configureDriverBButtons();
-    driverA.b().whileTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(14.392,3.8, new Rotation2d(Math.PI)), true));
+    // driverA.b().whileTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(14.392,3.8, new Rotation2d(Math.PI)), true));
     // driverA.y().onTrue(new InstantCommand(() -> {
     //   // Only shoot in simulation
     //   if (Constants.getRobotType() == Constants.RobotType.SIM) {
@@ -318,11 +318,11 @@ public class RobotContainer {
 
     //driverA.b().onTrue(climbController.setTargetStateCommand(ClimbControllerState.STOW)
       //.andThen(intakeController.setTargetStateCommand(IntakeControllerState.OUT)));
-    driverA.b().whileTrue(swerve.setTargetPositionCommand(() -> RobotState.getInstance().getShootingPose()));
+    driverA.rightBumper().whileTrue(new PathPlannerApproachPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetCommand(ShooterState.SHOOT)));
-    driverA.rightBumper().or(driverA.rightBumper()).whileTrue( // automatically go to the right orientation to shoot
+    driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
       new RunCommand(() -> {
           swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(90))));
       })
