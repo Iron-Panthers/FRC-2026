@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.util.List;
 
+import org.dyn4j.geometry.Transform;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.*;
@@ -20,6 +21,7 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.RobotType;
 import frc.robot.subsystems.swerve.DriveConstants;
 
@@ -64,11 +66,18 @@ public class RobotSimState {
    }
 
    // Shooting utilities
-   public void shootFuel(Angle shooterAngle, LinearVelocity launchVelocity){
-    shootFuel(getRobotPose3d().plus(new Transform3d(0, 0, 1, new Rotation3d(0,shooterAngle.in(Units.Radians),0))), launchVelocity);
+   public void shootFuel(Angle launchAngle, Transform3d shooterTransform3d, LinearVelocity launchVelocity){
+    Transform3d shooterEndpointPosition3d = new Transform3d(
+        shooterTransform3d.getTranslation(),
+        new Rotation3d(0, launchAngle.in(Units.Radians), shooterTransform3d.getRotation().getZ())
+    );
+    shootFuel(getRobotPose3d().plus(shooterEndpointPosition3d), launchVelocity);
    }
 
    public void shootFuel(Pose3d shooterEndpointPosition3d, LinearVelocity launchVelocity){
+    // Record start time to measure flight duration
+    final double startTime = Timer.getFPGATimestamp();
+    
     RebuiltFuelOnFly flyingFuel = new RebuiltFuelOnFly(
         shooterEndpointPosition3d.getTranslation().toTranslation2d(), // position of the chassis where t
         new Translation2d(0, 0),
@@ -79,14 +88,25 @@ public class RobotSimState {
         Units.Radians.of(shooterEndpointPosition3d.getRotation().getY()) // gets the pitch of the shooter endpoint position -- for shooting angle
     );
 
-    flyingFuel.withTargetPosition(() -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN).withTargetTolerance(
-        new Translation3d(.2,.2,.2) // just an arbitrary tolerance
-    );
+    flyingFuel.withTargetPosition(() -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN)
+        .withTargetTolerance(new Translation3d(.5,.5,.2)) // just an arbitrary tolerance
+        .withHitTargetCallBack(() -> {
+            double endTime = Timer.getFPGATimestamp();
+            double flightTime = endTime - startTime;
+            Logger.recordOutput("RobotSimState/LastFlightTimeSeconds", flightTime);
+        });
 
-    // show trajectory
+
+    // Show trajectory and record flight time when target is hit
     flyingFuel.withProjectileTrajectoryDisplayCallBack(
-        (pose3ds) -> Logger.recordOutput("RobotSimState/FuelSuccessfulShot", pose3ds.toArray(Pose3d[]::new)), // sucess
-        (pose3ds) -> Logger.recordOutput("RobotSimState/FuelUnsuccessfulShot", pose3ds.toArray(Pose3d[]::new)) // unsucess
+        (pose3ds) -> {
+            // Success callback - ball hit target
+            Logger.recordOutput("RobotSimState/FuelSuccessfulShot", pose3ds.toArray(Pose3d[]::new));
+        },
+        (pose3ds) -> {
+            // Failure callback - ball missed target
+            Logger.recordOutput("RobotSimState/FuelUnsuccessfulShot", pose3ds.toArray(Pose3d[]::new));
+        }
     );
 
     SimulatedArena.getInstance().addGamePieceProjectile(flyingFuel);

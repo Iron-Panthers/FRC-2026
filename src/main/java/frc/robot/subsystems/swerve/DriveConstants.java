@@ -46,9 +46,9 @@ public class DriveConstants {
   public static final DrivebaseConfig DRIVE_CONFIG =
       switch (getRobotType()) {
         case COMP -> new DrivebaseConfig(
-            Units.inchesToMeters(1.925),
-            Units.inchesToMeters(22.5),
-            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(1.97),
+            Units.inchesToMeters(19.75),
+            Units.inchesToMeters(23.75),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             3.75,
@@ -78,10 +78,10 @@ public class DriveConstants {
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
-            3.3, // 3.75,
-            9,
+            2.75, // 3.75,
+            10,
             // TODO: make it actually max acceleration in m/s^2
-            1.63); // (multiply by max velocity to get m/s^2)
+            6); // (multiply by max velocity to get m/s^2)
       };
 
     public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
@@ -165,28 +165,28 @@ public class DriveConstants {
         };
         case ALPHA -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(5, "FL Drive"),
-              CAN.at(6, "FL Steer"),
-              1,
+              CAN.at(3, "FL Drive"),
+              CAN.at(4, "FL Steer"),
+              6,
               new Rotation2d(2.058602),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(11, "FR Drive"),
-              CAN.at(12, "FR Steer"),
+              CAN.at(10, "FR Steer"),
               3,
               new Rotation2d(-2.161379),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(9, "BL Drive"),
-              CAN.at(10, "BLSteer"),
-              4,
+              CAN.at(2, "BL Drive"),
+              CAN.at(1, "BL Steer"),
+              3,
               new Rotation2d(0.48934),
               InvertedValue.Clockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(7, "BR Drive"), CAN.at(8, "BRSteer"), 2, new Rotation2d(-0.271515), InvertedValue.Clockwise_Positive, InvertedValue.Clockwise_Positive)
+              CAN.at(5, "BR Drive"), CAN.at(7, "BRSteer"), 2, new Rotation2d(-0.271515), InvertedValue.Clockwise_Positive, InvertedValue.Clockwise_Positive)
         };
         case SIM -> new ModuleConfig[] {
           new ModuleConfig(
