@@ -288,9 +288,9 @@ public class DriveConstants {
   // Tolerance in Radians
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
-        case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
+        case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.01);
         case SIM -> new HeadingControllerConstants(6, 0, 8, 20, 0.01);
-        case VISION -> new HeadingControllerConstants(1, 0, 5, 20, 0.01);
+        case VISION -> new HeadingControllerConstants(3, 0, 5, 15, 0.007);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
@@ -298,17 +298,17 @@ public class DriveConstants {
   public static final PIDAutoAlignControllerConstants PID_AUTOALIGN_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new PIDAutoAlignControllerConstants(
-            4, 0, 2, 2, 2); /*FIXME: tune these constants*/
+            4, 0, 2, 2, 2, 0.01); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
-            13, 0, 0, 3.3, 4); /*FIXME: tune these constants*/
+            13, 0, 0, 3, 2, 0.01); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
-            7, 0, 0, 1, 1); /* FIXME: tune these constants */
-        case SIM -> new PIDAutoAlignControllerConstants(7, 0.0, 0.0, 3, 4);
-        default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
+            7, 0, 0, 1, 1, 0.01); /* FIXME: tune these constants */
+        case SIM -> new PIDAutoAlignControllerConstants(7, 0.0, 0.0, 3, 4, 0.01);
+        default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0, 0.01);
       };
   public static final double ROTATION_FINISH_PERCENT = 0.9;
 
-  public static final double PATHPLANNER_PID_OFFSET = 10;
+  public static final double PATHPLANNER_PID_OFFSET = 0.7;
                                                                                                                                        
   public static final double AUTOALIGN_POSITION_DEADBAND = 0.01;
 
@@ -391,7 +391,7 @@ public class DriveConstants {
       double kP, double kD, double maxVelocity, double maxAcceleration, double tolerance) {}
 
   public record PIDAutoAlignControllerConstants(
-      double kP, double kI, double kD, double maxVelocity, double maxAcceleration) {}
+      double kP, double kI, double kD, double maxVelocity, double maxAcceleration, double tolerance) {}
   public record ApproachPose(Pose2d pose) {
     public static ApproachPose[] fromPose2ds(Pose2d... poses) {
       List<ApproachPose> approachPoses = new ArrayList<ApproachPose>();

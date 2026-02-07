@@ -29,6 +29,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
   private double xVel;
   private double yVel;
   private final Supplier<Translation2d> velocity;
+  protected boolean hasReachedTarget = false;
 
   public PIDAutoAlignController(
       Supplier<Pose2d> positionSupplier, Supplier<Rotation2d> yawSupplier, Pose2d targetPosition) {
@@ -173,5 +174,12 @@ public class PIDAutoAlignController extends BaseTranslationController {
     Rotation2d angleDiff = targetAngle.minus(currentVelAngle);
     double forwardVelocity = Math.cos(angleDiff.getRadians()) * vel.getNorm();
     return forwardVelocity;
+  }
+
+  public boolean atTarget() {
+    return hasReachedTarget = positionSupplier
+      .get().getTranslation()
+      .getDistance(targetPosition.getTranslation()) 
+        < PID_AUTOALIGN_CONSTANTS.tolerance() * (hasReachedTarget ? 4 : 1);
   }
 }
