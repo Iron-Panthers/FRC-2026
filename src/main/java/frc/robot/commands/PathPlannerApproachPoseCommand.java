@@ -27,8 +27,7 @@ public class PathPlannerApproachPoseCommand extends Command {
   public PathPlannerApproachPoseCommand(Drive drive, Pose2d approachPose, boolean underTrench) {
     // all of this jank is basically so that we can get a command that generates the pose on the fly and still figure out when it ends
     this.drive = drive;
-    this.approachPose = DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == Alliance.Blue
+    this.approachPose = RobotState.isAllianceRed() == false
                     ? approachPose
                     : FlippingUtil.flipFieldPose(approachPose);
     this.underTrench = underTrench;
