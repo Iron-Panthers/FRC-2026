@@ -354,8 +354,7 @@ public class RobotState {
   public Pose2d getShootingPose(){
     Pose2d shootingPoseOne = getShootingPose(2.0);
     Pose2d shootingPoseTwo = getShootingPose(4.0); //edit forf climb
-    Pose2d flippedEstimatedPose = DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == Alliance.Red
+    Pose2d flippedEstimatedPose = isAllianceRed()
                     ? FlippingUtil.flipFieldPose(estimatedPose)
                     : estimatedPose;
     Logger.recordOutput("RobotState/ShootingPoseOne", shootingPoseOne);
@@ -369,8 +368,7 @@ public class RobotState {
   }
 
   public Pose2d getShootingPose(double distanceTargetToHub){
-    Pose2d flippedEstimatedPose = DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == Alliance.Red
+    Pose2d flippedEstimatedPose = isAllianceRed()
                     ? FlippingUtil.flipFieldPose(estimatedPose)
                     : estimatedPose;
     Translation2d hubCoords = new Pose2d(4.62, 4.03, new Rotation2d()).getTranslation();
