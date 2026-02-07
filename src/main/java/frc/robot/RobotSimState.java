@@ -88,7 +88,7 @@ public class RobotSimState {
         Units.Radians.of(shooterEndpointPosition3d.getRotation().getY()) // gets the pitch of the shooter endpoint position -- for shooting angle
     );
 
-    flyingFuel.withTargetPosition(() -> RobotState.isAllianceRed() == false ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN)
+    flyingFuel.withTargetPosition(() -> RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN)
         .withTargetTolerance(new Translation3d(.5,.5,.2)) // just an arbitrary tolerance
         .withHitTargetCallBack(() -> {
             double endTime = Timer.getFPGATimestamp();

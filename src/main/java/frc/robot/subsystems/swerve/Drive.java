@@ -199,10 +199,10 @@ public class Drive extends SubsystemBase {
         gyroInputs
             .yawPosition
             .minus(
-                RobotState.isAllianceRed() == false
-                    ? FlippingUtil.flipFieldRotation(
-                        RobotState.getInstance().getEstimatedPose().getRotation())
-                    : RobotState.getInstance().getEstimatedPose().getRotation())
+                RobotState.isAllianceRed()
+                    ? RobotState.getInstance().getEstimatedPose().getRotation()
+                    : FlippingUtil.flipFieldRotation(
+                        RobotState.getInstance().getEstimatedPose().getRotation()))
             .minus(Rotation2d.kPi);
   }
 

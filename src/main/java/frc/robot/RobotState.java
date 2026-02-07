@@ -264,7 +264,7 @@ public class RobotState {
       initializeShooterTable();
 
       // Get target hub position
-      final Translation3d hubPosition3d = isAllianceRed() == false ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN;
+      final Translation3d hubPosition3d = isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
 
       // Get chassis speeds and apply moving average filter for smoothness
       ChassisSpeeds rawSpeeds = chassisSpeedsSupplier.get();
