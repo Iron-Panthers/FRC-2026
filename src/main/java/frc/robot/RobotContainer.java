@@ -282,9 +282,7 @@ public class RobotContainer {
 
     configureDriverAButtons();
     configureDriverBButtons();
-
-    // driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
-
+    driverA.b().whileTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(14.392,3.8, new Rotation2d(Math.PI)), true));
     // driverA.y().onTrue(new InstantCommand(() -> {
     //   // Only shoot in simulation
     //   if (Constants.getRobotType() == Constants.RobotType.SIM) {

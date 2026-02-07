@@ -16,6 +16,7 @@ public abstract class BaseHeadingController {
   protected ProfiledPIDController controller;
   protected Supplier<Rotation2d> headingSupplier;
   protected Rotation2d targetHeading;
+  protected boolean hasReachedTarget = false;
 
   public BaseHeadingController(
       Supplier<Rotation2d> headingSupplier,
@@ -65,10 +66,10 @@ public abstract class BaseHeadingController {
   }
 
   public boolean atTarget() {
-    return epsilonEquals(
+    return hasReachedTarget = epsilonEquals(
         headingSupplier.get().getRadians(),
         controller.getGoal().position,
-        HEADING_CONTROLLER_CONSTANTS.tolerance());
+        HEADING_CONTROLLER_CONSTANTS.tolerance() * (hasReachedTarget ? 4 : 1));
   }
 
   protected boolean epsilonEquals(double a, double b, double epsilon) {
