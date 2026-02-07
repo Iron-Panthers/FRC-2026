@@ -80,8 +80,7 @@ public class RobotState {
   public record VisionMeasurement(Pose2d visionPose, double timestamp) {}
 
   private static final double poseBufferSizeSeconds = 2; // shorter?
-  private static final Pose2d initialPose =
-      DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red
+  private static final Pose2d initialPose = isAllianceRed()
           ? FlippingUtil.flipFieldPose(DriveConstants.INITIAL_POSE)
           : DriveConstants.INITIAL_POSE;
 
@@ -265,7 +264,7 @@ public class RobotState {
       initializeShooterTable();
 
       // Get target hub position
-      final Translation3d hubPosition3d = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == Alliance.Blue ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
+      final Translation3d hubPosition3d = isAllianceRed() == false ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN;
 
       // Get chassis speeds and apply moving average filter for smoothness
       ChassisSpeeds rawSpeeds = chassisSpeedsSupplier.get();
@@ -354,4 +353,14 @@ public class RobotState {
     }
   }
   public record TargetShootingState(Rotation2d drivebaseYaw, Angle shooterAngle) { }
+
+  @AutoLogOutput(key = "RobotState/isAllianceRed")
+  public static boolean isAllianceRed() {
+    //where true is red and false is blue
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
+  }
 }

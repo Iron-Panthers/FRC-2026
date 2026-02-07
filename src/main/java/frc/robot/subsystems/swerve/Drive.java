@@ -201,8 +201,7 @@ public class Drive extends SubsystemBase {
         gyroInputs
             .yawPosition
             .minus(
-                DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == Alliance.Blue
+                RobotState.isAllianceRed() == false
                     ? FlippingUtil.flipFieldRotation(
                         RobotState.getInstance().getEstimatedPose().getRotation())
                     : RobotState.getInstance().getEstimatedPose().getRotation())
@@ -236,10 +235,7 @@ public class Drive extends SubsystemBase {
   }
 
   public Pose2d setTargetPosition(Pose2d targetPosition) {
-    targetPosition = DriverStation.getAlliance().isPresent()
-                        && DriverStation.getAlliance().get() == Alliance.Blue
-                    ? targetPosition
-                    : FlippingUtil.flipFieldPose(targetPosition);
+    targetPosition = RobotState.isAllianceRed() == false ? targetPosition : FlippingUtil.flipFieldPose(targetPosition);
     clearHeadingControl();
     driveMode = DriveModes.AUTO_ALIGN;
     if (pidAutoAlignController == null) {

@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
+import frc.robot.RobotState;
 
 public class DriveConstants {
   // measures in meters (per sec) and radians (per sec)
@@ -398,11 +399,7 @@ public class DriveConstants {
     }
 
     public Pose2d getAlliancePose() {
-      return DriverStation.getAlliance().isPresent()
-          ? (DriverStation.getAlliance().get() == Alliance.Red
-              ? FlippingUtil.flipFieldPose(pose)
-              : pose)
-          : pose;
+      return RobotState.isAllianceRed() ? FlippingUtil.flipFieldPose(pose) : pose;
     }
 
     public Pose2d getPose() {
