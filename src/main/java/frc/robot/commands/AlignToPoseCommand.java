@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,21 +19,20 @@ import frc.robot.subsystems.swerve.Drive.DriveModes;
 import frc.robot.subsystems.swerve.DriveConstants;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class PathPlannerApproachPoseCommand extends Command {
+public class AlignToPoseCommand extends Command {
   private Command poseAlignCommand;
   private Drive drive;
-  private Pose2d approachPose;
+  private Supplier<Pose2d> approachPose;
+  private Pose2d currentApproachPose;
   private boolean underTrench;
 
-  /** Creates a new PathPlannerApproachPoseCommand. */
-  public PathPlannerApproachPoseCommand(Drive drive, Pose2d approachPose, boolean underTrench) {
+  public AlignToPoseCommand(Drive drive, Supplier<Pose2d> approachPose, boolean underTrench) {
     // all of this jank is basically so that we can get a command that generates the pose on the fly and still figure out when it ends
     this.drive = drive;
     this.approachPose = RobotState.isAllianceRed()
-        ? FlippingUtil.flipFieldPose(approachPose)
+        ? () -> FlippingUtil.flipFieldPose(approachPose.get())
         : approachPose;
     this.underTrench = underTrench;
-    drive.setTargetPosition(this.approachPose); // :)
 
     addRequirements(drive); 
   }
@@ -39,9 +40,11 @@ public class PathPlannerApproachPoseCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    currentApproachPose = approachPose.get();
+    drive.setTargetPosition(currentApproachPose); // :)
     try {
       poseAlignCommand =
-          new VelocityClamp(drive).andThen(RobotState.getInstance().getPathPlannerApproachPoseCommand(approachPose, underTrench));
+          new VelocityClamp(drive).andThen(RobotState.getInstance().getPathPlannerApproachPoseCommand(currentApproachPose, underTrench));
           poseAlignCommand.initialize();
     } catch (Exception e) {
       e.printStackTrace();
@@ -52,12 +55,12 @@ public class PathPlannerApproachPoseCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!poseAlignCommand.isFinished() && RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(approachPose.getTranslation())
+    if (!poseAlignCommand.isFinished() && RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(currentApproachPose.getTranslation())
          >= DriveConstants.PATHPLANNER_PID_OFFSET){
       poseAlignCommand.execute();
     } else {
       if (!drive.isPIDAutoAlign()){
-        drive.setPIDAutoAlignTargetPosition(approachPose);
+        drive.setPIDAutoAlignTargetPosition(currentApproachPose);
       }
     }
   }

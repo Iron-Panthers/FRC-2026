@@ -25,6 +25,8 @@ import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
 import frc.robot.subsystems.swerve.controllers.translation.PIDAutoAlignController;
 import frc.robot.subsystems.swerve.controllers.translation.TeleopTranslationController;
 import java.util.Arrays;
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
