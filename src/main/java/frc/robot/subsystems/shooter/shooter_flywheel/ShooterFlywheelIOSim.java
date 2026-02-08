@@ -30,9 +30,7 @@ public class ShooterFlywheelIOSim extends GenericRollersIOSim implements Shooter
             GAINS.kD(),
             GAINS.kS(),
             GAINS.kV(),
-            GAINS.kA(),
-            GAINS.kG()
-        );
+            GAINS.kA());
         // Create feedforward controller using configured gains
         feedforward = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());
 

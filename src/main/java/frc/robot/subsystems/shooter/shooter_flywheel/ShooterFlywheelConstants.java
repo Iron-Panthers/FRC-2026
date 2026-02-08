@@ -31,11 +31,11 @@ public class ShooterFlywheelConstants {
             default -> 40;
         };
 
-    public static final ShooterFlywheelPhysicalConstants PHYSICAL_CONSTANTS =
+    public static final ShooterFlywheelPhysicalConstants PHYSICAL_CONSTANTS = // TODO: update values
         switch (Constants.getRobotType()) {
-            case SIM -> new ShooterFlywheelPhysicalConstants(0.01);
-            case COMP -> new ShooterFlywheelPhysicalConstants(0.1);
-            default -> new ShooterFlywheelPhysicalConstants(0.1);
+            case SIM -> new ShooterFlywheelPhysicalConstants(0.01, .1);
+            case COMP -> new ShooterFlywheelPhysicalConstants(0.1, .1);
+            default -> new ShooterFlywheelPhysicalConstants(0.1, .1);
         };
 
     //RECORDS
@@ -44,7 +44,7 @@ public class ShooterFlywheelConstants {
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
   public static record ShooterFlywheelPhysicalConstants(
-      double momentOfInertia) {}
+      double momentOfInertia, double circumferenceMeters) {}
 
 
 }
