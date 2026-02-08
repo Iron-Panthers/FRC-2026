@@ -3,6 +3,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+import frc.robot.RobotState;
 
 public class ElasticUpdater extends SubsystemBase {
 
@@ -59,22 +60,14 @@ public class ElasticUpdater extends SubsystemBase {
         }
         Logger.recordOutput("RedHubActive", redHubActive);
         Logger.recordOutput("BlueHubActive", blueHubActive);
-
-        // If our alliance is unknown, default to red hub's status.
-        boolean ourAllianceIsRed;
-        if (DriverStation.getAlliance().isPresent()) {
-            ourAllianceIsRed = DriverStation.getAlliance().get() == Alliance.Red;
-        } else {
-            ourAllianceIsRed = true;
-        }
     
-        Logger.recordOutput("OurHubActive", ourAllianceIsRed ? redHubActive : blueHubActive);
+        Logger.recordOutput("OurHubActive", RobotState.isAllianceRed() ? redHubActive : blueHubActive);
 
         double timeUntilOurHubShifts;
         if (timeframe == "Auto") {
             timeUntilOurHubShifts = matchTime;
         } else if (timeframe == "Transition Shift") {
-            timeUntilOurHubShifts = matchTime - (firstAllianceIsRed ^ ourAllianceIsRed ? 130 : 105);
+            timeUntilOurHubShifts = matchTime - (firstAllianceIsRed ^ RobotState.isAllianceRed() ? 130 : 105);
         } else if (timeframe == "Shift 1") {
             timeUntilOurHubShifts = matchTime - 105;
         } else if (timeframe == "Shift 2") {
@@ -82,7 +75,7 @@ public class ElasticUpdater extends SubsystemBase {
         } else if (timeframe == "Shift 3") {
             timeUntilOurHubShifts = matchTime - 55;
         } else if (timeframe == "Shift 4") {
-            timeUntilOurHubShifts = matchTime - (firstAllianceIsRed ^ ourAllianceIsRed ? 0 : 30);
+            timeUntilOurHubShifts = matchTime - (firstAllianceIsRed ^ RobotState.isAllianceRed() ? 0 : 30);
         } else if (timeframe == "End Game") {
             timeUntilOurHubShifts = matchTime;
         } else {

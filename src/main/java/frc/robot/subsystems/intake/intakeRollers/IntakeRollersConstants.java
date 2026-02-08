@@ -10,9 +10,11 @@ public class IntakeRollersConstants {
   public static final IntakeRollerConfig INTAKE_ROLLER_CONFIG =
       switch (Constants.getRobotType()) {
         case SIM -> new IntakeRollerConfig(
-            CAN.at(64, "Intake Roller"), 1, false, true); 
+            CAN.at(64, "Intake Roller"), CAN.at(65, "Intake Roller 2"), 2, false, true); 
+        case COMP -> new IntakeRollerConfig(
+            CAN.at(21, "Intake Roller"), CAN.at(32, "Intake Roller 2"), 2, true, false);
         default -> new IntakeRollerConfig(
-            CAN.at(36, "Intake Roller"), 1, false, true); 
+            CAN.at(0, "Intake Roller"), CAN.at(0, "Intake Roller 2"), 2, false, true); 
     };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
@@ -23,9 +25,13 @@ public class IntakeRollersConstants {
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
+  
+  public static final boolean OPPOSE_MOTOR = true;
+
+
   // CURRENT LIMITS
-  public static final double UPPER_VOLT_LIMIT = 6;
-  public static final double LOWER_VOLT_LIMIT = -6;
+  public static final double UPPER_VOLT_LIMIT = 13;
+  public static final double LOWER_VOLT_LIMIT = -13;
   public static final int CURRENT_LIMIT_AMPS = 10;
 
   public static final IntakeRollerPhysicalConstants PHYSICAL_CONSTANTS =
@@ -37,7 +43,7 @@ public class IntakeRollersConstants {
 
   // RECORDS
   public record IntakeRollerConfig(
-      int motorID, double reduction, boolean inverted, boolean brake) {}
+      int motorID, int motorID2, double reduction, boolean inverted, boolean brake) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}

@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.shooter_hood;
 
 import static frc.robot.subsystems.shooter.shooter_hood.ShooterHoodConstants.*;
 
+import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
 import frc.robot.lib.generic_subsystems.superstructure.*;
 import org.littletonrobotics.junction.AutoLogOutput;
 
