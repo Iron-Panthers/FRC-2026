@@ -340,10 +340,10 @@ public class RobotContainer {
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
-    driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+    //driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
 
-    //driverA.b().onTrue(climbController.setTargetStateCommand(ClimbControllerState.STOW)
-      //.andThen(intakeController.setTargetStateCommand(IntakeControllerState.OUT)));
+    driverA.b().onTrue(climbController.setTargetCommand(ClimbState.STOW)
+      .andThen(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE)));
     driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
@@ -359,17 +359,17 @@ public class RobotContainer {
     driverB.leftBumper().onFalse(intakeController.setTargetStateCommand(IntakeControllerState.IDLE));
     // TODO: the code below all has something to do with climb, which hasn't been merged into dev, so they're commented for now
 
-    // driverB.x().onTrue(shooterController.setStoppedCommand(true)
-      // .alongWith(intakeController.setStoppedCommand(true))
-      // .alongWith(climbController.setStoppedCeommand(true))
-    // driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
-    //   .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
-    // driverB.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOW));
-    // driverB.y().onTrue(intakeController.getTargetState() == IntakeControllerState.STOW ?
-    //   climbController.setTargetCommand(ClimbState.CLIMB) : climbController.setTargetCommand(ClimbState.STOW));
-    // driverB.rightBumper().onTrue(climbController.getTargetState() == ClimbState.STOW ?
-    //   intakeController.setTargetStateCommand(IntakeControllerState.INTAKE) : intakeController.setTargetStateCommand(IntakeControllerState.STOW));   
-    // );
+    driverB.x().onTrue(shooterController.setStoppedCommand(true)
+      .alongWith(intakeController.setStoppedCommand(true))
+      .alongWith(new InstantCommand(() -> climbController.setStopped(true))));
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
+      .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
+    driverB.b().onTrue(climbController.setTargetCommand(ClimbState.STOW));
+    driverB.y().onTrue(intakeController.getTargetState() == IntakeControllerState.STOW ?
+      climbController.setTargetCommand(ClimbState.L3) : climbController.setTargetCommand(ClimbState.STOW));
+    driverB.rightBumper().onTrue(climbController.getClimbState() == ClimbState.STOW ?
+      intakeController.setTargetStateCommand(IntakeControllerState.INTAKE) : intakeController.setTargetStateCommand(IntakeControllerState.STOW));   
+    
   }
 
   private void configureAutos() {

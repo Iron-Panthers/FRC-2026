@@ -96,19 +96,20 @@ public class ClimbController extends SubsystemBase    {
   }
 
   public LoggedMechanism2d getAsMechanism2d() {
+    // NEXT TIME PLEASE MAKE SURE THE VALUES ARE IN THE UNITS YOU THINK THEY ARE, THIS CAUSED A LOT OF PROBELMS (ex: meters being treated as inches and being converted into meters) >:(
     LoggedMechanism2d mech =
-        new LoggedMechanism2d(Units.Inches.of(1).in(Units.Meters), Units.Inches.of(1).in(Units.Meters));
-    mech.getRoot("Climb", Units.Inches.of(25).in(Units.Meters), Units.Inches.of(0).in(Units.Meters))
+        new LoggedMechanism2d(Units.Inches.of(100).in(Units.Meters), Units.Inches.of(100).in(Units.Meters));
+    mech.getRoot("Climb", Units.Inches.of(50).in(Units.Meters), Units.Inches.of(50).in(Units.Meters))
         .append(
             new LoggedMechanismLigament2d(
                 "Climb Deploy Pivot",
-                Units.Inches.of(ClimbDeployPivotConstants.PHYSICAL_CONSTANTS.lengthMeters()).in(Units.Meters),
-                Units.Degrees.of(climbDeployPivot.getPosition()).in(Units.Degrees) - 90))
+                (ClimbDeployPivotConstants.PHYSICAL_CONSTANTS.lengthMeters()),
+                Units.Rotations.of(climbDeployPivot.getPosition()).in(Units.Degrees) - 90))
         .append(
             new LoggedMechanismLigament2d(
                 "Climb Claw Pivot",
-                Units.Inches.of(ClimbClawPivotConstants.PHYSICAL_CONSTANTS.lengthMeters()).in(Units.Meters),
-                Units.Degrees.of(climbClawPivot.getPosition()).in(Units.Degrees) - 90));
+                (ClimbClawPivotConstants.PHYSICAL_CONSTANTS.lengthMeters()),
+                Units.Rotations.of(climbClawPivot.getPosition()).in(Units.Degrees) - 90));
     return mech;
   }
 
