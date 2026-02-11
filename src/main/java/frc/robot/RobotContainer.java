@@ -42,6 +42,11 @@ import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
+import frc.robot.subsystems.hopper.HopperController;
+import frc.robot.subsystems.hopper.Hopper.Hopper;
+import frc.robot.subsystems.hopper.Hopper.HopperIO;
+import frc.robot.subsystems.hopper.Hopper.HopperIOSim;
+import frc.robot.subsystems.hopper.HopperController.HopperControllerState;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.rgb.RGBIOCANdle;
@@ -105,6 +110,8 @@ public class RobotContainer {
   private IntakePivot intakePivot;
   private IntakeRollers intakeRollers;
   private IntakeController intakeController;
+  private Hopper hopper;
+  private HopperController hopperController;
   private ShooterFlywheel shooterFlywheels;
   private ShooterHood shooterHood;
   private ShooterController shooterController;
@@ -177,6 +184,8 @@ public class RobotContainer {
           intakePivot = new IntakePivot(new IntakePivotIOSim());
           intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
 
+          hopper = new Hopper(new HopperIOSim());
+
           shooterFlywheels =
             new ShooterFlywheel(new ShooterFlywheelIOSim());
           shooterHood =
@@ -220,6 +229,13 @@ public class RobotContainer {
       intakeRollers = new IntakeRollers( new IntakeRollersIO() {});
     }
     intakeController = new IntakeController(intakePivot, intakeRollers);
+
+    if (hopper == null) {
+      hopper = new Hopper(new HopperIO() {});
+    }
+
+    hopperController = new HopperController(hopper);
+
 
     if (shooterFlywheels == null) {
       shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIO() {});
@@ -302,6 +318,10 @@ public class RobotContainer {
     //   })
     // );
     // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
+    driverB.a().onTrue(hopperController.setTargetStateCommand(HopperControllerState.INTAKE));
+
+    // driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
 
     //IDEAL BUTTON BINDINGS; climb-related stuff commented because climb is not yet merged
     
