@@ -14,13 +14,20 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class VisionIOPhotonvision implements VisionIO {
   protected final PhotonCamera camera;
   private final PhotonPoseEstimator estimator;
+  private final int[] ignoredTags;
 
   public VisionIOPhotonvision(String name, int index) {
     camera = new PhotonCamera(name);
     estimator =
         new PhotonPoseEstimator(
             VisionConstants.APRIL_TAG_FIELD_LAYOUT,
+            PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
             VisionConstants.CAMERA_TRANSFORM[index]);
+    if(name.equals("ardcucam-4") || name.equals("arducam-5")){
+      ignoredTags = VisionConstants.IGNORE_TAGS_SHOOTER;
+    }else{
+      ignoredTags = VisionConstants.IGNORE_TAGS;
+    }
   }
 
   @Override
@@ -35,13 +42,7 @@ public class VisionIOPhotonvision implements VisionIO {
       PhotonPipelineResult frame = results.get(frameIndex);
       if (!frame.hasTargets()) continue;
 
-      Optional<EstimatedRobotPose> optEstimation;
-
-      optEstimation = estimator.estimateCoprocMultiTagPose(frame);
-      if (optEstimation.isEmpty()) {
-        optEstimation = estimator.estimateLowestAmbiguityPose(frame);
-      }
-
+      Optional<EstimatedRobotPose> optEstimation = estimator.update(frame);
       if (optEstimation.isEmpty()) continue;
       EstimatedRobotPose estimation = optEstimation.get();
 
@@ -49,16 +50,18 @@ public class VisionIOPhotonvision implements VisionIO {
       for (PhotonTrackedTarget target : frame.getTargets()) {
         totalDistance += target.getBestCameraToTarget().getTranslation().getNorm();
       }
-
+      
       List<Integer> FIDs = new ArrayList<Integer>();
       boolean badTag = false;
-      for (PhotonTrackedTarget target : estimation.targetsUsed) {
-        int id = target.getFiducialId();
-        if (IntStream.of(VisionConstants.IGNORE_TAGS).anyMatch(x -> x == id)) {
-          badTag = true;
-          break;
+      if(estimation.targetsUsed.size() == 1) {
+        for (PhotonTrackedTarget target : estimation.targetsUsed) {
+          int id = target.getFiducialId();
+          if (IntStream.of(ignoredTags).anyMatch(x -> x == id)) {
+            badTag = true;
+            break;
+          }
+          FIDs.add(id);
         }
-        FIDs.add(id);
       }
       if (badTag) continue;
       allTagIDs.addAll(FIDs);
