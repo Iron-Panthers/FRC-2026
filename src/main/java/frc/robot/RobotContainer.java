@@ -31,6 +31,16 @@ import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
+import frc.robot.subsystems.climb.ClimbController;
+import frc.robot.subsystems.climb.ClimbController.ClimbState;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIO;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIOSim;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot.ClimbClawPivotTarget;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIO;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot.ClimbDeployPivotTarget;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeControllerState;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
@@ -117,6 +127,9 @@ public class RobotContainer {
   private ShooterController shooterController;
   private ShooterAcceleratorBottom shooterAcceleratorBottom;
   private ShooterAcceleratorTop shooterAcceleratorTop;
+  private ClimbClawPivot climbClawPivot;
+  private ClimbDeployPivot climbDeployPivot;
+  private ClimbController climbController;
 
   public RobotContainer() {
 
@@ -195,6 +208,9 @@ public class RobotContainer {
           shooterAcceleratorTop = 
             new ShooterAcceleratorTop(new ShooterAcceleratorTopIOSim());
 
+          climbClawPivot = new ClimbClawPivot(new ClimbClawPivotIOSim());
+          climbDeployPivot = new ClimbDeployPivot(new ClimbDeployPivotIOSim());
+
           SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
         }
       }
@@ -256,6 +272,16 @@ public class RobotContainer {
     shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop, () -> {
       return robotState.calculateTargetShootingState().shooterAngle().in(Units.Rotations);
     });
+
+
+    // init climb
+    if( climbClawPivot == null) {
+      climbClawPivot = new ClimbClawPivot( new ClimbClawPivotIO() {});
+    }
+    if( climbDeployPivot == null) {
+      climbDeployPivot = new ClimbDeployPivot( new ClimbDeployPivotIO() {});
+    }
+    climbController = new ClimbController(climbClawPivot, climbDeployPivot);
 
     // init shooter with testing values
     RobotState.getInstance().initializeShootingAnglePredictor(
@@ -334,10 +360,10 @@ public class RobotContainer {
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
-    driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+    //driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
 
-    //driverA.b().onTrue(climbController.setTargetStateCommand(ClimbControllerState.STOW)
-      //.andThen(intakeController.setTargetStateCommand(IntakeControllerState.OUT)));
+    driverA.b().onTrue(climbController.setTargetCommand(ClimbState.STOW)
+      .andThen(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE)));
     driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
@@ -353,17 +379,17 @@ public class RobotContainer {
     driverB.leftBumper().onFalse(intakeController.setTargetStateCommand(IntakeControllerState.IDLE));
     // TODO: the code below all has something to do with climb, which hasn't been merged into dev, so they're commented for now
 
-    // driverB.x().onTrue(shooterController.setStoppedCommand(true)
-      // .alongWith(intakeController.setStoppedCommand(true))
-      // .alongWith(climbController.setStoppedCeommand(true))
-    // driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
-    //   .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
-    // driverB.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOW));
-    // driverB.y().onTrue(intakeController.getTargetState() == IntakeControllerState.STOW ?
-    //   climbController.setTargetCommand(ClimbState.CLIMB) : climbController.setTargetCommand(ClimbState.STOW));
-    // driverB.rightBumper().onTrue(climbController.getTargetState() == ClimbState.STOW ?
-    //   intakeController.setTargetStateCommand(IntakeControllerState.INTAKE) : intakeController.setTargetStateCommand(IntakeControllerState.STOW));   
-    // );
+    driverB.x().onTrue(shooterController.setStoppedCommand(true)
+      .alongWith(intakeController.setStoppedCommand(true))
+      .alongWith(new InstantCommand(() -> climbController.setStopped(true))));
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
+      .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
+    driverB.b().onTrue(climbController.setTargetCommand(ClimbState.STOW));
+    driverB.y().onTrue(intakeController.getTargetState() == IntakeControllerState.STOW ?
+      climbController.setTargetCommand(ClimbState.L3) : climbController.setTargetCommand(ClimbState.STOW));
+    driverB.rightBumper().onTrue(climbController.getClimbState() == ClimbState.STOW ?
+      intakeController.setTargetStateCommand(IntakeControllerState.INTAKE) : intakeController.setTargetStateCommand(IntakeControllerState.STOW));   
+    
   }
 
   private void configureAutos() {
