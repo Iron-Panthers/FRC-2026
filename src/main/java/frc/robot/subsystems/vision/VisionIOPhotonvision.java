@@ -14,6 +14,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class VisionIOPhotonvision implements VisionIO {
   protected final PhotonCamera camera;
   private final PhotonPoseEstimator estimator;
+  private final int[] ignoredTags;
 
   public VisionIOPhotonvision(String name, int index) {
     camera = new PhotonCamera(name);
@@ -21,6 +22,11 @@ public class VisionIOPhotonvision implements VisionIO {
         new PhotonPoseEstimator(
             VisionConstants.APRIL_TAG_FIELD_LAYOUT,
             VisionConstants.CAMERA_TRANSFORM[index]);
+    if (name.equals("arducam-4") || name.equals("arducam-5")){
+      ignoredTags = VisionConstants.IGNORE_TAGS_SHOOTER;
+    }else{
+      ignoredTags = VisionConstants.IGNORE_TAGS;
+    }
   }
 
   @Override
@@ -54,7 +60,7 @@ public class VisionIOPhotonvision implements VisionIO {
       boolean badTag = false;
       for (PhotonTrackedTarget target : estimation.targetsUsed) {
         int id = target.getFiducialId();
-        if (IntStream.of(VisionConstants.IGNORE_TAGS).anyMatch(x -> x == id)) {
+        if (IntStream.of(ignoredTags).anyMatch(x -> x == id)) {
           badTag = true;
           break;
         }

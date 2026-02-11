@@ -111,6 +111,7 @@ public class VisionConstants {
       };
 
   public static final int[] IGNORE_TAGS = {};
+  public static final int[] IGNORE_TAGS_SHOOTER = {1,6,7,12,13,14,15,16,17,22,23,28,29,30,31,32};
   // public static final int[] IGNORE_TAGS = {}; // removed
 
   // Fixed AprilTag field layout initialization
@@ -134,6 +135,8 @@ public class VisionConstants {
     APRIL_TAG_FIELD_LAYOUT =
         new AprilTagFieldLayout(
             aprilTags, defaultFieldLayout.getFieldLength(), defaultFieldLayout.getFieldWidth());
+    
+    
   }
 
   public static record TagCountDeviation(

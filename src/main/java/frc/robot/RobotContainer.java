@@ -322,9 +322,23 @@ public class RobotContainer {
                 })
             .withName("Drive Teleop"));
 
+<<<<<<< Updated upstream
     configureDriverAButtons();
     configureDriverBButtons();
     // driverA.b().whileTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(14.392,3.8, new Rotation2d(Math.PI)), true));
+=======
+    driverA.start().onTrue(swerve.zeroGyroCommand());
+
+    driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    driverA.x().whileTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(8.3, 2.5, new Rotation2d(0)), false));
+    
+    driverA.b().onTrue(new InstantCommand(() -> {
+      RobotSimState.getInstance().shootFuel(Units.Degrees.of(45), MetersPerSecond.of(3));
+    }));
+
+    driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+
+>>>>>>> Stashed changes
     // driverA.y().onTrue(new InstantCommand(() -> {
     //   // Only shoot in simulation
     //   if (Constants.getRobotType() == Constants.RobotType.SIM) {
