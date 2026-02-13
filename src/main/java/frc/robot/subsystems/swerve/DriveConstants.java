@@ -85,7 +85,7 @@ public class DriveConstants {
             6); // (multiply by max velocity to get m/s^2)
       };
 
-    public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
+    public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.001, 0.001, 0.001);
   
     public static final Translation2d[] MODULE_TRANSLATIONS =
       new Translation2d[] {
