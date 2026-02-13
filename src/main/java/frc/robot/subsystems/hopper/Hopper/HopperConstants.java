@@ -19,6 +19,8 @@ public class HopperConstants {
     };
 
   public static final int CURRENT_LIMIT_AMPS = 40;
+  public static final double UPPER_VOLT_LIMIT = 6;
+  public static final double LOWER_VOLT_LIMIT = -6;
 
   public static final HopperPhysicalConstants PHYSICAL_CONSTANTS =
     switch (Constants.getRobotType()) {
