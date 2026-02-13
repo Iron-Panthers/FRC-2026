@@ -17,8 +17,7 @@ private final FlywheelSim hopperSim;
             GAINS.kD(),
             GAINS.kS(),
             GAINS.kV(),
-            GAINS.kA(),
-            GAINS.kG()
+            GAINS.kA()
     );
     hopperSim =
         new FlywheelSim(

@@ -6,6 +6,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import frc.robot.lib.generic_subsystems.rollers.GenericRollersConfiguration;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
 
 public abstract class GenericMechanismConfiguration {
@@ -216,5 +217,62 @@ public abstract class GenericMechanismConfiguration {
     this.followerMotors.add(new FollowerMotorConfig(id, motorAlignmentValue));
     return this;
   }
-  
+
+  /**
+   * The upper voltage limit for the motor.
+   *
+   * <ul>
+   *   <li><b>Minimum Value:</b> -16
+   *   <li><b>Maximum Value:</b> 16
+   *   <li><b>Default Value:</b> 16
+   *   <li><b>Units:</b> V
+   * </ul>
+   */
+  public double upperVoltLimit = 16;
+
+  /**
+   * The upper voltage limit for the motor.
+   *
+   * <ul>
+   *   <li><b>Minimum Value:</b> -16
+   *   <li><b>Maximum Value:</b> 16
+   *   <li><b>Default Value:</b> 16
+   *   <li><b>Units:</b> V
+   * </ul>
+   *
+   * @return itself
+   */
+  public GenericMechanismConfiguration withUpperVoltageLimit(double upperVoltLimit) {
+    this.upperVoltLimit = upperVoltLimit;
+    return this;
+  }
+
+  /**
+   * The lower voltage limit for the motor.
+   *
+   * <ul>
+   *   <li><b>Minimum Value:</b> -16
+   *   <li><b>Maximum Value:</b> 16
+   *   <li><b>Default Value:</b> -16
+   *   <li><b>Units:</b> V
+   * </ul>
+   */
+  public double lowerVoltLimit = 16;
+
+  /**
+   * The lower voltage limit for the motor.
+   *
+   * <ul>
+   *   <li><b>Minimum Value:</b> -16
+   *   <li><b>Maximum Value:</b> 16
+   *   <li><b>Default Value:</b> -16
+   *   <li><b>Units:</b> V
+   * </ul>
+   *
+   * @return itself
+   */
+  public GenericMechanismConfiguration withLowerVoltageLimit(double lowerVoltLimit) {
+    this.lowerVoltLimit = lowerVoltLimit;
+    return this;
+  }
 }
