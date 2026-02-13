@@ -16,14 +16,11 @@ public class IntakePivotConstants {
         case COMP -> new IntakePivotConfig(
             // Reduction between sensor and mechansim
             CAN.at(30, "Intake Pivot"),
-            CAN.at(31, "Intake Pivot Encoder"),
-            -0.01444,
-            2.25); // (36/16
-          // is the reduction for the encoder)
+            2.25); 
         case SIM -> new IntakePivotConfig(
             // Reduction between motor and mechansim
-            CAN.at(8, "Intake Pivot"), 0, 0, 12 * 0.3750);
-        default -> new IntakePivotConfig(0, 0, 0, 1);
+            CAN.at(8, "Intake Pivot"),  12 * 0.3750);
+        default -> new IntakePivotConfig(0,  1);
       };
 
   public static final PIDGains GAINS =
@@ -41,7 +38,7 @@ public class IntakePivotConstants {
       };
 
   public record IntakePivotConfig(
-      int motorID, int canCoderID, double canCoderOffset, double reduction) {}
+      int motorID, double reduction) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
