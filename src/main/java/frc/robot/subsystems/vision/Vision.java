@@ -90,7 +90,6 @@ public class Vision extends SubsystemBase {
 
         RobotState.getInstance().addVisionMeasurement(measurement, visionStdDevs);
       }
-
       Logger.recordOutput(
           "Vision/Camera" + cameraIndex + "/TagPoses",
           tagPoses.toArray(new Pose3d[tagPoses.size()]));
