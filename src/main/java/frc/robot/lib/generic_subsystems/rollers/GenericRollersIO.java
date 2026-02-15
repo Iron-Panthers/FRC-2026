@@ -12,6 +12,7 @@ public interface GenericRollersIO {
     public double velocityRadsPerSec = 0;
     public double appliedVolts = 0;
     public double supplyCurrentAmps = 0;
+    public double appliedVelocity;
   }
 
   default void updateInputs(GenericRollersIOInputs inputs) {}

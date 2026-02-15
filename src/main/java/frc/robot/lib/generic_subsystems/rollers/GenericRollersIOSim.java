@@ -75,6 +75,7 @@ public abstract class GenericRollersIOSim implements GenericRollersIO {
     gainsConfig.kS = kS;
     gainsConfig.kV = kV;
     gainsConfig.kA = kA;
+    
 
     talon.getConfigurator().apply(gainsConfig);
   }
