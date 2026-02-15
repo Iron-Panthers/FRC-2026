@@ -46,6 +46,7 @@ import frc.robot.subsystems.intake.IntakeController.IntakeControllerState;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIOTalonFX;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
@@ -68,6 +69,7 @@ import frc.robot.subsystems.swerve.GyroIOSim;
 import frc.robot.subsystems.swerve.ModuleIO;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
+import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
 import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -154,6 +156,7 @@ public class RobotContainer {
           //   new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
           // shooterAcceleratorTop = 
           //   new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
+          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
         }
         case VISION -> {
@@ -324,7 +327,7 @@ public class RobotContainer {
 
     configureDriverAButtons();
     configureDriverBButtons();
-    // driverA.b().whileTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(14.392,3.8, new Rotation2d(Math.PI)), true));
+    driverA.b().whileTrue(new AlignToPoseCommand(swerve, () -> new Pose2d(14.392,3.8, new Rotation2d(Math.PI)), true));
     // driverA.y().onTrue(new InstantCommand(() -> {
     //   // Only shoot in simulation
     //   if (Constants.getRobotType() == Constants.RobotType.SIM) {
@@ -344,9 +347,9 @@ public class RobotContainer {
     //   })
     // );
     // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
-    driverB.a().onTrue(hopperController.setTargetStateCommand(HopperControllerState.INTAKE));
+    // driverB.a().onTrue(hopperController.setTargetStateCommand(HopperControllerState.INTAKE));
 
-    // driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
     driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
 
     //IDEAL BUTTON BINDINGS; climb-related stuff commented because climb is not yet merged
@@ -362,8 +365,8 @@ public class RobotContainer {
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
     //driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
 
-    driverA.b().onTrue(climbController.setTargetCommand(ClimbState.STOW)
-      .andThen(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE)));
+    // driverA.b().onTrue(climbController.setTargetCommand(ClimbState.STOW)
+    //   .andThen(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE)));
     driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))

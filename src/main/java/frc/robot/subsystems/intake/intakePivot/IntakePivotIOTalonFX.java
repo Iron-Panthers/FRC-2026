@@ -20,9 +20,7 @@ public class IntakePivotIOTalonFX extends GenericSuperstructureIOTalonFX impleme
             .withUpperVoltageLimit(UPPER_VOLT_LIMIT)
             .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
             .withZeroingVolts(ZEROING_VOLTS)
-            .withZeroingOffset(ZEROING_OFFSET)
-            .withCANCoderDirection(CANCODER_DIRECTION)
-            .withSensorDiscontinuityPoint(SENSOR_DISCONTINUITY_POINT));
+            .withZeroingOffset(ZEROING_OFFSET));
 
     setSlot0(
         GAINS.kP(),
