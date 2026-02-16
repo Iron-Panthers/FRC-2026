@@ -28,20 +28,23 @@ public class TeleopTranslationController extends BaseTranslationController {
   }
 
   /* accept driver input from joysticks */
-  public void acceptJoystickInput(
-      double controllerX, double controllerY, double controllerOmega, double acceleration) {
-    this.controllerX = controllerX;
-    this.controllerY = controllerY;
-    this.controllerOmega = controllerOmega;
-    this.acceleration = acceleration;
+  public void acceptJoystickInput(double controllerX, double controllerY, double controllerOmega, double acceleration, boolean fullState) {
+    if (!fullState){
+      this.controllerX = controllerX;
+      this.controllerY = controllerY;
+      this.controllerOmega = controllerOmega;
+      this.acceleration = acceleration;
+    }
   }
 
   /* accept driver input from joysticks */
-  public void acceptJoystickInput(double controllerX, double controllerY, double controllerOmega) {
-    this.controllerX = controllerX;
-    this.controllerY = controllerY;
-    this.controllerOmega = controllerOmega;
-    this.acceleration = DRIVE_CONFIG.maxLinearAcceleration();
+  public void acceptJoystickInput(double controllerX, double controllerY, double controllerOmega, boolean fullState) {
+    if (!fullState){
+      this.controllerX = controllerX;
+      this.controllerY = controllerY;
+      this.controllerOmega = controllerOmega;
+      this.acceleration = DRIVE_CONFIG.maxLinearAcceleration();
+    } 
   }
 
   /* update controller with current desired state */

@@ -29,7 +29,7 @@ public class HopperController extends SubsystemBase {
     }
 
     private HopperControllerState targetState = HopperControllerState.IDLE;
-
+    private boolean fullState = false;
     private final Hopper hopper;
 
     public HopperController(Hopper hopper) {
@@ -42,6 +42,7 @@ public class HopperController extends SubsystemBase {
         hopper.periodic();
 
         Logger.recordOutput("Hopper/TargetState", targetState);
+        Logger.recordOutput("Hopper/FullState", fullState);
     }
 
     public void setTargetState(HopperControllerState targetState) {
@@ -54,5 +55,9 @@ public class HopperController extends SubsystemBase {
 
     public Command setTargetStateCommand(HopperControllerState targetState) {
         return new InstantCommand(() -> setTargetState(targetState), this);
+    }
+
+    public boolean getFullState() {    
+        return fullState;
     }
 }

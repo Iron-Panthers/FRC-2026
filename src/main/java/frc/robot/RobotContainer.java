@@ -316,7 +316,8 @@ public class RobotContainer {
                       -driverA.getLeftY(),
                       -driverA.getLeftX(),
                       driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis(),
-                      DriveConstants.DRIVE_CONFIG.maxLinearAcceleration());
+                      DriveConstants.DRIVE_CONFIG.maxLinearAcceleration(),
+                      hopperController.getFullState());
                     if (Math.abs(driverA.getLeftTriggerAxis()) > 0.1
                     || Math.abs(driverA.getRightTriggerAxis()) > 0.1) {
                       swerve.clearHeadingControl();
