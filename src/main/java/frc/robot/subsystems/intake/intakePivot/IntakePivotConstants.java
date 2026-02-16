@@ -47,7 +47,7 @@ public class IntakePivotConstants {
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-  public static final InvertedValue MOTOR_DIRECTION = InvertedValue.Clockwise_Positive;
+  public static final InvertedValue MOTOR_DIRECTION = InvertedValue.CounterClockwise_Positive;
 
   public static final SensorDirectionValue CANCODER_DIRECTION =
       SensorDirectionValue.CounterClockwise_Positive;
