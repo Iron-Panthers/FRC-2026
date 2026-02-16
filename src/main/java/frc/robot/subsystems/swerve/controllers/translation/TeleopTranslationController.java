@@ -10,8 +10,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.RobotState;
+
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
+
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
+import com.pathplanner.lib.util.FlippingUtil;
 
 public class TeleopTranslationController extends BaseTranslationController {
   private double controllerX = 0;
@@ -68,6 +74,7 @@ public class TeleopTranslationController extends BaseTranslationController {
         pastLinearVelocity.plus(new Translation2d(clampedVelocityDiff, velocityTheta));
     pastLinearVelocity = newVelocity;
 
+    newVelocity = centerizeTrench(linearVelocity);
     return ChassisSpeeds.fromFieldRelativeSpeeds(
         newVelocity.getX() * DRIVE_CONFIG.maxLinearVelocity(),
         newVelocity.getY() * DRIVE_CONFIG.maxLinearVelocity(),
@@ -100,5 +107,43 @@ public class TeleopTranslationController extends BaseTranslationController {
 
   public void setPastLinearVelocity(Translation2d pastLinearVelocity) {
     this.pastLinearVelocity = pastLinearVelocity;
+  }
+
+  public Translation2d centerizeTrench(Translation2d linearVelocity){
+    Pose2d robotPose = RobotState.getInstance().getEstimatedPose();
+    double robotYSize = 0.61;
+    Pose2d trenchPose = new Pose2d(4.6, 0.65, new Rotation2d());
+    Pose2d flippedTrenchPose = FlippingUtil.flipFieldPose(trenchPose);
+    Logger.recordOutput("Swerve/isUnderTrench", ((Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
+       Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65) ||
+       (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
+       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65)));
+    
+    Logger.recordOutput("Swerve/isDown", (linearVelocity.getY() < 0 
+        &&  trenchPose.getY() - (robotPose.getY() - robotYSize) > 0.65));
+    
+    Logger.recordOutput("Swerve/isUp", (linearVelocity.getY() > 0 
+        &&  trenchPose.getY() - (robotPose.getY() + robotYSize) > 0.65));
+
+       
+    if(((Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
+       Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65) ||
+       (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
+       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65))){
+
+        if(linearVelocity.getY() < 0 
+        &&  trenchPose.getY() - (robotPose.getY() - robotYSize) > 0.65){
+          return new Translation2d(linearVelocity.getX(), 0);
+        }
+        if(linearVelocity.getY() > 0 
+        &&  trenchPose.getY() - (robotPose.getY() + robotYSize) > 0.65){
+          return new Translation2d(linearVelocity.getX(), 0);
+        }
+    }
+    return linearVelocity;
+      //  &&
+      //   (robotPose.getY() + robotXSize > trenchPose.getY() + 0.65 || robotPose.getY() + robotXSize > flippedTrenchPose.getY() + 0.65 //if I'm not centered
+      //   ||robotPose.getY() - robotXSize < trenchPose.getY() + 0.65 || robotPose.getY() - robotXSize < flippedTrenchPose.getY() + 0.65)){
+      // return new Translation2d(linearVelocity.getX(), 0);
   }
 }
