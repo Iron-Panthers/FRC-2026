@@ -85,6 +85,7 @@ import frc.robot.lib.generic_subsystems.superstructure.*;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
@@ -272,9 +273,7 @@ public class RobotContainer {
       shooterAcceleratorTop = new ShooterAcceleratorTop(new ShooterAcceleratorTopIO() {});
     }
 
-    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop, () -> {
-      return robotState.calculateTargetShootingState().shooterAngle().in(Units.Rotations);
-    });
+    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop);
 
 
     // init climb
@@ -327,50 +326,40 @@ public class RobotContainer {
 
     configureDriverAButtons();
     configureDriverBButtons();
-    // driverA.b().whileTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(14.392,3.8, new Rotation2d(Math.PI)), true));
-    // driverA.y().onTrue(new InstantCommand(() -> {
-    //   // Only shoot in simulation
-    //   if (Constants.getRobotType() == Constants.RobotType.SIM) {
 
-    //     Transform3d shooterPose = ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
-    //       new Translation3d(),
-    //       new Rotation3d(0, 0, Math.PI/2)
-    //     )); // rotation because of how the modeled shooter was in sim litterally just that i fear
+    //Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other buttons)
 
-    //     // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
-    //     Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
-    //     LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
+    driverA.a().onTrue(new InstantCommand(() -> {
+      // Only shoot in simulation
+      if (Constants.getRobotType() == Constants.RobotType.SIM) {
 
-    //     // Shoot the fuel using the calculated parameters - velocity must match calculation!
-    //     RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
-    //   }
-    //   })
-    // );
-    // driverA.b().onTrue(shooterController.setTargetCommand(ShooterController.ShooterState.SHOOT));
-    driverB.a().onTrue(hopperController.setTargetStateCommand(HopperControllerState.INTAKE));
+        Transform3d shooterPose = ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+          new Translation3d(),
+          new Rotation3d(0, 0, Math.PI/2)
+        )); // rotation because of how the modeled shooter was in sim litterally just that i fear
 
-    // driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
-    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+        // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
+        Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
+        LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
 
-    //IDEAL BUTTON BINDINGS; climb-related stuff commented because climb is not yet merged
-    
-//swerve.settargetheadingcommand, shoot 0 for aim pass
-// + test in sim
+        // Shoot the fuel using the calculated parameters - velocity must match calculation!
+        RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
+      }
+      })
+    );
   }
 
   private void configureDriverAButtons() {
     driverA.start().onTrue(swerve.zeroGyroCommand());
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
+    driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT)).onFalse(shooterController.setTargetCommand(ShooterState.IDLE));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
-    //driverA.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
-
     driverA.b().onTrue(climbController.setTargetCommand(ClimbState.STOW)
-      .andThen(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE)));
-    driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
+      .andThen(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE)));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetCommand(ShooterState.SHOOT)));
+    driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
     driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
       new RunCommand(() -> {
           swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(90))));
@@ -387,11 +376,10 @@ public class RobotContainer {
       .alongWith(new InstantCommand(() -> climbController.setStopped(true))));
     driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
       .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
-    driverB.b().onTrue(climbController.setTargetCommand(ClimbState.STOW));
-    driverB.y().onTrue(intakeController.getTargetState() == IntakeControllerState.STOW ?
-      climbController.setTargetCommand(ClimbState.L3) : climbController.setTargetCommand(ClimbState.STOW));
-    driverB.rightBumper().onTrue(climbController.getClimbState() == ClimbState.STOW ?
-      intakeController.setTargetStateCommand(IntakeControllerState.INTAKE) : intakeController.setTargetStateCommand(IntakeControllerState.STOW));   
+    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW).andThen(climbController.setTargetCommand(ClimbState.DEPLOY)));
+    driverB.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW).andThen(climbController.setTargetCommand(ClimbState.L3)));
+    driverB.rightBumper().onTrue(climbController.setTargetCommand(ClimbState.STOW)
+      .andThen(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE))); 
     
   }
 
@@ -468,5 +456,16 @@ public class RobotContainer {
         "FieldSimulation/RobotPosition", RobotSimState.getInstance().getDriveSimulation().getSimulatedDriveTrainPose());
     Logger.recordOutput(
         "FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
+    
+    Logger.recordOutput("FieldSimulation/Robot Fuel", RobotSimState.getInstance().getIntakeGamePieces());
+
+    // Update the shooting logic with the correct rollers
+    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAcceleratorTop.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+          new Translation3d(),
+          new Rotation3d(0, 0, Math.PI/2)
+        )), shooterFlywheels.getCurrentVelocity());
+    
+    // Handle automatic shooter firing
+    RobotSimState.getInstance().periodicShooter();
   }
 }
