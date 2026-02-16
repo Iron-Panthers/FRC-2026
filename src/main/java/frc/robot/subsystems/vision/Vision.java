@@ -12,8 +12,11 @@ import frc.robot.RobotState;
 import frc.robot.RobotState.VisionMeasurement;
 import frc.robot.subsystems.vision.VisionIO.PoseObservation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
@@ -87,8 +90,11 @@ public class Vision extends SubsystemBase {
             TAG_COUNT_DEVIATIONS
                 .get(MathUtil.clamp(observation.tagCount() - 1, 0, TAG_COUNT_DEVIATIONS.size() - 1))
                 .computeDeviation(observation.averageDistance());
-
+      Logger.recordOutput(
+      "Vision/Camera" + cameraIndex + "/StdDevs", visionStdDevs);
         RobotState.getInstance().addVisionMeasurement(measurement, visionStdDevs);
+            Logger.recordOutput(
+      "Vision/Camera" + cameraIndex + "/AverageDistance", observation.averageDistance());
       }
 
       Logger.recordOutput(
@@ -103,7 +109,11 @@ public class Vision extends SubsystemBase {
       Logger.recordOutput(
           "Vision/Camera" + cameraIndex + "/RejectedPoses",
           rejectedPoses.toArray(new Pose3d[rejectedPoses.size()]));
-
+      Logger.recordOutput(
+          "Vision/Camera" + cameraIndex + "/Angle",
+          acceptedPoses.stream()
+        .mapToDouble(pose -> pose.getRotation().getZ())
+        .toArray());
       allTagPoses.addAll(tagPoses);
       allEstimatedPoses.addAll(estimatedPoses);
       allAcceptedPoses.addAll(acceptedPoses);
