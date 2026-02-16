@@ -171,13 +171,13 @@ public class Drive extends SubsystemBase {
       driveMode = DriveModes.DEFENSE;
     }
 
-  public void driveTeleopController(double xAxis, double yAxis, double omega, double acceleration) {
+  public void driveTeleopController(double xAxis, double yAxis, double omega, double acceleration, boolean fullState) {
     if (DriverStation.isTeleopEnabled()) {
       if (driveMode != DriveModes.TELEOP) {
         driveMode = DriveModes.TELEOP;
         teleopController.setPastLinearVelocity(new Translation2d());
       }
-      teleopController.acceptJoystickInput(xAxis, yAxis, omega, acceleration);
+      teleopController.acceptJoystickInput(xAxis, yAxis, omega, acceleration, fullState);
     }
   }
 
