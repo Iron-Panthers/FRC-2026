@@ -17,13 +17,11 @@ public class ShooterHoodConstants {
             case COMP -> new ShooterHoodConfig(
                 //reduction between sensor and mechanism
                 CAN.at(30, "Shooter Hood"),
-                CAN.at(31, "Shooter Hood Encoder"),
-                -0.01444, 
-                2.25);  //find the reduction for the encoder
+                2.25); 
             case SIM -> new ShooterHoodConfig(
                 //Reduction between motor and mechanism
-                CAN.at(8, "Shooter Hood"), 0, 0, 12 * 0.3750);
-            default -> new ShooterHoodConfig(0,0,0,1);
+                CAN.at(8, "Shooter Hood"),  12 * 0.3750);
+            default -> new ShooterHoodConfig(0,1);
         };
     
     //TODO update all the PID information
@@ -43,7 +41,7 @@ public class ShooterHoodConstants {
       };
 
     public record ShooterHoodConfig(
-        int motorID, int canCoderID, double canCoderOffset, double reduction) {}
+        int motorID, double reduction) {}
 
     public record PIDGains(
         double kP, double kI, double kD, double kS, double kV, double kA, double kG){}
