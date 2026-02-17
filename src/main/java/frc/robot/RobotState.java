@@ -99,7 +99,22 @@ public class RobotState {
           DriveConstants.STATE_STD_DEVS,
           VisionConstants.VISION_STATE_STD_DEVS);
 
+  private SwerveDrivePoseEstimator wheelPoseEstimator =
+      new SwerveDrivePoseEstimator(
+          DriveConstants.KINEMATICS,
+          new Rotation2d(),
+          new SwerveModulePosition[] {
+            new SwerveModulePosition(),
+            new SwerveModulePosition(),
+            new SwerveModulePosition(),
+            new SwerveModulePosition()
+          },
+          initialPose,
+          DriveConstants.STATE_STD_DEVS,
+          VisionConstants.VISION_STATE_STD_DEVS);
+
   private Pose2d estimatedPose = initialPose; // vision adjusted
+  private Pose2d wheelEstimatedPose = initialPose; //non-vision adjusted
 
   private Pose2d lastApproachPose = new Pose2d();
 
@@ -164,10 +179,13 @@ public class RobotState {
     }
     
     poseEstimator.updateWithTime(
-        measurement.timestamp(), measurement.gyroAngle(), corrected);
+        measurement.timestamp(), measurement.gyroAngle(), measurement.wheelPositions());
+    wheelPoseEstimator.updateWithTime(
+        measurement.timestamp(), measurement.gyroAngle(), measurement.wheelPositions());
 
     // integrate to find difference in pose over time, add to pose estimate
     estimatedPose = poseEstimator.getEstimatedPosition();
+    wheelEstimatedPose = wheelPoseEstimator.getEstimatedPosition();
   }
 
   public void addVisionMeasurement(VisionMeasurement measurement, Matrix<N3, N1> visionStdDevs) {
@@ -180,10 +198,18 @@ public class RobotState {
     estimatedPose = pose;
     poseEstimator.resetPose(pose);
   }
+  public void equalizeEstimatedPoses(){
+    wheelEstimatedPose = estimatedPose;
+    wheelPoseEstimator.resetPose(estimatedPose);
+  }
 
   @AutoLogOutput(key = "RobotState/EstimatedPose")
   public Pose2d getEstimatedPose() {
     return estimatedPose;
+  }
+  @AutoLogOutput(key = "RobotState/WheelEstimatedPose")
+  public Pose2d getWheelEstimatedPose() {
+    return wheelEstimatedPose;
   }
 
   @AutoLogOutput(key = "RobotState/Velocity")
