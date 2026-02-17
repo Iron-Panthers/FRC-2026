@@ -14,7 +14,7 @@ import frc.robot.utility.LoggableMechanism3d;
 public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget> implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
     INTAKE(0), // the numbers are from 2025 sprint bot)
-    STOW(100);
+    STOW(80);
 
     private double position;
     private static final double EPSILON = IntakePivotConstants.POSITION_TARGET_EPSILON;

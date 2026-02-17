@@ -69,6 +69,7 @@ import frc.robot.subsystems.swerve.GyroIOSim;
 import frc.robot.subsystems.swerve.ModuleIO;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
+import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
 import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -158,6 +159,7 @@ public class RobotContainer {
           //   new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
           // shooterAcceleratorTop = 
           //   new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
+          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
         }
         case VISION -> {
