@@ -322,7 +322,8 @@ public class DriveConstants {
   public static final double AUTOALIGN_POSITION_DEADBAND = 0.01;
 
   public static final double AUTOALIGN_VELOCITY_DEADBAND = 0.01;
-
+  //m per 50 milliseconds
+  public static final double SLIPPAGE_TOLERANCE = 0.01;
 
   public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
 

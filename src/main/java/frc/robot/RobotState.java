@@ -54,6 +54,8 @@ import static edu.wpi.first.units.Units.Radians;
 
 import java.lang.annotation.Target;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -101,6 +103,10 @@ public class RobotState {
 
   private Pose2d lastApproachPose = new Pose2d();
 
+  private SwerveModulePosition[] lastSwerveModulePositions = new SwerveModulePosition[4];
+
+  private double[] swerveError = new double[4];
+
   private ChassisSpeeds robotSpeeds = new ChassisSpeeds();
 
   private static RobotState instance;
@@ -118,8 +124,47 @@ public class RobotState {
 
   /* update pose estimation based on odometry measurements*/
   public void addOdometryMeasurement(OdometryMeasurement measurement) {
+    SwerveModulePosition[] corrected = measurement.wheelPositions;
+    if (lastSwerveModulePositions[0] != null){
+      double max = 0;   
+      int maxIndex = 0;
+      double[] wheelDifferences = new double[4];
+      for (int i = 0; i < 4; i ++){
+        wheelDifferences[i] = measurement.wheelPositions[i].distanceMeters - lastSwerveModulePositions[i].distanceMeters;
+        if (Math.abs(wheelDifferences[i]) > max){
+          max = Math.abs(wheelDifferences[i]);
+          maxIndex = i;
+        }
+      }
+      double average = 0;
+      for (int i = 0; i < 4; i ++){
+        if (i != maxIndex){
+          average += Math.abs(wheelDifferences[i]);
+        }
+      }
+      average = average/3;
+
+      if (max - average > DriveConstants.SLIPPAGE_TOLERANCE){
+        swerveError[maxIndex] += Math.signum(wheelDifferences[maxIndex])*(Math.abs(wheelDifferences[maxIndex]) - average);
+      }
+      lastSwerveModulePositions = measurement.wheelPositions;
+      corrected = new SwerveModulePosition[4];
+      for (int i = 0; i < 4; i++) {
+        corrected[i] = new SwerveModulePosition(
+            measurement.wheelPositions[i].distanceMeters - swerveError[i],
+            measurement.wheelPositions[i].angle);
+      }
+      Logger.recordOutput("RobotState/LimitedWheelPositions", corrected);
+      Logger.recordOutput("RobotState/AreWheelPositionsChanged", max - average > DriveConstants.SLIPPAGE_TOLERANCE);
+      Logger.recordOutput("RobotState/ModuleErrors", swerveError);
+      Logger.recordOutput("RobotState/AverageDist", average);
+      Logger.recordOutput("RobotState/BadModule", maxIndex);
+    } else {
+      lastSwerveModulePositions = measurement.wheelPositions;
+    }
+    
     poseEstimator.updateWithTime(
-        measurement.timestamp(), measurement.gyroAngle(), measurement.wheelPositions());
+        measurement.timestamp(), measurement.gyroAngle(), corrected);
 
     // integrate to find difference in pose over time, add to pose estimate
     estimatedPose = poseEstimator.getEstimatedPosition();
