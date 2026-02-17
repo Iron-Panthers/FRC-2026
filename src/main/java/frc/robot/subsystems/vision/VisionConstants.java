@@ -99,15 +99,15 @@ public class VisionConstants {
         default -> List.of(
             // 1 tag
             new TagCountDeviation(
-                new UnitDeviationParams(0.2, 0.1, 0.6),
-                new UnitDeviationParams(0.3, 0.1, 0.9),
-                new UnitDeviationParams(0.5, 0.7, 1.5)),
+                new UnitDeviationParams(0.007329, 0, 0),
+                new UnitDeviationParams(0.007329,0, 0),
+                new UnitDeviationParams(0.0166, 0, 0)),
             // 2 tag
             new TagCountDeviation(
-                new UnitDeviationParams(0.35, 0.1, 0.4), new UnitDeviationParams(0.5, 0.7, 1.5)),
+                new UnitDeviationParams(0.00162493, 0, 0), new UnitDeviationParams(0.0010625, 0, 0)),
             // 3+ tag
             new TagCountDeviation(
-                new UnitDeviationParams(0.25, 0.07, 0.25), new UnitDeviationParams(0.15, 1, 1.5)));
+                new UnitDeviationParams(0, 0.0, 0.001), new UnitDeviationParams(0,0, 0.0001)));
       };
 
   public static final int[] IGNORE_TAGS = {};
@@ -151,9 +151,9 @@ public class VisionConstants {
   }
 
   public static record UnitDeviationParams(
-      double distanceMultiplier, double eulerMultiplier, double minimum) {
+      double distanceMultiplier, double eulerMultiplier, double constant) {
     private double computeUnitDeviation(double averageDistance) {
-      return Math.max(minimum, eulerMultiplier * Math.exp(averageDistance * distanceMultiplier));
+      return distanceMultiplier*averageDistance + constant;
     }
   }
 }

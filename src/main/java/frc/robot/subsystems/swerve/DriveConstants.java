@@ -87,7 +87,7 @@ public class DriveConstants {
             6); // (multiply by max velocity to get m/s^2)
       };
 
-    public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1);
+    public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.001, 0.001, 0.001);
   
     public static final Translation2d[] MODULE_TRANSLATIONS =
       new Translation2d[] {
@@ -309,7 +309,7 @@ public class DriveConstants {
         case COMP -> new PIDAutoAlignControllerConstants(
             4, 0, 2, 2, 2, 0.01); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
-            13, 0, 0, 3, 2, 0.01); /*FIXME: tune these constants*/
+            8, 0, 0,3, 3, 0.01); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
             7, 0, 0, 1, 1, 0.01); /* FIXME: tune these constants */
         case SIM -> new PIDAutoAlignControllerConstants(7, 0.0, 0.0, 3, 4, 0.01);
@@ -317,7 +317,7 @@ public class DriveConstants {
       };
   public static final double ROTATION_FINISH_PERCENT = 0.9;
 
-  public static final double PATHPLANNER_PID_OFFSET = 0.7;
+  public static final double PATHPLANNER_PID_OFFSET = 1.5;
                                                                                                                                        
   public static final double AUTOALIGN_POSITION_DEADBAND = 0.01;
 
@@ -338,7 +338,7 @@ public class DriveConstants {
 
   public static final PathConstraints ALIGN_PATH_CONSTRAINTS =
       new PathConstraints(
-          3, 2, Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
+          3, 4, Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
   // unused
   public static final PathConstraints APPROACH_PATH_CONSTRAINTS =
       new PathConstraints(
