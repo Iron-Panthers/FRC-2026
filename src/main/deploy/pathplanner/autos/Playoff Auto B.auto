@@ -5,21 +5,57 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Spin up shooter"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Playoff Auto B 1"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spin up shooter"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Playoff Auto B 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spin up shooter"
           }
         }
       ]

@@ -4,14 +4,49 @@
     "type" : "sequential",
     "data" : {
       "commands" : [ {
+        "type" : "named",
+        "data" : {
+          "name" : "Spin up shooter"
+        }
+      }, {
         "type" : "path",
         "data" : {
           "pathName" : "Playoff Auto A 1 Mirrored"
         }
       }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Shoot"
+        }
+      }, {
+        "type" : "wait",
+        "data" : {
+          "waitTime" : 1.0
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Spin up shooter"
+        }
+      }, {
         "type" : "path",
         "data" : {
           "pathName" : "Playoff Auto A 2 Mirrored"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Shoot"
+        }
+      }, {
+        "type" : "wait",
+        "data" : {
+          "waitTime" : 1.0
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Spin up shooter"
         }
       } ]
     }

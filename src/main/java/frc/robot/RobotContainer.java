@@ -3,6 +3,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.geometry.Pose3d;
@@ -306,6 +307,9 @@ public class RobotContainer {
   /** Use this method to define the named commands for all of the autos */
   private void nameCommands() {
     // Register Command Names in this method
+    NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetCommand(ShooterState.SPIN_UP));
+    NamedCommands.registerCommand("Shoot", shooterController.setTargetCommand(ShooterState.SHOOT));
+    NamedCommands.registerCommand("Stop shooting", shooterController.setTargetCommand(ShooterState.IDLE));
   }
 
   private void configureBindings() {
@@ -415,7 +419,7 @@ public class RobotContainer {
   }
 
   public Command getAutoCommand() {
-    return autoChooser.get(); // HACK: Replace once we get auto logging
+    return autoChooser.get(); 
   }
 
   // runs when auto starts

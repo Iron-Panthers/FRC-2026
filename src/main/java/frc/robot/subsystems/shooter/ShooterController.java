@@ -38,6 +38,13 @@ public class ShooterController extends SubsystemBase {
             ShooterAcceleratorTopTarget.SHOOT,
             ShooterAcceleratorBottomTarget.SHOOT
         ),
+        /**spin up: spinning up flywheels */
+        SPIN_UP(
+            ShooterHoodTarget.BOTTOM,
+            ShooterFlywheelTarget.SHOOT,
+            ShooterAcceleratorTopTarget.IDLE,
+            ShooterAcceleratorBottomTarget.IDLE
+        ),
         /**climb: no spin*/
         CLIMB(
             ShooterHoodTarget.BOTTOM,
@@ -91,7 +98,7 @@ public class ShooterController extends SubsystemBase {
             shooterAcceleratorBottom.setControlMode(ControlMode.STOP);
             shooterAcceleratorTop.setControlMode(ControlMode.STOP);
         }
-        else if (targetState == ShooterState.SHOOT) {
+        else if (targetState == ShooterState.SHOOT || targetState == ShooterState.SPIN_UP) {
             // If shooting, update the hood target based on the calculated shooter angle
             shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
             shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
