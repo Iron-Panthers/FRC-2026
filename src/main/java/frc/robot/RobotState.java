@@ -409,4 +409,14 @@ public class RobotState {
     }
     return false;
   }
+
+  public Pose2d getClimbTarget(){
+    Pose2d climbLeftPose = DriveConstants.CLIMB_LEFT_POSE;
+    Pose2d climbRightPose = DriveConstants.CLIMB_RIGHT_POSE;
+    if (estimatedPose.getY() - climbLeftPose.getY() >= estimatedPose.getY() - climbRightPose.getY()){
+      return climbRightPose;
+    }else{
+      return climbLeftPose;
+    }
+  }
 }
