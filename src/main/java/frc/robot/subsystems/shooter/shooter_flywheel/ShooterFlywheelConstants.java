@@ -9,9 +9,9 @@ public class ShooterFlywheelConstants {
   public static final ShooterFlywheelConfig SHOOTER_FLYWHEEL_CONFIG =
       switch (Constants.getRobotType()) {
         case SIM -> new ShooterFlywheelConfig(
-            CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, true); 
+            CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, true, true); 
         default -> new ShooterFlywheelConfig(
-            CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, true); 
+            CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, true, true); 
       };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
@@ -21,8 +21,6 @@ public class ShooterFlywheelConstants {
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
-
-    public static final boolean OPPOSE_MOTOR = true;
 
     public static final int CURRENT_LIMIT_AMPS =
         switch (Constants.getRobotType()) {
@@ -40,7 +38,7 @@ public class ShooterFlywheelConstants {
 
     //RECORDS
   public record ShooterFlywheelConfig(
-      int motorID1, int motorID2, double reduction, boolean inverted, boolean brake) {}
+      int motorID1, int motorID2, double reduction, boolean inverted, boolean brake, boolean opposeMotor) {}
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
   public static record ShooterFlywheelPhysicalConstants(
