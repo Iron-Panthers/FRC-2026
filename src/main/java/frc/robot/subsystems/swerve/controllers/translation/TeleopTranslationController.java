@@ -119,37 +119,43 @@ public class TeleopTranslationController extends BaseTranslationController {
     Pose2d flippedTrenchPose = FlippingUtil.flipFieldPose(trenchPose);
     Logger.recordOutput("Swerve/FlippedTrench",  flippedTrenchPose);
     Logger.recordOutput("Swerve/Trench",  trenchPose);
-    Logger.recordOutput("Swerve/isUnderTrench", ((Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65) ||
-       (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65) ||
-       (Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65) ||
-       (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65)));
-       
-    if(linearVelocity.getY() != 0 &&
-      ((Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65) ||
-       (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65) ||
-       (Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65) ||
-       (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65))){
+    boolean isUnderTrench = isUnderTrench(robotPose, trenchPose, flippedTrenchPose, 0.65, 0.6, linearVelocity);
+    double robotYPredictedPose;
+    double robotXPredictedPose;
+    double robotToTrench;
+    double predictedToTrench;
+    
+    if(linearVelocity.getY() != 0 && isUnderTrench){
       if(Math.abs(trenchPose.getY() - robotPose.getY()) > Math.abs(flippedTrenchPose.getY() - robotPose.getY())){
         trenchPose = flippedTrenchPose;
       }
       return new Translation2d(linearVelocity.getX(), -5 * (robotPose.getY() - trenchPose.getY()) + linearVelocity.getY());
     }
+    if (hopperFull){
+      if (linearVelocity.getX() != 0 && isUnderTrench){
+        robotYPredictedPose = robotPose.getY() + linearVelocity.getY() * 0.002;
+        robotXPredictedPose = robotPose.getX() + linearVelocity.getX() * 0.002;
+        robotToTrench = Math.pow(Math.pow(Math.abs(trenchPose.getY() - robotPose.getY()), 2) + Math.pow(Math.abs(trenchPose.getX() - robotPose.getX()), 2), 0.5);
+        predictedToTrench = Math.pow(Math.pow(Math.abs(trenchPose.getY() - robotYPredictedPose), 2) + Math.pow(Math.abs(trenchPose.getX() - robotXPredictedPose), 2), 0.5);
+        if (predictedToTrench < robotToTrench){
+          return new Translation2d(0, linearVelocity.getY());
+        }
+      }
+    }
+    
     return linearVelocity;
   }
 
-  public boolean isUnderTrench(Pose2d robotPose, Pose2d trenchPose, Pose2d flippedTrenchPose){
-    boolean underTrench = ((Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65) ||
-       (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65));
+  public boolean isUnderTrench(Pose2d robotPose, Pose2d trenchPose, Pose2d flippedTrenchPose, double trenchWidth, double trenchLength, Translation2d linearVelocity){
+    boolean underTrench = (
+      (Math.abs(robotPose.getX() - trenchPose.getX()) < trenchLength &&
+       Math.abs(robotPose.getY() - trenchPose.getY()) < trenchWidth) ||
+      (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < trenchLength &&
+       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < trenchWidth) ||
+      (Math.abs(robotPose.getX() - trenchPose.getX()) < trenchWidth &&
+       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < trenchLength) ||
+      (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < trenchWidth &&
+       Math.abs(robotPose.getY() - trenchPose.getY()) < trenchLength));
     Logger.recordOutput("Swerve/isUnderTrench", underTrench);
     return underTrench;
   }
