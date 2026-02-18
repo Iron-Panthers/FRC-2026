@@ -29,7 +29,7 @@ public class HopperController extends SubsystemBase {
     }
 
     private HopperControllerState targetState = HopperControllerState.IDLE;
-    private boolean fullState = false;
+    private boolean fullState = true;
     private final Hopper hopper;
 
     public HopperController(Hopper hopper) {

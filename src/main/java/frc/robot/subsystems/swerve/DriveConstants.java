@@ -319,7 +319,6 @@ public class DriveConstants {
 
   public static final double AUTOALIGN_VELOCITY_DEADBAND = 0.01;
 
-
   public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
   public static final Pose2d TRENCH_POSE = new Pose2d(4.6, 0.65, new Rotation2d());
 
@@ -340,7 +339,6 @@ public class DriveConstants {
   public static final PathConstraints APPROACH_PATH_CONSTRAINTS =
       new PathConstraints(
           1.5, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
-
 
   // pathfinding constants
   public static final List<Pair<Translation2d, Translation2d>> OBSTACLES_FOR_TRENCH_PATHFINDING = List.of(

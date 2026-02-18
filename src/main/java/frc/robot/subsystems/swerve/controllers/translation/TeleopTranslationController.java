@@ -13,6 +13,7 @@ import frc.robot.Constants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.swerve.DriveConstants;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -27,6 +28,7 @@ public class TeleopTranslationController extends BaseTranslationController {
   private Translation2d pastLinearVelocity = new Translation2d();
   private double clampedVelocityDiff = 0;
   private double acceleration;
+  private boolean hopperFull;
 
   /* teleop control with specified yaw supplier, typically "arbitrary" yaw */
   public TeleopTranslationController(Supplier<Rotation2d> yawSupplier) {
@@ -36,22 +38,20 @@ public class TeleopTranslationController extends BaseTranslationController {
 
   /* accept driver input from joysticks */
   public void acceptJoystickInput(double controllerX, double controllerY, double controllerOmega, double acceleration, boolean fullState) {
-    if (!fullState){
-      this.controllerX = controllerX;
-      this.controllerY = controllerY;
-      this.controllerOmega = controllerOmega;
-      this.acceleration = acceleration;
-    }
+    this.controllerX = controllerX;
+    this.controllerY = controllerY;
+    this.controllerOmega = controllerOmega;
+    this.acceleration = acceleration;
+    this.hopperFull = fullState;
   }
 
   /* accept driver input from joysticks */
   public void acceptJoystickInput(double controllerX, double controllerY, double controllerOmega, boolean fullState) {
-    if (!fullState){
-      this.controllerX = controllerX;
-      this.controllerY = controllerY;
-      this.controllerOmega = controllerOmega;
-      this.acceleration = DRIVE_CONFIG.maxLinearAcceleration();
-    } 
+    this.controllerX = controllerX;
+    this.controllerY = controllerY;
+    this.controllerOmega = controllerOmega;
+    this.acceleration = DRIVE_CONFIG.maxLinearAcceleration();
+    this.hopperFull = fullState;
   }
 
   /* update controller with current desired state */
@@ -143,5 +143,14 @@ public class TeleopTranslationController extends BaseTranslationController {
       return new Translation2d(linearVelocity.getX(), -5 * (robotPose.getY() - trenchPose.getY()) + linearVelocity.getY());
     }
     return linearVelocity;
+  }
+
+  public boolean isUnderTrench(Pose2d robotPose, Pose2d trenchPose, Pose2d flippedTrenchPose){
+    boolean underTrench = ((Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
+       Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65) ||
+       (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
+       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65));
+    Logger.recordOutput("Swerve/isUnderTrench", underTrench);
+    return underTrench;
   }
 }
