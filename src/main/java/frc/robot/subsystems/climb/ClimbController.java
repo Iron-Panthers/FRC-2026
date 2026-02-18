@@ -1,11 +1,5 @@
 package frc.robot.subsystems.climb;
 
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
-import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
-
-import edu.wpi.first.units.Units;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -14,13 +8,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
 import frc.robot.subsystems.climb.*;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
-import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotConstants;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot.ClimbClawPivotTarget;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot.ClimbDeployPivotTarget;
-import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotConstants;
-import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotConstants.ClimbDeployPivotConfig;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 
 public class ClimbController extends SubsystemBase    {
   public enum ClimbState {
@@ -42,6 +32,7 @@ public class ClimbController extends SubsystemBase    {
   }
 
   private ClimbClawPivot climbClawPivot;
+
   private ClimbDeployPivot climbDeployPivot;
 
   private ClimbState targetState = ClimbState.STOW;
@@ -54,18 +45,36 @@ public class ClimbController extends SubsystemBase    {
 
   @Override
   public void periodic() {
-    climbClawPivot.setPositionTarget(targetState.clawTarget);
-    climbDeployPivot.setPositionTarget(targetState.deployTarget);
+    
+    switch (targetState) {
+      case STOW -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.STOW);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.STOW);
+      }
+      case DEPLOY -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.DEPLOY);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.DEPLOY);
+      }
+      case L1 -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.L1);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.L1);
+      }
+      case L2 -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.L2);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.L2);
+      }
+      case L3 -> {
+        climbClawPivot.setPositionTarget(ClimbClawPivotTarget.L3);
+        climbDeployPivot.setPositionTarget(ClimbDeployPivotTarget.L3);
+      }
+    }
 
     climbClawPivot.periodic();
     climbDeployPivot.periodic();
 
-    if (climbClawPivot.getPosition() > ClimbClawPivotTarget.L3.getPosition()) {
-      setTargetState(ClimbState.STOW);
+    if (climbClawPivot.getPosition() > ClimbClawPivotTarget.TOP.getPosition()) {
+      setTargetState(ClimbState.STOP_CLIMB);
     }
-
-    Logger.recordOutput("Climb/CurrentPose/Mechanism2d", getAsMechanism2d());
-    Logger.recordOutput("Climb/TargetState", targetState);
   }
 
   public void setTargetState (ClimbState targetState) {
@@ -88,35 +97,16 @@ public class ClimbController extends SubsystemBase    {
   }
 
   public void setClimbTarget(ClimbState target) {
-    targetState = target;
-  }
+    climbClawPivot.setControlMode(ControlMode.POSITION);
+    climbClawPivot.setPositionTarget(target.clawTarget);
 
-  public ClimbState getClimbState() {
-    return targetState;
+    climbDeployPivot.setControlMode(ControlMode.POSITION);
+    climbDeployPivot.setPositionTarget(target.deployTarget);
   }
-
-  public LoggedMechanism2d getAsMechanism2d() {
-    // NEXT TIME PLEASE MAKE SURE THE VALUES ARE IN THE UNITS YOU THINK THEY ARE, THIS CAUSED A LOT OF PROBELMS (ex: meters being treated as inches and being converted into meters) >:(
-    LoggedMechanism2d mech =
-        new LoggedMechanism2d(Units.Inches.of(100).in(Units.Meters), Units.Inches.of(100).in(Units.Meters));
-    mech.getRoot("Climb", Units.Inches.of(50).in(Units.Meters), Units.Inches.of(50).in(Units.Meters))
-        .append(
-            new LoggedMechanismLigament2d(
-                "Climb Deploy Pivot",
-                (ClimbDeployPivotConstants.PHYSICAL_CONSTANTS.lengthMeters()),
-                Units.Rotations.of(climbDeployPivot.getPosition()).in(Units.Degrees) - 90))
-        .append(
-            new LoggedMechanismLigament2d(
-                "Climb Claw Pivot",
-                (ClimbClawPivotConstants.PHYSICAL_CONSTANTS.lengthMeters()),
-                Units.Rotations.of(climbClawPivot.getPosition()).in(Units.Degrees) - 90));
-    return mech;
-  }
-
-  
 
   public void setStopped(boolean stopped) {
     climbClawPivot.setControlMode(ControlMode.STOP);
+
     climbDeployPivot.setControlMode(ControlMode.STOP);
   }
 }

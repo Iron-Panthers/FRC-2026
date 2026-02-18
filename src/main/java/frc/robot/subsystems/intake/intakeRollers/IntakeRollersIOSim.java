@@ -24,7 +24,9 @@ public class IntakeRollersIOSim extends GenericRollersIOSim implements IntakeRol
         GAINS.kD(),
         GAINS.kS(),
         GAINS.kV(),
-        GAINS.kA());
+        GAINS.kA(),
+        GAINS.kG()
+    );
     
     // Create feedforward controller using configured gains
     feedforward = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());

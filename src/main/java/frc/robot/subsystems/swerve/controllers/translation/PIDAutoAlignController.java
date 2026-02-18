@@ -1,8 +1,6 @@
 package frc.robot.subsystems.swerve.controllers.translation;
 
 import static frc.robot.subsystems.swerve.DriveConstants.PID_AUTOALIGN_CONSTANTS;
-import static frc.robot.subsystems.swerve.DriveConstants.AUTOALIGN_POSITION_DEADBAND;
-import static frc.robot.subsystems.swerve.DriveConstants.AUTOALIGN_VELOCITY_DEADBAND;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -29,7 +27,6 @@ public class PIDAutoAlignController extends BaseTranslationController {
   private double xVel;
   private double yVel;
   private final Supplier<Translation2d> velocity;
-  protected boolean hasReachedTarget = false;
 
   public PIDAutoAlignController(
       Supplier<Pose2d> positionSupplier, Supplier<Rotation2d> yawSupplier, Pose2d targetPosition) {
@@ -77,7 +74,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
     // x and y, but we have to pslit them at a larger level
     double pidOutput = magController.calculate(magTranslCurrPos, magTranslTargPos);
     double magVel = pidOutput + magController.getSetpoint().velocity;
-    magVel = (Math.abs(magVel) < AUTOALIGN_VELOCITY_DEADBAND ? 0 : magVel);
+    magVel = (Math.abs(magVel) < 0.02 ? 0 : magVel);
     yVel =
         magVel
             * currToTargAngle.getSin()
@@ -91,11 +88,10 @@ public class PIDAutoAlignController extends BaseTranslationController {
                 ? 1
                 : -1);
     if (positionSupplier.get().getTranslation().getDistance(targetPosition.getTranslation())
-        < AUTOALIGN_POSITION_DEADBAND) {
+        < 0.01) {
       xVel = 0;
       yVel = 0;
     }
-
     Logger.recordOutput("Swerve/PIDAutoalign/Angle", currToTargAngle);
     Logger.recordOutput("Swerve/PIDAutoalign/OriginAngle", startToTargAngle);
     Logger.recordOutput("Swerve/PIDAutoalign/SetpointPos", magController.getSetpoint().position);
@@ -129,7 +125,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
     calculateLinearMovement();
     Logger.recordOutput("Swerve/PIDAutoalign/XVel", xVel);
     Logger.recordOutput("Swerve/PIDAutoalign/YVel", yVel);
-    return ChassisSpeeds.fromFieldRelativeSpeeds(-xVel, -yVel, 0, positionSupplier.get().getRotation().plus(Rotation2d.k180deg));
+    return ChassisSpeeds.fromFieldRelativeSpeeds(-xVel, -yVel, 0, yawSupplier.get());
   }
   // log your data in advantage kit
   public Pose2d getTargetPosition() {
@@ -173,13 +169,8 @@ public class PIDAutoAlignController extends BaseTranslationController {
     Rotation2d currentVelAngle = new Rotation2d(Math.atan2(y, x));
     Rotation2d angleDiff = targetAngle.minus(currentVelAngle);
     double forwardVelocity = Math.cos(angleDiff.getRadians()) * vel.getNorm();
+    System.out.println("Forward Velocity: " + vel.getX());
+    System.out.println("Angle Diff: " + angleDiff.getDegrees());
     return forwardVelocity;
-  }
-
-  public boolean atTarget() {
-    return hasReachedTarget = positionSupplier
-      .get().getTranslation()
-      .getDistance(targetPosition.getTranslation()) 
-        < PID_AUTOALIGN_CONSTANTS.tolerance() * (hasReachedTarget ? 4 : 1);
   }
 }

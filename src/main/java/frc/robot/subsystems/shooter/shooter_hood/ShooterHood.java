@@ -73,6 +73,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
         return new Pose3d();
     }
 
+
     @Override
     public void setParent(LoggableMechanism3d parent) {
         if (parent == null) {
@@ -93,6 +94,6 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
                 .plus(
                     new Transform3d(
                         Translation3d.kZero, new Rotation3d( -Math.toRadians(getPosition() * 360),0, 0)));
-    }
+  }
 
 }//close class

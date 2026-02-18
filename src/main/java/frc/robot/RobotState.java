@@ -4,35 +4,26 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Radians;
-
-import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.IdealStartingState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.FlippingUtil;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.interpolation.Interpolatable;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
-import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -43,13 +34,14 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
-import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.Radians;
 
 import java.lang.annotation.Target;
@@ -64,7 +56,6 @@ import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltHub;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /* based on wpimath/../PoseEstimator.java */
 public class RobotState {
@@ -77,27 +68,29 @@ public class RobotState {
   public record VisionMeasurement(Pose2d visionPose, double timestamp) {}
 
   private static final double poseBufferSizeSeconds = 2; // shorter?
-  private static final Pose2d initialPose = isAllianceRed()
+  private static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+  private static final Pose2d initialPose =
+      DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red
           ? FlippingUtil.flipFieldPose(DriveConstants.INITIAL_POSE)
           : DriveConstants.INITIAL_POSE;
 
   private final Matrix<N3, N1> matrixQ = new Matrix<>(Nat.N3(), Nat.N1());
+  private final Matrix<N3, N3> kalmanGain = new Matrix<>(Nat.N3(), Nat.N3());
 
-  private SwerveDrivePoseEstimator poseEstimator =
-      new SwerveDrivePoseEstimator(
-          DriveConstants.KINEMATICS,
-          new Rotation2d(),
-          new SwerveModulePosition[] {
-            new SwerveModulePosition(),
-            new SwerveModulePosition(),
-            new SwerveModulePosition(),
-            new SwerveModulePosition()
-          },
-          initialPose,
-          DriveConstants.STATE_STD_DEVS,
-          VisionConstants.VISION_STATE_STD_DEVS);
+  private TimeInterpolatableBuffer<Pose2d> poseBuffer =
+      TimeInterpolatableBuffer.createBuffer(poseBufferSizeSeconds);
 
+  private Pose2d odometryPose = initialPose;
   private Pose2d estimatedPose = initialPose; // vision adjusted
+
+  private SwerveModulePosition[] lastWheelPositions =
+      new SwerveModulePosition[] {
+        new SwerveModulePosition(),
+        new SwerveModulePosition(),
+        new SwerveModulePosition(),
+        new SwerveModulePosition()
+      };
+  private Rotation2d lastGyroAngle = new Rotation2d();
 
   private Pose2d lastApproachPose = new Pose2d();
 
@@ -112,28 +105,96 @@ public class RobotState {
 
   private RobotState() {
     for (int i = 0; i < 3; ++i) {
-      matrixQ.set(i, 0, DriveConstants.STATE_STD_DEVS.get(i, 0) * DriveConstants.STATE_STD_DEVS.get(i, 0));
+      matrixQ.set(i, 0, stateStdDevs.get(i, 0) * stateStdDevs.get(i, 0));
     }
   }
 
-  /* update pose estimation based on odometry measurements*/
+  /* standard deviations in [x, y, theta], SI units */
+  public void setVisionMeasurementStdDevs(Matrix<N3, N1> stdDevs) {
+    var r = new double[3];
+    for (int i = 0; i < 3; ++i) {
+      r[i] = stdDevs.get(i, 0) * stdDevs.get(i, 0);
+    }
+
+    // Solve for closed form Kalman gain for continuous Kalman filter with A = 0
+    // and C = I. See wpimath/algorithms.md.
+    for (int row = 0; row < 3; ++row) {
+      if (matrixQ.get(row, 0) == 0.0) {
+        kalmanGain.set(row, row, 0.0);
+      } else {
+        kalmanGain.set(
+            row,
+            row,
+            matrixQ.get(row, 0) / (matrixQ.get(row, 0) + Math.sqrt(matrixQ.get(row, 0) * r[row])));
+      }
+    }
+  }
+
+  /* update pose estimation based on odometry measurements, based on wpimath */
   public void addOdometryMeasurement(OdometryMeasurement measurement) {
-    poseEstimator.updateWithTime(
-        measurement.timestamp(), measurement.gyroAngle(), measurement.wheelPositions());
+    Twist2d twist =
+        DriveConstants.KINEMATICS.toTwist2d(lastWheelPositions, measurement.wheelPositions());
+    twist.dtheta = measurement.gyroAngle().minus(lastGyroAngle).getRadians();
+
+    lastWheelPositions = measurement.wheelPositions();
+    lastGyroAngle = measurement.gyroAngle();
 
     // integrate to find difference in pose over time, add to pose estimate
-    estimatedPose = poseEstimator.getEstimatedPosition();
+    odometryPose = odometryPose.exp(twist);
+    estimatedPose = estimatedPose.exp(twist);
+
+    // add post estimate to buffer at timestamp; for vision
+    poseBuffer.addSample(measurement.timestamp(), odometryPose);
+  }
+
+  /* from wpimath PoseEstimator.java */
+  public void addVisionMeasurement(VisionMeasurement measurement) {
+    // if measurement is old enough to be outside buffer timespan, skip
+    if (poseBuffer.getInternalBuffer().isEmpty()
+        || poseBuffer.getInternalBuffer().lastKey() < poseBufferSizeSeconds) {
+      return;
+    }
+
+    // get odometry pose from moment of vision measurement
+    var sample = poseBuffer.getSample(measurement.timestamp());
+    if (sample.isEmpty()) return;
+
+    // twists to get from sampled <--> current odometry pose
+    var sampleToOdometry = sample.get().log(odometryPose);
+    var odometryToSample = odometryPose.log(sample.get());
+    // calculate old estimate
+    Pose2d oldEstimate = estimatedPose.exp(odometryToSample);
+
+    // measure twist between estimate and vision pose
+    var twist = oldEstimate.log(measurement.visionPose());
+
+    // scale twist by Kalman gain matrix; represents how much to trust vision vs.
+    // current pose
+    var timesTwist = kalmanGain.times(VecBuilder.fill(twist.dx, twist.dy, twist.dtheta));
+
+    // convert back to Twist2d
+    var scaledTwist = new Twist2d(timesTwist.get(0, 0), timesTwist.get(1, 0), timesTwist.get(2, 0));
+
+    // apply Kalman-scaled vision adjustment, replay odometry data to get current
+    // estimate
+    estimatedPose = sample.get().exp(scaledTwist).exp(sampleToOdometry);
+    odometryPose = estimatedPose;
   }
 
   public void addVisionMeasurement(VisionMeasurement measurement, Matrix<N3, N1> visionStdDevs) {
-    poseEstimator.setVisionMeasurementStdDevs(visionStdDevs);
-    poseEstimator.addVisionMeasurement(measurement.visionPose(), measurement.timestamp());
-    estimatedPose = poseEstimator.getEstimatedPosition();
+    setVisionMeasurementStdDevs(visionStdDevs);
+    addVisionMeasurement(measurement);
   }
 
   public void resetPose(Pose2d pose) {
+    odometryPose = pose;
     estimatedPose = pose;
-    poseEstimator.resetPose(pose);
+    poseBuffer.clear();
+  }
+
+  @AutoLogOutput(key = "RobotState/OdometryPose")
+  public Pose2d getOdometryPose() {
+    return odometryPose;
   }
 
   @AutoLogOutput(key = "RobotState/EstimatedPose")
@@ -206,16 +267,12 @@ public class RobotState {
 
 
   // methods that use the shootingAnglePredictor -- as an abstraction
-
   private ShootingAnglePredictor shootingAnglePredictor;
-  public void initializeShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw) {
-    shootingAnglePredictor = new ShootingAnglePredictor(chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier, shooterYaw);
+  public void initializeShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier) {
+    shootingAnglePredictor = new ShootingAnglePredictor(chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier);
   }
   public TargetShootingState calculateTargetShootingState(){
-    TargetShootingState targetShootingState = shootingAnglePredictor.calculateTargetShootingState();
-    Logger.recordOutput("RobotState/TargetShootingState/DrivebaseYaw", targetShootingState.drivebaseYaw());
-    Logger.recordOutput("RobotState/TargetShootingState/ShooterAngle", targetShootingState.shooterAngle());
-    return targetShootingState;
+    return shootingAnglePredictor.calculateTargetShootingState();
   }
 
   // shooting predictor
@@ -226,187 +283,95 @@ public class RobotState {
     private Supplier<LinearVelocity> shooterVelocitySupplier;
     private Supplier<Transform3d> shooterPositionSupplier;
 
+    // Air resistance coefficient
+    final double AIR_DRAG_COEFFICIENT = 0.03;
+      final double GRAVITY = 9.81; // gravity in m/s^2
 
-    // Moving average filters for smooth velocity measurements
-    private final LinearFilter vxFilter = LinearFilter.movingAverage(5);
-    private final LinearFilter vyFilter = LinearFilter.movingAverage(5);
-
-    private final InterpolatingTreeMap<Double, HoodParams> shooterTable = 
-        new InterpolatingTreeMap<>(
-            InverseInterpolator.forDouble(),
-            HoodParams::interpolate
-        );
-
-    public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw){
+    public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier){
       this.chassisSpeedsSupplier = chassisSpeedsSupplier;
-      this.shooterPositionSupplier = () -> (new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, shooterYaw.in(Radian)))).plus(shooterPositionSupplier.get());
+      this.shooterPositionSupplier = shooterPositionSupplier;
       this.shooterVelocitySupplier = shooterVelocitySupplier;
-
-      initializeShooterTable();
-    }
-
-    public void initializeShooterTable(){
-      this.shooterTable.clear();
-      this.shooterTable.put(1.3, new HoodParams(88, 1.621));
-      this.shooterTable.put(2.0, new HoodParams(84.5, 1.621));
-      this.shooterTable.put(2.5, new HoodParams(82, 1.601));
-      this.shooterTable.put(3.0, new HoodParams(79.5, 1.602));
-      this.shooterTable.put(3.5, new HoodParams(77.5, 1.581));
-      this.shooterTable.put(4.0, new HoodParams(75.5, 1.561));
-      this.shooterTable.put(4.5, new HoodParams(74, 1.561));
     }
 
     public TargetShootingState calculateTargetShootingState(){
-
-      initializeShooterTable();
+      // Figure out shooter pose3d
+      // Figure out target position
+      // Start loop 5
+      //  Figure out guess for angle and time of flight based on target position
+      //  Update target position based on tof
 
       // Get target hub position
-      final Translation3d hubPosition3d = isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
+      final Translation3d hubPosition3d = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() == Alliance.Blue ? DriveConstants.BLUE_HUB_ORIGIN : DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
 
-      // Get chassis speeds and apply moving average filter for smoothness
-      ChassisSpeeds rawSpeeds = chassisSpeedsSupplier.get();
-      double filteredVx = vxFilter.calculate(rawSpeeds.vxMetersPerSecond);
-      double filteredVy = vyFilter.calculate(rawSpeeds.vyMetersPerSecond);
-      
-      Translation2d robotVelocity = new Translation2d(filteredVx, filteredVy);
+      // Get shooter position
+      Translation3d shooterPose3d = new Pose3d(getEstimatedPose()).transformBy(shooterPositionSupplier.get()).getTranslation();
 
-      // Log the raw and filtered velocities for tuning
-      Logger.recordOutput("ShootingPredictor/RawVx", rawSpeeds.vxMetersPerSecond);
-      Logger.recordOutput("ShootingPredictor/RawVy", rawSpeeds.vyMetersPerSecond);
-      Logger.recordOutput("ShootingPredictor/FilteredVx", filteredVx);
-      Logger.recordOutput("ShootingPredictor/FilteredVy", filteredVy);
+      Translation3d targetPosition3Transform3d = hubPosition3d;
 
-      // Get the initial important things
-      Pose3d robotPose3d = new Pose3d(getEstimatedPose());
+      double shooterVelocity = shooterVelocitySupplier.get().in(edu.wpi.first.units.Units.MetersPerSecond);
 
-      double latencyCompensation = .17; // Tune later // TODO: make this an actual constant (if you change it later this is the one for sim)
+      ChassisSpeeds robotChassisSpeeds = chassisSpeedsSupplier.get();
 
-        // 1. Project future position
-        Translation2d futurePos = robotPose3d.getTranslation().toTranslation2d().plus(
-            robotVelocity.times(latencyCompensation)
+      // loop 5 times
+      for(int i = 0; i < 5; i++) {
+        // calculate the angle and time of flight to get to a target position
+        ShootingSolution shootingSolution = calculateStationaryShootingSolution(shooterPose3d, targetPosition3Transform3d, shooterVelocity);
+
+        // adjust the target position based on where we are going to be by the time of flight
+        double timeOfFlight = shootingSolution.timeOfFlight;
+        Translation3d robotMovement = new Translation3d(
+          robotChassisSpeeds.vxMetersPerSecond * timeOfFlight,
+          robotChassisSpeeds.vyMetersPerSecond * timeOfFlight,
+          0
         );
-
-        // 2. Get target vector
-        Translation2d toGoal = hubPosition3d.toTranslation2d().minus(futurePos);
-        double distance = toGoal.getNorm();
-        Translation2d targetDirection = toGoal.div(distance);
-
-        // 3. Look up baseline velocity from table
-        HoodParams baseline = shooterTable.get(distance);
-        double baselineVelocity = distance / baseline.timeOfFlight;
-
-        // 4. Build target velocity vector
-        Translation2d targetVelocity = targetDirection.times(baselineVelocity);
-
-        // 5. THE MAGIC: subtract robot velocity
-        Translation2d shotVelocity = targetVelocity.minus(robotVelocity);
-
-        // 6. Extract results
-        Rotation2d turretAngle = shotVelocity.getAngle();
-        double requiredVelocity = shotVelocity.getNorm();
-
-        // 7. Use table in reverse: velocity → effective distance → RPM
-        double adjustedHoodAngle = calculateAdjustedHood(distance, requiredVelocity);
-
-        Logger.recordOutput("ShootingPredictor/Distance", distance);
-        Logger.recordOutput("ShootingPredictor/TurretAngle", turretAngle);
-        Logger.recordOutput("ShootingPredictor/RequiredVelocity", requiredVelocity);
-        Logger.recordOutput("ShootingPredictor/AdjustedHoodAngle", adjustedHoodAngle);
-
-      return new TargetShootingState(turretAngle, Degrees.of(adjustedHoodAngle));
-    }
-
-    // Calculate total velocity from baseline measurement
-    // v_total = v_horizontal / cos(hood_angle)
-    public double getTotalVelocity(double distance) {
-        HoodParams params = shooterTable.get(distance);
-        double vHoriz = distance / params.timeOfFlight;
-        return vHoriz / Math.cos(Math.toRadians(params.shooterAngle));
-    }
-
-
-    public double calculateAdjustedHood(double distance, double requiredHorizontalVelocity) {
-        double totalVelocity = getTotalVelocity(distance);
-
-        // Clamp to physical limits
-        double ratio = MathUtil.clamp(
-            requiredHorizontalVelocity / totalVelocity,
-            0.0,
-            1.0
-        );
-        return Math.toDegrees(Math.acos(ratio));
-    }
-
-    // Simple data class for the LUT
-    // shooter angle in degrees, time of flight in seconds
-    public record HoodParams(double shooterAngle, double timeOfFlight) implements Interpolatable<HoodParams> {
-      @Override
-      public HoodParams interpolate(HoodParams endValue, double t) {
-        return new HoodParams(
-          MathUtil.interpolate(this.shooterAngle, endValue.shooterAngle, t),
-          MathUtil.interpolate(this.timeOfFlight, endValue.timeOfFlight, t)
-        );
+        targetPosition3Transform3d = hubPosition3d.plus(robotMovement);
       }
+
+      Logger.recordOutput("ShootingAnglePredictor/TargetPosition", targetPosition3Transform3d);
+
+      ShootingSolution finalShootingSolution = calculateStationaryShootingSolution(shooterPose3d, targetPosition3Transform3d, shooterVelocity);
+
+      return new TargetShootingState(finalShootingSolution.yawAngle, finalShootingSolution.pitchAngle);
     }
+
+    public ShootingSolution calculateStationaryShootingSolution(Translation3d currentPosition, Translation3d targetPosition, double shooterVelocity){
+      // figure out the yaw
+      Rotation2d yawAngle = new Rotation2d(Math.atan2(targetPosition.getY() - currentPosition.getY(), targetPosition.getX() - currentPosition.getX()));
+
+      // figure out the launch angle
+      double horizontalDistance = currentPosition.getDistance(targetPosition);
+      double verticalDistance = targetPosition.getZ() - currentPosition.getZ();
+
+      // Calculate shooter angle using projectile motion equations
+      // We need to solve: tan(theta) = (v^2 +/- sqrt(v^4 - g(gx^2 + 2yv^2))) / (gx)
+      // where v = velocity, g = gravity, x = horizontal distance, y = vertical distance
+      double v2 = shooterVelocity * shooterVelocity;
+      double v4 = v2 * v2;
+      double x2 = horizontalDistance * horizontalDistance;
+      
+      // Calculate discriminant
+      double discriminant = v4 - GRAVITY * (GRAVITY * x2 + 2 * verticalDistance * v2);
+
+      // Check if solution exists
+      if (discriminant < 0 || horizontalDistance == 0) {
+        // if no solution we just shoot at 45 and chill
+        return new ShootingSolution(yawAngle, Degrees.of(45), 0);
+      }
+
+      double tanTheta = (v2 + Math.sqrt(discriminant)) / (GRAVITY * horizontalDistance);
+
+      double angle = Math.atan(tanTheta);
+
+      Angle pitchAngle = Radians.of(angle);
+
+      // figure out time of flight
+      double vx = shooterVelocity * Math.cos(angle);
+      double timeOfFlight = horizontalDistance / vx;
+
+      return new ShootingSolution(yawAngle, pitchAngle, timeOfFlight);
+    }
+
+    public record ShootingSolution(Rotation2d yawAngle, Angle pitchAngle, double timeOfFlight){}
   }
   public record TargetShootingState(Rotation2d drivebaseYaw, Angle shooterAngle) { }
-
-  public Pose2d getShootingPose(){
-    Pose2d shootingPoseOne = getShootingPose(2.0);
-    Pose2d shootingPoseTwo = getShootingPose(4.0); //edit forf climb
-    Pose2d flippedEstimatedPose = isAllianceRed()
-                    ? FlippingUtil.flipFieldPose(estimatedPose)
-                    : estimatedPose;
-    Logger.recordOutput("RobotState/ShootingPoseOne", shootingPoseOne);
-    Logger.recordOutput("RobotState/ShootingPoseTwo", shootingPoseTwo);
-    if (shootingPoseOne.getTranslation().getDistance(flippedEstimatedPose.getTranslation()) <
-        shootingPoseTwo.getTranslation().getDistance(flippedEstimatedPose.getTranslation())){
-      return shootingPoseOne;
-    } else {
-      return shootingPoseTwo;
-    }
-  }
-
-  public Pose2d getShootingPose(double distanceTargetToHub){
-    Pose2d flippedEstimatedPose = isAllianceRed()
-                    ? FlippingUtil.flipFieldPose(estimatedPose)
-                    : estimatedPose;
-    Translation2d hubCoords = new Pose2d(4.62, 4.03, new Rotation2d()).getTranslation();
-    Translation2d translHubCoords = hubCoords.minus(flippedEstimatedPose.getTranslation());
-    double distanceToHub = translHubCoords.getNorm();
-    double angle = Math.atan2(translHubCoords.getY(), translHubCoords.getX());
-
-    if (distanceTargetToHub >= 2.5 && (angle > -35.64/180*Math.PI  && Math.abs(angle) < 28.25/180*Math.PI)){
-      distanceTargetToHub = 2;
-    }
-    
-    double y = -distanceTargetToHub*Math.sin(angle) + translHubCoords.getY() + flippedEstimatedPose.getY();
-    double x = -distanceTargetToHub*Math.cos(angle) + translHubCoords.getX() + flippedEstimatedPose.getX();
-
-    if (y > 7.307){
-      return new Pose2d(2.326, 7.307, new Rotation2d(Math.atan2(hubCoords.getY() - 7.307, hubCoords.getX() - 2.326)));
-    }
-    if (y < 0.753){
-      return new Pose2d(2.326, 0.753, new Rotation2d(Math.atan2(hubCoords.getY() - 0.753, hubCoords.getX() - 2.326)));
-    }
-    if (x > 3.322){
-      if (angle > 0){
-        return new Pose2d(3.322, 2.502, new Rotation2d(Math.atan2(hubCoords.getY() - 2.502, hubCoords.getX() - 3.322)));
-      }
-      if (angle < 0){
-        return new Pose2d(3.322, 5.522, new Rotation2d(Math.atan2(hubCoords.getY() - 5.522, hubCoords.getX() - 3.322)));
-      }
-    }
-    return new Pose2d(x, y, new Rotation2d(angle));
-  }
-
-  @AutoLogOutput(key = "RobotState/isAllianceRed")
-  public static boolean isAllianceRed() {
-    //where true is red and false is blue
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      return alliance.get() == DriverStation.Alliance.Red;
-    }
-    return false;
-  }
 }

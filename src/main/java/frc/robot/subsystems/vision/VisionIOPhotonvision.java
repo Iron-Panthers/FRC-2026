@@ -20,6 +20,7 @@ public class VisionIOPhotonvision implements VisionIO {
     estimator =
         new PhotonPoseEstimator(
             VisionConstants.APRIL_TAG_FIELD_LAYOUT,
+            PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
             VisionConstants.CAMERA_TRANSFORM[index]);
   }
 
@@ -35,13 +36,7 @@ public class VisionIOPhotonvision implements VisionIO {
       PhotonPipelineResult frame = results.get(frameIndex);
       if (!frame.hasTargets()) continue;
 
-      Optional<EstimatedRobotPose> optEstimation;
-
-      optEstimation = estimator.estimateCoprocMultiTagPose(frame);
-      if (optEstimation.isEmpty()) {
-        optEstimation = estimator.estimateLowestAmbiguityPose(frame);
-      }
-
+      Optional<EstimatedRobotPose> optEstimation = estimator.update(frame);
       if (optEstimation.isEmpty()) continue;
       EstimatedRobotPose estimation = optEstimation.get();
 

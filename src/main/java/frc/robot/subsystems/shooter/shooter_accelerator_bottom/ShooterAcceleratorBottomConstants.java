@@ -42,7 +42,7 @@ public class ShooterAcceleratorBottomConstants {
   public record ShooterAcceleratorBottomConfig(
       int motorID, double reduction, boolean inverted, boolean brake) {}
   public record PIDGains(
-      double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}    
+      double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
   public static record ShooterAcceleratorBottomPhysicalConstants(
       double momentOfInertia) {}
 }

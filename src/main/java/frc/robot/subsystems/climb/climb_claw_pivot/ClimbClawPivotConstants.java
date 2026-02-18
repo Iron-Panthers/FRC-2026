@@ -1,6 +1,5 @@
 package frc.robot.subsystems.climb.climb_claw_pivot;
 
-import edu.wpi.first.units.Units;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -11,22 +10,22 @@ public class ClimbClawPivotConstants {
   // TODO: Change values
   public static final ClimbClawPivotConfig CLIMB_CLAW_PIVOT_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new ClimbClawPivotConfig(CAN.at(25, "ClimbClaw"), 26, 0, 1);
-        case SIM -> new ClimbClawPivotConfig(25, 26, 0, 1);
-        default -> new ClimbClawPivotConfig(0, 0, 0, 1);
+        case COMP -> new ClimbClawPivotConfig(CAN.at(0, "insertNameHere"), 0, 0, 0);
+        case SIM -> new ClimbClawPivotConfig(0, 0, 0, 0);
+        default -> new ClimbClawPivotConfig(0, 0, 0, 0);
       };
   // TODO: Change values
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case COMP -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
-        case SIM -> new PIDGains(7.5, 0, 0, 0, 1, 0.0, 0);
+        case SIM -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
   // TODO: Change values
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
         case COMP -> new MotionMagicConfig(0, 0);
-        case SIM -> new MotionMagicConfig(1, 1);
+        case SIM -> new MotionMagicConfig(0, 0);
         default -> new MotionMagicConfig(0, 0);
       };
 
@@ -52,8 +51,8 @@ public class ClimbClawPivotConstants {
 
   // CURRENT LIMITS
   // TODO: Change following values below
-  public static final double UPPER_VOLT_LIMIT = 6;
-  public static final double LOWER_VOLT_LIMIT = -6;
+  public static final double UPPER_VOLT_LIMIT = 0;
+  public static final double LOWER_VOLT_LIMIT = 0;
   public static final double SUPPLY_CURRENT_LIMIT = 0;
 
   //ZEROING CONSTANTS
@@ -72,9 +71,9 @@ public class ClimbClawPivotConstants {
   // TODO: Change all values below
   public static final ClimbClawPivotPhysicalConstants PHYSICAL_CONSTANTS = 
   switch (Constants.getRobotType()) {
-    case SIM -> new ClimbClawPivotPhysicalConstants(.001, Units.Inches.of(25).in(Units.Meters), -1000, 2000, false); // TODO: set to accurate physical limits
-    default -> new ClimbClawPivotPhysicalConstants(.001, 0, 0, 0, false);
-  };
+  case SIM -> new ClimbClawPivotPhysicalConstants(0, 0, 0, 0, false);
+  case COMP -> new ClimbClawPivotPhysicalConstants(0, 0, 0, 0, false);
+      };
 
   public static final double SUPERSTRUCTURETEMP_LENGTH = 0; // inches //TODO: Change value
 }

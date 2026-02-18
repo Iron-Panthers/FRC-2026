@@ -7,8 +7,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.subsystems.swerve.DriveConstants;
 import java.util.function.Supplier;
 
-import org.littletonrobotics.junction.Logger;
-
 public class AutoAlignHeadingController extends BaseHeadingController {
 
   public AutoAlignHeadingController(
@@ -26,24 +24,27 @@ public class AutoAlignHeadingController extends BaseHeadingController {
   }
 
   public void setTargetHeading(
-      Rotation2d targetHeading, double t, double rotationFinishPercent) {
+      Rotation2d targetHeading, double timeLeft, double rotationFinishPercent) {
     super.setTargetHeading(targetHeading);
     double a = HEADING_CONTROLLER_CONSTANTS.maxAcceleration();
     double v = HEADING_CONTROLLER_CONSTANTS.maxVelocity();
-    t = rotationFinishPercent * t;
-    double d = Math.abs(super.getHeadingSupplier()
-              .get()
-              .minus(targetHeading).getRadians());
+    timeLeft = rotationFinishPercent * timeLeft;
     if (a != 0 && v != 0) {
-      if ((t*t)-(4/a)*d 
-      > 0){
-        v = (-t+Math.sqrt((t*t)-(4/a)*d))/(-2/a);
-      }
+      double adjustedTimeLeft = timeLeft - a * (Math.pow((v / a), 2)) / v;
+      Rotation2d adjustedAngleDifference =
+          super.getHeadingSupplier()
+              .get()
+              .minus(targetHeading)
+              .minus(
+                  new Rotation2d(
+                      Math.toRadians(
+                          a
+                              * (Math.pow(
+                                  (v / a), 2))))); // Amount of time to accelerate and decelerate
+      v = Math.min(Math.abs(adjustedAngleDifference.getRadians()) / adjustedTimeLeft, 5);
     } else {
       System.out.println("AutoAlignHeadingController: max velocity or acceleration is set to 0");
     }
-    Logger.recordOutput("Swerve/PIDAutoalign/VelocityWanted", v);
-    v = Math.min(v, HEADING_CONTROLLER_CONSTANTS.maxVelocity());
     super.getController().setConstraints(new Constraints(v, a));
   }
 }

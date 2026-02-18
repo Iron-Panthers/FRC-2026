@@ -2,10 +2,7 @@ package frc.robot.subsystems.intake.intakePivot;
 
 import static frc.robot.subsystems.intake.intakePivot.IntakePivotConstants.*;
 
-import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
-import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
-import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOTalonFX;
-
+import frc.robot.lib.generic_subsystems.superstructure.*;
 import org.littletonrobotics.junction.AutoLogOutput;
 //import frc.robot.subsystems.intake.intakePivot.IntakePivotConstants;
 public class IntakePivotIOTalonFX extends GenericSuperstructureIOTalonFX implements IntakePivotIO {
@@ -21,6 +18,8 @@ public class IntakePivotIOTalonFX extends GenericSuperstructureIOTalonFX impleme
             .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
             .withZeroingVolts(ZEROING_VOLTS)
             .withZeroingOffset(ZEROING_OFFSET)
+            .withCANCoderID(INTAKE_PIVOT_CONFIG.canCoderID())
+            .withCANCoderOffset(INTAKE_PIVOT_CONFIG.canCoderOffset())
             .withCANCoderDirection(CANCODER_DIRECTION)
             .withSensorDiscontinuityPoint(SENSOR_DISCONTINUITY_POINT));
 

@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,8 +24,6 @@ import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
 import frc.robot.subsystems.swerve.controllers.translation.PIDAutoAlignController;
 import frc.robot.subsystems.swerve.controllers.translation.TeleopTranslationController;
 import java.util.Arrays;
-import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -54,8 +51,6 @@ public class Drive extends SubsystemBase {
 
   private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
   private ChassisSpeeds trajectorySpeeds = new ChassisSpeeds();
-
-  private Pose2d targetPosition = new Pose2d();
 
   // controllers
   private final TeleopTranslationController teleopController;
@@ -112,8 +107,12 @@ public class Drive extends SubsystemBase {
         }
       }
       case TRAJECTORY -> {
-        Logger.recordOutput("Swerve/DistanceFromSetpoint", RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(targetPosition.getTranslation()));
         targetSpeeds = trajectorySpeeds;
+        // Only snap to heading during teleop
+        if (headingController != null && DriverStation.isTeleopEnabled()) {
+          setTargetHeading(RobotState.getInstance().getAlignPose().getRotation());
+          targetSpeeds.omegaRadiansPerSecond = headingController.update() + 0.0001;
+        }
       }
       case AUTO_ALIGN -> {
         if (pidAutoAlignController != null) {
@@ -137,9 +136,6 @@ public class Drive extends SubsystemBase {
           ChassisSpeeds.discretize(targetSpeeds, Constants.PERIODIC_LOOP_SEC);
 
       SwerveModuleState[] moduleTargetStates = KINEMATICS.toSwerveModuleStates(discretizedSpeeds);
-
-      SwerveDriveKinematics.desaturateWheelSpeeds(
-          moduleTargetStates, DriveConstants.DRIVE_CONFIG.maxLinearVelocity());
 
       for (int i = 0; i < modules.length; i++) {
         modules[i].runToSetpoint(moduleTargetStates[i]);
@@ -171,13 +167,13 @@ public class Drive extends SubsystemBase {
       driveMode = DriveModes.DEFENSE;
     }
 
-  public void driveTeleopController(double xAxis, double yAxis, double omega, double acceleration, boolean fullState) {
+  public void driveTeleopController(double xAxis, double yAxis, double omega, double acceleration) {
     if (DriverStation.isTeleopEnabled()) {
       if (driveMode != DriveModes.TELEOP) {
         driveMode = DriveModes.TELEOP;
         teleopController.setPastLinearVelocity(new Translation2d());
       }
-      teleopController.acceptJoystickInput(xAxis, yAxis, omega, acceleration, fullState);
+      teleopController.acceptJoystickInput(xAxis, yAxis, omega, acceleration);
     }
   }
 
@@ -201,10 +197,12 @@ public class Drive extends SubsystemBase {
         gyroInputs
             .yawPosition
             .minus(
-                RobotState.isAllianceRed()
+                DriverStation.getAlliance().isPresent()
+                        && DriverStation.getAlliance().get() == Alliance.Blue
                     ? FlippingUtil.flipFieldRotation(
                         RobotState.getInstance().getEstimatedPose().getRotation())
-                    : RobotState.getInstance().getEstimatedPose().getRotation());
+                    : RobotState.getInstance().getEstimatedPose().getRotation())
+            .minus(Rotation2d.kPi);
   }
 
   @AutoLogOutput(key = "Swerve/ModuleStates")
@@ -233,13 +231,7 @@ public class Drive extends SubsystemBase {
     headingController = null;
   }
 
-  public void setTargetPosition(Pose2d targetPosition){
-    this.targetPosition = targetPosition;
-  }
-
-  public Pose2d setPIDAutoAlignTargetPosition(Pose2d targetPosition) {
-    setTargetPosition(targetPosition);
-
+  public Pose2d setTargetPosition(Pose2d targetPosition) {
     clearHeadingControl();
     driveMode = DriveModes.AUTO_ALIGN;
     if (pidAutoAlignController == null) {
@@ -255,7 +247,7 @@ public class Drive extends SubsystemBase {
     if (autoAlignHeadingController == null) {
       autoAlignHeadingController =
           new AutoAlignHeadingController(
-              () -> RobotState.getInstance().getEstimatedPose().getRotation(),
+              () -> fieldRelativeYaw,
               targetPosition.getRotation(),
               pidAutoAlignController.calculateTimeLeft(),
               DriveConstants.ROTATION_FINISH_PERCENT);
@@ -265,6 +257,7 @@ public class Drive extends SubsystemBase {
           pidAutoAlignController.calculateTimeLeft(),
           DriveConstants.ROTATION_FINISH_PERCENT);
     }
+
     return targetPosition;
   }
 
@@ -275,7 +268,7 @@ public class Drive extends SubsystemBase {
 
   public Command setTargetPositionCommand(Pose2d targetPosition) {
     return new FunctionalCommand(
-        () -> setPIDAutoAlignTargetPosition(targetPosition),
+        () -> setTargetPosition(targetPosition),
         () -> {},
         (t) -> clearTargetPositionController(),
         () -> false,
@@ -290,7 +283,4 @@ public class Drive extends SubsystemBase {
     return (degrees % 360 + 360) % 360;
   }
 
-  public boolean isPIDAutoAlign() {
-    return driveMode == DriveModes.AUTO_ALIGN;
-  }
 }

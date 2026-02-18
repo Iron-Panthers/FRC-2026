@@ -2,7 +2,6 @@ package frc.robot.subsystems.shooter.shooter_hood;
 
 import static frc.robot.subsystems.shooter.shooter_hood.ShooterHoodConstants.*;
 
-import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
 import frc.robot.lib.generic_subsystems.superstructure.*;
 import org.littletonrobotics.junction.AutoLogOutput;
 
@@ -19,7 +18,9 @@ public class ShooterHoodIOTalonFX extends GenericSuperstructureIOTalonFX impleme
                 .withUpperVoltageLimit(UPPER_VOLT_LIMIT)
                 .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
                 .withZeroingVolts(ZEROING_VOLTS)
-                .withZeroingOffset(ZEROING_OFFSET)                
+                .withZeroingOffset(ZEROING_OFFSET)
+                .withCANCoderID(SHOOTER_HOOD_CONFIG.canCoderID())
+                .withCANCoderOffset(SHOOTER_HOOD_CONFIG.canCoderOffset())                    
                 .withCANCoderDirection(CANCODER_DIRECTION)
                 .withSensorDiscontinuityPoint(SENSOR_DISCONTINUITY_POINT));
         

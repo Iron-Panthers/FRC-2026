@@ -1,7 +1,5 @@
 package frc.robot.lib.generic_subsystems.superstructure;
 
-import java.util.ArrayList;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -9,7 +7,6 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -22,14 +19,10 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
 
 public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
   // Talon FX Motor
   protected final TalonFX talon;
-
-  // Follower motors
-  protected final ArrayList<TalonFX> followerMotors;
 
   // Motor config
   protected final TalonFXConfiguration config = new TalonFXConfiguration();
@@ -98,16 +91,6 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
     talon.getConfigurator().apply(config);
     setOffset();
     talon.setNeutralMode(NeutralModeValue.Brake);
-
-    // Initialize follower motors
-    followerMotors = new ArrayList<>();
-    for(GenericSuperstructureConfiguration.FollowerMotorConfig followerConfig : superstructureConfig.followerMotors) {
-      TalonFX followerTalon = new TalonFX(followerConfig.id());
-      followerTalon.setControl(new Follower(superstructureConfig.id, followerConfig.motorAlignmentValue()));
-      followerTalon.setNeutralMode(NeutralModeValue.Brake);
-      followerTalon.getConfigurator().apply(config);
-      followerMotors.add(followerTalon);
-    }
 
     // STATUS SIGNALS
     velocityRPS = talon.getVelocity();

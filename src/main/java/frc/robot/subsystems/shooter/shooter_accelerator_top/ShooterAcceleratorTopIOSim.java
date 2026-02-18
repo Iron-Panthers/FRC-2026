@@ -28,7 +28,9 @@ public class ShooterAcceleratorTopIOSim extends GenericRollersIOSim implements S
             GAINS.kD(),
             GAINS.kS(),
             GAINS.kV(),
-            GAINS.kA());
+            GAINS.kA(),
+            GAINS.kG()
+        );
         // Create feedforward controller using configured gains
         feedforward = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());
 

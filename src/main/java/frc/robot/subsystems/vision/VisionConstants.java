@@ -21,8 +21,6 @@ public class VisionConstants {
   public static final double AMBIGUITY_CUTOFF = 0.1;
   public static final double Z_ERROR_CUTOFF = 0.5;
 
-  public static final Matrix<N3, N1> VISION_STATE_STD_DEVS = VecBuilder.fill(0.1, 0.1, 0.1); //not real values, copy and psated :)
-
   // index 0 -> arducam-1, etc
   public static final Transform3d[] CAMERA_TRANSFORM =
       switch (getRobotType()) {
@@ -99,15 +97,15 @@ public class VisionConstants {
         default -> List.of(
             // 1 tag
             new TagCountDeviation(
-                new UnitDeviationParams(0.007329, 0, 0),
-                new UnitDeviationParams(0.007329,0, 0),
-                new UnitDeviationParams(0.0166, 0, 0)),
+                new UnitDeviationParams(0.2, 0.1, 0.6),
+                new UnitDeviationParams(0.3, 0.1, 0.9),
+                new UnitDeviationParams(0.5, 0.7, 1.5)),
             // 2 tag
             new TagCountDeviation(
-                new UnitDeviationParams(0.00162493, 0, 0), new UnitDeviationParams(0.0010625, 0, 0)),
+                new UnitDeviationParams(0.35, 0.1, 0.4), new UnitDeviationParams(0.5, 0.7, 1.5)),
             // 3+ tag
             new TagCountDeviation(
-                new UnitDeviationParams(0, 0.0, 0.001), new UnitDeviationParams(0,0, 0.0001)));
+                new UnitDeviationParams(0.25, 0.07, 0.25), new UnitDeviationParams(0.15, 1, 1.5)));
       };
 
   public static final int[] IGNORE_TAGS = {};
@@ -151,9 +149,9 @@ public class VisionConstants {
   }
 
   public static record UnitDeviationParams(
-      double distanceMultiplier, double eulerMultiplier, double constant) {
+      double distanceMultiplier, double eulerMultiplier, double minimum) {
     private double computeUnitDeviation(double averageDistance) {
-      return distanceMultiplier*averageDistance + constant;
+      return Math.max(minimum, eulerMultiplier * Math.exp(averageDistance * distanceMultiplier));
     }
   }
 }

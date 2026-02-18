@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
@@ -24,34 +23,28 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.FlippingUtil;
 
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
-import frc.robot.RobotState;
 
 public class DriveConstants {
   // measures in meters (per sec) and radians (per sec)
   public static final DrivebaseConfig DRIVE_CONFIG =
       switch (getRobotType()) {
         case COMP -> new DrivebaseConfig(
-            Units.inchesToMeters(1.97),
-            Units.inchesToMeters(19.75),
-            Units.inchesToMeters(23.75),
+            Units.inchesToMeters(1.925),
+            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
             3.75,
@@ -81,15 +74,13 @@ public class DriveConstants {
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
-            2.75, // 3.75,
-            10,
+            3.3, // 3.75,
+            9,
             // TODO: make it actually max acceleration in m/s^2
-            6); // (multiply by max velocity to get m/s^2)
+            1.63); // (multiply by max velocity to get m/s^2)
       };
 
-    public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.001, 0.001, 0.001);
-  
-    public static final Translation2d[] MODULE_TRANSLATIONS =
+  public static final Translation2d[] MODULE_TRANSLATIONS =
       new Translation2d[] {
         new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, DRIVE_CONFIG.trackLength() / 2.0),
         new Translation2d(DRIVE_CONFIG.trackWidth() / 2.0, -DRIVE_CONFIG.trackLength() / 2.0),
@@ -102,49 +93,43 @@ public class DriveConstants {
 
   public static final int GYRO_ID = 0;
 
-  public static final boolean IS_GYRO_UPSIDEDOWN = 
-    switch(getRobotType()) {
-        case COMP -> true;
-        default -> false;
-    };
-
   // fl, fr, bl, br; negate offsets
   public static final ModuleConfig[] MODULE_CONFIGS =
       switch (getRobotType()) {
         // TODO: Check that InvertedValue.(Counter)Clockwise_Positive is for true or false
         case COMP -> new ModuleConfig[] {
-            new ModuleConfig(
-              CAN.at(18, "FR Drive"),
-              CAN.at(2, "FR Steer"),
-              12,
-              new Rotation2d(-2.600097),
-              InvertedValue.CounterClockwise_Positive,
-              InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(17, "FL Drive"),
               CAN.at(1, "FL Steer"),
+              3,
+              new Rotation2d(1.549321),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.Clockwise_Positive),
+          new ModuleConfig(
+              CAN.at(44, "FR Drive"),
+              CAN.at(4, "FR Steer"),
               6,
-              new Rotation2d(-0.075165),
+              new Rotation2d(0.415709),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
+          new ModuleConfig(
+              CAN.at(18, "BL Drive"),
+              CAN.at(0, "BL Steer"),
+              12,
+              new Rotation2d(2.096952),
+              InvertedValue.CounterClockwise_Positive,
+              InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(8, "BR Drive"),
               CAN.at(20, "BR Steer"),
               25,
-              new Rotation2d(-0.190214),
-              InvertedValue.CounterClockwise_Positive,
-              InvertedValue.Clockwise_Positive),
-          new ModuleConfig(
-              CAN.at(44, "BL Drive"),
-              CAN.at(4, "BL Steer"),
-              3,
-              new Rotation2d(1.937418),
+              new Rotation2d(1.402058),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive)
         };
         case VISION -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(3, "FL Drive"),
+              CAN.at(5, "FL Drive"),
               CAN.at(4, "FL Steer"),
               6,
               new Rotation2d(-1.876059),
@@ -165,37 +150,37 @@ public class DriveConstants {
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(38, "BR Drive"),
-              CAN.at(6, "BR Steer"),
+              CAN.at(8, "BR Drive"),
+              CAN.at(7, "BR Steer"),
               9,
-              new Rotation2d(1.078388),
+              new Rotation2d(-0.648874),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive)
         };
         case ALPHA -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(3, "FL Drive"),
-              CAN.at(4, "FL Steer"),
-              6,
+              CAN.at(5, "FL Drive"),
+              CAN.at(6, "FL Steer"),
+              1,
               new Rotation2d(2.058602),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(11, "FR Drive"),
-              CAN.at(10, "FR Steer"),
+              CAN.at(12, "FR Steer"),
               3,
               new Rotation2d(-2.161379),
               InvertedValue.Clockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(2, "BL Drive"),
-              CAN.at(1, "BL Steer"),
-              3,
+              CAN.at(9, "BL Drive"),
+              CAN.at(10, "BLSteer"),
+              4,
               new Rotation2d(0.48934),
               InvertedValue.Clockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(5, "BR Drive"), CAN.at(7, "BRSteer"), 2, new Rotation2d(-0.271515), InvertedValue.Clockwise_Positive, InvertedValue.Clockwise_Positive)
+              CAN.at(7, "BR Drive"), CAN.at(8, "BRSteer"), 2, new Rotation2d(-0.271515), InvertedValue.Clockwise_Positive, InvertedValue.Clockwise_Positive)
         };
         case SIM -> new ModuleConfig[] {
           new ModuleConfig(
@@ -261,6 +246,7 @@ public class DriveConstants {
             3.125);
       };
 
+
 /**
  * These are the configs for the maple sim drivebase
  * This should be updated to be similar to the comp bot drivebase
@@ -297,9 +283,9 @@ public class DriveConstants {
   // Tolerance in Radians
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
-        case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.01);
-        case SIM -> new HeadingControllerConstants(6, 0, 8, 20, 0.01);
-        case VISION -> new HeadingControllerConstants(3, 0, 5, 15, 0.007);
+        case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
+        case SIM -> new HeadingControllerConstants(20, 0, 8, 20, 0.01);
+        case VISION -> new HeadingControllerConstants(6, 0, 5, 20, 0.01);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
       };
@@ -307,21 +293,16 @@ public class DriveConstants {
   public static final PIDAutoAlignControllerConstants PID_AUTOALIGN_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new PIDAutoAlignControllerConstants(
-            4, 0, 2, 2, 2, 0.01); /*FIXME: tune these constants*/
+            4, 0, 2, 2, 2); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
-            8, 0, 0,3, 3, 0.01); /*FIXME: tune these constants*/
+            15, 0, 0, 4, 4); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(
-            7, 0, 0, 1, 1, 0.01); /* FIXME: tune these constants */
-        case SIM -> new PIDAutoAlignControllerConstants(7, 0.0, 0.0, 3, 4, 0.01);
-        default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0, 0.01);
+            7, 0, 0, 1, 1); /* FIXME: tune these constants */
+        case SIM -> new PIDAutoAlignControllerConstants(15, 0.0, 0.0, 2, 2);
+        default -> new PIDAutoAlignControllerConstants(0, 0, 0, 0, 0);
       };
   public static final double ROTATION_FINISH_PERCENT = 0.9;
-
-  public static final double PATHPLANNER_PID_OFFSET = 1.5;
-                                                                                                                                       
-  public static final double AUTOALIGN_POSITION_DEADBAND = 0.01;
-
-  public static final double AUTOALIGN_VELOCITY_DEADBAND = 0.01;
+  public static final double[] REEF_SNAP_ANGLES = {-120, -60, 0, 60, 120, 180};
 
   public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
 
@@ -337,11 +318,12 @@ public class DriveConstants {
 
   public static final PathConstraints ALIGN_PATH_CONSTRAINTS =
       new PathConstraints(
-          3, 4, Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
+          3, 2, Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
   // unused
   public static final PathConstraints APPROACH_PATH_CONSTRAINTS =
       new PathConstraints(
           1.5, 1.5, Units.degreesToRadians(540), Units.degreesToRadians(720), 12, false);
+
 
   // pathfinding constants
   public static final List<Pair<Translation2d, Translation2d>> OBSTACLES_FOR_TRENCH_PATHFINDING = List.of(
@@ -398,7 +380,8 @@ public class DriveConstants {
       double kP, double kD, double maxVelocity, double maxAcceleration, double tolerance) {}
 
   public record PIDAutoAlignControllerConstants(
-      double kP, double kI, double kD, double maxVelocity, double maxAcceleration, double tolerance) {}
+      double kP, double kI, double kD, double maxVelocity, double maxAcceleration) {}
+
   public record ApproachPose(Pose2d pose) {
     public static ApproachPose[] fromPose2ds(Pose2d... poses) {
       List<ApproachPose> approachPoses = new ArrayList<ApproachPose>();
@@ -409,7 +392,11 @@ public class DriveConstants {
     }
 
     public Pose2d getAlliancePose() {
-      return RobotState.isAllianceRed() ? FlippingUtil.flipFieldPose(pose) : pose;
+      return DriverStation.getAlliance().isPresent()
+          ? (DriverStation.getAlliance().get() == Alliance.Red
+              ? FlippingUtil.flipFieldPose(pose)
+              : pose)
+          : pose;
     }
 
     public Pose2d getPose() {

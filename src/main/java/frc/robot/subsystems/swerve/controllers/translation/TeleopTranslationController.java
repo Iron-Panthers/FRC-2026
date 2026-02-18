@@ -10,15 +10,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.RobotState;
-
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
-
-import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
-import com.pathplanner.lib.util.FlippingUtil;
 
 public class TeleopTranslationController extends BaseTranslationController {
   private double controllerX = 0;
@@ -27,7 +20,6 @@ public class TeleopTranslationController extends BaseTranslationController {
   private Translation2d pastLinearVelocity = new Translation2d();
   private double clampedVelocityDiff = 0;
   private double acceleration;
-  private boolean hopperFull;
 
   /* teleop control with specified yaw supplier, typically "arbitrary" yaw */
   public TeleopTranslationController(Supplier<Rotation2d> yawSupplier) {
@@ -36,21 +28,20 @@ public class TeleopTranslationController extends BaseTranslationController {
   }
 
   /* accept driver input from joysticks */
-  public void acceptJoystickInput(double controllerX, double controllerY, double controllerOmega, double acceleration, boolean fullState) {
+  public void acceptJoystickInput(
+      double controllerX, double controllerY, double controllerOmega, double acceleration) {
     this.controllerX = controllerX;
     this.controllerY = controllerY;
     this.controllerOmega = controllerOmega;
     this.acceleration = acceleration;
-    this.hopperFull = fullState;
   }
 
   /* accept driver input from joysticks */
-  public void acceptJoystickInput(double controllerX, double controllerY, double controllerOmega, boolean fullState) {
+  public void acceptJoystickInput(double controllerX, double controllerY, double controllerOmega) {
     this.controllerX = controllerX;
     this.controllerY = controllerY;
     this.controllerOmega = controllerOmega;
     this.acceleration = DRIVE_CONFIG.maxLinearAcceleration();
-    this.hopperFull = fullState;
   }
 
   /* update controller with current desired state */
@@ -74,7 +65,6 @@ public class TeleopTranslationController extends BaseTranslationController {
         pastLinearVelocity.plus(new Translation2d(clampedVelocityDiff, velocityTheta));
     pastLinearVelocity = newVelocity;
 
-    newVelocity = centerizeTrench(linearVelocity);
     return ChassisSpeeds.fromFieldRelativeSpeeds(
         newVelocity.getX() * DRIVE_CONFIG.maxLinearVelocity(),
         newVelocity.getY() * DRIVE_CONFIG.maxLinearVelocity(),
@@ -107,68 +97,5 @@ public class TeleopTranslationController extends BaseTranslationController {
 
   public void setPastLinearVelocity(Translation2d pastLinearVelocity) {
     this.pastLinearVelocity = pastLinearVelocity;
-  }
-
-  public Translation2d centerizeTrench(Translation2d linearVelocity){
-    Pose2d robotPose = RobotState.getInstance().getEstimatedPose();
-    double robotYSize = 0.61;
-    Pose2d trenchPose = new Pose2d(4.6, 0.65, new Rotation2d());
-    Pose2d flippedTrenchPose = FlippingUtil.flipFieldPose(trenchPose);
-
-    isUnderTrench(robotPose, trenchPose, flippedTrenchPose);
-    
-    Logger.recordOutput("Swerve/isDown", (linearVelocity.getY() < 0 
-        &&  trenchPose.getY() - (robotPose.getY() - robotYSize) > 0.65));
-    
-    Logger.recordOutput("Swerve/isUp", (linearVelocity.getY() > 0 
-        &&  trenchPose.getY() - (robotPose.getY() + robotYSize) > 0.65));
-
-    if (hopperFull){
-      if (Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65){
-        if (linearVelocity.getX() > 0 && robotPose.getX() < trenchPose.getX() && Math.abs(robotPose.getY() - trenchPose.getY()) < 0.6){
-          return new Translation2d(0, linearVelocity.getY());
-        }
-        if (linearVelocity.getX() < 0 && robotPose.getX() > trenchPose.getX() && Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6) {
-          return new Translation2d(0, linearVelocity.getY());
-        }
-      }
-      
-      if (Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65) {
-        if (linearVelocity.getX() > 0 && robotPose.getX() < flippedTrenchPose.getX() && Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6) {
-          return new Translation2d(0, linearVelocity.getY());
-        }
-        if (linearVelocity.getX() < 0 && robotPose.getX() > flippedTrenchPose.getX() && Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6) {
-          return new Translation2d(0, linearVelocity.getY());
-        }
-      }
-    }  
-    if(((Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65) ||
-       (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65))){
-
-        if(linearVelocity.getY() < 0 
-        &&  trenchPose.getY() - (robotPose.getY() - robotYSize) > 0.65){
-          return new Translation2d(linearVelocity.getX(), 0);
-        }
-        if(linearVelocity.getY() > 0 
-        &&  trenchPose.getY() - (robotPose.getY() + robotYSize) > 0.65){
-          return new Translation2d(linearVelocity.getX(), 0);
-        }
-    }
-    return linearVelocity;
-      //  &&
-      //   (robotPose.getY() + robotXSize > trenchPose.getY() + 0.65 || robotPose.getY() + robotXSize > flippedTrenchPose.getY() + 0.65 //if I'm not centered
-      //   ||robotPose.getY() - robotXSize < trenchPose.getY() + 0.65 || robotPose.getY() - robotXSize < flippedTrenchPose.getY() + 0.65)){
-      // return new Translation2d(linearVelocity.getX(), 0);
-  }
-
-  public boolean isUnderTrench(Pose2d robotPose, Pose2d trenchPose, Pose2d flippedTrenchPose){
-    boolean underTrench = ((Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65) ||
-       (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < 0.65));
-    Logger.recordOutput("Swerve/isUnderTrench", underTrench);
-    return underTrench;
   }
 }

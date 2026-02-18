@@ -10,7 +10,7 @@ public class ClimbDeployPivotIOSim extends GenericSuperstructureIOSim implements
     private final SingleJointedArmSim climbDeployPivotSim;
     private final double reduction;
 
-    public ClimbDeployPivotIOSim() {
+      public ClimbDeployPivotIOSim() {
     super(ClimbDeployPivotConstants.CLIMB_DEPLOY_PIVOT_CONFIG.motorID());
 
     this.reduction = ClimbDeployPivotConstants.CLIMB_DEPLOY_PIVOT_CONFIG.reduction();
@@ -70,5 +70,11 @@ public class ClimbDeployPivotIOSim extends GenericSuperstructureIOSim implements
   @Override
   public void setOffset() {
     climbDeployPivotSim.setState(0, 0);
+  }
+
+  /** Move move the arm to a position with the given degrees */
+  @Override
+  public void runPosition(double position) {
+    super.runPosition(position / 360d); // convert degrees to rotations
   }
 }

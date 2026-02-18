@@ -8,19 +8,12 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     double getVelocity();
   }
 
-  public enum ControlMode {
-    VELOCITY,
-    STOP
-  }
-
-  private ControlMode controlMode = ControlMode.STOP;
-
   private LinearFilter filter;
   private double filteredCurrent;
 
   private final String name;
   private final GenericRollersIO rollerIO;
-  protected GenericRollersIOInputsAutoLogged inputs = new GenericRollersIOInputsAutoLogged();
+  private GenericRollersIOInputsAutoLogged inputs = new GenericRollersIOInputsAutoLogged();
 
   private G velocityTarget;
 
@@ -39,16 +32,6 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
 
     filteredCurrent = this.filter.calculate(inputs.supplyCurrentAmps);
     Logger.recordOutput("Rollers/" + name + "/FilteredCurrent", filteredCurrent);
-
-    Logger.recordOutput("Rollers/" + name + "/Control Mode", controlMode.toString());
-    switch (controlMode) {
-      case VELOCITY -> {
-        rollerIO.runVelocity(velocityTarget.getVelocity());
-      }
-      case STOP -> {
-        rollerIO.stop();
-      }
-    }
   }
 
   public G getVelocityTarget() {
@@ -64,15 +47,6 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
   }
 
   public void setVelocityTarget(G velocityTarget) {
-    setControlMode(ControlMode.VELOCITY);
     this.velocityTarget = velocityTarget;
-  }
-
-  public ControlMode getControlMode() {
-    return controlMode;
-  }
-
-  public void setControlMode(ControlMode controlMode) {
-    this.controlMode = controlMode;
   }
 }

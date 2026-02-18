@@ -1,10 +1,8 @@
 package frc.robot.subsystems.intake.intakePivot;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.RobotSimState;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOSim;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotConstants;
 
@@ -67,14 +65,6 @@ public class IntakePivotIOSim extends GenericSuperstructureIOSim implements Inta
     inputs.appliedVolts = appliedVoltage;
     inputs.supplyCurrentAmps = 1.0; // Not simulated
     inputs.tempCelsius = 25.0; // Not simulated
-
-    // update the Sim State to match if it is up or down
-    if(rotations < .1){
-        RobotSimState.getInstance().setIntakeState(true);
-    }
-    else{
-        RobotSimState.getInstance().setIntakeState(false);
-    }
   }
 
   @Override
