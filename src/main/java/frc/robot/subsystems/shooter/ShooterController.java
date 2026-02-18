@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,6 +14,9 @@ import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTo
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop.ShooterAcceleratorTopTarget;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
 import frc.robot.lib.generic_subsystems.superstructure.*;
+import frc.robot.RobotState;
+
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -29,7 +33,7 @@ public class ShooterController extends SubsystemBase {
         ),
         /**shoot: spinning to shoot*/
         SHOOT(
-            ShooterHoodTarget.UP,
+            ShooterHoodTarget.BOTTOM,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTopTarget.SHOOT,
             ShooterAcceleratorBottomTarget.SHOOT
@@ -86,6 +90,13 @@ public class ShooterController extends SubsystemBase {
             shooterFlywheel.setControlMode(ControlMode.STOP);
             shooterAcceleratorBottom.setControlMode(ControlMode.STOP);
             shooterAcceleratorTop.setControlMode(ControlMode.STOP);
+        }
+        else if (targetState == ShooterState.SHOOT) {
+            // If shooting, update the hood target based on the calculated shooter angle
+            shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
+            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+            shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
+            shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
         }
         else {
             shooterHood.setPositionTarget(targetState.hoodTarget);

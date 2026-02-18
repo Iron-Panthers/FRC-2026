@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter.shooter_accelerator_top;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterAcceleratorTop extends GenericRollers<ShooterAcceleratorTop.ShooterAcceleratorTopTarget>{
@@ -22,5 +24,9 @@ public class ShooterAcceleratorTop extends GenericRollers<ShooterAcceleratorTop.
 
     public ShooterAcceleratorTop(ShooterAcceleratorTopIO io) {
         super("Shooter/Shooter Accelerator Top", io);
+    }
+
+    public AngularVelocity getCurrentVelocity() {
+        return Units.RadiansPerSecond.of(inputs.velocityRadsPerSec);
     }
 }

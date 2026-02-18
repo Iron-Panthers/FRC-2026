@@ -100,9 +100,9 @@ public class Robot extends LoggedRobot {
     Logger.start();
 
     robotContainer = new RobotContainer();
-
-    FollowPathCommand.warmupCommand().schedule();
-    PathfindingCommand.warmupCommand().schedule();
+    
+    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+    CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
   }
 
   /** This function is called periodically during all modes. */
@@ -136,7 +136,7 @@ public class Robot extends LoggedRobot {
 
     autoCommand = robotContainer.getAutoCommand();
     if (autoCommand != null) {
-      autoCommand.schedule();
+      CommandScheduler.getInstance().schedule(autoCommand);
     }
 
     robotContainer.autoInit();
