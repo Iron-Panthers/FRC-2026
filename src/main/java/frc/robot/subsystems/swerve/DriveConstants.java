@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
@@ -37,12 +36,9 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
-import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
 import frc.robot.RobotState;
+import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
 
 public class DriveConstants {
   // measures in meters (per sec) and radians (per sec)
@@ -325,6 +321,7 @@ public class DriveConstants {
 
 
   public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
+  public static final Pose2d TRENCH_POSE = new Pose2d(4.6, 0.65, new Rotation2d());
 
   public static final PPHolonomicDriveController HOLONOMIC_DRIVE_CONTROLLER =
       new PPHolonomicDriveController(
