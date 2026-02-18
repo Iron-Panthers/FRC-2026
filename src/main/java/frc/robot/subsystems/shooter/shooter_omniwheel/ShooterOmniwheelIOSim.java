@@ -1,6 +1,6 @@
-package frc.robot.subsystems.shooter.shooter_accelerator_bottom;
+package frc.robot.subsystems.shooter.shooter_omniwheel;
 
-import static frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottomConstants.*;
+import static frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelConstants.*;
 
 import com.ctre.phoenix6.sim.ChassisReference;
 
@@ -13,15 +13,15 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 //TODO: likely have to update shooterflywheelsiosim -- adjust values + motors might be wrong
 
-public class ShooterAcceleratorBottomIOSim extends GenericRollersIOSim implements ShooterAcceleratorBottomIO {
+public class ShooterOmniwheelIOSim extends GenericRollersIOSim implements ShooterOmniwheelIO {
     
     private final FlywheelSim shooterFlywheelsSim;
     private final SimpleMotorFeedforward feedforward;
     private double rotorPositionRotations = 0.0;
     private double velocitySetpointRPS = 0.0;
 
-    public ShooterAcceleratorBottomIOSim() {
-        super(SHOOTER_ACCELERATOR_BOTTOM_CONFIG.motorID(), CURRENT_LIMIT_AMPS, SHOOTER_ACCELERATOR_BOTTOM_CONFIG.inverted(), SHOOTER_ACCELERATOR_BOTTOM_CONFIG.brake(), SHOOTER_ACCELERATOR_BOTTOM_CONFIG.reduction());
+    public ShooterOmniwheelIOSim() {
+        super(SHOOTER_OMNIWHEEL_CONFIG.motorID(), CURRENT_LIMIT_AMPS, SHOOTER_OMNIWHEEL_CONFIG.inverted(), SHOOTER_OMNIWHEEL_CONFIG.brake(), SHOOTER_OMNIWHEEL_CONFIG.reduction());
         super.setSlot0(
             GAINS.kP(),
             GAINS.kI(),
@@ -34,12 +34,12 @@ public class ShooterAcceleratorBottomIOSim extends GenericRollersIOSim implement
 
         shooterFlywheelsSim =
             new FlywheelSim(
-                LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), PHYSICAL_CONSTANTS.momentOfInertia(), SHOOTER_ACCELERATOR_BOTTOM_CONFIG.reduction()), 
+                LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), PHYSICAL_CONSTANTS.momentOfInertia(), SHOOTER_OMNIWHEEL_CONFIG.reduction()), 
                 DCMotor.getKrakenX60Foc(1));
         
         // Enable physics simulation for Phoenix
         var simState = talon.getSimState();
-        simState.Orientation = SHOOTER_ACCELERATOR_BOTTOM_CONFIG.inverted() 
+        simState.Orientation = SHOOTER_OMNIWHEEL_CONFIG.inverted() 
             ? ChassisReference.Clockwise_Positive 
             : ChassisReference.CounterClockwise_Positive;
   }

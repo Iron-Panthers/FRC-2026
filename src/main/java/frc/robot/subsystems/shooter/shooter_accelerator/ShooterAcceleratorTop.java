@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooter.shooter_accelerator_top;
+package frc.robot.subsystems.shooter.shooter_accelerator;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
