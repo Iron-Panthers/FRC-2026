@@ -9,9 +9,9 @@ public class ShooterAcceleratorConstants {
   public static final ShooterAcceleratorConfig SHOOTER_ACCELERATOR_CONFIG =
       switch (Constants.getRobotType()) {
         case SIM -> new ShooterAcceleratorConfig(
-            CAN.at(38, "Shooter Accelerator"), 1, false, true); 
+            CAN.at(38, "Shooter Accelerator 1"), CAN.at(39, "Shooter Accelerator 2"), 1, false, true, true); 
         default -> new ShooterAcceleratorConfig(
-            CAN.at(38, "Shooter Accelerator"),  1, false, true); 
+            CAN.at(38, "Shooter Accelerator 1"), CAN.at(39, "Shooter Accelerator 2"), 1, false, true, true); 
       };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
@@ -20,9 +20,6 @@ public class ShooterAcceleratorConstants {
         case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
-
-
-    public static final boolean OPPOSE_MOTOR = true;
 
     public static final int CURRENT_LIMIT_AMPS =
         switch (Constants.getRobotType()) {
@@ -40,7 +37,7 @@ public class ShooterAcceleratorConstants {
 
     //RECORDS
   public record ShooterAcceleratorConfig(
-      int motorID, double reduction, boolean inverted, boolean brake) {}
+      int motorID1, int motorID2, double reduction, boolean inverted, boolean brake, boolean oppose_motor) {}
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}    
   public static record ShooterAcceleratorPhysicalConstants(

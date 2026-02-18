@@ -15,13 +15,13 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterAcceleratorIOSim extends GenericRollersIOSim implements ShooterAcceleratorIO {
     
-    private final FlywheelSim shooterAcceleratorTopSim;
+    private final FlywheelSim shooterAcceleratorSim;
     private final SimpleMotorFeedforward feedforward;
     private double rotorPositionRotations = 0.0;
     private double velocitySetpointRPS = 0.0;
 
     public ShooterAcceleratorIOSim() {
-        super(SHOOTER_ACCELERATOR_CONFIG.motorID(), CURRENT_LIMIT_AMPS, SHOOTER_ACCELERATOR_CONFIG.inverted(), SHOOTER_ACCELERATOR_CONFIG.brake(), SHOOTER_ACCELERATOR_CONFIG.reduction());
+        super(SHOOTER_ACCELERATOR_CONFIG.motorID1(), CURRENT_LIMIT_AMPS, SHOOTER_ACCELERATOR_CONFIG.inverted(), SHOOTER_ACCELERATOR_CONFIG.brake(), SHOOTER_ACCELERATOR_CONFIG.reduction());
         super.setSlot0(
             GAINS.kP(),
             GAINS.kI(),
@@ -32,7 +32,7 @@ public class ShooterAcceleratorIOSim extends GenericRollersIOSim implements Shoo
         // Create feedforward controller using configured gains
         feedforward = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());
 
-        shooterAcceleratorTopSim =
+        shooterAcceleratorSim =
             new FlywheelSim(
                 LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), PHYSICAL_CONSTANTS.momentOfInertia(), SHOOTER_ACCELERATOR_CONFIG.reduction()), 
                 DCMotor.getKrakenX60Foc(1));
@@ -52,7 +52,7 @@ public class ShooterAcceleratorIOSim extends GenericRollersIOSim implements Shoo
 
   @Override
   public void updateInputs(GenericRollersIOInputs inputs) {
-    double currentVelocityRPS = shooterAcceleratorTopSim.getAngularVelocityRadPerSec() / (2.0 * Math.PI);
+    double currentVelocityRPS = shooterAcceleratorSim.getAngularVelocityRadPerSec() / (2.0 * Math.PI);
     
     // Set TalonFX sim state
     talon.getSimState().setSupplyVoltage(RobotController.getBatteryVoltage());
@@ -67,17 +67,17 @@ public class ShooterAcceleratorIOSim extends GenericRollersIOSim implements Shoo
     appliedVoltage = Math.max(-12, Math.min(12, appliedVoltage)); // Clamp to battery voltage
 
     // Simulate physics
-    shooterAcceleratorTopSim.setInputVoltage(appliedVoltage);
-    shooterAcceleratorTopSim.update(0.02);
+    shooterAcceleratorSim.setInputVoltage(appliedVoltage);
+    shooterAcceleratorSim.update(0.02);
 
     // Update position tracking
-    currentVelocityRPS = shooterAcceleratorTopSim.getAngularVelocityRadPerSec() / (2.0 * Math.PI);
+    currentVelocityRPS = shooterAcceleratorSim.getAngularVelocityRadPerSec() / (2.0 * Math.PI);
     rotorPositionRotations += currentVelocityRPS * 0.02;
 
     inputs.connected = true;
     inputs.positionRads = rotorPositionRotations * 2.0 * Math.PI;
-    inputs.velocityRadsPerSec = shooterAcceleratorTopSim.getAngularVelocityRadPerSec();
+    inputs.velocityRadsPerSec = shooterAcceleratorSim.getAngularVelocityRadPerSec();
     inputs.appliedVolts = appliedVoltage;
-    inputs.supplyCurrentAmps = Math.abs(shooterAcceleratorTopSim.getCurrentDrawAmps());
+    inputs.supplyCurrentAmps = Math.abs(shooterAcceleratorSim.getCurrentDrawAmps());
   }
 }

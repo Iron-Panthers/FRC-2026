@@ -70,6 +70,11 @@ public class GenericRollersConfiguration extends GenericMechanismConfiguration{
         return this;
     }
 
+    public GenericRollersConfiguration withAdditionalFollowerMotor(int id, boolean opposeMotor) {
+        withAdditionalFollowerMotor(id, opposeMotor ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned);
+        return this;
+    }
+
     public GenericRollersConfiguration withUpperVoltageLimit(double upperVoltLimit) {
         super.withUpperVoltageLimit(upperVoltLimit);
         return this;
