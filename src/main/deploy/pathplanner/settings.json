@@ -4,10 +4,12 @@
   "holonomicMode": true,
   "pathFolders": [
     "Autos",
+    "Mirrored Paths",
     "Testing"
   ],
   "autoFolders": [
     "Autos",
+    "Mirrored Autos",
     "Testing"
   ],
   "defaultMaxVel": 3.0,
