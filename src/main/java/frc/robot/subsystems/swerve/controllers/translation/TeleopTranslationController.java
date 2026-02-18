@@ -128,7 +128,8 @@ public class TeleopTranslationController extends BaseTranslationController {
        (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
        Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65)));
        
-    if(linearVelocity.getY() != 0 &&
+    if(Math.abs(robotPose.getY() - trenchPose.getY()) < 0.2 
+      &&
       ((Math.abs(robotPose.getX() - trenchPose.getX()) < 0.6 &&
        Math.abs(robotPose.getY() - trenchPose.getY()) < 0.65) ||
        (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < 0.6 &&
@@ -140,7 +141,8 @@ public class TeleopTranslationController extends BaseTranslationController {
       if(Math.abs(trenchPose.getY() - robotPose.getY()) > Math.abs(flippedTrenchPose.getY() - robotPose.getY())){
         trenchPose = flippedTrenchPose;
       }
-      return new Translation2d(linearVelocity.getX(), -5 * (robotPose.getY() - trenchPose.getY()) + linearVelocity.getY());
+    
+      return new Translation2d(linearVelocity.getX(), -2 * (robotPose.getY() - trenchPose.getY()) + linearVelocity.getY());
     }
     return linearVelocity;
   }

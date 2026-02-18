@@ -409,4 +409,7 @@ public class RobotState {
     }
     return false;
   }
+  public Pose2d getClimbTarget(){
+    return new Pose2d(0,0, new Rotation2d());
+  }
 }
