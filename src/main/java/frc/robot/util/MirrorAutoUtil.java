@@ -90,8 +90,8 @@ public class MirrorAutoUtil {
       mirrorPathsInCommand(copy.get("command"));
     }
 
-    // Set folder to "Left Autos"
-    copy.put("folder", "Left Autos");
+    // Set folder to "Left Autos (auto generated)"
+    copy.put("folder", "Left Autos (auto generated)");
 
     // Generate output filename
     String parent = inputFile.getParent();

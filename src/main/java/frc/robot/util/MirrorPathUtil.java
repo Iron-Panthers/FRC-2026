@@ -102,7 +102,7 @@ public class MirrorPathUtil {
       if (iss.has("rotation")) iss.put("rotation", mirrorRotationDeg(iss.get("rotation").asDouble()));
     }
 
-    root.put("folder", "Left Paths");
+    root.put("folder", "Left Paths (auto generated)");
   }
 
   /**
