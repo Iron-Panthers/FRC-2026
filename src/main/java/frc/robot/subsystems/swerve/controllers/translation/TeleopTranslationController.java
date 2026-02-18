@@ -125,11 +125,12 @@ public class TeleopTranslationController extends BaseTranslationController {
     double robotToTrench;
     double predictedToTrench;
     
-    if(linearVelocity.getY() != 0 && isUnderTrench){
+    if(Math.abs(robotPose.getY() - trenchPose.getY()) < 0.2 && isUnderTrench){
       if(Math.abs(trenchPose.getY() - robotPose.getY()) > Math.abs(flippedTrenchPose.getY() - robotPose.getY())){
         trenchPose = flippedTrenchPose;
       }
-      return new Translation2d(linearVelocity.getX(), -5 * (robotPose.getY() - trenchPose.getY()) + linearVelocity.getY());
+    
+      return new Translation2d(linearVelocity.getX(), -2 * (robotPose.getY() - trenchPose.getY()) + linearVelocity.getY());
     }
     if (hopperFull){
       if (linearVelocity.getX() != 0 && isUnderTrench){
