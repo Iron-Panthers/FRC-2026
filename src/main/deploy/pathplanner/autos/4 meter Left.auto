@@ -6,12 +6,12 @@
       "commands" : [ {
         "type" : "path",
         "data" : {
-          "pathName" : "4 meter Mirrored"
+          "pathName" : "4 meter Left"
         }
       } ]
     }
   },
   "resetOdom" : true,
-  "folder" : "Mirrored Autos",
+  "folder" : "Left Autos",
   "choreoAuto" : false
 }

@@ -25,10 +25,10 @@ task mirrorPaths(type: JavaExec) {
     
     def pathDir = file('src/main/deploy/pathplanner/paths')
     
-    // Find all .path files (excluding already mirrored ones)
+    // Find all .path files (excluding already generated left ones)
     def pathFiles = fileTree(pathDir) {
         include '*.path'
-        exclude '* Mirrored.path'
+        exclude '* Left.path'
     }
     
     // Only run if path files exist
@@ -53,10 +53,10 @@ task mirrorAutos(type: JavaExec) {
     
     def autoDir = file('src/main/deploy/pathplanner/autos')
     
-    // Find all .auto files (excluding already mirrored ones)
+    // Find all .auto files (excluding already generated left ones)
     def autoFiles = fileTree(autoDir) {
         include '*.auto'
-        exclude '* Mirrored.auto'
+        exclude '* Left.auto'
     }
     
     // Only run if auto files exist

@@ -21,10 +21,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Utility class to mirror PathPlanner auto files to use mirrored paths.
+ * Utility class to mirror PathPlanner auto files to use left-side (mirrored) paths.
  *
  * <p>Recursively finds all "path" type commands and updates their pathName to reference
- * the mirrored version (appends " Mirrored" to the path name).
+ * the left version (appends " Left" to the path name).
  */
 public class MirrorAutoUtil {
   private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -43,9 +43,13 @@ public class MirrorAutoUtil {
       if (data != null && data.isObject() && data.has("pathName")) {
         ObjectNode dataObj = (ObjectNode) data;
         String pathName = dataObj.get("pathName").asText();
-        // Only add " Mirrored" if not already mirrored
-        if (!pathName.endsWith(" Mirrored")) {
-          dataObj.put("pathName", pathName + " Mirrored");
+        // Only add " Left" if not already a left variant
+        if (!pathName.endsWith(" Left")) {
+          // Strip " Right" suffix if present before appending " Left"
+          if (pathName.endsWith(" Right")) {
+            pathName = pathName.substring(0, pathName.length() - 6);
+          }
+          dataObj.put("pathName", pathName + " Left");
         }
       }
     }
@@ -65,7 +69,7 @@ public class MirrorAutoUtil {
   }
 
   /**
-   * Mirrors a single auto file: reads the .auto file, updates path references, writes "* Mirrored.auto".
+   * Mirrors a single auto file: reads the .auto file, updates path references, writes "* Left.auto".
    */
   public static void mirrorAutoFile(String inputPath) throws IOException {
     File inputFile = new File(inputPath);
@@ -86,8 +90,8 @@ public class MirrorAutoUtil {
       mirrorPathsInCommand(copy.get("command"));
     }
 
-    // Set folder to "Mirrored Autos"
-    copy.put("folder", "Mirrored Autos");
+    // Set folder to "Left Autos"
+    copy.put("folder", "Left Autos");
 
     // Generate output filename
     String parent = inputFile.getParent();
@@ -95,7 +99,11 @@ public class MirrorAutoUtil {
     int dot = name.lastIndexOf('.');
     String baseName = dot > 0 ? name.substring(0, dot) : name;
     String ext = dot > 0 ? name.substring(dot) : "";
-    File outputFile = new File(parent, baseName + " Mirrored" + ext);
+    // Strip " Right" suffix if present before appending " Left"
+    if (baseName.endsWith(" Right")) {
+      baseName = baseName.substring(0, baseName.length() - 6);
+    }
+    File outputFile = new File(parent, baseName + " Left" + ext);
 
     MAPPER.writerWithDefaultPrettyPrinter().writeValue(outputFile, copy);
   }

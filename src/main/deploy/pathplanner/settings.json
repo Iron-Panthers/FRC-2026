@@ -3,13 +3,13 @@
   "robotLength": 0.7366,
   "holonomicMode": true,
   "pathFolders": [
-    "Autos",
-    "Mirrored Paths",
+    "Right Paths",
+    "Left Paths",
     "Testing"
   ],
   "autoFolders": [
-    "Autos",
-    "Mirrored Autos",
+    "Right Autos",
+    "Left Autos",
     "Testing"
   ],
   "defaultMaxVel": 3.0,

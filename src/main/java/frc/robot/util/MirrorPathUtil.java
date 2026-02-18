@@ -102,11 +102,11 @@ public class MirrorPathUtil {
       if (iss.has("rotation")) iss.put("rotation", mirrorRotationDeg(iss.get("rotation").asDouble()));
     }
 
-    root.put("folder", "Mirrored Paths");
+    root.put("folder", "Left Paths");
   }
 
   /**
-   * Mirrors a single path file: reads the .path file, mirrors it, writes "* Mirrored.path".
+   * Mirrors a single path file: reads the .path file, mirrors it, writes "* Left.path".
    */
   public static void mirrorPathFile(String inputPath) throws IOException {
     File inputFile = new File(inputPath);
@@ -128,7 +128,11 @@ public class MirrorPathUtil {
     int dot = name.lastIndexOf('.');
     String baseName = dot > 0 ? name.substring(0, dot) : name;
     String ext = dot > 0 ? name.substring(dot) : "";
-    File outputFile = new File(parent, baseName + " Mirrored" + ext);
+    // Strip " Right" suffix if present before appending " Left"
+    if (baseName.endsWith(" Right")) {
+      baseName = baseName.substring(0, baseName.length() - 6);
+    }
+    File outputFile = new File(parent, baseName + " Left" + ext);
 
     MAPPER.writerWithDefaultPrettyPrinter().writeValue(outputFile, copy);
   }

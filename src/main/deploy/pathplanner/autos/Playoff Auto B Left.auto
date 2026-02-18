@@ -11,7 +11,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "Playoff Auto A 1 Mirrored"
+          "pathName" : "Playoff Auto B 1 Left"
         }
       }, {
         "type" : "named",
@@ -31,7 +31,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "Playoff Auto A 2 Mirrored"
+          "pathName" : "Playoff Auto B 2 Left"
         }
       }, {
         "type" : "named",
@@ -52,6 +52,6 @@
     }
   },
   "resetOdom" : false,
-  "folder" : "Mirrored Autos",
+  "folder" : "Left Autos",
   "choreoAuto" : false
 }
