@@ -11,14 +11,14 @@ public class ShooterAcceleratorConstants {
         case SIM -> new ShooterAcceleratorConfig(
             CAN.at(38, "Shooter Accelerator 1"), CAN.at(39, "Shooter Accelerator 2"), 1, false, true, true); 
         default -> new ShooterAcceleratorConfig(
-            CAN.at(38, "Shooter Accelerator 1"), CAN.at(39, "Shooter Accelerator 2"), 1, false, true, true); 
+            CAN.at(33, "Shooter Accelerator 1"), CAN.at(34, "Shooter Accelerator 2"), 1, true, true, true); 
       };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
+        default -> new PIDGains(.1, 0, 0, 0, 0.18, 0, 0);
       };
 
     public static final int CURRENT_LIMIT_AMPS =

@@ -15,7 +15,7 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterOmniwheelIOSim extends GenericRollersIOSim implements ShooterOmniwheelIO {
     
-    private final FlywheelSim shooterFlywheelsSim;
+    private final FlywheelSim shooterOmniwheelsSim;
     private final SimpleMotorFeedforward feedforward;
     private double rotorPositionRotations = 0.0;
     private double velocitySetpointRPS = 0.0;
@@ -32,7 +32,7 @@ public class ShooterOmniwheelIOSim extends GenericRollersIOSim implements Shoote
         // Create feedforward controller using configured gains
         feedforward = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());
 
-        shooterFlywheelsSim =
+        shooterOmniwheelsSim =
             new FlywheelSim(
                 LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), PHYSICAL_CONSTANTS.momentOfInertia(), SHOOTER_OMNIWHEEL_CONFIG.reduction()), 
                 DCMotor.getKrakenX60Foc(1));
@@ -52,7 +52,7 @@ public class ShooterOmniwheelIOSim extends GenericRollersIOSim implements Shoote
 
   @Override
   public void updateInputs(GenericRollersIOInputs inputs) {
-    double currentVelocityRPS = shooterFlywheelsSim.getAngularVelocityRadPerSec() / (2.0 * Math.PI);
+    double currentVelocityRPS = shooterOmniwheelsSim.getAngularVelocityRadPerSec() / (2.0 * Math.PI);
     
     // Set TalonFX sim state
     talon.getSimState().setSupplyVoltage(RobotController.getBatteryVoltage());
@@ -67,17 +67,17 @@ public class ShooterOmniwheelIOSim extends GenericRollersIOSim implements Shoote
     appliedVoltage = Math.max(-12, Math.min(12, appliedVoltage)); // Clamp to battery voltage
 
     // Simulate physics
-    shooterFlywheelsSim.setInputVoltage(appliedVoltage);
-    shooterFlywheelsSim.update(0.02);
+    shooterOmniwheelsSim.setInputVoltage(appliedVoltage);
+    shooterOmniwheelsSim.update(0.02);
 
     // Update position tracking
-    currentVelocityRPS = shooterFlywheelsSim.getAngularVelocityRadPerSec() / (2.0 * Math.PI);
+    currentVelocityRPS = shooterOmniwheelsSim.getAngularVelocityRadPerSec() / (2.0 * Math.PI);
     rotorPositionRotations += currentVelocityRPS * 0.02;
 
     inputs.connected = true;
     inputs.positionRads = rotorPositionRotations * 2.0 * Math.PI;
-    inputs.velocityRadsPerSec = shooterFlywheelsSim.getAngularVelocityRadPerSec();
+    inputs.velocityRadsPerSec = shooterOmniwheelsSim.getAngularVelocityRadPerSec();
     inputs.appliedVolts = appliedVoltage;
-    inputs.supplyCurrentAmps = Math.abs(shooterFlywheelsSim.getCurrentDrawAmps());
+    inputs.supplyCurrentAmps = Math.abs(shooterOmniwheelsSim.getCurrentDrawAmps());
   }
 }

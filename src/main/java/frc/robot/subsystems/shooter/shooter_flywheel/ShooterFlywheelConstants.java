@@ -11,20 +11,20 @@ public class ShooterFlywheelConstants {
         case SIM -> new ShooterFlywheelConfig(
             CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, true, true); 
         default -> new ShooterFlywheelConfig(
-            CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, true, true); 
+            CAN.at(2, "Shooter Flywheel 1"), CAN.at(12, "Shooter Flywheel 2"), 1, true, true, false); 
       };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
+        default -> new PIDGains(.1, 0, 0, 0, .45, 0, 0);
       };
 
 
     public static final int CURRENT_LIMIT_AMPS =
         switch (Constants.getRobotType()) {
-            case COMP -> 40;
+            case COMP -> 1000;
             case SIM -> 40;
             default -> 40;
         };

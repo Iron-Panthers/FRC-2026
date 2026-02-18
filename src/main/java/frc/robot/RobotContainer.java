@@ -78,12 +78,15 @@ import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
 import frc.robot.subsystems.shooter.shooter_hood.*;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIO;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOSim;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator;
-import frc.robot.subsystems.shooter.shooter_accelerator_bottom.*;
-import frc.robot.subsystems.shooter.shooter_accelerator_top.*;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIO;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOSim;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOTalonFX;
 import frc.robot.subsystems.shooter.shooter_flywheel.*;
 import frc.robot.lib.generic_subsystems.superstructure.*;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
@@ -142,28 +145,28 @@ public class RobotContainer {
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
         case COMP -> {
-          swerve =
-              new Drive(
-                  new GyroIOPigeon2(),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          // swerve =
+          //     new Drive(
+          //         new GyroIOPigeon2(),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
+          // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
-          // shooterFlywheels =
-          //   new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          shooterFlywheels =
+            new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
           // shooterHood =
           //   new ShooterHood(new ShooterHoodIOTalonFX());
-          // shooterAcceleratorBottom = 
-          //   new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
-          // shooterAcceleratorTop = 
-          //   new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
-          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          shooterOmniwheel = 
+            new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
+          shooterAccelerator = 
+            new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
+          // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
         }
         case VISION -> {
           swerve =
@@ -271,11 +274,11 @@ public class RobotContainer {
     }
 
     if (shooterOmniwheel == null) {
-      shooterOmniwheel = new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIO() {});
+      shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIO() {});
     }
 
     if (shooterAccelerator == null) {
-      shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorTopIO() {});
+      shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIO() {});
     }
 
     shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator);

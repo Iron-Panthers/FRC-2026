@@ -29,7 +29,7 @@ public final class Constants {
   public static final boolean REPLAY = false; 
 
   @SuppressWarnings("unused")
-  public static RobotType ROBOT_TYPE = (RobotBase.isReal() || REPLAY) ? RobotType.VISION : RobotType.SIM;
+  public static RobotType ROBOT_TYPE = (RobotBase.isReal() || REPLAY) ? RobotType.COMP : RobotType.SIM;
 
 
   /* running mode of robot */

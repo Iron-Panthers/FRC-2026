@@ -11,14 +11,14 @@ public class ShooterOmniwheelConstants {
         case SIM -> new ShooterOmniwheelConfig(
             CAN.at(39, "Shooter Omniwheel"), 1, false, true); 
         default -> new ShooterOmniwheelConfig(
-            CAN.at(39, "Shooter Omniwheel"), 1, false, true); 
+            CAN.at(29, "Shooter Omniwheel"), 1, true, true); 
       };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
+        default -> new PIDGains(.1, 0, 0, 0, .18, 0, 0);
       };
 
 
