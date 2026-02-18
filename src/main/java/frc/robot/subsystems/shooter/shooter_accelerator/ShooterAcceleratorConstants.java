@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooter.shooter_accelerator_top;
+package frc.robot.subsystems.shooter.shooter_accelerator;
 
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
@@ -6,11 +6,11 @@ import frc.robot.Constants;
 import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
 
 public class ShooterAcceleratorConstants {
-  public static final ShooterAcceleratorTopConfig SHOOTER_ACCELERATOR_TOP_CONFIG =
+  public static final ShooterAcceleratorConfig SHOOTER_ACCELERATOR_CONFIG =
       switch (Constants.getRobotType()) {
-        case SIM -> new ShooterAcceleratorTopConfig(
+        case SIM -> new ShooterAcceleratorConfig(
             CAN.at(38, "Shooter Accelerator"), 1, false, true); 
-        default -> new ShooterAcceleratorTopConfig(
+        default -> new ShooterAcceleratorConfig(
             CAN.at(38, "Shooter Accelerator"),  1, false, true); 
       };
 
@@ -31,19 +31,19 @@ public class ShooterAcceleratorConstants {
             default -> 40;
         };
 
-    public static final ShooterAcceleratorTopPhysicalConstants PHYSICAL_CONSTANTS =
+    public static final ShooterAcceleratorPhysicalConstants PHYSICAL_CONSTANTS =
         switch (Constants.getRobotType()) {
-            case SIM -> new ShooterAcceleratorTopPhysicalConstants(0.01);
-            case COMP -> new ShooterAcceleratorTopPhysicalConstants(0.1);
-            default -> new ShooterAcceleratorTopPhysicalConstants(0.1);
+            case SIM -> new ShooterAcceleratorPhysicalConstants(0.01);
+            case COMP -> new ShooterAcceleratorPhysicalConstants(0.1);
+            default -> new ShooterAcceleratorPhysicalConstants(0.1);
         };
 
     //RECORDS
-  public record ShooterAcceleratorTopConfig(
+  public record ShooterAcceleratorConfig(
       int motorID, double reduction, boolean inverted, boolean brake) {}
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}    
-  public static record ShooterAcceleratorTopPhysicalConstants(
+  public static record ShooterAcceleratorPhysicalConstants(
       double momentOfInertia) {}
 
 }

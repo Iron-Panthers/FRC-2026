@@ -5,7 +5,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
-import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
+import frc.robot.lib.generic_subsystems.mechanism.GenericMechanismConfiguration;
 
 public class GenericRollersConfiguration extends GenericMechanismConfiguration{
 
