@@ -124,24 +124,23 @@ public class TeleopTranslationController extends BaseTranslationController {
     double robotXPredictedPose;
     double robotToTrench;
     double predictedToTrench;
-    
-    if(Math.abs(robotPose.getY() - trenchPose.getY()) < 0.2 && isUnderTrench){
+    if (hopperFull){
+      if (linearVelocity.getX() != 0 && isUnderTrench){
+        robotYPredictedPose = robotPose.getY() + linearVelocity.getY() * 0.002;
+        robotXPredictedPose = robotPose.getX() + linearVelocity.getX() * 0.002;
+        robotToTrench = Math.abs(trenchPose.getX() - robotPose.getX());
+        predictedToTrench = Math.abs(trenchPose.getX() - robotXPredictedPose);
+        if (predictedToTrench <= Math.abs(trenchPose.getX() - robotPose.getX())){
+          return new Translation2d(0, linearVelocity.getY());
+        }
+      }
+    }
+    if(linearVelocity.getY() != 0 && isUnderTrench){
       if(Math.abs(trenchPose.getY() - robotPose.getY()) > Math.abs(flippedTrenchPose.getY() - robotPose.getY())){
         trenchPose = flippedTrenchPose;
       }
     
       return new Translation2d(linearVelocity.getX(), -2 * (robotPose.getY() - trenchPose.getY()) + linearVelocity.getY());
-    }
-    if (hopperFull){
-      if (linearVelocity.getX() != 0 && isUnderTrench){
-        robotYPredictedPose = robotPose.getY() + linearVelocity.getY() * 0.002;
-        robotXPredictedPose = robotPose.getX() + linearVelocity.getX() * 0.002;
-        robotToTrench = Math.pow(Math.pow(Math.abs(trenchPose.getY() - robotPose.getY()), 2) + Math.pow(Math.abs(trenchPose.getX() - robotPose.getX()), 2), 0.5);
-        predictedToTrench = Math.pow(Math.pow(Math.abs(trenchPose.getY() - robotYPredictedPose), 2) + Math.pow(Math.abs(trenchPose.getX() - robotXPredictedPose), 2), 0.5);
-        if (predictedToTrench < robotToTrench){
-          return new Translation2d(0, linearVelocity.getY());
-        }
-      }
     }
     
     return linearVelocity;
@@ -149,14 +148,14 @@ public class TeleopTranslationController extends BaseTranslationController {
 
   public boolean isUnderTrench(Pose2d robotPose, Pose2d trenchPose, Pose2d flippedTrenchPose, double trenchWidth, double trenchLength, Translation2d linearVelocity){
     boolean underTrench = (
-      (Math.abs(robotPose.getX() - trenchPose.getX()) < trenchLength &&
-       Math.abs(robotPose.getY() - trenchPose.getY()) < trenchWidth) ||
-      (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < trenchLength &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < trenchWidth) ||
-      (Math.abs(robotPose.getX() - trenchPose.getX()) < trenchWidth &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) < trenchLength) ||
-      (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) < trenchWidth &&
-       Math.abs(robotPose.getY() - trenchPose.getY()) < trenchLength));
+      (Math.abs(robotPose.getX() - trenchPose.getX()) <= trenchLength &&
+       Math.abs(robotPose.getY() - trenchPose.getY()) <= trenchWidth) ||
+      (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) <= trenchLength &&
+       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) <= trenchWidth) ||
+      (Math.abs(robotPose.getX() - trenchPose.getX()) <= trenchWidth &&
+       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) <= trenchLength) ||
+      (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) <= trenchWidth &&
+       Math.abs(robotPose.getY() - trenchPose.getY()) <= trenchLength));
     Logger.recordOutput("Swerve/isUnderTrench", underTrench);
     return underTrench;
   }
