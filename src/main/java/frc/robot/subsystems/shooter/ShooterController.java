@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -138,5 +139,9 @@ public class ShooterController extends SubsystemBase {
 
     public Command setStoppedCommand(boolean stopped){
         return new InstantCommand(()-> setStopped(stopped));
+    }
+
+    public LinearVelocity getCurrentVelocity(){
+        return shooterFlywheel.getCurrentVelocity();
     }
 }

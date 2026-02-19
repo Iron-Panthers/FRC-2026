@@ -296,7 +296,7 @@ public class RobotContainer {
     // init shooter with testing values
     RobotState.getInstance().initializeShootingAnglePredictor(
       () -> ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotSpeeds(), RobotState.getInstance().getEstimatedPose().getRotation()), 
-      () -> MetersPerSecond.of(12),
+      () -> shooterController.getCurrentVelocity(),
       () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(-90)); 
 
     nameCommands();

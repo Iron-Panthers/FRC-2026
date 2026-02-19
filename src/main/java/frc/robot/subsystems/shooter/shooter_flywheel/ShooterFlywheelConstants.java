@@ -2,6 +2,10 @@ package frc.robot.subsystems.shooter.shooter_flywheel;
 
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+
 import frc.robot.Constants;
 import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
 
@@ -32,7 +36,7 @@ public class ShooterFlywheelConstants {
     public static final ShooterFlywheelPhysicalConstants PHYSICAL_CONSTANTS = // TODO: update values
         switch (Constants.getRobotType()) {
             case SIM -> new ShooterFlywheelPhysicalConstants(0.01, .1);
-            case COMP -> new ShooterFlywheelPhysicalConstants(0.1, .1);
+            case COMP -> new ShooterFlywheelPhysicalConstants(0.1, 0.23938936);
             default -> new ShooterFlywheelPhysicalConstants(0.1, .1);
         };
 
