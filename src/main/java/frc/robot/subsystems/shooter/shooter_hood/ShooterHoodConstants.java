@@ -17,7 +17,7 @@ public class ShooterHoodConstants {
             case COMP -> new ShooterHoodConfig(
                 //reduction between sensor and mechanism
                 CAN.at(30, "Shooter Hood"),
-                2.25); 
+                7.2); 
             case SIM -> new ShooterHoodConfig(
                 //Reduction between motor and mechanism
                 CAN.at(8, "Shooter Hood"),  12 * 0.3750);
