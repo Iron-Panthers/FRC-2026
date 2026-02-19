@@ -5,6 +5,15 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.LinearVelocity;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -16,12 +25,39 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.Mode;
-import frc.robot.commands.PathPlannerApproachPoseCommand;
+import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.VibrateHIDCommand;
+import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
+import frc.robot.subsystems.climb.ClimbController;
+import frc.robot.subsystems.climb.ClimbController.ClimbState;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIO;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIOSim;
+import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot.ClimbClawPivotTarget;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIO;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
+import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot.ClimbDeployPivotTarget;
+import frc.robot.subsystems.intake.IntakeController;
+import frc.robot.subsystems.intake.IntakeController.IntakeControllerState;
+import frc.robot.subsystems.intake.intakePivot.IntakePivot;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
+import frc.robot.subsystems.intake.intakePivot.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOTalonFX;
+import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
+import frc.robot.subsystems.hopper.HopperController;
+import frc.robot.subsystems.hopper.Hopper.Hopper;
+import frc.robot.subsystems.hopper.Hopper.HopperIO;
+import frc.robot.subsystems.hopper.Hopper.HopperIOSim;
+import frc.robot.subsystems.hopper.HopperController.HopperControllerState;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.rgb.RGBIOAddressableLED;
@@ -33,15 +69,29 @@ import frc.robot.subsystems.swerve.GyroIOSim;
 import frc.robot.subsystems.swerve.ModuleIO;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
+import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
+import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
-import frc.robot.utility.BlankSimulatedArena;
 import frc.robot.utility.ElasticSetpoints;
+import frc.robot.subsystems.shooter.shooter_hood.*;
+import frc.robot.subsystems.shooter.ShooterController;
+import frc.robot.subsystems.shooter.ShooterController.ShooterState;
+import frc.robot.subsystems.shooter.shooter_flywheel.*;
+import frc.robot.subsystems.shooter.shooter_accelerator_bottom.*;
+import frc.robot.subsystems.shooter.shooter_accelerator_top.*;
+import frc.robot.lib.generic_subsystems.superstructure.*;
+import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -70,8 +120,19 @@ public class RobotContainer {
   private Vision vision;
   private RGB rgb;
   private CANWatchdog canWatchdog;
-
-  private SwerveDriveSimulation driveSimulation = null;
+  private IntakePivot intakePivot;
+  private IntakeRollers intakeRollers;
+  private IntakeController intakeController;
+  private Hopper hopper;
+  private HopperController hopperController;
+  private ShooterFlywheel shooterFlywheels;
+  private ShooterHood shooterHood;
+  private ShooterController shooterController;
+  private ShooterAcceleratorBottom shooterAcceleratorBottom;
+  private ShooterAcceleratorTop shooterAcceleratorTop;
+  private ClimbClawPivot climbClawPivot;
+  private ClimbDeployPivot climbDeployPivot;
+  private ClimbController climbController;
 
   public RobotContainer() {
 
@@ -85,9 +146,22 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
+          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
           rgb = new RGB(new RGBIOAddressableLED());
-          canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
+          // rgb = new RGB(new RGBIOCANdle());
+          // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
+          // shooterFlywheels =
+          //   new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          // shooterHood =
+          //   new ShooterHood(new ShooterHoodIOTalonFX());
+          // shooterAcceleratorBottom = 
+          //   new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
+          // shooterAcceleratorTop = 
+          //   new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
+          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
         }
         case VISION -> {
           swerve =
@@ -97,7 +171,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
+          vision = new Vision(new VisionIOPhotonvision("arducam-4", 0), new VisionIOPhotonvision("arducam-5", 1));
         }
         case ALPHA -> {
           swerve =
@@ -109,11 +183,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
         }
         case SIM -> {
-          SimulatedArena.overrideInstance(new BlankSimulatedArena());
-          driveSimulation =
-              new SwerveDriveSimulation(
-                  DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
-          SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
+          SwerveDriveSimulation driveSimulation = RobotSimState.getInstance().getDriveSimulation();
           swerve =
               new Drive(
                   new GyroIOSim(driveSimulation.getGyroSimulation()),
@@ -125,12 +195,30 @@ public class RobotContainer {
                       DriveConstants.MODULE_CONFIGS[2], driveSimulation.getModules()[2]),
                   new ModuleIOTalonFXSim(
                       DriveConstants.MODULE_CONFIGS[3], driveSimulation.getModules()[3]));
-          // vision =
-          //     new Vision(
-          //         new VisionIOPhotonvisionSim("arducam-4",4, driveSimulation::getSimulatedDriveTrainPose),
-          //         new VisionIOPhotonvisionSim("arducam-5", 5, driveSimulation::getSimulatedDriveTrainPose));
+          vision =
+              new Vision(
+                  new VisionIOPhotonvisionSim("arducam-3",3, driveSimulation::getSimulatedDriveTrainPose));
+                  new VisionIOPhotonvisionSim("arducam-4", 4, driveSimulation::getSimulatedDriveTrainPose);
 
-          SimulatedArena.getInstance().resetFieldForAuto();
+          // INTAKE
+          intakePivot = new IntakePivot(new IntakePivotIOSim());
+          intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
+
+          hopper = new Hopper(new HopperIOSim());
+
+          shooterFlywheels =
+            new ShooterFlywheel(new ShooterFlywheelIOSim());
+          shooterHood =
+            new ShooterHood(new ShooterHoodIOSim());
+          shooterAcceleratorBottom = 
+            new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOSim());
+          shooterAcceleratorTop = 
+            new ShooterAcceleratorTop(new ShooterAcceleratorTopIOSim());
+
+          climbClawPivot = new ClimbClawPivot(new ClimbClawPivotIOSim());
+          climbDeployPivot = new ClimbDeployPivot(new ClimbDeployPivotIOSim());
+
+          SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
         }
       }
     }
@@ -155,6 +243,56 @@ public class RobotContainer {
     if (rgb == null) {
       rgb = new RGB(new RGBIO() {});
     }
+
+    // INTAKE
+    if( intakePivot == null) {
+      intakePivot = new IntakePivot( new IntakePivotIO() {});
+    }
+    if( intakeRollers == null) {
+      intakeRollers = new IntakeRollers( new IntakeRollersIO() {});
+    }
+    intakeController = new IntakeController(intakePivot, intakeRollers);
+
+    if (hopper == null) {
+      hopper = new Hopper(new HopperIO() {});
+    }
+
+    hopperController = new HopperController(hopper);
+
+
+    if (shooterFlywheels == null) {
+      shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIO() {});
+    }
+
+    if (shooterHood == null) {
+      shooterHood = new ShooterHood(new ShooterHoodIO() {});
+    }
+
+    if (shooterAcceleratorBottom == null) {
+      shooterAcceleratorBottom = new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIO() {});
+    }
+
+    if (shooterAcceleratorTop == null) {
+      shooterAcceleratorTop = new ShooterAcceleratorTop(new ShooterAcceleratorTopIO() {});
+    }
+
+    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop);
+
+
+    // init climb
+    if( climbClawPivot == null) {
+      climbClawPivot = new ClimbClawPivot( new ClimbClawPivotIO() {});
+    }
+    if( climbDeployPivot == null) {
+      climbDeployPivot = new ClimbDeployPivot( new ClimbDeployPivotIO() {});
+    }
+    climbController = new ClimbController(climbClawPivot, climbDeployPivot);
+
+    // init shooter with testing values
+    RobotState.getInstance().initializeShootingAnglePredictor(
+      () -> ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotSpeeds(), RobotState.getInstance().getEstimatedPose().getRotation()), 
+      () -> MetersPerSecond.of(12),
+      () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(-90)); 
 
     nameCommands();
     configureAutos();
@@ -182,22 +320,71 @@ public class RobotContainer {
                       -driverA.getLeftX(),
                       driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis(),
                       DriveConstants.DRIVE_CONFIG.maxLinearAcceleration());
+                    if (Math.abs(driverA.getLeftTriggerAxis()) > 0.1
+                    || Math.abs(driverA.getRightTriggerAxis()) > 0.1) {
+                      swerve.clearHeadingControl();
+                    }
                 })
             .withName("Drive Teleop"));
 
-    driverA.start().onTrue(swerve.zeroGyroCommand());
+    configureDriverAButtons();
+    configureDriverBButtons();
 
-    driverA.a().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    // driverA.b().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(10.406, 1.916, new Rotation2d(0)), true));
-    // driverA.x().onTrue(new PathPlannerApproachPoseCommand(swerve, new Pose2d(2.499, 3.977, new Rotation2d(0)), false));
-    // driverA.b().whileTrue(new RunCommand(() -> swerve.setTargetHeading(RobotState.getInstance().getVelocity().getAngle()), swerve));
+    //Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other buttons)
 
-    driverA.y().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+    driverA.a().onTrue(new InstantCommand(() -> {
+      // Only shoot in simulation
+      if (Constants.getRobotType() == Constants.RobotType.SIM) {
+
+        Transform3d shooterPose = ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+          new Translation3d(),
+          new Rotation3d(0, 0, Math.PI/2)
+        )); // rotation because of how the modeled shooter was in sim litterally just that i fear
+
+        // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
+        Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
+        LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
+
+        // Shoot the fuel using the calculated parameters - velocity must match calculation!
+        RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
+      }
+      })
+    );
   }
-  
-  // public Command killYourlelf(){
-  //   return RobotState.getInstance().getPathPlannerApproachPoseCommand(new Pose2d(10.406, 1.916, new Rotation2d(0)), true);
-  // }
+
+  private void configureDriverAButtons() {
+    driverA.start().onTrue(swerve.zeroGyroCommand());
+    driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT)).onFalse(shooterController.setTargetCommand(ShooterState.IDLE));
+    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
+    driverA.b().onTrue(climbController.setTargetCommand(ClimbState.STOW)
+      .andThen(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE)));
+    driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+    driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
+      .andThen(shooterController.setTargetCommand(ShooterState.SHOOT)));
+    driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
+    driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
+      new RunCommand(() -> {
+          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(90))));
+      })
+    );
+  }
+  private void configureDriverBButtons() {
+    driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE));
+    driverB.leftBumper().onFalse(intakeController.setTargetStateCommand(IntakeControllerState.IDLE));
+    // TODO: the code below all has something to do with climb, which hasn't been merged into dev, so they're commented for now
+
+    driverB.x().onTrue(shooterController.setStoppedCommand(true)
+      .alongWith(intakeController.setStoppedCommand(true))
+      .alongWith(new InstantCommand(() -> climbController.setStopped(true))));
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
+      .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
+    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW).andThen(climbController.setTargetCommand(ClimbState.DEPLOY)));
+    driverB.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW).andThen(climbController.setTargetCommand(ClimbState.L3)));
+    driverB.rightBumper().onTrue(climbController.setTargetCommand(ClimbState.STOW)
+      .andThen(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE))); 
+    
+  }
 
   private void configureAutos() {
     RobotConfig robotConfig;
@@ -210,20 +397,6 @@ public class RobotContainer {
 
     var passRobotConfig = robotConfig; // workaround TODO: is it necessary?
 
-    BooleanSupplier isRedAlliance =
-        () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red
-          // alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
-          return false;
-        };
-
     AutoBuilder.configure(
         () -> RobotState.getInstance().getEstimatedPose(),
         (pose) -> RobotState.getInstance().resetPose(pose),
@@ -233,11 +406,12 @@ public class RobotContainer {
         },
         DriveConstants.HOLONOMIC_DRIVE_CONTROLLER,
         passRobotConfig,
-        isRedAlliance,
+        () -> RobotState.isAllianceRed(),
         swerve);
 
     autoChooser =
         new LoggedDashboardChooser<Command>("Auto Chooser", AutoBuilder.buildAutoChooser());
+    VisionTuningCommands.addTuningCommandsToAutoChooser(vision, autoChooser);
     SmartDashboard.putData("Auto Chooser", autoChooser.getSendableChooser());
   }
 
@@ -278,12 +452,23 @@ public class RobotContainer {
   public void updateSimulation() {
     if (Constants.getRobotMode() != Constants.Mode.SIM) return;
 
+    Logger.recordOutput("Testing/BlankPose3d", new Pose3d());
+
     SimulatedArena.getInstance().simulationPeriodic();
     Logger.recordOutput(
-        "FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
+        "FieldSimulation/RobotPosition", RobotSimState.getInstance().getDriveSimulation().getSimulatedDriveTrainPose());
     Logger.recordOutput(
-        "FieldSimulation/Coral", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
-    Logger.recordOutput(
-        "FieldSimulation/Algae", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+        "FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
+    
+    Logger.recordOutput("FieldSimulation/Robot Fuel", RobotSimState.getInstance().getIntakeGamePieces());
+
+    // Update the shooting logic with the correct rollers
+    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAcceleratorTop.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+          new Translation3d(),
+          new Rotation3d(0, 0, Math.PI/2)
+        )), shooterFlywheels.getCurrentVelocity());
+    
+    // Handle automatic shooter firing
+    RobotSimState.getInstance().periodicShooter();
   }
 }

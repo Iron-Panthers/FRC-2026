@@ -25,10 +25,12 @@ public final class Constants {
   public static final double PERIODIC_LOOP_SEC = 0.02;
 
   public static final Pose3d MECHANISM_ROOT_POSE = Pose3d.kZero;
-
-  public static RobotType ROBOT_TYPE = RobotBase.isReal() ? RobotType.ALPHA : RobotType.SIM;
-
+  
   public static final boolean REPLAY = false; 
+
+  @SuppressWarnings("unused")
+  public static RobotType ROBOT_TYPE = (RobotBase.isReal() || REPLAY) ? RobotType.VISION : RobotType.SIM;
+
 
   /* running mode of robot */
   public static Mode getRobotMode() {

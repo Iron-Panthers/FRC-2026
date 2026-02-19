@@ -48,20 +48,20 @@ public class VisionTuningCommands {
     // We may want to run this at a competition
     chooser.addOption(
         "TUNING | Vision Camera Position Measurement",
-        new InstantCommand(() -> measureCameraPositions(vision)));
+        measureCameraPositions(vision));
   }
 
   /** The transform of the calibration tag, relative to the robot base. */
   public static Transform3d heldTagTransform =
       new Transform3d(
           new Translation3d( //
-              Units.inchesToMeters(16. + 11.), // Distance forward
+              Units.inchesToMeters((14.5+30+7.13)), // Distance forward
               Units.inchesToMeters(0.), // Distance left
-              Units.inchesToMeters(8.875 + 6.5 / 2.) // Distance up
+              Units.inchesToMeters(44.25) // Distance up
               ),
           new Rotation3d(0., 0., Units.degreesToRadians(180)));
 
-  public static Pose3d heldTagPose = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(10).get();
+  public static Pose3d heldTagPose = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(4).get();
 
   // 481.387in
 

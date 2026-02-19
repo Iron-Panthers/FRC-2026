@@ -3,19 +3,26 @@ package frc.robot.lib.generic_subsystems.rollers;
 import edu.wpi.first.math.filter.LinearFilter;
 import org.littletonrobotics.junction.Logger;
 
-public abstract class GenericRollers<G extends GenericRollers.VoltageTarget> {
-  public interface VoltageTarget {
-    double getVolts();
+public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
+  public interface VelocityTarget {
+    double getVelocity();
   }
+
+  public enum ControlMode {
+    VELOCITY,
+    STOP
+  }
+
+  private ControlMode controlMode = ControlMode.STOP;
 
   private LinearFilter filter;
   private double filteredCurrent;
 
   private final String name;
   private final GenericRollersIO rollerIO;
-  private GenericRollersIOInputsAutoLogged inputs = new GenericRollersIOInputsAutoLogged();
+  protected GenericRollersIOInputsAutoLogged inputs = new GenericRollersIOInputsAutoLogged();
 
-  private G voltageTarget;
+  private G velocityTarget;
 
   public GenericRollers(String name, GenericRollersIO rollerIO) {
     this.name = name;
@@ -27,15 +34,25 @@ public abstract class GenericRollers<G extends GenericRollers.VoltageTarget> {
     rollerIO.updateInputs(inputs);
     Logger.processInputs(name, inputs);
 
-    rollerIO.runVolts(voltageTarget.getVolts());
-    Logger.recordOutput("Rollers/" + name + "/Target", voltageTarget.toString());
+    rollerIO.runVelocity(velocityTarget.getVelocity());
+    Logger.recordOutput("Rollers/" + name + "/Target", velocityTarget.toString());
 
     filteredCurrent = this.filter.calculate(inputs.supplyCurrentAmps);
     Logger.recordOutput("Rollers/" + name + "/FilteredCurrent", filteredCurrent);
+
+    Logger.recordOutput("Rollers/" + name + "/Control Mode", controlMode.toString());
+    switch (controlMode) {
+      case VELOCITY -> {
+        rollerIO.runVelocity(velocityTarget.getVelocity());
+      }
+      case STOP -> {
+        rollerIO.stop();
+      }
+    }
   }
 
-  public G getVoltageTarget() {
-    return voltageTarget;
+  public G getVelocityTarget() {
+    return velocityTarget;
   }
 
   public double getSupplyCurrentAmps() {
@@ -46,7 +63,16 @@ public abstract class GenericRollers<G extends GenericRollers.VoltageTarget> {
     return filteredCurrent;
   }
 
-  public void setVoltageTarget(G voltageTarget) {
-    this.voltageTarget = voltageTarget;
+  public void setVelocityTarget(G velocityTarget) {
+    setControlMode(ControlMode.VELOCITY);
+    this.velocityTarget = velocityTarget;
+  }
+
+  public ControlMode getControlMode() {
+    return controlMode;
+  }
+
+  public void setControlMode(ControlMode controlMode) {
+    this.controlMode = controlMode;
   }
 }
