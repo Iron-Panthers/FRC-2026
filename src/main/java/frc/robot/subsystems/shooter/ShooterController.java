@@ -43,8 +43,8 @@ public class ShooterController extends SubsystemBase {
         SPIN_UP(
             ShooterHoodTarget.BOTTOM,
             ShooterFlywheelTarget.SHOOT,
-            ShooterAcceleratorTopTarget.IDLE,
-            ShooterAcceleratorBottomTarget.IDLE
+            ShooterAcceleratorTarget.IDLE,
+            ShooterOmniwheelTarget.IDLE
         ),
         /**climb: no spin*/
         CLIMB(
