@@ -20,7 +20,6 @@ public class ShooterHoodIOTalonFX extends GenericSuperstructureIOTalonFX impleme
                 .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
                 .withZeroingVolts(ZEROING_VOLTS)
                 .withZeroingOffset(ZEROING_OFFSET)                
-                .withCANCoderDirection(CANCODER_DIRECTION)
                 .withSensorDiscontinuityPoint(SENSOR_DISCONTINUITY_POINT));
         
         setSlot0(

@@ -9,7 +9,7 @@ public class HopperConstants {
       case SIM -> new HopperConfig(
         CAN.at(32, "Hopper"), 5, true, true);
       case COMP -> new HopperConfig(
-        CAN.at(32, "Hopper"), 2, true, true);
+        CAN.at(25, "Hopper"), 2, true, true);
       default -> new HopperConfig(
         CAN.at(40, "Hopper"), 5, true, true);
     };
