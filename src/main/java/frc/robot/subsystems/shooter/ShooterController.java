@@ -8,6 +8,7 @@ import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel;
 import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel.ShooterFlywheelTarget;
 import frc.robot.subsystems.shooter.shooter_hood.ShooterHood;
 import frc.robot.subsystems.shooter.shooter_hood.ShooterHood.ShooterHoodTarget;
+import frc.robot.subsystems.intake.IntakeController.IntakeControllerState;
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom;
 import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom.ShooterAcceleratorBottomTarget;
 import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop;
@@ -44,6 +45,12 @@ public class ShooterController extends SubsystemBase {
             ShooterFlywheelTarget.CLIMB,
             ShooterAcceleratorTopTarget.CLIMB,
             ShooterAcceleratorBottomTarget.CLIMB
+        ),
+        ZEROING(
+            ShooterHoodTarget.BOTTOM,
+            ShooterFlywheelTarget.IDLE,
+            ShooterAcceleratorTopTarget.IDLE,
+            ShooterAcceleratorBottomTarget.IDLE
         );
 
         public final ShooterHoodTarget hoodTarget;
@@ -65,7 +72,7 @@ public class ShooterController extends SubsystemBase {
         }
     }
     private ShooterState targetState = ShooterState.IDLE;
-        private boolean stopped = false;
+    private boolean stopped = false;
 
     //might need sensors defined here and in constructor
     private final ShooterFlywheel shooterFlywheel;
@@ -90,6 +97,11 @@ public class ShooterController extends SubsystemBase {
             shooterFlywheel.setControlMode(ControlMode.STOP);
             shooterAcceleratorBottom.setControlMode(ControlMode.STOP);
             shooterAcceleratorTop.setControlMode(ControlMode.STOP);
+        }
+        else if (shooterHood.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
+            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+            shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
+            shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
         }
         else if (targetState == ShooterState.SHOOT) {
             // If shooting, update the hood target based on the calculated shooter angle
@@ -124,7 +136,7 @@ public class ShooterController extends SubsystemBase {
     public Command setTargetCommand(ShooterState target) {
         return new InstantCommand(
             () -> {
-                this.targetState = target;
+                setTargetState(target);
             },
             this)
             .withTimeout(.02);
@@ -138,5 +150,11 @@ public class ShooterController extends SubsystemBase {
 
     public Command setStoppedCommand(boolean stopped){
         return new InstantCommand(()-> setStopped(stopped));
+    }
+
+    public Command zeroCommand(){
+        return new InstantCommand(() -> shooterHood.setControlMode(GenericSuperstructure.ControlMode.ZEROING))
+            .alongWith(setTargetCommand(ShooterState.ZEROING)
+            .alongWith(setStoppedCommand(false)));
     }
 }

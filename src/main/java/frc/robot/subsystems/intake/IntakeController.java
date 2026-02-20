@@ -7,6 +7,7 @@ import frc.robot.subsystems.intake.intakePivot.IntakePivot;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot.IntakePivotTarget;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
+import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
 import frc.robot.lib.generic_subsystems.superstructure.*;
 
@@ -16,7 +17,8 @@ public class IntakeController extends SubsystemBase {
         STOW(IntakePivotTarget.STOW, IntakeRollersTarget.OFF),
         IDLE(IntakePivotTarget.INTAKE, IntakeRollersTarget.OFF),
         INTAKE(IntakePivotTarget.INTAKE, IntakeRollersTarget.ON),
-        REVERSE(IntakePivotTarget.INTAKE, IntakeRollersTarget.EJECT);
+        REVERSE(IntakePivotTarget.INTAKE, IntakeRollersTarget.EJECT),
+        ZEROING(IntakePivotTarget.STOW, IntakeRollersTarget.OFF);
 
         private IntakePivotTarget intakePivotTarget;
         private IntakeRollersTarget intakeRollersTarget;
@@ -50,6 +52,9 @@ public class IntakeController extends SubsystemBase {
         if (stopped){
             intakeRollers.setControlMode(ControlMode.STOP);
             intakePivot.setControlMode(GenericSuperstructure.ControlMode.STOP);
+        //if else set control mode to zero
+        } else if (intakePivot.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
+            intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
         } else {
             // set target states to those in the current controller state
             intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
@@ -80,5 +85,11 @@ public class IntakeController extends SubsystemBase {
 
     public Command setStoppedCommand(boolean stopped){
         return new InstantCommand(() -> setStopped(stopped));
+    } 
+    
+    public Command zeroCommand(){
+        return new InstantCommand(() -> intakePivot.setControlMode(GenericSuperstructure.ControlMode.ZEROING))
+            .alongWith(setTargetStateCommand(IntakeControllerState.ZEROING)
+            .alongWith(setStoppedCommand(false)));
     }
 }

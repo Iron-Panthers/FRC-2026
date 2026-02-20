@@ -21,6 +21,7 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
   public enum ControlMode {
     POSITION,
     POSITION_MANUAL,
+    ZEROING,
     STOP;
   }
 
@@ -53,6 +54,13 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
       case POSITION_MANUAL -> {
         if (positionTargetManual.isPresent()) {
           superstructureIO.runPosition(positionTargetManual.get());
+        }
+      }
+      case ZEROING -> {
+        superstructureIO.runCharacterization();
+        if (getSupplyCurrentAmps() >= 5) {
+          superstructureIO.setOffset();
+          setControlMode(ControlMode.STOP);
         }
       }
       case STOP -> {
@@ -118,6 +126,7 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
           case POSITION -> positionTarget.getPosition();
           case POSITION_MANUAL -> positionTargetManual.orElse(0d);
           case STOP -> inputs.positionRotations;
+          default -> 0;
         };
     return Math.abs(inputs.positionRotations - targetPosition) <= positionTarget.getEpsilon();
   }
