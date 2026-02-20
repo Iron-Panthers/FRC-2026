@@ -158,14 +158,14 @@ public class RobotContainer {
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
-          // shooterFlywheels =
-          //   new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
-          // shooterHood =
-          //   new ShooterHood(new ShooterHoodIOTalonFX());
-          // shooterOmniwheel = 
-          //   new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
-          // shooterAccelerator = 
-          //   new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
+          shooterFlywheels =
+            new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          shooterHood =
+            new ShooterHood(new ShooterHoodIOTalonFX());
+          shooterOmniwheel = 
+            new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
+          shooterAccelerator = 
+            new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
           // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           hopper = new Hopper(new HopperIOTalonFX());

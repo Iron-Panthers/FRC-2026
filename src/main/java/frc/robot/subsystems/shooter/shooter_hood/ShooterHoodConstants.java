@@ -16,7 +16,7 @@ public class ShooterHoodConstants {
         switch(Constants.getRobotType()){
             case COMP -> new ShooterHoodConfig(
                 //reduction between sensor and mechanism
-                CAN.at(1, "Shooter Hood"), 1); 
+                CAN.at(1, "Shooter Hood"), 7.2); 
             case SIM -> new ShooterHoodConfig(
                 //Reduction between motor and mechanism
                 CAN.at(8, "Shooter Hood"),  12 * 0.3750);

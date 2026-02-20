@@ -6,7 +6,7 @@ import frc.robot.lib.generic_subsystems.rollers.GenericRollersIO;
 public class Hopper extends GenericRollers<Hopper.HopperTarget>{
     public enum HopperTarget implements GenericRollers.VelocityTarget{
         IDLE(0),
-        INTAKE(3);
+        INTAKE(80);
 
         private double velocity;
 
