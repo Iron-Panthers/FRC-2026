@@ -92,15 +92,14 @@ public class ShooterController extends SubsystemBase {
             shooterOmniwheel.setControlMode(ControlMode.STOP);
             shooterAccelerator.setControlMode(ControlMode.STOP);
         }
-        else if (targetState == ShooterState.SHOOT) {
-            // If shooting, update the hood target based on the calculated shooter angle
-            shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
-            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
-            shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
-            shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
-        }
         else {
-            shooterHood.setPositionTarget(targetState.hoodTarget);
+            if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE) {
+                // If shooting, update the hood target based on the calculated shooter angle
+                shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
+            }
+            else {
+                shooterHood.setPositionTarget(targetState.hoodTarget);
+            }
             shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
@@ -110,7 +109,7 @@ public class ShooterController extends SubsystemBase {
         shooterOmniwheel.periodic();
         shooterAccelerator.periodic();
         
-        Logger.recordOutput("ShooterFlywheel/TargetState", targetState);
+        Logger.recordOutput("Shooter/Shooter Flywheel/TargetState", targetState);
     }
 
     public ShooterState getTargetState() {

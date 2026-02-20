@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter.shooter_omniwheel;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterOmniwheel extends GenericRollers<ShooterOmniwheel.ShooterOmniwheelTarget>{
@@ -21,5 +23,9 @@ public class ShooterOmniwheel extends GenericRollers<ShooterOmniwheel.ShooterOmn
 
     public ShooterOmniwheel(ShooterOmniwheelIO io) {
         super("Shooter/Shooter Omniwheel", io);
+    }
+
+    public AngularVelocity getCurrentVelocity() {
+        return Units.RadiansPerSecond.of(inputs.velocityRadsPerSec);
     }
 }
