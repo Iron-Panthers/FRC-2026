@@ -14,7 +14,7 @@ public class IntakePivotIOTalonFX extends GenericSuperstructureIOTalonFX impleme
     super(
         new GenericSuperstructureConfiguration()
             .withID(INTAKE_PIVOT_CONFIG.motorID())
-            .withMotorDirection(MOTOR_DIRECTION)
+            .withMotorDirection(INTAKE_PIVOT_CONFIG.motorDirection())
             .withSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT)
             .withReduction(INTAKE_PIVOT_CONFIG.reduction())
             .withUpperVoltageLimit(UPPER_VOLT_LIMIT)

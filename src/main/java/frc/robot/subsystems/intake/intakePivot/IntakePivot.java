@@ -34,7 +34,7 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
   }
 
   public IntakePivot(IntakePivotIO io) {
-    super("Intake Pivot", io);
+    super("Intake/Intake Pivot", io);
     setPositionTarget(IntakePivotTarget.STOW);
     setControlMode(ControlMode.STOP);
   }
