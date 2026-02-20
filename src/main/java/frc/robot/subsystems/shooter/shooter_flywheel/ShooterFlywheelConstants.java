@@ -22,7 +22,7 @@ public class ShooterFlywheelConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(.1, 0, 0, 0, .45, 0, 0);
+        default -> new PIDGains(.1, 0, 0, 0, 0.143, 0, 0);
       };
 
 
