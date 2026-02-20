@@ -100,7 +100,7 @@ public class ShooterController extends SubsystemBase {
             shooterAccelerator.setControlMode(ControlMode.STOP);
         }
         else {
-            if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE) {
+            if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE || targetState == ShooterState.SPIN_UP) {
                 // If shooting, update the hood target based on the calculated shooter angle
                 shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
             }
