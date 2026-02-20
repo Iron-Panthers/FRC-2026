@@ -27,14 +27,14 @@ public class ShooterController extends SubsystemBase {
         //TO-DO: update states
         /**idle: no spin*/
         IDLE(
-            ShooterHoodTarget.BOTTOM,
+            ShooterHoodTarget.SHOOT_TEMP,
             ShooterFlywheelTarget.IDLE,
             ShooterAcceleratorTarget.IDLE,
             ShooterOmniwheelTarget.IDLE
         ),
         /**shoot: spinning to shoot*/
         SHOOT(
-            ShooterHoodTarget.BOTTOM,
+            ShooterHoodTarget.SHOOT_TEMP,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.SHOOT,
             ShooterOmniwheelTarget.SHOOT
@@ -93,13 +93,13 @@ public class ShooterController extends SubsystemBase {
             shooterAccelerator.setControlMode(ControlMode.STOP);
         }
         else {
-            if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE) {
-                // If shooting, update the hood target based on the calculated shooter angle
-                shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
-            }
-            else {
+            // if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE) {
+            //     // If shooting, update the hood target based on the calculated shooter angle
+            //     shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
+            // }
+            // else {
                 shooterHood.setPositionTarget(targetState.hoodTarget);
-            }
+            // }
             shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);

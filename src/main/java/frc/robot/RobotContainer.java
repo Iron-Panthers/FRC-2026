@@ -57,6 +57,7 @@ import frc.robot.subsystems.hopper.HopperController;
 import frc.robot.subsystems.hopper.Hopper.Hopper;
 import frc.robot.subsystems.hopper.Hopper.HopperIO;
 import frc.robot.subsystems.hopper.Hopper.HopperIOSim;
+import frc.robot.subsystems.hopper.Hopper.HopperIOTalonFX;
 import frc.robot.subsystems.hopper.HopperController.HopperControllerState;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
@@ -157,16 +158,17 @@ public class RobotContainer {
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
-          shooterFlywheels =
-            new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          // shooterFlywheels =
+          //   new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
           // shooterHood =
           //   new ShooterHood(new ShooterHoodIOTalonFX());
-          shooterOmniwheel = 
-            new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
-          shooterAccelerator = 
-            new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
+          // shooterOmniwheel = 
+          //   new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
+          // shooterAccelerator = 
+          //   new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
           // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          hopper = new Hopper(new HopperIOTalonFX());
         }
         case VISION -> {
           swerve =
@@ -261,7 +263,6 @@ public class RobotContainer {
     if (hopper == null) {
       hopper = new Hopper(new HopperIO() {});
     }
-
     hopperController = new HopperController(hopper);
 
 
