@@ -19,9 +19,10 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
         private double velocity;
 
         private ShooterFlywheelTarget(double velocity) {
-            this.velocity = velocity;
+            this.velocity = velocity / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters();
         }
 
+        /** Velocity in rotations per second */
         public double getVelocity() {
             return velocity;
         }
