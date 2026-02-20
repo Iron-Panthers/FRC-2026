@@ -42,7 +42,7 @@ import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIO;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot.ClimbDeployPivotTarget;
 import frc.robot.subsystems.intake.IntakeController;
-import frc.robot.subsystems.intake.IntakeController.IntakeControllerState;
+import frc.robot.subsystems.intake.IntakeController.IntakeState;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
 import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
@@ -355,13 +355,13 @@ public class RobotContainer {
   private void configureDriverAButtons() {
     driverA.start().onTrue(swerve.zeroGyroCommand());
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT)).onFalse(shooterController.setTargetCommand(ShooterState.IDLE));
-    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
-    driverA.b().onTrue(climbController.setTargetCommand(ClimbState.STOW)
-      .andThen(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE)));
+    driverA.a().onTrue(shooterController.setTargetStateCommand(ShooterState.SHOOT)).onFalse(shooterController.setTargetStateCommand(ShooterState.IDLE));
+    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW));
+    driverA.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOW)
+      .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE)));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
-      .andThen(shooterController.setTargetCommand(ShooterState.SHOOT)));
+      .andThen(shooterController.setTargetStateCommand(ShooterState.SHOOT)));
     driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
     driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
       new RunCommand(() -> {
@@ -370,19 +370,19 @@ public class RobotContainer {
     );
   }
   private void configureDriverBButtons() {
-    driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.REVERSE));
-    driverB.leftBumper().onFalse(intakeController.setTargetStateCommand(IntakeControllerState.IDLE));
+    driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
+    driverB.leftBumper().onFalse(intakeController.setTargetStateCommand(IntakeState.IDLE));
     // TODO: the code below all has something to do with climb, which hasn't been merged into dev, so they're commented for now
 
     driverB.x().onTrue(shooterController.setStoppedCommand(true)
       .alongWith(intakeController.setStoppedCommand(true))
       .alongWith(new InstantCommand(() -> climbController.setStopped(true))));
-    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW)
-      .alongWith(climbController.setTargetCommand(ClimbState.STOW)));
-    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW).andThen(climbController.setTargetCommand(ClimbState.DEPLOY)));
-    driverB.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW).andThen(climbController.setTargetCommand(ClimbState.L3)));
-    driverB.rightBumper().onTrue(climbController.setTargetCommand(ClimbState.STOW)
-      .andThen(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE))); 
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW)
+      .alongWith(climbController.setTargetStateCommand(ClimbState.STOW)));
+    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW).andThen(climbController.setTargetStateCommand(ClimbState.DEPLOY)));
+    driverB.y().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW).andThen(climbController.setTargetStateCommand(ClimbState.L3)));
+    driverB.rightBumper().onTrue(climbController.setTargetStateCommand(ClimbState.STOW)
+      .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))); 
     
   }
 

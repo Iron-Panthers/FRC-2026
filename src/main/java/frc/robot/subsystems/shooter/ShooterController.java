@@ -26,24 +26,17 @@ public class ShooterController extends SubsystemBase {
         //TO-DO: update states
         /**idle: no spin*/
         IDLE(
-            ShooterHoodTarget.BOTTOM,
+            ShooterHoodTarget.STOW,
             ShooterFlywheelTarget.IDLE,
             ShooterAcceleratorTopTarget.IDLE,
             ShooterAcceleratorBottomTarget.IDLE
         ),
         /**shoot: spinning to shoot*/
         SHOOT(
-            ShooterHoodTarget.BOTTOM,
+            ShooterHoodTarget.STOW,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTopTarget.SHOOT,
             ShooterAcceleratorBottomTarget.SHOOT
-        ),
-        /**climb: no spin*/
-        CLIMB(
-            ShooterHoodTarget.BOTTOM,
-            ShooterFlywheelTarget.CLIMB,
-            ShooterAcceleratorTopTarget.CLIMB,
-            ShooterAcceleratorBottomTarget.CLIMB
         );
 
         public final ShooterHoodTarget hoodTarget;
@@ -82,9 +75,6 @@ public class ShooterController extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //TODO: update states for shooter controller
-        // if stopped, set all to stop 
-
         if (stopped){
             shooterHood.setControlMode(GenericSuperstructure.ControlMode.STOP);
             shooterFlywheel.setControlMode(ControlMode.STOP);
@@ -121,15 +111,8 @@ public class ShooterController extends SubsystemBase {
         this.targetState = targetState;
     }
 
-    public Command setTargetCommand(ShooterState target) {
-        return new InstantCommand(
-            () -> {
-                this.targetState = target;
-            },
-            this)
-            .withTimeout(.02);
-            //.andThen(new WaitUntilCommand(this::shooterReachedTarget))
-            //TODO: not sure if we are making this method or not bc it was used for pivot
+    public Command setTargetStateCommand(ShooterState target) {
+        return new InstantCommand(() -> setTargetState(target), this);
     }
 
     public void setStopped(boolean stopped){

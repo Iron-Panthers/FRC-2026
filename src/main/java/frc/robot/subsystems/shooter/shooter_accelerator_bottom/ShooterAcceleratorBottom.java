@@ -6,8 +6,7 @@ public class ShooterAcceleratorBottom extends GenericRollers<ShooterAcceleratorB
     public enum ShooterAcceleratorBottomTarget implements GenericRollers.VelocityTarget {
         //TODO: need to change; from sprint 2025 -- ive taken away a few states
         IDLE(0),
-        SHOOT(12),
-        CLIMB(0);
+        SHOOT(12);
 
         private double velocity;
 
