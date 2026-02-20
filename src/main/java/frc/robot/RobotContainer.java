@@ -78,11 +78,17 @@ import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
 import frc.robot.subsystems.shooter.shooter_hood.*;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIO;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOSim;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIO;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOSim;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOTalonFX;
 import frc.robot.subsystems.shooter.shooter_flywheel.*;
-import frc.robot.subsystems.shooter.shooter_accelerator_bottom.*;
-import frc.robot.subsystems.shooter.shooter_accelerator_top.*;
 import frc.robot.lib.generic_subsystems.superstructure.*;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
 
@@ -129,8 +135,8 @@ public class RobotContainer {
   private ShooterFlywheel shooterFlywheels;
   private ShooterHood shooterHood;
   private ShooterController shooterController;
-  private ShooterAcceleratorBottom shooterAcceleratorBottom;
-  private ShooterAcceleratorTop shooterAcceleratorTop;
+  private ShooterOmniwheel shooterOmniwheel;
+  private ShooterAccelerator shooterAccelerator;
   private ClimbClawPivot climbClawPivot;
   private ClimbDeployPivot climbDeployPivot;
   private ClimbController climbController;
@@ -140,29 +146,29 @@ public class RobotContainer {
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
         case COMP -> {
-          swerve =
-              new Drive(
-                  new GyroIOPigeon2(),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
-                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          // swerve =
+          //     new Drive(
+          //         new GyroIOPigeon2(),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
+          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
+          // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
           rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
-          // shooterFlywheels =
-          //   new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          shooterFlywheels =
+            new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
           // shooterHood =
           //   new ShooterHood(new ShooterHoodIOTalonFX());
-          // shooterAcceleratorBottom = 
-          //   new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
-          // shooterAcceleratorTop = 
-          //   new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
-          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          shooterOmniwheel = 
+            new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
+          shooterAccelerator = 
+            new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
+          // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
         }
         case VISION -> {
           swerve =
@@ -211,10 +217,10 @@ public class RobotContainer {
             new ShooterFlywheel(new ShooterFlywheelIOSim());
           shooterHood =
             new ShooterHood(new ShooterHoodIOSim());
-          shooterAcceleratorBottom = 
-            new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOSim());
-          shooterAcceleratorTop = 
-            new ShooterAcceleratorTop(new ShooterAcceleratorTopIOSim());
+          shooterOmniwheel = 
+            new ShooterOmniwheel(new ShooterOmniwheelIOSim());
+          shooterAccelerator = 
+            new ShooterAccelerator(new ShooterAcceleratorIOSim());
 
           climbClawPivot = new ClimbClawPivot(new ClimbClawPivotIOSim());
           climbDeployPivot = new ClimbDeployPivot(new ClimbDeployPivotIOSim());
@@ -269,15 +275,15 @@ public class RobotContainer {
       shooterHood = new ShooterHood(new ShooterHoodIO() {});
     }
 
-    if (shooterAcceleratorBottom == null) {
-      shooterAcceleratorBottom = new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIO() {});
+    if (shooterOmniwheel == null) {
+      shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIO() {});
     }
 
-    if (shooterAcceleratorTop == null) {
-      shooterAcceleratorTop = new ShooterAcceleratorTop(new ShooterAcceleratorTopIO() {});
+    if (shooterAccelerator == null) {
+      shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIO() {});
     }
 
-    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop);
+    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator);
 
 
     // init climb
@@ -292,7 +298,7 @@ public class RobotContainer {
     // init shooter with testing values
     RobotState.getInstance().initializeShootingAnglePredictor(
       () -> ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotSpeeds(), RobotState.getInstance().getEstimatedPose().getRotation()), 
-      () -> MetersPerSecond.of(12),
+      () -> shooterController.getCurrentVelocity(),
       () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(-90)); 
 
     nameCommands();
@@ -347,7 +353,7 @@ public class RobotContainer {
 
         // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
         Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
-        LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
+        LinearVelocity launchVelocity = shooterController.getCurrentVelocity(); 
 
         // Shoot the fuel using the calculated parameters - velocity must match calculation!
         RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
@@ -467,7 +473,7 @@ public class RobotContainer {
     Logger.recordOutput("FieldSimulation/Robot Fuel", RobotSimState.getInstance().getIntakeGamePieces());
 
     // Update the shooting logic with the correct rollers
-    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAcceleratorTop.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAccelerator.getCurrentVelocity().in(RotationsPerSecond) > 1.0 && shooterOmniwheel.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
           new Translation3d(),
           new Rotation3d(0, 0, Math.PI/2)
         )), shooterFlywheels.getCurrentVelocity());

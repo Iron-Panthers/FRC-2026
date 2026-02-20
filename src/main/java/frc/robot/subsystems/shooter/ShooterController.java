@@ -1,17 +1,18 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator.ShooterAcceleratorTarget;
 import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel;
 import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel.ShooterFlywheelTarget;
 import frc.robot.subsystems.shooter.shooter_hood.ShooterHood;
 import frc.robot.subsystems.shooter.shooter_hood.ShooterHood.ShooterHoodTarget;
-import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom;
-import frc.robot.subsystems.shooter.shooter_accelerator_bottom.ShooterAcceleratorBottom.ShooterAcceleratorBottomTarget;
-import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop;
-import frc.robot.subsystems.shooter.shooter_accelerator_top.ShooterAcceleratorTop.ShooterAcceleratorTopTarget;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel.ShooterOmniwheelTarget;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
 import frc.robot.lib.generic_subsystems.superstructure.*;
 import frc.robot.RobotState;
@@ -28,15 +29,15 @@ public class ShooterController extends SubsystemBase {
         IDLE(
             ShooterHoodTarget.BOTTOM,
             ShooterFlywheelTarget.IDLE,
-            ShooterAcceleratorTopTarget.IDLE,
-            ShooterAcceleratorBottomTarget.IDLE
+            ShooterAcceleratorTarget.IDLE,
+            ShooterOmniwheelTarget.IDLE
         ),
         /**shoot: spinning to shoot*/
         SHOOT(
             ShooterHoodTarget.BOTTOM,
             ShooterFlywheelTarget.SHOOT,
-            ShooterAcceleratorTopTarget.SHOOT,
-            ShooterAcceleratorBottomTarget.SHOOT
+            ShooterAcceleratorTarget.SHOOT,
+            ShooterOmniwheelTarget.SHOOT
         ),
         /**spin up: spinning up flywheels */
         SPIN_UP(
@@ -49,26 +50,26 @@ public class ShooterController extends SubsystemBase {
         CLIMB(
             ShooterHoodTarget.BOTTOM,
             ShooterFlywheelTarget.CLIMB,
-            ShooterAcceleratorTopTarget.CLIMB,
-            ShooterAcceleratorBottomTarget.CLIMB
+            ShooterAcceleratorTarget.CLIMB,
+            ShooterOmniwheelTarget.CLIMB
         );
 
         public final ShooterHoodTarget hoodTarget;
         public final ShooterFlywheelTarget flywheelTarget;
-        public final ShooterAcceleratorTopTarget acceleratorTopTarget;
-        public final ShooterAcceleratorBottomTarget acceleratorBottomTarget;
+        public final ShooterAcceleratorTarget acceleratorTarget;
+        public final ShooterOmniwheelTarget omniwheelTarget;
 
 
         private ShooterState(
             ShooterHoodTarget hoodTarget,
             ShooterFlywheelTarget flywheelTarget,
-            ShooterAcceleratorTopTarget topTarget,
-            ShooterAcceleratorBottomTarget bottomTarget
+            ShooterAcceleratorTarget acceleratorTarget,
+            ShooterOmniwheelTarget omniwheelTarget
         ) {
             this.hoodTarget = hoodTarget;
             this.flywheelTarget = flywheelTarget;
-            this.acceleratorTopTarget = topTarget;
-            this.acceleratorBottomTarget = bottomTarget;
+            this.acceleratorTarget = acceleratorTarget;
+            this.omniwheelTarget = omniwheelTarget;
         }
     }
     private ShooterState targetState = ShooterState.IDLE;
@@ -77,14 +78,14 @@ public class ShooterController extends SubsystemBase {
     //might need sensors defined here and in constructor
     private final ShooterFlywheel shooterFlywheel;
     private final ShooterHood shooterHood;
-    private final ShooterAcceleratorBottom shooterAcceleratorBottom;
-    private final ShooterAcceleratorTop shooterAcceleratorTop;
+    private final ShooterOmniwheel shooterOmniwheel;
+    private final ShooterAccelerator shooterAccelerator;
 
-    public ShooterController(ShooterFlywheel shooterFlywheel, ShooterHood shooterHood, ShooterAcceleratorBottom shooterAcceleratorBottom, ShooterAcceleratorTop shooterAcceleratorTop) {
+    public ShooterController(ShooterFlywheel shooterFlywheel, ShooterHood shooterHood, ShooterOmniwheel shooterOmniwheel, ShooterAccelerator shooterAccelerator) {
         this.shooterFlywheel = shooterFlywheel;
         this.shooterHood = shooterHood;
-        this.shooterAcceleratorBottom = shooterAcceleratorBottom;
-        this.shooterAcceleratorTop = shooterAcceleratorTop;
+        this.shooterOmniwheel = shooterOmniwheel;
+        this.shooterAccelerator = shooterAccelerator;
     }
 
     @Override
@@ -95,28 +96,27 @@ public class ShooterController extends SubsystemBase {
         if (stopped){
             shooterHood.setControlMode(GenericSuperstructure.ControlMode.STOP);
             shooterFlywheel.setControlMode(ControlMode.STOP);
-            shooterAcceleratorBottom.setControlMode(ControlMode.STOP);
-            shooterAcceleratorTop.setControlMode(ControlMode.STOP);
-        }
-        else if (targetState == ShooterState.SHOOT || targetState == ShooterState.SPIN_UP) {
-            // If shooting, update the hood target based on the calculated shooter angle
-            shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
-            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
-            shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
-            shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
+            shooterOmniwheel.setControlMode(ControlMode.STOP);
+            shooterAccelerator.setControlMode(ControlMode.STOP);
         }
         else {
-            shooterHood.setPositionTarget(targetState.hoodTarget);
+            if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE) {
+                // If shooting, update the hood target based on the calculated shooter angle
+                shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
+            }
+            else {
+                shooterHood.setPositionTarget(targetState.hoodTarget);
+            }
             shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
-            shooterAcceleratorBottom.setVelocityTarget(targetState.acceleratorBottomTarget);
-            shooterAcceleratorTop.setVelocityTarget(targetState.acceleratorTopTarget);
+            shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
+            shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
         }
         shooterFlywheel.periodic();
         shooterHood.periodic();
-        shooterAcceleratorBottom.periodic();
-        shooterAcceleratorTop.periodic();
+        shooterOmniwheel.periodic();
+        shooterAccelerator.periodic();
         
-        Logger.recordOutput("ShooterFlywheel/TargetState", targetState);
+        Logger.recordOutput("Shooter/Shooter Flywheel/TargetState", targetState);
     }
 
     public ShooterState getTargetState() {
@@ -145,5 +145,9 @@ public class ShooterController extends SubsystemBase {
 
     public Command setStoppedCommand(boolean stopped){
         return new InstantCommand(()-> setStopped(stopped));
+    }
+
+    public LinearVelocity getCurrentVelocity(){
+        return shooterFlywheel.getCurrentVelocity();
     }
 }

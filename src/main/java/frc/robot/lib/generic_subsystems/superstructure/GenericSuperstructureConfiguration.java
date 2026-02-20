@@ -2,7 +2,7 @@ package frc.robot.lib.generic_subsystems.superstructure;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
+import frc.robot.lib.generic_subsystems.mechanism.GenericMechanismConfiguration;
 
 public class GenericSuperstructureConfiguration extends GenericMechanismConfiguration {
   /**
