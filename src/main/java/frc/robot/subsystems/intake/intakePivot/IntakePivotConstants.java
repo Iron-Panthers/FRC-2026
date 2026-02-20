@@ -19,7 +19,7 @@ public class IntakePivotConstants {
             77.625, InvertedValue.CounterClockwise_Positive); 
         case SIM -> new IntakePivotConfig(
             // Reduction between motor and mechansim
-            CAN.at(8, "Intake Pivot"),  12 * 0.3750, InvertedValue.Clockwise_Positive);
+            CAN.at(9, "Intake Pivot"),  12 * 0.3750, InvertedValue.Clockwise_Positive);
         default -> new IntakePivotConfig(0,  1, InvertedValue.CounterClockwise_Positive);
       };
 
@@ -59,11 +59,12 @@ public class IntakePivotConstants {
   public static final double ZEROING_OFFSET = 0; // offset in degrees
   public static final double ZEROING_VOLTAGE_THRESHOLD = 5;
 
+
   public static final Transform3d BASE_TO_INTAKE_PIVOT_TRANSFORM =
       switch (Constants.getRobotType()) {
         default -> new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(0), Units.inchesToMeters(0d), Units.inchesToMeters(0d)),
+                Units.inchesToMeters(-10.940786), Units.inchesToMeters(-0.1875), Units.inchesToMeters(7.191913)),
             new Rotation3d(0, 0, 0));
       };
 
