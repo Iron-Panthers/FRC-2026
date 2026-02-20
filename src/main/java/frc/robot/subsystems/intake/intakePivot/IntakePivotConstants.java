@@ -16,11 +16,11 @@ public class IntakePivotConstants {
         case COMP -> new IntakePivotConfig(
             // Reduction between sensor and mechansim
             CAN.at(22, "Intake Pivot"),
-            77.625); 
+            77.625, InvertedValue.CounterClockwise_Positive); 
         case SIM -> new IntakePivotConfig(
             // Reduction between motor and mechansim
-            CAN.at(8, "Intake Pivot"),  12 * 0.3750);
-        default -> new IntakePivotConfig(0,  1);
+            CAN.at(9, "Intake Pivot"),  12 * 0.3750, InvertedValue.Clockwise_Positive);
+        default -> new IntakePivotConfig(0,  1, InvertedValue.CounterClockwise_Positive);
       };
 
   public static final PIDGains GAINS =
@@ -38,7 +38,7 @@ public class IntakePivotConstants {
       };
 
   public record IntakePivotConfig(
-      int motorID, double reduction) {}
+      int motorID, double reduction, InvertedValue motorDirection) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
@@ -46,11 +46,6 @@ public class IntakePivotConstants {
   public record MotionMagicConfig(double acceleration, double cruiseVelocity) {}
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
-
-  public static final InvertedValue MOTOR_DIRECTION = InvertedValue.CounterClockwise_Positive;
-
-  public static final SensorDirectionValue CANCODER_DIRECTION =
-      SensorDirectionValue.CounterClockwise_Positive;
 
   public static final double POSITION_TARGET_EPSILON = 0.01;
 
@@ -63,14 +58,13 @@ public class IntakePivotConstants {
   public static final double ZEROING_VOLTS = 1;
   public static final double ZEROING_OFFSET = 0; // offset in degrees
   public static final double ZEROING_VOLTAGE_THRESHOLD = 5;
-  // PHYSICAL CONSTANTS
-  public static final double INTAKE_PIVOT_LENGTH = 25; // inches
+
 
   public static final Transform3d BASE_TO_INTAKE_PIVOT_TRANSFORM =
       switch (Constants.getRobotType()) {
         default -> new Transform3d(
             new Translation3d(
-                Units.inchesToMeters(0), Units.inchesToMeters(0d), Units.inchesToMeters(0d)),
+                Units.inchesToMeters(-10.940786), Units.inchesToMeters(-0.1875), Units.inchesToMeters(7.191913)),
             new Rotation3d(0, 0, 0));
       };
 

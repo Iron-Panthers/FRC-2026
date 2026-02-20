@@ -21,7 +21,7 @@ public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTar
         }
     }
     public IntakeRollers(IntakeRollersIO intakeRollersIO) {
-        super("Intake Rollers", intakeRollersIO);
+        super("Intake/Intake Rollers", intakeRollersIO);
         setVelocityTarget(IntakeRollersTarget.OFF);
     }
 }

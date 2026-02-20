@@ -61,7 +61,7 @@ import frc.robot.subsystems.hopper.Hopper.HopperIOSim;
 import frc.robot.subsystems.hopper.HopperController.HopperControllerState;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
-import frc.robot.subsystems.rgb.RGBIOCANdle;
+import frc.robot.subsystems.rgb.RGBIOAddressableLED;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.GyroIO;
@@ -150,6 +150,7 @@ public class RobotContainer {
           intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
+          rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
           // shooterFlywheels =
