@@ -8,6 +8,8 @@ public class HopperConstants {
     switch (Constants.getRobotType()) {
       case SIM -> new HopperConfig(
         CAN.at(32, "Hopper"), 5, true, true);
+      case COMP -> new HopperConfig(
+        CAN.at(25, "Hopper"), 2, false, true);
       default -> new HopperConfig(
         CAN.at(40, "Hopper"), 5, true, true);
     };
@@ -15,12 +17,13 @@ public class HopperConstants {
   public static final PIDGains GAINS =
     switch (Constants.getRobotType()) {
       case SIM -> new PIDGains(1, 0, 0, 0, 1, 0, 0);
+      case COMP -> new PIDGains(0.02, 0, 0, 0.5, 0.107, 0.035, 0);
       default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
     };
 
-  public static final int CURRENT_LIMIT_AMPS = 40;
-  public static final double UPPER_VOLT_LIMIT = 6;
-  public static final double LOWER_VOLT_LIMIT = -6;
+  public static final int CURRENT_LIMIT_AMPS = 20;
+  public static final double UPPER_VOLT_LIMIT = 10;
+  public static final double LOWER_VOLT_LIMIT = -10;
 
   public static final HopperPhysicalConstants PHYSICAL_CONSTANTS =
     switch (Constants.getRobotType()) {

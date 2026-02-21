@@ -57,6 +57,7 @@ import frc.robot.subsystems.hopper.HopperController;
 import frc.robot.subsystems.hopper.Hopper.Hopper;
 import frc.robot.subsystems.hopper.Hopper.HopperIO;
 import frc.robot.subsystems.hopper.Hopper.HopperIOSim;
+import frc.robot.subsystems.hopper.Hopper.HopperIOTalonFX;
 import frc.robot.subsystems.hopper.HopperController.HopperControllerState;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
@@ -77,11 +78,17 @@ import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
 import frc.robot.subsystems.shooter.shooter_hood.*;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIO;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOSim;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIO;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOSim;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOTalonFX;
 import frc.robot.subsystems.shooter.shooter_flywheel.*;
-import frc.robot.subsystems.shooter.shooter_accelerator_bottom.*;
-import frc.robot.subsystems.shooter.shooter_accelerator_top.*;
 import frc.robot.lib.generic_subsystems.superstructure.*;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
 
@@ -128,8 +135,8 @@ public class RobotContainer {
   private ShooterFlywheel shooterFlywheels;
   private ShooterHood shooterHood;
   private ShooterController shooterController;
-  private ShooterAcceleratorBottom shooterAcceleratorBottom;
-  private ShooterAcceleratorTop shooterAcceleratorTop;
+  private ShooterOmniwheel shooterOmniwheel;
+  private ShooterAccelerator shooterAccelerator;
   private ClimbClawPivot climbClawPivot;
   private ClimbDeployPivot climbDeployPivot;
   private ClimbController climbController;
@@ -152,16 +159,17 @@ public class RobotContainer {
           rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
-          // shooterFlywheels =
-          //   new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
-          // shooterHood =
-          //   new ShooterHood(new ShooterHoodIOTalonFX());
-          // shooterAcceleratorBottom = 
-          //   new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOTalonFX());
-          // shooterAcceleratorTop = 
-          //   new ShooterAcceleratorTop(new ShooterAcceleratorTopIOTalonFX());
-          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          shooterFlywheels =
+            new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          shooterHood =
+            new ShooterHood(new ShooterHoodIOTalonFX());
+          shooterOmniwheel = 
+            new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
+          shooterAccelerator = 
+            new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
+          // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          hopper = new Hopper(new HopperIOTalonFX());
         }
         case VISION -> {
           swerve =
@@ -210,10 +218,10 @@ public class RobotContainer {
             new ShooterFlywheel(new ShooterFlywheelIOSim());
           shooterHood =
             new ShooterHood(new ShooterHoodIOSim());
-          shooterAcceleratorBottom = 
-            new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIOSim());
-          shooterAcceleratorTop = 
-            new ShooterAcceleratorTop(new ShooterAcceleratorTopIOSim());
+          shooterOmniwheel = 
+            new ShooterOmniwheel(new ShooterOmniwheelIOSim());
+          shooterAccelerator = 
+            new ShooterAccelerator(new ShooterAcceleratorIOSim());
 
           climbClawPivot = new ClimbClawPivot(new ClimbClawPivotIOSim());
           climbDeployPivot = new ClimbDeployPivot(new ClimbDeployPivotIOSim());
@@ -256,7 +264,6 @@ public class RobotContainer {
     if (hopper == null) {
       hopper = new Hopper(new HopperIO() {});
     }
-
     hopperController = new HopperController(hopper);
 
 
@@ -268,15 +275,15 @@ public class RobotContainer {
       shooterHood = new ShooterHood(new ShooterHoodIO() {});
     }
 
-    if (shooterAcceleratorBottom == null) {
-      shooterAcceleratorBottom = new ShooterAcceleratorBottom(new ShooterAcceleratorBottomIO() {});
+    if (shooterOmniwheel == null) {
+      shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIO() {});
     }
 
-    if (shooterAcceleratorTop == null) {
-      shooterAcceleratorTop = new ShooterAcceleratorTop(new ShooterAcceleratorTopIO() {});
+    if (shooterAccelerator == null) {
+      shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIO() {});
     }
 
-    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterAcceleratorBottom, shooterAcceleratorTop);
+    shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator);
 
 
     // init climb
@@ -291,7 +298,7 @@ public class RobotContainer {
     // init shooter with testing values
     RobotState.getInstance().initializeShootingAnglePredictor(
       () -> ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotSpeeds(), RobotState.getInstance().getEstimatedPose().getRotation()), 
-      () -> MetersPerSecond.of(12),
+      () -> shooterController.getCurrentVelocity(),
       () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(-90)); 
 
     nameCommands();
@@ -343,7 +350,7 @@ public class RobotContainer {
 
         // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
         Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
-        LinearVelocity launchVelocity = shooterFlywheels.getCurrentVelocity(); 
+        LinearVelocity launchVelocity = shooterController.getCurrentVelocity(); 
 
         // Shoot the fuel using the calculated parameters - velocity must match calculation!
         RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
@@ -355,10 +362,11 @@ public class RobotContainer {
   private void configureDriverAButtons() {
     driverA.start().onTrue(swerve.zeroGyroCommand());
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.a().onTrue(shooterController.setTargetStateCommand(ShooterState.SHOOT)).onFalse(shooterController.setTargetStateCommand(ShooterState.IDLE));
-    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW));
     driverA.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOW)
       .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE)));
+    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW));
+    driverA.a().onTrue(shooterController.setTargetStateCommand(ShooterState.SHOOT));
+    driverA.a().onFalse(shooterController.setTargetStateCommand(ShooterState.IDLE));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetStateCommand(ShooterState.SHOOT)));
@@ -463,7 +471,7 @@ public class RobotContainer {
     Logger.recordOutput("FieldSimulation/RobotFuel", RobotSimState.getInstance().getIntakeGamePieces());
 
     // Update the shooting logic with the correct rollers
-    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAcceleratorTop.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAccelerator.getCurrentVelocity().in(RotationsPerSecond) > 1.0 && shooterOmniwheel.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
           new Translation3d(),
           new Rotation3d(0, 0, Math.PI/2)
         )), shooterFlywheels.getCurrentVelocity());

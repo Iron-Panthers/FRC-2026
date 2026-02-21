@@ -16,8 +16,7 @@ public class ShooterHoodConstants {
         switch(Constants.getRobotType()){
             case COMP -> new ShooterHoodConfig(
                 //reduction between sensor and mechanism
-                CAN.at(30, "Shooter Hood"),
-                2.25); 
+                CAN.at(1, "Shooter Hood"), 7.2); 
             case SIM -> new ShooterHoodConfig(
                 //Reduction between motor and mechanism
                 CAN.at(8, "Shooter Hood"),  12 * 0.3750);
@@ -27,7 +26,7 @@ public class ShooterHoodConstants {
     //TODO update all the PID information
     public static final PIDGains GAINS = 
         switch(Constants.getRobotType()){
-            case COMP -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0.4);
+            case COMP -> new PIDGains(40, 0, 0, .5, .9, .04667, 0);
             case SIM -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0);
             default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         };
@@ -51,8 +50,6 @@ public class ShooterHoodConstants {
     public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
     public static final InvertedValue MOTOR_DIRECTION = InvertedValue.Clockwise_Positive;
-
-    public static final SensorDirectionValue CANCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
 
     public static final double POSITION_TARGET_EPSILON = 0.05;
 
