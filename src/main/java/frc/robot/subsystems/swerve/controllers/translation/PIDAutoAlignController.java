@@ -101,7 +101,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
     Logger.recordOutput("Swerve/PIDAutoalign/SetpointPos", magController.getSetpoint().position);
     Logger.recordOutput("Swerve/PIDAutoalign/CurrPos", magTranslCurrPos);
     Logger.recordOutput("Swerve/PIDAutoalign/TargPos", magTranslTargPos);
-    Logger.recordOutput("Swerve/PIDAutoalign/magVel", magVel);
+    Logger.recordOutput("Swerve/PIDAutoalign/MagVel", magVel);
     Logger.recordOutput("Swerve/PIDAutoalign/Target", targetPosition);
     Logger.recordOutput("Swerve/PIDAutoalign/TrapVel", magController.getSetpoint().velocity);
     Logger.recordOutput("Swerve/PIDAutoalign/PIDVel", pidOutput);

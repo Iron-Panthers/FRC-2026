@@ -13,9 +13,9 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTarget>
     implements LoggableMechanism3d {
     public enum ShooterHoodTarget implements GenericSuperstructure.PositionTarget{
-        BOTTOM(0), //need to update
+        STOW(0), //need to update
         HALF(45), //need to update
-        UP(45); //need to update
+        TOP(45); //need to update
         
         private double position; // in rotations
         private static final double EPSILON = ShooterHoodConstants.POSITION_TARGET_EPSILON;
@@ -39,7 +39,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     } //close enum
     public ShooterHood(ShooterHoodIO io){
         super("Shooter/Shooter Hood", io);
-        setPositionTarget(ShooterHoodTarget.BOTTOM);
+        setPositionTarget(ShooterHoodTarget.STOW);
         setControlMode(ControlMode.STOP);
     }
     
