@@ -146,15 +146,15 @@ public class RobotContainer {
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
         case COMP -> {
-          // swerve =
-          //     new Drive(
-          //         new GyroIOPigeon2(),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          swerve =
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
+          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
@@ -361,7 +361,8 @@ public class RobotContainer {
   private void configureDriverAButtons() {
     driverA.start().onTrue(swerve.zeroGyroCommand());
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT)).onFalse(shooterController.setTargetCommand(ShooterState.IDLE));
+    driverA.a().onTrue(shooterController.setTargetCommand(ShooterState.SHOOT));
+    driverA.a().onFalse(shooterController.setTargetCommand(ShooterState.IDLE));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeControllerState.STOW));
     driverA.b().onTrue(climbController.setTargetCommand(ClimbState.STOW)
       .andThen(intakeController.setTargetStateCommand(IntakeControllerState.INTAKE)));

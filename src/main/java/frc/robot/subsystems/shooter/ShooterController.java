@@ -27,7 +27,7 @@ public class ShooterController extends SubsystemBase {
         //TO-DO: update states
         /**idle: no spin*/
         IDLE(
-            ShooterHoodTarget.SHOOT_TEMP,
+            ShooterHoodTarget.STOW,
             ShooterFlywheelTarget.IDLE,
             ShooterAcceleratorTarget.IDLE,
             ShooterOmniwheelTarget.IDLE
@@ -41,7 +41,7 @@ public class ShooterController extends SubsystemBase {
         ),
         /**climb: no spin*/
         CLIMB(
-            ShooterHoodTarget.BOTTOM,
+            ShooterHoodTarget.STOW,
             ShooterFlywheelTarget.CLIMB,
             ShooterAcceleratorTarget.CLIMB,
             ShooterOmniwheelTarget.CLIMB
@@ -109,7 +109,8 @@ public class ShooterController extends SubsystemBase {
         shooterOmniwheel.periodic();
         shooterAccelerator.periodic();
         
-        Logger.recordOutput("Shooter/Shooter Flywheel/TargetState", targetState);
+        Logger.recordOutput("Shooter/TargetState", targetState);
+        Logger.recordOutput("Shooter/IsStopped", stopped);
     }
 
     public ShooterState getTargetState() {
