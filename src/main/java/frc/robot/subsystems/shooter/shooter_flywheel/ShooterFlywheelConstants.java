@@ -22,13 +22,13 @@ public class ShooterFlywheelConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(.1, 0, 0, 0, .45, 0, 0);
+        default -> new PIDGains(.1, 0, 0, 0, 0.143, 0, 0);
       };
 
 
     public static final int CURRENT_LIMIT_AMPS =
         switch (Constants.getRobotType()) {
-            case COMP -> 1000;
+            case COMP -> 40;
             case SIM -> 40;
             default -> 40;
         };
