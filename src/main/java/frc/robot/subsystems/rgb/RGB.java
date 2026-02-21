@@ -81,7 +81,7 @@ public class RGB extends SubsystemBase {
     }
     rgbIO.updateInputs(inputs);
     Logger.processInputs("RGB", inputs);
-    Logger.recordOutput("RGB/Total messages not expired", total);
+    Logger.recordOutput("RGB/TotalMessagesNotExpired", total);
     Logger.recordOutput(
         "RGB/Message",
         currentMessage.isPresent() ? currentMessage.get().getPriority().name() : "None");

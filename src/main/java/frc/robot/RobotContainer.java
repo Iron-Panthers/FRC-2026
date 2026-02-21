@@ -460,7 +460,7 @@ public class RobotContainer {
     Logger.recordOutput(
         "FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     
-    Logger.recordOutput("FieldSimulation/Robot Fuel", RobotSimState.getInstance().getIntakeGamePieces());
+    Logger.recordOutput("FieldSimulation/RobotFuel", RobotSimState.getInstance().getIntakeGamePieces());
 
     // Update the shooting logic with the correct rollers
     RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAcceleratorTop.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
