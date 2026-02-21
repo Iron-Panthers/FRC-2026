@@ -15,7 +15,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     public enum ShooterHoodTarget implements GenericSuperstructure.PositionTarget{
         STOW(0), //need to update
         HALF(45), //need to update
-        UP(45),
+        TOP(45), //need to update
         SHOOT_TEMP(0.095*360) ; //need to update
         
         private double position; // in rotations

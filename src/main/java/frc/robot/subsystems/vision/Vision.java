@@ -123,7 +123,7 @@ public class Vision extends SubsystemBase {
     Logger.recordOutput(
         "Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
     Logger.recordOutput(
-        "Vision/Summary/estimatedPoses",
+        "Vision/Summary/EstimatedPoses",
         allEstimatedPoses.toArray(new Pose3d[allEstimatedPoses.size()]));
     Logger.recordOutput(
         "Vision/Summary/AcceptedPoses",
