@@ -315,9 +315,9 @@ public class RobotContainer {
   /** Use this method to define the named commands for all of the autos */
   private void nameCommands() {
     // Register Command Names in this method
-    NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetCommand(ShooterState.SPIN_UP));
-    NamedCommands.registerCommand("Shoot", shooterController.setTargetCommand(ShooterState.SHOOT));
-    NamedCommands.registerCommand("Stop shooting", shooterController.setTargetCommand(ShooterState.IDLE));
+    NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.SPIN_UP));
+    NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
+    NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
   }
 
   private void configureBindings() {

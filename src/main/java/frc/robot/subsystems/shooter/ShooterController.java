@@ -38,6 +38,13 @@ public class ShooterController extends SubsystemBase {
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.SHOOT,
             ShooterOmniwheelTarget.SHOOT
+        ),
+        //TODO: fix spinup shooter and write body of command
+        SPIN_UP(
+            ShooterHoodTarget.SHOOT_TEMP,
+            ShooterFlywheelTarget.SHOOT,
+            ShooterAcceleratorTarget.SHOOT,
+            ShooterOmniwheelTarget.SHOOT
         );
 
         public final ShooterHoodTarget hoodTarget;
