@@ -58,7 +58,7 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
       }
       case ZEROING -> {
         superstructureIO.runCharacterization();
-        if (getSupplyCurrentAmps() >= 5) {
+        if (getSupplyCurrentAmps() >= 2) {
           superstructureIO.setOffset();
           setControlMode(ControlMode.STOP);
         }
