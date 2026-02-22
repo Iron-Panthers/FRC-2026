@@ -6,7 +6,7 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterAccelerator extends GenericRollers<ShooterAccelerator.ShooterAcceleratorTarget>{
     public enum ShooterAcceleratorTarget implements GenericRollers.VelocityTarget {
-        IDLE(51.66),
+        IDLE(0),
         SHOOT(51.66),
         CLIMB(0);
 
