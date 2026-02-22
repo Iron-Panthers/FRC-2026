@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 3.374567022538553,
-        "y": 2.641684460260973
+        "y": 5.568315539739028
       },
       "prevControl": null,
       "nextControl": {
         "x": 6.193475682087783,
-        "y": 2.781553973902728
+        "y": 5.708185053380783
       },
       "isLocked": false,
       "linkedName": "Shooting Pose Right"
@@ -53,7 +53,7 @@
       },
       "prevControl": {
         "x": 7.032692763938318,
-        "y": 2.071447212336892
+        "y": 2.0714472123368926
       },
       "nextControl": null,
       "isLocked": false,
