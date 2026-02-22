@@ -15,7 +15,8 @@ public class HopperController extends SubsystemBase {
 
     public enum HopperControllerState {
         IDLE(HopperTarget.IDLE),
-        INTAKE(HopperTarget.INTAKE);
+        INTAKE(HopperTarget.INTAKE),
+        SLOW(HopperTarget.SLOW);
 
         private HopperTarget hopperTarget;
 

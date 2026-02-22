@@ -157,7 +157,7 @@ public class RobotContainer {
           intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
-          rgb = new RGB(new RGBIOAddressableLED());
+          // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
           shooterFlywheels =
@@ -367,19 +367,38 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     driverA.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOW)
-      .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE)));
+      .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))
+      .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))
+      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW));
-    driverA.a().onTrue(shooterController.setTargetStateCommand(ShooterState.SHOOT));
-    driverA.a().onFalse(shooterController.setTargetStateCommand(ShooterState.IDLE));
+
+    driverA.a().onTrue(
+      new InstantCommand(()-> {
+          shooterController.setTargetState(shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
+          ? ShooterState.SHOOT
+          : (shooterController.getTargetState() == ShooterState.FLY_SPIN_UP
+            ? ShooterState.TOTAL_SPIN_UP
+            : ShooterState.FLY_SPIN_UP));
+      })
+      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+    driverA.a().onFalse( new InstantCommand (() -> 
+    {
+      if (shooterController.getTargetState() == ShooterState.SHOOT){
+        shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP);
+      }
+    })
+      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetStateCommand(ShooterState.SHOOT)));
-    driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true));
-    driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
-      new RunCommand(() -> {
-          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(90))));
-      })
-    );
+    // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
+    //   .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
+    // driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
+    //   new RunCommand(() -> {
+    //       swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(90))));
+    //   })
+    //   .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
+    // );
   }
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
