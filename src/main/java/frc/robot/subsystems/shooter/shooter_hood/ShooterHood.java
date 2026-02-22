@@ -16,7 +16,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
         STOW(0), //need to update
         HALF(45), //need to update
         TOP(45), //need to update
-        SHOOT_TEMP(0.095*360) ; //need to update
+        SHOOT_TEMP(12) ; //need to update
         
         private double position; // in rotations
         private static final double EPSILON = ShooterHoodConstants.POSITION_TARGET_EPSILON;
