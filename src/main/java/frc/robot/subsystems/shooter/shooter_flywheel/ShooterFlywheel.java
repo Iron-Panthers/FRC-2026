@@ -12,12 +12,12 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywheelTarget>{
     public enum ShooterFlywheelTarget implements GenericRollers.VelocityTarget {
         //TODO: need to change; from sprint 2025 -- ive taken away a few states
-        IDLE(120),
-        SHOOT(120),
-        CLIMB(0);
+        IDLE(0),
+        SHOOT(8.6);
 
         private double velocity;
 
+        /** Input velocity in meters per second */
         private ShooterFlywheelTarget(double velocity) {
             this.velocity = velocity / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters();
         }

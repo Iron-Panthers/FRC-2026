@@ -36,11 +36,12 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
 
     rollerIO.runVelocity(velocityTarget.getVelocity());
     Logger.recordOutput(name + "/Target", velocityTarget.toString());
+    Logger.recordOutput(name + "/Target Velocity", velocityTarget.getVelocity());
 
     filteredCurrent = this.filter.calculate(inputs.supplyCurrentAmps);
     Logger.recordOutput(name + "/FilteredCurrent", filteredCurrent);
 
-    Logger.recordOutput(name + "/Control Mode", controlMode.toString());
+    Logger.recordOutput(name + "/ControlMode", controlMode.toString());
     switch (controlMode) {
       case VELOCITY -> {
         rollerIO.runVelocity(velocityTarget.getVelocity());
@@ -49,6 +50,7 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
         rollerIO.stop();
       }
     }
+
   }
 
   public G getVelocityTarget() {

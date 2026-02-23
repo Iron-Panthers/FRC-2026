@@ -5,8 +5,8 @@ import frc.robot.lib.generic_subsystems.rollers.GenericRollers;
 public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTarget> {
     
     public enum IntakeRollersTarget implements GenericRollers.VelocityTarget{
-        ON(60),
-        OFF(0.0),
+        INTAKE(60),
+        IDLE(0.0),
         EJECT(-3.0),
         HOLD(1.0);
         
@@ -22,6 +22,6 @@ public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTar
     }
     public IntakeRollers(IntakeRollersIO intakeRollersIO) {
         super("Intake/Intake Rollers", intakeRollersIO);
-        setVelocityTarget(IntakeRollersTarget.OFF);
+        setVelocityTarget(IntakeRollersTarget.IDLE);
     }
 }

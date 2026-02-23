@@ -115,14 +115,14 @@ public class DriveConstants {
         case COMP -> new ModuleConfig[] {
             new ModuleConfig(
               CAN.at(18, "FR Drive"),
-              CAN.at(2, "FR Steer"),
+              CAN.at(46, "FR Steer"),
               12,
               new Rotation2d(-2.600097),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(17, "FL Drive"),
-              CAN.at(1, "FL Steer"),
+              CAN.at(45, "FL Steer"),
               6,
               new Rotation2d(-0.075165),
               InvertedValue.CounterClockwise_Positive,
