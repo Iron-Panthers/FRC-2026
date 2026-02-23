@@ -5,7 +5,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
-import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
+import frc.robot.lib.generic_subsystems.mechanism.GenericMechanismConfiguration;
 
 public class GenericRollersConfiguration extends GenericMechanismConfiguration{
 
@@ -67,6 +67,11 @@ public class GenericRollersConfiguration extends GenericMechanismConfiguration{
     @Override
     public GenericRollersConfiguration withAdditionalFollowerMotor(int id, MotorAlignmentValue motorAlignmentValue) {
         super.withAdditionalFollowerMotor(id, motorAlignmentValue);
+        return this;
+    }
+
+    public GenericRollersConfiguration withAdditionalFollowerMotor(int id, boolean opposeMotor) {
+        withAdditionalFollowerMotor(id, opposeMotor ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned);
         return this;
     }
 

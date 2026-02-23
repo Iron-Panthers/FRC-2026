@@ -72,7 +72,7 @@ public class ClimbController extends SubsystemBase    {
     this.targetState = targetState;
   }
 
-  public Command setTargetCommand(ClimbState target) {
+  public Command setTargetStateCommand(ClimbState target) {
     return new InstantCommand(
         () -> {
           this.targetState = target;

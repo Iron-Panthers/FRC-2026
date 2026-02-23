@@ -60,13 +60,11 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
       }
     }
 
-    Logger.recordOutput("Superstructure/" + name + "/Target", positionTarget.toString());
-    Logger.recordOutput("Superstructure/" + name + "/Control Mode", controlMode.toString());
-    Logger.recordOutput("Superstructure/" + name + "/Reached target", reachedTarget());
-    Logger.recordOutput(
-        "Superstructure/" + name + "/Target Position", positionTarget.getPosition());
-    Logger.recordOutput(
-        "Superstructure/" + name + "/Target Position Manual", positionTargetManual.orElse(0.0));
+    Logger.recordOutput(name + "/Target", positionTarget.toString());
+    Logger.recordOutput(name + "/ControlMode", controlMode.toString());
+    Logger.recordOutput(name + "/ReachedTarget", reachedTarget());
+    Logger.recordOutput(name + "/TargetPosition", positionTarget.getPosition());
+    Logger.recordOutput(name + "/TargetPositionManual", positionTargetManual.orElse(0.0));
   }
 
   public G getPositionTarget() {

@@ -1,4 +1,4 @@
-package frc.robot.lib.generic_subsystems;
+package frc.robot.lib.generic_subsystems.mechanism;
 
 import java.util.ArrayList;
 
