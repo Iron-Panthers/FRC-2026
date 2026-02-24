@@ -27,31 +27,30 @@ public class ShooterController extends SubsystemBase {
         //TO-DO: update states
         /**idle: no spin*/
         IDLE(
-            ShooterHoodTarget.BOTTOM,
+            ShooterHoodTarget.STOW,
             ShooterFlywheelTarget.IDLE,
             ShooterAcceleratorTarget.IDLE,
             ShooterOmniwheelTarget.IDLE
         ),
         /**shoot: spinning to shoot*/
         SHOOT(
-            ShooterHoodTarget.BOTTOM,
+            ShooterHoodTarget.SHOOT_TEMP,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.SHOOT,
             ShooterOmniwheelTarget.SHOOT
         ),
-        /**spin up: spinning up flywheels */
-        SPIN_UP(
-            ShooterHoodTarget.BOTTOM,
+        
+        TOTAL_SPIN_UP(
+            ShooterHoodTarget.SHOOT_TEMP,
+            ShooterFlywheelTarget.SHOOT,
+            ShooterAcceleratorTarget.SHOOT,
+            ShooterOmniwheelTarget.IDLE
+        ),
+        FLY_SPIN_UP(
+            ShooterHoodTarget.STOW,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.IDLE,
             ShooterOmniwheelTarget.IDLE
-        ),
-        /**climb: no spin*/
-        CLIMB(
-            ShooterHoodTarget.BOTTOM,
-            ShooterFlywheelTarget.CLIMB,
-            ShooterAcceleratorTarget.CLIMB,
-            ShooterOmniwheelTarget.CLIMB
         );
 
         public final ShooterHoodTarget hoodTarget;
@@ -90,9 +89,6 @@ public class ShooterController extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //TODO: update states for shooter controller
-        // if stopped, set all to stop 
-
         if (stopped){
             shooterHood.setControlMode(GenericSuperstructure.ControlMode.STOP);
             shooterFlywheel.setControlMode(ControlMode.STOP);
@@ -100,13 +96,13 @@ public class ShooterController extends SubsystemBase {
             shooterAccelerator.setControlMode(ControlMode.STOP);
         }
         else {
-            if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE || targetState == ShooterState.SPIN_UP) {
-                // If shooting, update the hood target based on the calculated shooter angle
-                shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
-            }
-            else {
+            // if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE) {
+            //     // If shooting, update the hood target based on the calculated shooter angle
+            //     shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
+            // }
+            // else {
                 shooterHood.setPositionTarget(targetState.hoodTarget);
-            }
+            // }
             shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
@@ -116,7 +112,8 @@ public class ShooterController extends SubsystemBase {
         shooterOmniwheel.periodic();
         shooterAccelerator.periodic();
         
-        Logger.recordOutput("Shooter/Shooter Flywheel/TargetState", targetState);
+        Logger.recordOutput("Shooter/TargetState", targetState);
+        Logger.recordOutput("Shooter/IsStopped", stopped);
     }
 
     public ShooterState getTargetState() {
@@ -128,15 +125,8 @@ public class ShooterController extends SubsystemBase {
         this.targetState = targetState;
     }
 
-    public Command setTargetCommand(ShooterState target) {
-        return new InstantCommand(
-            () -> {
-                this.targetState = target;
-            },
-            this)
-            .withTimeout(.02);
-            //.andThen(new WaitUntilCommand(this::shooterReachedTarget))
-            //TODO: not sure if we are making this method or not bc it was used for pivot
+    public Command setTargetStateCommand(ShooterState target) {
+        return new InstantCommand(() -> setTargetState(target), this);
     }
 
     public void setStopped(boolean stopped){

@@ -93,4 +93,13 @@
     "rotation" : 90.0
   },
   "useDefaultConstraints" : true
+    "rotation": -143.09073763429777
+  },
+  "reversed": false,
+  "folder": "Left Paths (auto generated)",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
 }
