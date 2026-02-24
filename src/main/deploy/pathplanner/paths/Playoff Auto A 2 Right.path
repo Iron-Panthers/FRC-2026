@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.374567022538553,
-        "y": 5.568315539739028
+        "x": 3.210955555555555,
+        "y": 2.5838
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.193475682087783,
-        "y": 5.708185053380783
+        "x": 6.029864215104784,
+        "y": 2.723669513641755
       },
       "isLocked": false,
       "linkedName": "Shooting Pose Right"
@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 3.374567022538553,
-        "y": 5.568315539739028
+        "x": 3.210955555555555,
+        "y": 2.5838
       },
       "prevControl": {
-        "x": 7.032692763938318,
-        "y": 2.0714472123368926
+        "x": 6.8690812969553185,
+        "y": 2.013562752075919
       },
       "nextControl": null,
       "isLocked": false,
@@ -97,13 +97,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -33.9435870197518
+    "rotation": -133.4518423010219
   },
   "reversed": false,
   "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -33.9435870197518
+    "rotation": -133.4518423010219
   },
   "useDefaultConstraints": true
 }

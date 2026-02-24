@@ -8,40 +8,56 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.029864215104784,
-        "y": 2.443930486358245
+        "x": 2.662890017333965,
+        "y": 2.6513697238903324
       },
       "isLocked": false,
       "linkedName": "Shooting Pose Right"
     },
     {
       "anchor": {
-        "x": 7.481469298245615,
-        "y": 7.175263157894738
+        "x": 4.420288888883849,
+        "y": 0.5480888888888886
       },
       "prevControl": {
-        "x": 6.712171052631579,
-        "y": 7.665690789473685
+        "x": 1.9663444970882016,
+        "y": 0.7662172792711285
       },
       "nextControl": {
-        "x": 8.140868811962655,
-        "y": 6.7548959679001275
+        "x": 7.141288888878811,
+        "y": 0.3062222222222213
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.827653508771929,
-        "y": 4.6269627192982465
+        "x": 6.052888888888889,
+        "y": 4.105544444444445
       },
       "prevControl": {
-        "x": 8.087291666666667,
-        "y": 4.857752192982457
+        "x": 6.173822222222222,
+        "y": 3.279166666666667
       },
       "nextControl": {
-        "x": 7.046520514228711,
-        "y": 3.932622279704278
+        "x": 6.004556952612813,
+        "y": 4.435812675664297
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.456,
+        "y": 3.4404111111111115
+      },
+      "prevControl": {
+        "x": 6.496311111111112,
+        "y": 3.8536
+      },
+      "nextControl": {
+        "x": 6.388479921501391,
+        "y": 2.7483303065003657
       },
       "isLocked": false,
       "linkedName": null
@@ -52,29 +68,25 @@
         "y": 2.5838
       },
       "prevControl": {
-        "x": 6.8690812969553185,
-        "y": 3.154037247924081
+        "x": 4.853633333328293,
+        "y": 2.2814666666666663
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shooting Pose Right"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9250302297460711,
-      "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 2.3941958887545267,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 1.2807363576594288,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
     {
       "name": "Intake",
-      "minWaypointRelativePos": 1.3275401069518729,
-      "maxWaypointRelativePos": 2.0895721925133692,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.0,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 4.0,
@@ -97,13 +109,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -133.4518423010219
+    "rotation": -133.452
   },
   "reversed": false,
-  "folder": "Left Paths (auto generated)",
+  "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -133.4518423010219
+    "rotation": -133.452
   },
   "useDefaultConstraints": true
 }

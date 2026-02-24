@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 3.374567022538553,
-        "y": 5.568315539739028
+        "x": 3.210955555555555,
+        "y": 2.5838
       },
       "prevControl": {
-        "x": 5.42282360148592,
-        "y": 4.664390101142535
+        "x": 5.259212134502921,
+        "y": 1.6798745614035075
       },
       "nextControl": null,
       "isLocked": false,
@@ -93,7 +93,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -33.9435870197518
+    "rotation": -133.4518423010219
   },
   "reversed": false,
   "folder": "Right Paths (make these)",
