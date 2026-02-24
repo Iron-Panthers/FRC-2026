@@ -155,7 +155,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
-          //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
+          vision = new Vision(new VisionIOPhotonvision("arducam-6", 0));
           // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
