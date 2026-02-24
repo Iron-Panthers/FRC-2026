@@ -406,7 +406,9 @@ public class RobotContainer {
       .alongWith(new InstantCommand(() -> climbController.setStopped(true))));
     driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW)
       .alongWith(climbController.setTargetStateCommand(ClimbState.STOW)));
-    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW).andThen(climbController.setTargetStateCommand(ClimbState.DEPLOY)));
+    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW)
+      .andThen(climbController.setTargetStateCommand(ClimbState.DEPLOY))
+        .alongWith(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getClimbTarget(), false)));
     driverB.y().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW).andThen(climbController.setTargetStateCommand(ClimbState.L3)));
     driverB.rightBumper().onTrue(climbController.setTargetStateCommand(ClimbState.STOW)
       .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))); 
