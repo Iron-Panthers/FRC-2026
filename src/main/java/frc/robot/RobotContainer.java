@@ -315,6 +315,8 @@ public class RobotContainer {
   /** Use this method to define the named commands for all of the autos */
   private void nameCommands() {
     // Register Command Names in this method
+    NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+    NamedCommands.registerCommand("Intake stow", intakeController.setTargetStateCommand(IntakeControllerState.STOW));
     NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
     NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
     NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
