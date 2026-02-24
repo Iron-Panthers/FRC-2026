@@ -317,6 +317,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetCommand(ShooterState.SPIN_UP));
     NamedCommands.registerCommand("Shoot", shooterController.setTargetCommand(ShooterState.SHOOT));
     NamedCommands.registerCommand("Stop shooting", shooterController.setTargetCommand(ShooterState.IDLE));
+    NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeControllerState.INTAKE));
+    NamedCommands.registerCommand("Intake stow", intakeController.setTargetStateCommand(IntakeControllerState.STOW));
   }
 
   private void configureBindings() {
