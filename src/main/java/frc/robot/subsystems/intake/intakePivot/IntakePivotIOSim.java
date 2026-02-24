@@ -65,7 +65,7 @@ public class IntakePivotIOSim extends GenericSuperstructureIOSim implements Inta
     inputs.positionRotations = rotations;
     inputs.velocityRotPerSec = velocityRPS;
     inputs.appliedVolts = appliedVoltage;
-    inputs.supplyCurrentAmps = 1.0; // Not simulated
+    inputs.supplyCurrentAmps = talon.getSimState().getSupplyCurrent(); 
     inputs.tempCelsius = 25.0; // Not simulated
 
     // update the Sim State to match if it is up or down
