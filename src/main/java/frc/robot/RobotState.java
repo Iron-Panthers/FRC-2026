@@ -226,6 +226,7 @@ public class RobotState {
     private Supplier<LinearVelocity> shooterVelocitySupplier;
     private Supplier<Transform3d> shooterPositionSupplier;
 
+    public LoggedNetworkNumber tempShooterAngle = new LoggedNetworkNumber("Tuning/TempShooterAngle");
 
     // Moving average filters for smooth velocity measurements
     private final LinearFilter vxFilter = LinearFilter.movingAverage(5);
