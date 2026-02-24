@@ -51,6 +51,12 @@ public class ShooterController extends SubsystemBase {
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.IDLE,
             ShooterOmniwheelTarget.IDLE
+        ),
+        ZEROING(
+            ShooterHoodTarget.STOW,
+            ShooterFlywheelTarget.IDLE,
+            ShooterAcceleratorTarget.IDLE,
+            ShooterOmniwheelTarget.IDLE
         );
 
         public final ShooterHoodTarget hoodTarget;
@@ -72,7 +78,7 @@ public class ShooterController extends SubsystemBase {
         }
     }
     private ShooterState targetState = ShooterState.IDLE;
-        private boolean stopped = false;
+    private boolean stopped = false;
 
     //might need sensors defined here and in constructor
     private final ShooterFlywheel shooterFlywheel;
@@ -95,14 +101,20 @@ public class ShooterController extends SubsystemBase {
             shooterOmniwheel.setControlMode(ControlMode.STOP);
             shooterAccelerator.setControlMode(ControlMode.STOP);
         }
+        else if (shooterHood.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
+            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+            shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
+            shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+        }
+        else if (targetState == ShooterState.SHOOT) {
+            // If shooting, update the hood target based on the calculated shooter angle
+            shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
+            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+            shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
+            shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+        }
         else {
-            // if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE) {
-            //     // If shooting, update the hood target based on the calculated shooter angle
-            //     shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
-            // }
-            // else {
-                shooterHood.setPositionTarget(targetState.hoodTarget);
-            // }
+            shooterHood.setPositionTarget(targetState.hoodTarget);
             shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
@@ -135,6 +147,12 @@ public class ShooterController extends SubsystemBase {
 
     public Command setStoppedCommand(boolean stopped){
         return new InstantCommand(()-> setStopped(stopped));
+    }
+
+    public Command zeroCommand(){
+        return new InstantCommand(() -> shooterHood.setControlMode(GenericSuperstructure.ControlMode.ZEROING))
+            .alongWith(setTargetStateCommand(ShooterState.ZEROING)
+            .alongWith(setStoppedCommand(false)));
     }
 
     public LinearVelocity getCurrentVelocity(){

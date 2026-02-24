@@ -13,9 +13,9 @@ public class ShooterFlywheelConstants {
   public static final ShooterFlywheelConfig SHOOTER_FLYWHEEL_CONFIG =
       switch (Constants.getRobotType()) {
         case SIM -> new ShooterFlywheelConfig(
-            CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, true, true); 
+            CAN.at(36, "Shooter Flywheel 1"), CAN.at(37, "Shooter Flywheel 2"), 1, false, false, true); 
         default -> new ShooterFlywheelConfig(
-            CAN.at(2, "Shooter Flywheel 1"), CAN.at(12, "Shooter Flywheel 2"), 1, true, true, false); 
+            CAN.at(2, "Shooter Flywheel 1"), CAN.at(12, "Shooter Flywheel 2"), 1, true, false, false); 
       };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
@@ -39,7 +39,7 @@ public class ShooterFlywheelConstants {
             case COMP -> new ShooterFlywheelPhysicalConstants(0.1, 0.23938936);
             default -> new ShooterFlywheelPhysicalConstants(0.1, .1);
         };
-
+    
     //RECORDS
   public record ShooterFlywheelConfig(
       int motorID1, int motorID2, double reduction, boolean inverted, boolean brake, boolean opposeMotor) {}

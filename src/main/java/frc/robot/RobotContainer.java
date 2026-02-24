@@ -413,6 +413,8 @@ public class RobotContainer {
     driverB.rightBumper().onTrue(climbController.setTargetStateCommand(ClimbState.STOW)
       .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))); 
     
+      driverB.povLeft().onTrue(intakeController.zeroCommand());
+      driverB.povDown().onTrue(shooterController.zeroCommand());
   }
 
   private void configureAutos() {

@@ -261,6 +261,8 @@ public class DriveConstants {
             3.125);
       };
 
+    public static final double CURRENT_LIMIT_AMPS = 35;
+
 /**
  * These are the configs for the maple sim drivebase
  * This should be updated to be similar to the comp bot drivebase
