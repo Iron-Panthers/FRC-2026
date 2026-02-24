@@ -16,20 +16,17 @@ public class ShooterHoodConstants {
         switch(Constants.getRobotType()){
             case COMP -> new ShooterHoodConfig(
                 //reduction between sensor and mechanism
-                CAN.at(30, "Shooter Hood"),
-                CAN.at(31, "Shooter Hood Encoder"),
-                -0.01444, 
-                2.25);  //find the reduction for the encoder
+                CAN.at(1, "Shooter Hood"), 45); 
             case SIM -> new ShooterHoodConfig(
                 //Reduction between motor and mechanism
-                CAN.at(8, "Shooter Hood"), 0, 0, 12 * 0.3750);
-            default -> new ShooterHoodConfig(0,0,0,1);
+                CAN.at(8, "Shooter Hood"),  12 * 0.3750);
+            default -> new ShooterHoodConfig(0,1);
         };
     
     //TODO update all the PID information
     public static final PIDGains GAINS = 
         switch(Constants.getRobotType()){
-            case COMP -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0.4);
+            case COMP -> new PIDGains(500, 0, 0, .5, 4.1, 0, 0.45);
             case SIM -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0);
             default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
         };
@@ -37,13 +34,13 @@ public class ShooterHoodConstants {
         //TODO update Motion Magic
     public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(6, 10);
+        case COMP -> new MotionMagicConfig( 6, 10);
         case SIM -> new MotionMagicConfig(7.5, 10);
         default -> new MotionMagicConfig(0, 0);
       };
 
     public record ShooterHoodConfig(
-        int motorID, int canCoderID, double canCoderOffset, double reduction) {}
+        int motorID, double reduction) {}
 
     public record PIDGains(
         double kP, double kI, double kD, double kS, double kV, double kA, double kG){}
@@ -53,8 +50,6 @@ public class ShooterHoodConstants {
     public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
     public static final InvertedValue MOTOR_DIRECTION = InvertedValue.Clockwise_Positive;
-
-    public static final SensorDirectionValue CANCODER_DIRECTION = SensorDirectionValue.Clockwise_Positive;
 
     public static final double POSITION_TARGET_EPSILON = 0.05;
 

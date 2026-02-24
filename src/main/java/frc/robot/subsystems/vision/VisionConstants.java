@@ -27,19 +27,8 @@ public class VisionConstants {
   public static final Transform3d[] CAMERA_TRANSFORM =
       switch (getRobotType()) {
         case COMP -> new Transform3d[] {
-          // arducam-1 (front left)
-          new Transform3d(
-              0.299, 0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), Math.toRadians(55))),
-          // arducam-2 (front center)
-          new Transform3d(0.3017, 0, 0.3373, new Rotation3d(0, -Math.toRadians(35), 0)),
-          // arducam-3 (front right)
-          new Transform3d(
-              0.299, -0.2744, 0.3464, new Rotation3d(0, -Math.toRadians(35), -Math.toRadians(55))),
-          // arducam-4 (back right)
-          new Transform3d(
-              -0.17, -0.298, 0.3651, new Rotation3d(0, 0, Math.PI - Math.toRadians(12))),
-          // arducam-5 (back left)
-          new Transform3d(-0.17, 0.298, 0.3651, new Rotation3d(0, 0, -Math.PI + Math.toRadians(12)))
+          // arducam-6 (front)
+          new Transform3d(new Translation3d(0.22860929920064077, 0.2077131830328219, 0.4409522926695345), new Rotation3d(0.022664911373188813, -0.47667215401543667, 0.005354613028298594))
         };
         case VISION -> new Transform3d[] {
           // arducam-1 (front left)
@@ -106,15 +95,15 @@ public class VisionConstants {
         default -> List.of(
             // 1 tag
             new TagCountDeviation(
-                new UnitDeviationParams(0.2, 0.1, 0.6),
-                new UnitDeviationParams(0.3, 0.1, 0.9),
-                new UnitDeviationParams(0.5, 0.7, 1.5)),
+                new UnitDeviationParams(0.007329, 0, 0),
+                new UnitDeviationParams(0.007329,0, 0),
+                new UnitDeviationParams(0.0166, 0, 0)),
             // 2 tag
             new TagCountDeviation(
-                new UnitDeviationParams(0.35, 0.1, 0.4), new UnitDeviationParams(0.5, 0.7, 1.5)),
+                new UnitDeviationParams(0.00162493, 0, 0), new UnitDeviationParams(0.0010625, 0, 0)),
             // 3+ tag
             new TagCountDeviation(
-                new UnitDeviationParams(0.25, 0.07, 0.25), new UnitDeviationParams(0.15, 1, 1.5)));
+                new UnitDeviationParams(0, 0.0, 0.001), new UnitDeviationParams(0,0, 0.0001)));
       };
 
   public static final int[] IGNORE_TAGS = {};
@@ -158,9 +147,9 @@ public class VisionConstants {
   }
 
   public static record UnitDeviationParams(
-      double distanceMultiplier, double eulerMultiplier, double minimum) {
+      double distanceMultiplier, double eulerMultiplier, double constant) {
     private double computeUnitDeviation(double averageDistance) {
-      return Math.max(minimum, eulerMultiplier * Math.exp(averageDistance * distanceMultiplier));
+      return distanceMultiplier*averageDistance + constant;
     }
   }
 }

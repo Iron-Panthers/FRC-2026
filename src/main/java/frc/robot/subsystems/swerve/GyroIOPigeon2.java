@@ -1,5 +1,7 @@
 package frc.robot.subsystems.swerve;
 
+import static edu.wpi.first.units.Units.Degree;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
@@ -16,8 +18,9 @@ public class GyroIOPigeon2 implements GyroIO {
 
   public GyroIOPigeon2() {
     pigeon = new Pigeon2(DriveConstants.GYRO_ID);
-
-    pigeon.getConfigurator().apply(new Pigeon2Configuration());
+    Pigeon2Configuration config = new Pigeon2Configuration();
+    config.MountPose.withMountPosePitch(DriveConstants.IS_GYRO_UPSIDEDOWN ? Degree.of(180) : Degree.of(0));
+    pigeon.getConfigurator().apply(config);
     pigeon.setYaw(0, 1.0);
 
     yaw = pigeon.getYaw();

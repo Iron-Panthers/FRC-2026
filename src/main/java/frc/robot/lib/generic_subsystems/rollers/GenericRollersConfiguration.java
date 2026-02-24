@@ -4,7 +4,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
+
+import frc.robot.lib.generic_subsystems.mechanism.GenericMechanismConfiguration;
 
 public class GenericRollersConfiguration extends GenericMechanismConfiguration{
 
@@ -68,4 +69,20 @@ public class GenericRollersConfiguration extends GenericMechanismConfiguration{
         super.withAdditionalFollowerMotor(id, motorAlignmentValue);
         return this;
     }
+
+    public GenericRollersConfiguration withAdditionalFollowerMotor(int id, boolean opposeMotor) {
+        withAdditionalFollowerMotor(id, opposeMotor ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned);
+        return this;
+    }
+
+    public GenericRollersConfiguration withUpperVoltageLimit(double upperVoltLimit) {
+        super.withUpperVoltageLimit(upperVoltLimit);
+        return this;
+    }
+
+    public GenericRollersConfiguration withLowerVoltageLimit(double lowerVoltLimit) {
+        super.withLowerVoltageLimit(lowerVoltLimit);
+        return this;
+    }
+
 }

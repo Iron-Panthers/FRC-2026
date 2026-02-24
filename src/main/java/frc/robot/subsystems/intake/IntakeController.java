@@ -7,21 +7,22 @@ import frc.robot.subsystems.intake.intakePivot.IntakePivot;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot.IntakePivotTarget;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
+import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
 import frc.robot.lib.generic_subsystems.superstructure.*;
 
 public class IntakeController extends SubsystemBase {
-
-    public enum IntakeControllerState{
-        STOW(IntakePivotTarget.STOW, IntakeRollersTarget.OFF),
-        IDLE(IntakePivotTarget.INTAKE, IntakeRollersTarget.OFF),
-        INTAKE(IntakePivotTarget.INTAKE, IntakeRollersTarget.ON),
-        REVERSE(IntakePivotTarget.INTAKE, IntakeRollersTarget.EJECT);
+    public enum IntakeState {
+        STOW(IntakePivotTarget.STOW, IntakeRollersTarget.IDLE),
+        IDLE(IntakePivotTarget.INTAKE, IntakeRollersTarget.IDLE),
+        INTAKE(IntakePivotTarget.INTAKE, IntakeRollersTarget.INTAKE),
+        REVERSE(IntakePivotTarget.INTAKE, IntakeRollersTarget.EJECT),
+        ZEROING(IntakePivotTarget.STOW, IntakeRollersTarget.IDLE);
 
         private IntakePivotTarget intakePivotTarget;
         private IntakeRollersTarget intakeRollersTarget;
 
-        private IntakeControllerState(IntakePivotTarget intakePivotTarget, IntakeRollersTarget intakeRollersTarget){
+        private IntakeState(IntakePivotTarget intakePivotTarget, IntakeRollersTarget intakeRollersTarget){
             this.intakePivotTarget = intakePivotTarget;
             this.intakeRollersTarget = intakeRollersTarget;
         }
@@ -34,7 +35,7 @@ public class IntakeController extends SubsystemBase {
         }
     }
 
-    private IntakeControllerState targetState = IntakeControllerState.STOW;
+    private IntakeState targetState = IntakeState.STOW;
     private boolean stopped = false;
 
     private final IntakePivot intakePivot;
@@ -50,6 +51,9 @@ public class IntakeController extends SubsystemBase {
         if (stopped){
             intakeRollers.setControlMode(ControlMode.STOP);
             intakePivot.setControlMode(GenericSuperstructure.ControlMode.STOP);
+        //if else set control mode to zero
+        } else if (intakePivot.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
+            intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
         } else {
             // set target states to those in the current controller state
             intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
@@ -62,15 +66,15 @@ public class IntakeController extends SubsystemBase {
 
 
     // GETTTERS AND SETTERS
-    public void setTargetState(IntakeControllerState targetState){
+    public void setTargetState(IntakeState targetState){
         setStopped(false);
         this.targetState = targetState;
     }
-    public IntakeControllerState getTargetState(){
+    public IntakeState getTargetState(){
         return targetState;
     }
 
-    public Command setTargetStateCommand(IntakeControllerState targetState){
+    public Command setTargetStateCommand(IntakeState targetState){
         return new InstantCommand(() -> setTargetState(targetState), this);
     }
 
@@ -80,5 +84,11 @@ public class IntakeController extends SubsystemBase {
 
     public Command setStoppedCommand(boolean stopped){
         return new InstantCommand(() -> setStopped(stopped));
+    } 
+    
+    public Command zeroCommand(){
+        return new InstantCommand(() -> intakePivot.setControlMode(GenericSuperstructure.ControlMode.ZEROING))
+            .alongWith(setTargetStateCommand(IntakeState.ZEROING)
+            .alongWith(setStoppedCommand(false)));
     }
 }

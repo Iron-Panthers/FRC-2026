@@ -2,7 +2,7 @@ package frc.robot.lib.generic_subsystems.superstructure;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import frc.robot.lib.generic_subsystems.GenericMechanismConfiguration;
+import frc.robot.lib.generic_subsystems.mechanism.GenericMechanismConfiguration;
 
 public class GenericSuperstructureConfiguration extends GenericMechanismConfiguration {
   /**
@@ -69,63 +69,7 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
     return this;
   }
 
-  /**
-   * The upper voltage limit for the motor.
-   *
-   * <ul>
-   *   <li><b>Minimum Value:</b> -16
-   *   <li><b>Maximum Value:</b> 16
-   *   <li><b>Default Value:</b> 16
-   *   <li><b>Units:</b> V
-   * </ul>
-   */
-  public double upperVoltLimit = 16;
-
-  /**
-   * The upper voltage limit for the motor.
-   *
-   * <ul>
-   *   <li><b>Minimum Value:</b> -16
-   *   <li><b>Maximum Value:</b> 16
-   *   <li><b>Default Value:</b> 16
-   *   <li><b>Units:</b> V
-   * </ul>
-   *
-   * @return itself
-   */
-  public GenericSuperstructureConfiguration withUpperVoltageLimit(double upperVoltLimit) {
-    this.upperVoltLimit = upperVoltLimit;
-    return this;
-  }
-
-  /**
-   * The lower voltage limit for the motor.
-   *
-   * <ul>
-   *   <li><b>Minimum Value:</b> -16
-   *   <li><b>Maximum Value:</b> 16
-   *   <li><b>Default Value:</b> -16
-   *   <li><b>Units:</b> V
-   * </ul>
-   */
-  public double lowerVoltLimit = 16;
-
-  /**
-   * The lower voltage limit for the motor.
-   *
-   * <ul>
-   *   <li><b>Minimum Value:</b> -16
-   *   <li><b>Maximum Value:</b> 16
-   *   <li><b>Default Value:</b> -16
-   *   <li><b>Units:</b> V
-   * </ul>
-   *
-   * @return itself
-   */
-  public GenericSuperstructureConfiguration withLowerVoltageLimit(double lowerVoltLimit) {
-    this.lowerVoltLimit = lowerVoltLimit;
-    return this;
-  }
+  
 
   /**
    * Voltage applied to the motor during zeroing.
@@ -230,4 +174,15 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
     return this;
   }
 
+  @Override
+  public GenericSuperstructureConfiguration withUpperVoltageLimit(double upperVoltLimit) {
+    super.withUpperVoltageLimit(upperVoltLimit);
+    return this;
+  }
+
+  @Override
+  public GenericSuperstructureConfiguration withLowerVoltageLimit(double lowerVoltLimit) {
+    super.withLowerVoltageLimit(lowerVoltLimit);
+    return this;
+  }
 }

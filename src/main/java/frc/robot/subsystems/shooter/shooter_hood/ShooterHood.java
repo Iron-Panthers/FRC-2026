@@ -13,9 +13,10 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTarget>
     implements LoggableMechanism3d {
     public enum ShooterHoodTarget implements GenericSuperstructure.PositionTarget{
-        BOTTOM(0), //need to update
+        STOW(0), //need to update
         HALF(45), //need to update
-        UP(45); //need to update
+        TOP(45), //need to update
+        SHOOT_TEMP(12) ; //need to update
         
         private double position; // in rotations
         private static final double EPSILON = ShooterHoodConstants.POSITION_TARGET_EPSILON;
@@ -39,7 +40,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     } //close enum
     public ShooterHood(ShooterHoodIO io){
         super("Shooter/Shooter Hood", io);
-        setPositionTarget(ShooterHoodTarget.BOTTOM);
+        setPositionTarget(ShooterHoodTarget.STOW);
         setControlMode(ControlMode.STOP);
     }
     
@@ -49,7 +50,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     public void periodic(){
         super.periodic();
         Logger.recordOutput(
-            "Shooter/ShooterHood/PositionTargetRotations", //TODO: add naming convention to notion doc
+            "Shooter/Shooter Hood/PositionTargetRotations", //TODO: add naming convention to notion doc
             getPositionTarget().getPosition());
     }
 
@@ -85,7 +86,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     }
 
     //TODO make sure logic is correct for getting Display Pose3D
-    @AutoLogOutput(key = "Shooter/ShooterHood/DisplayPose3d")
+    @AutoLogOutput(key = "Shooter/Shooter Hood/DisplayPose3d")
     @Override
     public Pose3d getDisplayPose3d() {
         return getParentPosition()
@@ -94,5 +95,4 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
                     new Transform3d(
                         Translation3d.kZero, new Rotation3d( -Math.toRadians(getPosition() * 360),0, 0)));
     }
-
 }//close class

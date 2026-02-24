@@ -21,6 +21,7 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
   public enum ControlMode {
     POSITION,
     POSITION_MANUAL,
+    ZEROING,
     STOP;
   }
 
@@ -55,18 +56,23 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
           superstructureIO.runPosition(positionTargetManual.get());
         }
       }
+      case ZEROING -> {
+        superstructureIO.runCharacterization();
+        if (getSupplyCurrentAmps() >= 2) {
+          superstructureIO.setOffset();
+          setControlMode(ControlMode.STOP);
+        }
+      }
       case STOP -> {
         superstructureIO.stop();
       }
     }
 
-    Logger.recordOutput("Superstructure/" + name + "/Target", positionTarget.toString());
-    Logger.recordOutput("Superstructure/" + name + "/Control Mode", controlMode.toString());
-    Logger.recordOutput("Superstructure/" + name + "/Reached target", reachedTarget());
-    Logger.recordOutput(
-        "Superstructure/" + name + "/Target Position", positionTarget.getPosition());
-    Logger.recordOutput(
-        "Superstructure/" + name + "/Target Position Manual", positionTargetManual.orElse(0.0));
+    Logger.recordOutput(name + "/Target", positionTarget.toString());
+    Logger.recordOutput(name + "/ControlMode", controlMode.toString());
+    Logger.recordOutput(name + "/ReachedTarget", reachedTarget());
+    Logger.recordOutput(name + "/TargetPosition", positionTarget.getPosition());
+    Logger.recordOutput(name + "/TargetPositionManual", positionTargetManual.orElse(0.0));
   }
 
   public G getPositionTarget() {
@@ -120,6 +126,7 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
           case POSITION -> positionTarget.getPosition();
           case POSITION_MANUAL -> positionTargetManual.orElse(0d);
           case STOP -> inputs.positionRotations;
+          default -> 0;
         };
     return Math.abs(inputs.positionRotations - targetPosition) <= positionTarget.getEpsilon();
   }

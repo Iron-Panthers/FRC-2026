@@ -22,6 +22,7 @@ public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements
                 .withMotorDirection(SHOOTER_FLYWHEEL_CONFIG.inverted() ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
                 .withNeutralMode(SHOOTER_FLYWHEEL_CONFIG.brake())
                 .withReduction(SHOOTER_FLYWHEEL_CONFIG.reduction())
+                .withAdditionalFollowerMotor(SHOOTER_FLYWHEEL_CONFIG.motorID2(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor())
         );
         super.setSlot0(
             GAINS.kP(),
@@ -30,11 +31,5 @@ public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements
             GAINS.kS(),
             GAINS.kV(),
             GAINS.kA());
-
-        // initing second motor because why not
-        talon2 = new TalonFX(SHOOTER_FLYWHEEL_CONFIG.motorID2());
-        talon2.getConfigurator().apply(config);
-        talon2.setNeutralMode(SHOOTER_FLYWHEEL_CONFIG.brake() ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-        talon2.setControl(new Follower(talon.getDeviceID(), OPPOSE_MOTOR ? MotorAlignmentValue.Aligned : MotorAlignmentValue.Opposed));
     }
 }
