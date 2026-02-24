@@ -144,7 +144,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          vision = new Vision(new VisionIOPhotonvision("arducam-4", 0), new VisionIOPhotonvision("arducam-5", 1));
+          vision = new Vision(new VisionIOPhotonvision("arducam-4", 0, () -> swerve.getFieldRelativeYaw()), new VisionIOPhotonvision("arducam-5", 1, () -> swerve.getFieldRelativeYaw()));
         }
         case ALPHA -> {
           swerve =
@@ -169,9 +169,9 @@ public class RobotContainer {
                   new ModuleIOTalonFXSim(
                       DriveConstants.MODULE_CONFIGS[3], driveSimulation.getModules()[3]));
           vision =
-              new Vision(
-                  new VisionIOPhotonvisionSim("arducam-3",3, driveSimulation::getSimulatedDriveTrainPose));
-                  new VisionIOPhotonvisionSim("arducam-4", 4, driveSimulation::getSimulatedDriveTrainPose);
+               new Vision(
+                   new VisionIOPhotonvisionSim("arducam-3",0, driveSimulation::getSimulatedDriveTrainPose),
+                   new VisionIOPhotonvisionSim("arducam-4", 1, driveSimulation::getSimulatedDriveTrainPose));
 
           // INTAKE
           intakePivot = new IntakePivot(new IntakePivotIOSim());

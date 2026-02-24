@@ -167,6 +167,10 @@ public class Drive extends SubsystemBase {
     }
   }
 
+    public  Rotation2d getFieldRelativeYaw(){
+      return fieldRelativeYaw;
+    }
+
   public void setDefenseMode(){
       driveMode = DriveModes.DEFENSE;
     }
