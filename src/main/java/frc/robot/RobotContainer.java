@@ -156,7 +156,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
-          //   vision = new Vision(new VisionIOPhotonvision(4), new VisionIOPhotonvision(5));
+          vision = new Vision(new VisionIOPhotonvision("arducam-6", 0));
           // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
@@ -410,11 +410,15 @@ public class RobotContainer {
       .alongWith(new InstantCommand(() -> climbController.setStopped(true))));
     driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW)
       .alongWith(climbController.setTargetStateCommand(ClimbState.STOW)));
-    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW).andThen(climbController.setTargetStateCommand(ClimbState.DEPLOY)));
+    driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW)
+      .andThen(climbController.setTargetStateCommand(ClimbState.DEPLOY))
+        .alongWith(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getClimbTarget(), false)));
     driverB.y().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW).andThen(climbController.setTargetStateCommand(ClimbState.L3)));
     driverB.rightBumper().onTrue(climbController.setTargetStateCommand(ClimbState.STOW)
       .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))); 
     
+      driverB.povLeft().onTrue(intakeController.zeroCommand());
+      driverB.povDown().onTrue(shooterController.zeroCommand());
   }
 
   private void configureAutos() {

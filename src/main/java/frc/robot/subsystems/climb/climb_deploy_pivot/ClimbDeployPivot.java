@@ -2,6 +2,7 @@ package frc.robot.subsystems.climb.climb_deploy_pivot;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.subsystems.climb.*;
 

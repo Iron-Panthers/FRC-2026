@@ -1,5 +1,7 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.subsystems.intake.intakePivot.IntakePivotConstants.SUPPLY_CURRENT_LIMIT;
+import static frc.robot.subsystems.swerve.DriveConstants.CURRENT_LIMIT_AMPS;
 import static frc.robot.subsystems.swerve.DriveConstants.DRIVE_CONFIG;
 import static frc.robot.subsystems.swerve.DriveConstants.MODULE_CONSTANTS;
 import static frc.robot.utility.PhoenixUtil.*;
@@ -57,8 +59,8 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     encoder = new CANcoder(config.encoderID());
 
     // Drive Config
-    driveConfig.CurrentLimits.StatorCurrentLimit = 80; // TODO: Make constant
-    driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    driveConfig.CurrentLimits.SupplyCurrentLimit = CURRENT_LIMIT_AMPS; // TODO: Make constant
+    driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     driveConfig.Feedback.SensorToMechanismRatio = MODULE_CONSTANTS.driveReduction();
     driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -70,8 +72,8 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
 
     // Steer Config
-    steerConfig.CurrentLimits.StatorCurrentLimit = 50; // TODO: Make constant
-    steerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    steerConfig.CurrentLimits.SupplyCurrentLimit = CURRENT_LIMIT_AMPS; // TODO: Make constant
+    steerConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     steerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     steerConfig.MotorOutput.Inverted = config.steerInverted();
