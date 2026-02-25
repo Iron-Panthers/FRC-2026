@@ -96,13 +96,13 @@ public class ShooterController extends SubsystemBase {
             shooterAccelerator.setControlMode(ControlMode.STOP);
         }
         else {
-            // if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE) {
-            //     // If shooting, update the hood target based on the calculated shooter angle
-            //     shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
-            // }
-            // else {
+            if (targetState == ShooterState.SHOOT || targetState == ShooterState.IDLE) {
+                // If shooting, update the hood target based on the calculated shooter angle
+                shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
+            }
+            else {
                 shooterHood.setPositionTarget(targetState.hoodTarget);
-            // }
+            }
             shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
