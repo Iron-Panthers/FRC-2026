@@ -141,7 +141,7 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
 
   @Override
   public void runCharacterization() {
-    talon.setControl(voltageOutput.withOutput(-zeroingVolts));
+    talon.setControl(voltageOutput.withOutput(zeroingVolts));
   }
 
   @Override
