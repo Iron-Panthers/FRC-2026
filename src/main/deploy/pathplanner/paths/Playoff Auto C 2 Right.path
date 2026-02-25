@@ -86,7 +86,7 @@
   "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -133.452
+    "rotation": -130.33967189930965
   },
   "useDefaultConstraints": true
 }
