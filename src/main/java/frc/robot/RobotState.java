@@ -42,7 +42,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -65,6 +64,7 @@ import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltHub;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkInput;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /* based on wpimath/../PoseEstimator.java */
@@ -227,6 +227,7 @@ public class RobotState {
     private Supplier<LinearVelocity> shooterVelocitySupplier;
     private Supplier<Transform3d> shooterPositionSupplier;
 
+    public LoggedNetworkNumber tempShooterAngle = new LoggedNetworkNumber("Tuning/TempShooterAngle", 0);
 
     // Moving average filters for smooth velocity measurements
     private final LinearFilter vxFilter = LinearFilter.movingAverage(5);
@@ -248,13 +249,7 @@ public class RobotState {
 
     public void initializeShooterTable(){
       this.shooterTable.clear();
-      this.shooterTable.put(1.3, new HoodParams(88, 1.621));
-      this.shooterTable.put(2.0, new HoodParams(84.5, 1.621));
-      this.shooterTable.put(2.5, new HoodParams(82, 1.601));
-      this.shooterTable.put(3.0, new HoodParams(79.5, 1.602));
-      this.shooterTable.put(3.5, new HoodParams(77.5, 1.581));
-      this.shooterTable.put(4.0, new HoodParams(75.5, 1.561));
-      this.shooterTable.put(4.5, new HoodParams(74, 1.561));
+      this.shooterTable.put(2.0, new HoodParams(tempShooterAngle.get(), 1.621));
     }
 
     public TargetShootingState calculateTargetShootingState(){
@@ -405,9 +400,20 @@ public class RobotState {
   public static boolean isAllianceRed() {
     //where true is red and false is blue
     var alliance = DriverStation.getAlliance();
-    if (RobotBase.isReal()) {
+    if (alliance.isPresent()) {
       return alliance.get() == DriverStation.Alliance.Red;
     }
     return false;
+  }
+
+  public Pose2d getClimbTarget(){
+    Pose2d climbLeftPose = DriveConstants.CLIMB_LEFT_POSE;
+    Pose2d climbRightPose = DriveConstants.CLIMB_RIGHT_POSE;
+    if (climbRightPose.getTranslation().getDistance(estimatedPose.getTranslation()) <
+        climbLeftPose.getTranslation().getDistance(estimatedPose.getTranslation())){
+      return climbLeftPose;
+    }else{
+      return climbRightPose;
+    }
   }
 }

@@ -226,8 +226,6 @@ public class RobotContainer {
 
           climbClawPivot = new ClimbClawPivot(new ClimbClawPivotIOSim());
           climbDeployPivot = new ClimbDeployPivot(new ClimbDeployPivotIOSim());
-
-          SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
         }
       }
     }
@@ -300,7 +298,7 @@ public class RobotContainer {
     RobotState.getInstance().initializeShootingAnglePredictor(
       () -> ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotSpeeds(), RobotState.getInstance().getEstimatedPose().getRotation()), 
       () -> shooterController.getCurrentVelocity(),
-      () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(-90)); 
+      () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(0)); 
 
     nameCommands();
     configureAutos();
@@ -395,12 +393,12 @@ public class RobotContainer {
       .andThen(shooterController.setTargetStateCommand(ShooterState.SHOOT)));
     // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
     //   .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
-    // driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
-    //   new RunCommand(() -> {
-    //       swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(90))));
-    //   })
-    //   .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
-    // );
+    driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
+      new RunCommand(() -> {
+          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(180))));
+      })
+      .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
+    );
   }
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
