@@ -153,8 +153,8 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           vision = new Vision(new VisionIOPhotonvision("arducam-6", 0));
           // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
@@ -167,8 +167,6 @@ public class RobotContainer {
             new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
           shooterAccelerator = 
             new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
-          // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           hopper = new Hopper(new HopperIOTalonFX());
         }
         case VISION -> {

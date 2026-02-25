@@ -64,6 +64,7 @@ import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltHub;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkInput;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /* based on wpimath/../PoseEstimator.java */
@@ -226,7 +227,7 @@ public class RobotState {
     private Supplier<LinearVelocity> shooterVelocitySupplier;
     private Supplier<Transform3d> shooterPositionSupplier;
 
-    public LoggedNetworkNumber tempShooterAngle = new LoggedNetworkNumber("Tuning/TempShooterAngle");
+    public LoggedNetworkNumber tempShooterAngle = new LoggedNetworkNumber("Tuning/TempShooterAngle", 0);
 
     // Moving average filters for smooth velocity measurements
     private final LinearFilter vxFilter = LinearFilter.movingAverage(5);
@@ -248,13 +249,7 @@ public class RobotState {
 
     public void initializeShooterTable(){
       this.shooterTable.clear();
-      this.shooterTable.put(1.3, new HoodParams(88, 1.621));
-      this.shooterTable.put(2.0, new HoodParams(84.5, 1.621));
-      this.shooterTable.put(2.5, new HoodParams(82, 1.601));
-      this.shooterTable.put(3.0, new HoodParams(79.5, 1.602));
-      this.shooterTable.put(3.5, new HoodParams(77.5, 1.581));
-      this.shooterTable.put(4.0, new HoodParams(75.5, 1.561));
-      this.shooterTable.put(4.5, new HoodParams(74, 1.561));
+      this.shooterTable.put(2.0, new HoodParams(tempShooterAngle.get(), 1.621));
     }
 
     public TargetShootingState calculateTargetShootingState(){
