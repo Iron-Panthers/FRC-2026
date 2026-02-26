@@ -7,6 +7,7 @@ public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTar
     public enum IntakeRollersTarget implements GenericRollers.VelocityTarget{
         INTAKE(60),
         IDLE(0.0),
+        INTAKE_DOWN(-1),
         EJECT(-3.0),
         HOLD(1.0);
         

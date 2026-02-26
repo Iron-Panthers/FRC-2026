@@ -26,9 +26,9 @@ public class ShooterOmniwheelConstants {
 
     public static final int CURRENT_LIMIT_AMPS =
         switch (Constants.getRobotType()) {
-            case COMP -> 40;
-            case SIM -> 40;
-            default -> 40;
+            case COMP -> 30;
+            case SIM -> 30;
+            default -> 30;
         };
 
     public static final ShooterOmniwheelPhysicalConstants PHYSICAL_CONSTANTS =
