@@ -261,7 +261,7 @@ public class RobotState {
         }
         default -> {
         this.shooterTable.put(1.3, new HoodParams(85, 1.621));
-        this.shooterTable.put(2.0, new HoodParams(79.5, 1.621));
+        this.shooterTable.put(2.0, new HoodParams(tempShooterAngle.get(), 1.621));
         this.shooterTable.put(2.5, new HoodParams(77, 1.601));
         this.shooterTable.put(3.0, new HoodParams(74.5, 1.602));
         this.shooterTable.put(3.5, new HoodParams(73.5, 1.581));

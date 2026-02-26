@@ -29,7 +29,7 @@ public class VisionConstants {
         case COMP -> new Transform3d[] {
           // new Transform3d(new Translation3d(), new Rotation3d())
           // arducam-7 (front in rollers)
-          new Transform3d(new Translation3d(0.39652674379759234, -0.284255382216857, 0.47565698058562966), new Rotation3d(0.043186409797544914, -0.603995628066826, -0.016653331133166884))
+          new Transform3d(new Translation3d(-0.3742394074228319, 0.2958554867169158, 0.46319638351625225), new Rotation3d(0.048833313512474996, -0.6159735526187061, 3.0981605781693538))
           // // arducam-6 (front)
           // new Transform3d(new Translation3d(0.22860929920064077, 0.2077131830328219, 0.4409522926695345), new Rotation3d(0.022664911373188813, -0.47667215401543667, 0.005354613028298594))
         };
