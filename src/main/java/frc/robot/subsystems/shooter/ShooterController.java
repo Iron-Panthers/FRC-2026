@@ -106,7 +106,7 @@ public class ShooterController extends SubsystemBase {
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
         }
-        else if (targetState == ShooterState.SHOOT) {
+        else if (targetState == ShooterState.SHOOT || targetState == ShooterState.TOTAL_SPIN_UP) {
             // If shooting, update the hood target based on the calculated shooter angle
             shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
             shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
