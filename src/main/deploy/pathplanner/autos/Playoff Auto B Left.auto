@@ -1,67 +1,37 @@
 {
-  "version": "2025.0",
-  "command": {
-    "type": "sequential",
-    "data": {
-      "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "Spin up shooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Playoff Auto B 1 Left"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Spin up shooter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Playoff Auto B 2 Left"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Spin up shooter"
-          }
+  "version" : "2025.0",
+  "command" : {
+    "type" : "sequential",
+    "data" : {
+      "commands" : [ {
+        "type" : "path",
+        "data" : {
+          "pathName" : "Playoff Auto C 1 Left"
         }
-      ]
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Shoot"
+        }
+      }, {
+        "type" : "path",
+        "data" : {
+          "pathName" : "Playoff Auto B Left"
+        }
+      }, {
+        "type" : "path",
+        "data" : {
+          "pathName" : "Playoff Auto B Left"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Shoot"
+        }
+      } ]
     }
   },
-  "resetOdom": false,
-  "folder": "Left Autos (auto generated)",
-  "choreoAuto": false
+  "resetOdom" : true,
+  "folder" : "Left Autos (auto generated)",
+  "choreoAuto" : false
 }
