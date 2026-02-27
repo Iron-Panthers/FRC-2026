@@ -34,14 +34,14 @@ public class ShooterController extends SubsystemBase {
         ),
         /**shoot: spinning to shoot*/
         SHOOT(
-            ShooterHoodTarget.SHOOT_TEMP,
+            ShooterHoodTarget.DEFAULT_SHOOT,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.SHOOT,
             ShooterOmniwheelTarget.SHOOT
         ),
         
         TOTAL_SPIN_UP(
-            ShooterHoodTarget.SHOOT_TEMP,
+            ShooterHoodTarget.DEFAULT_SHOOT,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.SHOOT,
             ShooterOmniwheelTarget.IDLE
@@ -79,6 +79,7 @@ public class ShooterController extends SubsystemBase {
     }
     private ShooterState targetState = ShooterState.IDLE;
     private boolean stopped = false;
+    private boolean autoAim = false;
 
     //might need sensors defined here and in constructor
     private final ShooterFlywheel shooterFlywheel;
@@ -106,7 +107,7 @@ public class ShooterController extends SubsystemBase {
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
         }
-        else if (targetState == ShooterState.SHOOT || targetState == ShooterState.TOTAL_SPIN_UP) {
+        else if ((targetState == ShooterState.SHOOT || targetState == ShooterState.TOTAL_SPIN_UP) && autoAim) {
             // If shooting, update the hood target based on the calculated shooter angle
             shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
             shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
@@ -126,6 +127,7 @@ public class ShooterController extends SubsystemBase {
         
         Logger.recordOutput("Shooter/TargetState", targetState);
         Logger.recordOutput("Shooter/IsStopped", stopped);
+        Logger.recordOutput("Shooter/AutoAim", autoAim);
     }
 
     public ShooterState getTargetState() {
@@ -157,5 +159,13 @@ public class ShooterController extends SubsystemBase {
 
     public LinearVelocity getCurrentVelocity(){
         return shooterFlywheel.getCurrentVelocity();
+    }
+
+    public void setAutoAim(boolean autoAim){
+        this.autoAim = autoAim;
+    }
+
+    public Command setAutoAimCommand(boolean autoAim){
+        return new InstantCommand(()-> setAutoAim(autoAim));
     }
 }
