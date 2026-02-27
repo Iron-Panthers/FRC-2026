@@ -9,6 +9,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
@@ -156,7 +157,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
-          vision = new Vision(new VisionIOPhotonvision("arducam-6", 0));
+          vision = new Vision(new VisionIOPhotonvision("arducam-7", 0));
           // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
@@ -168,8 +169,6 @@ public class RobotContainer {
             new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
           shooterAccelerator = 
             new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
-          // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           hopper = new Hopper(new HopperIOTalonFX());
         }
         case VISION -> {
@@ -298,7 +297,7 @@ public class RobotContainer {
     RobotState.getInstance().initializeShootingAnglePredictor(
       () -> ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotSpeeds(), RobotState.getInstance().getEstimatedPose().getRotation()), 
       () -> shooterController.getCurrentVelocity(),
-      () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(0)); 
+      () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(-180)); 
 
     nameCommands();
     configureAutos();
@@ -395,9 +394,14 @@ public class RobotContainer {
     //   .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
     driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
       new RunCommand(() -> {
-          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(180))));
+          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(0))));
+
+          final Translation3d hubPosition3d = RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
+          Translation2d toGoal = hubPosition3d.toTranslation2d().minus(RobotState.getInstance().getEstimatedPose().getTranslation());
+          double distance = toGoal.getNorm();
+          Logger.recordOutput("Tuning/DistanceTo", distance);
       })
-      .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
+      // .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
     );
   }
   private void configureDriverBButtons() {
@@ -472,7 +476,8 @@ public class RobotContainer {
   /** Ran when periodic disabled */
   public void updateDashboardStatus() {
     // TODO: Define all of the dashboard outputs here
-    SmartDashboard.putString("Current Auto", autoChooser.get().getName());
+    var selectedAuto = autoChooser.get();
+    SmartDashboard.putString("Current Auto", selectedAuto != null ? selectedAuto.getName() : "None");
   }
 
   public static double doubleToDegrees(double angle) {

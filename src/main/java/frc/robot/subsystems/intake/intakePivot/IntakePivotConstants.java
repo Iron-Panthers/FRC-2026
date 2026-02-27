@@ -48,16 +48,16 @@ public class IntakePivotConstants {
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-  public static final double POSITION_TARGET_EPSILON = 0.01;
+  public static final double POSITION_TARGET_EPSILON = 0.002;
 
   // CURRENT LIMITS
   public static final double UPPER_VOLT_LIMIT = 12;
   public static final double LOWER_VOLT_LIMIT = -12;
-  public static final double SUPPLY_CURRENT_LIMIT = 10;
+  public static final double SUPPLY_CURRENT_LIMIT = 30;
 
   // ZEROING CONSTANTS
   public static final double ZEROING_VOLTS = 1;
-  public static final double ZEROING_OFFSET = -22.0/360.0; // offset in rotations
+  public static final double ZEROING_OFFSET = 87/360.0; // offset in rotations
 
   public static final Transform3d BASE_TO_INTAKE_PIVOT_TRANSFORM =
       switch (Constants.getRobotType()) {

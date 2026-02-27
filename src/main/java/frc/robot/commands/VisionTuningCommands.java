@@ -55,13 +55,13 @@ public class VisionTuningCommands {
   public static Transform3d heldTagTransform =
       new Transform3d(
           new Translation3d( //
-              Units.inchesToMeters((14.5+30+7.13)), // Distance forward
-              Units.inchesToMeters(0.), // Distance left
+              Units.inchesToMeters(-(31.5/2 + 30)), // Distance forward
+              Units.inchesToMeters(0), // Distance left
               Units.inchesToMeters(44.25) // Distance up
               ),
-          new Rotation3d(0., 0., Units.degreesToRadians(180)));
+          new Rotation3d(0., 0., Units.degreesToRadians(0)));
 
-  public static Pose3d heldTagPose = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(4).get();
+  public static Pose3d heldTagPose = VisionConstants.APRIL_TAG_FIELD_LAYOUT.getTagPose(10).get();
 
   // 481.387in
 
@@ -97,24 +97,24 @@ public class VisionTuningCommands {
                 printTransform(transform);
               }
 
-              Transform3d frontLeftTransform = adjustedTransforms[0];
-              Transform3d frontRightTransform = adjustedTransforms[1];
-              double frontWidth = frontLeftTransform.getY() - frontRightTransform.getY();
-              frontLeftTransform =
-                  new Transform3d(
-                      new Translation3d(
-                          frontLeftTransform.getX(), frontWidth / 2, frontLeftTransform.getZ()),
-                      frontLeftTransform.getRotation());
-              frontRightTransform =
-                  new Transform3d(
-                      new Translation3d(
-                          frontRightTransform.getX(), -frontWidth / 2, frontRightTransform.getZ()),
-                      frontRightTransform.getRotation());
+            //   Transform3d frontLeftTransform = adjustedTransforms[0];
+            //   Transform3d frontRightTransform = adjustedTransforms[1];
+            //   double frontWidth = frontLeftTransform.getY() - frontRightTransform.getY();
+            //   frontLeftTransform =
+            //       new Transform3d(
+            //           new Translation3d(
+            //               frontLeftTransform.getX(), frontWidth / 2, frontLeftTransform.getZ()),
+            //           frontLeftTransform.getRotation());
+            //   frontRightTransform =
+            //       new Transform3d(
+            //           new Translation3d(
+            //               frontRightTransform.getX(), -frontWidth / 2, frontRightTransform.getZ()),
+            //           frontRightTransform.getRotation());
 
-              System.out.print("Robot to front left camera (centered Y compensated): ");
-              printTransform(frontLeftTransform);
-              System.out.print("Robot to front right camera (centered Y compensated): ");
-              printTransform(frontRightTransform);
+            //   System.out.print("Robot to front left camera (centered Y compensated): ");
+            //   printTransform(frontLeftTransform);
+            //   System.out.print("Robot to front right camera (centered Y compensated): ");
+            //   printTransform(frontRightTransform);
             });
   }
 

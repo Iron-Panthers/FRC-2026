@@ -7,13 +7,14 @@ import org.littletonrobotics.junction.AutoLogOutput;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywheelTarget>{
     public enum ShooterFlywheelTarget implements GenericRollers.VelocityTarget {
         //TODO: need to change; from sprint 2025 -- ive taken away a few states
         IDLE(0),
-        SHOOT(8.6);
+        SHOOT(RobotBase.isReal() ? 9.6 : 8.6); // TODO: make this uniform
 
         private double velocity;
 

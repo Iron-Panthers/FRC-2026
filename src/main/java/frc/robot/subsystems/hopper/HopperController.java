@@ -29,7 +29,7 @@ public class HopperController extends SubsystemBase {
         }
     }
 
-    private HopperControllerState targetState = HopperControllerState.INTAKE;
+    private HopperControllerState targetState = HopperControllerState.SLOW;
 
     private final Hopper hopper;
 
