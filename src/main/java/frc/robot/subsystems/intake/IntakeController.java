@@ -54,21 +54,6 @@ public class IntakeController extends SubsystemBase {
         //if else set control mode to zero
         } else if (intakePivot.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
             intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
-        } else if (targetState == IntakeState.INTAKE) {
-            IntakeRollersTarget rollersTarget = targetState.getIntakeRollersTarget();
-            if (intakePivot.getPositionTarget().getPosition() == IntakePivotTarget.STOW.getPosition()){
-                intakePivot.setPositionTarget(IntakePivotTarget.DYING_1);
-                intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE_DOWN);
-            } else if (intakePivot.getPositionTarget().getPosition() == IntakePivotTarget.DYING_1.getPosition() && intakePivot.reachedTarget()){
-                intakePivot.setPositionTarget(IntakePivotTarget.DYING_2);
-                intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE_DOWN);
-            } else if (intakePivot.getPositionTarget().getPosition() == IntakePivotTarget.DYING_2.getPosition() && intakePivot.reachedTarget()){
-                intakePivot.setPositionTarget(IntakePivotTarget.INTAKE);
-                intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE_DOWN);
-            } else if (intakePivot.getPositionTarget().getPosition() == IntakePivotTarget.INTAKE.getPosition() && intakePivot.reachedTarget()){
-                intakePivot.setPositionTarget(IntakePivotTarget.INTAKE);
-                intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE);
-            }
         } else {
             // set target states to those in the current controller state
             intakePivot.setPositionTarget(targetState.getIntakePivotTarget());

@@ -14,8 +14,6 @@ import frc.robot.utility.LoggableMechanism3d;
 public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget> implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
     INTAKE(-13), 
-    DYING_1(23),
-    DYING_2(26),
     STOW(86);
 
     private double position;
