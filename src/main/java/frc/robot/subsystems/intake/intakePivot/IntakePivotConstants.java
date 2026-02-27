@@ -3,6 +3,7 @@ package frc.robot.subsystems.intake.intakePivot;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -60,10 +61,16 @@ public class IntakePivotConstants {
 
   public static final Transform3d BASE_TO_INTAKE_PIVOT_TRANSFORM =
       switch (Constants.getRobotType()) {
-        default -> new Transform3d(
-            new Translation3d(
-                Units.inchesToMeters(-10.940786), Units.inchesToMeters(-0.1875), Units.inchesToMeters(7.191913)),
-            new Rotation3d(0, 0, 0));
+        default -> new Pose3d()
+            .plus(
+                new Transform3d(
+                    new Translation3d(
+                        Units.inchesToMeters(-10.940786),
+                        Units.inchesToMeters(-0.1875),
+                        Units.inchesToMeters(7.191913)),
+                    new Rotation3d(0, 0, 0)))
+            .rotateBy(new Rotation3d(0, 0, Math.toRadians(90)))
+            .minus(new Pose3d());
       };
 
   public static record IntakePivotPhysicalConstants(

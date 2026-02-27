@@ -14,6 +14,67 @@ task(replayWatch, type: JavaExec) {
     mainClass = "org.littletonrobotics.junction.ReplayWatch"
     classpath = sourceSets.main.runtimeClasspath
 }
+
+// Task to mirror PathPlanner paths across field centerline
+task mirrorPaths(type: JavaExec) {
+    description = 'Mirrors PathPlanner paths across field centerline'
+    group = 'build'
+    
+    mainClass = 'frc.robot.util.MirrorPathUtil'
+    classpath = sourceSets.main.runtimeClasspath
+    
+    def pathDir = file('src/main/deploy/pathplanner/paths')
+    
+    // Find all .path files (excluding already generated left ones)
+    def pathFiles = fileTree(pathDir) {
+        include '*.path'
+        exclude '* Left.path'
+    }
+    
+    // Only run if path files exist
+    onlyIf {
+        pathFiles.files.size() > 0
+    }
+    
+    // Pass all path files as arguments
+    args = pathFiles.files.collect { it.absolutePath }
+}
+
+// Task to mirror PathPlanner autos to use mirrored paths
+task mirrorAutos(type: JavaExec) {
+    description = 'Mirrors PathPlanner autos to use mirrored paths'
+    group = 'build'
+    
+    mainClass = 'frc.robot.util.MirrorAutoUtil'
+    classpath = sourceSets.main.runtimeClasspath
+    
+    // Must run after mirrorPaths so mirrored paths exist
+    dependsOn mirrorPaths
+    
+    def autoDir = file('src/main/deploy/pathplanner/autos')
+    
+    // Find all .auto files (excluding already generated left ones)
+    def autoFiles = fileTree(autoDir) {
+        include '*.auto'
+        exclude '* Left.auto'
+    }
+    
+    // Only run if auto files exist
+    onlyIf {
+        autoFiles.files.size() > 0
+    }
+    
+    // Pass all auto files as arguments
+    args = autoFiles.files.collect { it.absolutePath }
+}
+
+// Make build and deploy depend on mirrorAutos (which depends on mirrorPaths)
+tasks.named('build').configure {
+    dependsOn mirrorAutos
+}
+tasks.named('deploy').configure {
+    dependsOn mirrorAutos
+}
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
 deploy {

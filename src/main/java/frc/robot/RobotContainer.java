@@ -3,6 +3,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.geometry.Pose3d;
@@ -225,8 +226,6 @@ public class RobotContainer {
 
           climbClawPivot = new ClimbClawPivot(new ClimbClawPivotIOSim());
           climbDeployPivot = new ClimbDeployPivot(new ClimbDeployPivotIOSim());
-
-          SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
         }
       }
     }
@@ -299,7 +298,7 @@ public class RobotContainer {
     RobotState.getInstance().initializeShootingAnglePredictor(
       () -> ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotSpeeds(), RobotState.getInstance().getEstimatedPose().getRotation()), 
       () -> shooterController.getCurrentVelocity(),
-      () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(-90)); 
+      () -> ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM, Units.Degrees.of(0)); 
 
     nameCommands();
     configureAutos();
@@ -314,6 +313,11 @@ public class RobotContainer {
   /** Use this method to define the named commands for all of the autos */
   private void nameCommands() {
     // Register Command Names in this method
+    NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeState.INTAKE));
+    NamedCommands.registerCommand("Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
+    NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
+    NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
+    NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
   }
 
   private void configureBindings() {
@@ -389,12 +393,12 @@ public class RobotContainer {
       .andThen(shooterController.setTargetStateCommand(ShooterState.SHOOT)));
     // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
     //   .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
-    // driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
-    //   new RunCommand(() -> {
-    //       swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(90))));
-    //   })
-    //   .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
-    // );
+    driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
+      new RunCommand(() -> {
+          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(180))));
+      })
+      .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
+    );
   }
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
@@ -447,7 +451,7 @@ public class RobotContainer {
   }
 
   public Command getAutoCommand() {
-    return autoChooser.get(); // HACK: Replace once we get auto logging
+    return autoChooser.get(); 
   }
 
   // runs when auto starts

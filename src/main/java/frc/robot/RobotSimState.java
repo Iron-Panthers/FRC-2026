@@ -40,7 +40,9 @@ public class RobotSimState {
    private RobotSimState(){
         // init the arena
         Arena2026Rebuilt arena = new Arena2026Rebuilt(false);
-        arena.resetFieldForAuto();
+
+        arena.setEfficiencyMode(false);
+        arena.placeGamePiecesOnField();
 
         // start the cloock
         arena.setShouldRunClock(true);
@@ -54,9 +56,10 @@ public class RobotSimState {
         SimulatedArena.overrideInstance(arena);
 
         // intake
-        intakeSimulation = IntakeSimulation.OverTheBumperIntake("Fuel", driveSimulation, Meters.of(DriveConstants.DRIVE_CONFIG.bumperWidthX()), Meters.of(.3), IntakeSimulation.IntakeSide.BACK, INTAKE_FUEL_CAPACITY);
+        intakeSimulation = IntakeSimulation.OverTheBumperIntake("Fuel", driveSimulation, Meters.of(DriveConstants.DRIVE_CONFIG.bumperWidthX()), Meters.of(.3), IntakeSimulation.IntakeSide.RIGHT, INTAKE_FUEL_CAPACITY);
         // load the intake initially
         intakeSimulation.addGamePiecesToIntake(INTAKE_FUEL_CAPACITY);
+
    } 
 
    // Singleton instance
