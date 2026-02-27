@@ -3,6 +3,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.geometry.Pose3d;
@@ -224,8 +225,6 @@ public class RobotContainer {
 
           climbClawPivot = new ClimbClawPivot(new ClimbClawPivotIOSim());
           climbDeployPivot = new ClimbDeployPivot(new ClimbDeployPivotIOSim());
-
-          SimulatedArena.getInstance().clearGamePieces(); // rebuilt fueld sim is currently cooked so we just sim the shots
         }
       }
     }
@@ -313,6 +312,11 @@ public class RobotContainer {
   /** Use this method to define the named commands for all of the autos */
   private void nameCommands() {
     // Register Command Names in this method
+    NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeState.INTAKE));
+    NamedCommands.registerCommand("Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
+    NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
+    NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
+    NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
   }
 
   private void configureBindings() {
@@ -451,7 +455,7 @@ public class RobotContainer {
   }
 
   public Command getAutoCommand() {
-    return autoChooser.get(); // HACK: Replace once we get auto logging
+    return autoChooser.get(); 
   }
 
   // runs when auto starts

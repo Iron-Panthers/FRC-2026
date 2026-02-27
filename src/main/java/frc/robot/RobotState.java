@@ -42,6 +42,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -420,7 +421,7 @@ public class RobotState {
   public static boolean isAllianceRed() {
     //where true is red and false is blue
     var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
+    if (RobotBase.isReal()) {
       return alliance.get() == DriverStation.Alliance.Red;
     }
     return false;
