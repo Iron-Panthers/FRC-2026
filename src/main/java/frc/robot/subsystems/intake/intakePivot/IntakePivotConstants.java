@@ -48,7 +48,7 @@ public class IntakePivotConstants {
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-  public static final double POSITION_TARGET_EPSILON = 0.002;
+  public static final double POSITION_TARGET_EPSILON = 0.01;
 
   // CURRENT LIMITS
   public static final double UPPER_VOLT_LIMIT = 12;

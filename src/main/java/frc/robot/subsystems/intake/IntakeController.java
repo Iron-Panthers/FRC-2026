@@ -3,6 +3,8 @@ package frc.robot.subsystems.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot.IntakePivotTarget;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
@@ -14,8 +16,10 @@ import frc.robot.lib.generic_subsystems.superstructure.*;
 public class IntakeController extends SubsystemBase {
     public enum IntakeState {
         STOW(IntakePivotTarget.STOW, IntakeRollersTarget.IDLE),
+        MIDDLE_STOW(IntakePivotTarget.MED_STOW, IntakeRollersTarget.INTAKE_REALLY_SLOW),
         IDLE(IntakePivotTarget.INTAKE, IntakeRollersTarget.IDLE),
         INTAKE(IntakePivotTarget.INTAKE, IntakeRollersTarget.INTAKE),
+        INTAKE_DOWN(IntakePivotTarget.INTAKE, IntakeRollersTarget.INTAKE_DOWN),
         REVERSE(IntakePivotTarget.INTAKE, IntakeRollersTarget.EJECT),
         ZEROING(IntakePivotTarget.STOW, IntakeRollersTarget.IDLE);
 
@@ -54,6 +58,9 @@ public class IntakeController extends SubsystemBase {
         //if else set control mode to zero
         } else if (intakePivot.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
             intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
+        } else if (intakePivot.getPositionTarget() == IntakePivotTarget.STOW && !intakePivot.reachedTarget()) {
+            intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
+            intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE_SLOW);
         } else {
             // set target states to those in the current controller state
             intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
@@ -75,7 +82,8 @@ public class IntakeController extends SubsystemBase {
     }
 
     public Command setTargetStateCommand(IntakeState targetState){
-        return new InstantCommand(() -> setTargetState(targetState), this);
+        return new InstantCommand(() -> setTargetState(targetState), this).andThen(new WaitCommand(0.2)
+            .andThen(new WaitUntilCommand(()-> intakePivot.reachedTarget())));
     }
 
     public void setStopped(boolean stopped){
