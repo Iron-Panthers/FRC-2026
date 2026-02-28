@@ -375,9 +375,7 @@ public class RobotContainer {
       new InstantCommand(()-> {
           shooterController.setTargetState(shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
           ? ShooterState.SHOOT
-          : (shooterController.getTargetState() == ShooterState.FLY_SPIN_UP
-            ? ShooterState.TOTAL_SPIN_UP
-            : ShooterState.FLY_SPIN_UP));
+          : ShooterState.TOTAL_SPIN_UP);
       })
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
     driverA.a().onFalse( new InstantCommand (() -> 
@@ -390,6 +388,10 @@ public class RobotContainer {
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetStateCommand(ShooterState.SHOOT)));
+
+    // when you hit right bumper, hood goes to DEFAULT_SHOOT (7 degrees) and then when you hit 
+    // shoot as above, hood doesn't actually go to shoot but stays at default shoot
+    driverA.rightBumper().onTrue(shooterController.setAutoAimCommand(false));
     // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
     //   .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
     driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
@@ -402,6 +404,7 @@ public class RobotContainer {
           Logger.recordOutput("Tuning/DistanceTo", distance);
       })
       // .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
+      .alongWith(shooterController.setAutoAimCommand(true))
     );
   }
   private void configureDriverBButtons() {
