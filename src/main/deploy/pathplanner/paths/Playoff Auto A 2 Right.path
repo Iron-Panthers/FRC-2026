@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.210955555555555,
-        "y": 2.5838
+        "x": 3.038,
+        "y": 2.568
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.029864215104784,
-        "y": 2.723669513641755
+        "x": 5.856908659549228,
+        "y": 2.707869513641755
       },
       "isLocked": false,
       "linkedName": "Shooting Pose Right"
@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 3.210955555555555,
-        "y": 2.5838
+        "x": 3.038,
+        "y": 2.568
       },
       "prevControl": {
-        "x": 6.8690812969553185,
-        "y": 2.013562752075919
+        "x": 6.696125741399763,
+        "y": 1.9977627520759191
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,7 +62,11 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9250302297460711,
+      "waypointRelativePos": 0.4955595026642977,
+      "rotationDegrees": -56.91254698399373
+    },
+    {
+      "waypointRelativePos": 1.145648312611008,
       "rotationDegrees": -178.833
     },
     {
@@ -86,7 +90,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Spin up shooter",
+      "waypointRelativePos": 2.4971878515185626,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 4.0,
@@ -97,13 +108,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -130.33967189930965
+    "rotation": -137.26
   },
   "reversed": false,
   "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -130.33967189930965
+    "rotation": -137.26
   },
   "useDefaultConstraints": true
 }

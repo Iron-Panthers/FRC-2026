@@ -7,7 +7,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Spin up shooter"
+            "name": "Smart zero"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake down"
           }
         },
         {
@@ -19,19 +25,25 @@
         {
           "type": "named",
           "data": {
+            "name": "Intake mid"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Shoot"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 4.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Spin up shooter"
+            "name": "Intake down"
           }
         },
         {
@@ -47,9 +59,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake mid"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 4.0
           }
         },
         {

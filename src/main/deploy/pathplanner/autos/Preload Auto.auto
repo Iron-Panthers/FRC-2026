@@ -50,6 +50,6 @@
     }
   },
   "resetOdom": false,
-  "folder": null,
+  "folder": "Right Autos (make these)",
   "choreoAuto": false
 }
