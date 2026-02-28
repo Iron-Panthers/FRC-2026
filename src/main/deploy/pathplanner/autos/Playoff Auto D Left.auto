@@ -1,0 +1,87 @@
+{
+  "version" : "2025.0",
+  "command" : {
+    "type" : "sequential",
+    "data" : {
+      "commands" : [ {
+        "type" : "named",
+        "data" : {
+          "name" : "Smart zero"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Intake down"
+        }
+      }, {
+        "type" : "path",
+        "data" : {
+          "pathName" : "Playoff Auto D 1 Left"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Align to shoot"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Intake mid"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Shoot"
+        }
+      }, {
+        "type" : "wait",
+        "data" : {
+          "waitTime" : 4.0
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Intake down"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Stop shooting"
+        }
+      }, {
+        "type" : "path",
+        "data" : {
+          "pathName" : "Playoff Auto D 2 Left"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Align to shoot"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Shoot"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Intake mid"
+        }
+      }, {
+        "type" : "wait",
+        "data" : {
+          "waitTime" : 4.0
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Stop shooting"
+        }
+      } ]
+    }
+  },
+  "resetOdom" : true,
+  "folder" : "Left Autos (auto generated)",
+  "choreoAuto" : false
+}
