@@ -6,7 +6,42 @@
       "commands" : [ {
         "type" : "named",
         "data" : {
+          "name" : "Smart zero"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
           "name" : "Spin up shooter"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Align to shoot"
+        }
+      }, {
+        "type" : "wait",
+        "data" : {
+          "waitTime" : 0.6
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Shoot"
+        }
+      }, {
+        "type" : "wait",
+        "data" : {
+          "waitTime" : 1.0
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Stop shooting"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Intake down"
         }
       }, {
         "type" : "path",
@@ -16,17 +51,32 @@
       }, {
         "type" : "named",
         "data" : {
+          "name" : "Align to shoot"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Intake mid"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
           "name" : "Shoot"
         }
       }, {
         "type" : "wait",
         "data" : {
-          "waitTime" : 1.0
+          "waitTime" : 4.0
         }
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Spin up shooter"
+          "name" : "Intake down"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Stop shooting"
         }
       }, {
         "type" : "path",
@@ -36,17 +86,27 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Shoot"
-        }
-      }, {
-        "type" : "wait",
-        "data" : {
-          "waitTime" : 1.0
+          "name" : "Align to shoot"
         }
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Spin up shooter"
+          "name" : "Shoot"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Intake mid"
+        }
+      }, {
+        "type" : "wait",
+        "data" : {
+          "waitTime" : 4.0
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Stop shooting"
         }
       } ]
     }
