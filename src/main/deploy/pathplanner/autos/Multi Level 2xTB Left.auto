@@ -6,7 +6,7 @@
       "commands" : [ {
         "type" : "path",
         "data" : {
-          "pathName" : "Playoff Auto C 1 Left"
+          "pathName" : "Multi Level 2xTB 1 Left"
         }
       }, {
         "type" : "named",
@@ -16,12 +16,12 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "Playoff Auto B Left"
+          "pathName" : "Multi Level 2xTB 2 Left"
         }
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "Playoff Auto B Left"
+          "pathName" : "Multi Level 2xTB 2 Left"
         }
       }, {
         "type" : "named",

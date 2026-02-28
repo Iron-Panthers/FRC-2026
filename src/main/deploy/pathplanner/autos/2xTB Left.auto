@@ -11,42 +11,12 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Spin up shooter"
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Align to shoot"
-        }
-      }, {
-        "type" : "wait",
-        "data" : {
-          "waitTime" : 0.6
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Shoot"
-        }
-      }, {
-        "type" : "wait",
-        "data" : {
-          "waitTime" : 1.0
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Stop shooting"
-        }
-      }, {
-        "type" : "named",
-        "data" : {
           "name" : "Intake down"
         }
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "Playoff Auto A 1 Left"
+          "pathName" : "2xTB 1 Left"
         }
       }, {
         "type" : "named",
@@ -81,7 +51,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "Playoff Auto A 2 Left"
+          "pathName" : "2xTB 2 Left"
         }
       }, {
         "type" : "named",
@@ -111,7 +81,7 @@
       } ]
     }
   },
-  "resetOdom" : false,
+  "resetOdom" : true,
   "folder" : "Left Autos (auto generated)",
   "choreoAuto" : false
 }

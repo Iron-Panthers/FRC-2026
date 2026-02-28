@@ -5,9 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Align to shoot"
+            "pathName": "Multi Level 2xTB 1 Right"
           }
         },
         {
@@ -17,21 +17,27 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 10.0
+            "pathName": "Multi Level 2xTB 2 Right"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Multi Level 2xTB 2 Right"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Stop shooting"
+            "name": "Shoot"
           }
         }
       ]
     }
   },
-  "resetOdom": false,
-  "folder": "Left Autos (auto generated)",
+  "resetOdom": true,
+  "folder": "Right Autos (make these)",
   "choreoAuto": false
 }

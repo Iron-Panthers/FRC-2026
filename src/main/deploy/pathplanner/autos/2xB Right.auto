@@ -13,13 +13,49 @@
         {
           "type": "named",
           "data": {
+            "name": "Spin up shooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align to shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.6
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop shooting"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Intake down"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Playoff Auto D 1 Right"
+            "pathName": "2xB 1 Right"
           }
         },
         {
@@ -61,7 +97,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Playoff Auto D 2 Right"
+            "pathName": "2xB 2 Right"
           }
         },
         {
@@ -97,7 +133,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "Right Autos (make these)",
   "choreoAuto": false
 }

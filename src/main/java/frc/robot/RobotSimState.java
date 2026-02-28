@@ -59,7 +59,7 @@ public class RobotSimState {
         // intake
         intakeSimulation = IntakeSimulation.OverTheBumperIntake("Fuel", driveSimulation, Meters.of(DriveConstants.DRIVE_CONFIG.bumperWidthX()), Meters.of(.3), IntakeSimulation.IntakeSide.RIGHT, INTAKE_FUEL_CAPACITY);
         // load the intake initially
-        intakeSimulation.addGamePiecesToIntake(START_FUEL_CAPACITY);
+        intakeSimulation.setGamePiecesCount(START_FUEL_CAPACITY);
 
    } 
 
