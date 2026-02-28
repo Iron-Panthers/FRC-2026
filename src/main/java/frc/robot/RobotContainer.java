@@ -378,7 +378,10 @@ public class RobotContainer {
       .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))
       .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
-    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
+
+    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW)
+      .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))
+      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
 
     driverA.a().onTrue(
       new InstantCommand(()-> {
@@ -386,7 +389,7 @@ public class RobotContainer {
           ? ShooterState.SHOOT
           : ShooterState.TOTAL_SPIN_UP);
       })
-      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)).alongWith(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW)));
       
     driverA.a().onFalse( new InstantCommand (() -> 
     {
@@ -419,8 +422,8 @@ public class RobotContainer {
       .alongWith(shooterController.setAutoAimCommand(true))
     );
 
-    new Trigger(()-> (shooterController.getTargetState() == ShooterState.SHOOT ||
-    shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP)).onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
+    // new Trigger(()-> (shooterController.getTargetState() == ShooterState.SHOOT ||
+    // shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP)).onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
   }
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
