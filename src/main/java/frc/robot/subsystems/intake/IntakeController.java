@@ -58,7 +58,7 @@ public class IntakeController extends SubsystemBase {
         //if else set control mode to zero
         } else if (intakePivot.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
             intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
-        } else if (intakePivot.getPositionTarget() == IntakePivotTarget.STOW && !intakePivot.reachedTarget()) {
+        } else if ((intakePivot.getPositionTarget() == IntakePivotTarget.STOW || intakePivot.getPositionTarget() == IntakePivotTarget.MED_STOW) && !intakePivot.reachedTarget()) {
             intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
             intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE_SLOW);
         } else {

@@ -322,10 +322,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
     NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
     NamedCommands.registerCommand("Align to shoot", 
-      (new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
+      new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
         .alongWith(
-          shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)))
-        .until(() -> RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(RobotState.getInstance().getAlignPose().getTranslation()) < 0.04));
+          shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
+
   }
 
   private void configureBindings() {
@@ -401,7 +401,7 @@ public class RobotContainer {
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
-      .andThen(shooterController.setTargetStateCommand(ShooterState.SHOOT)));
+      .andThen(shooterController.setTargetStateCommand(ShooterState.SHUTTLE)));
 
     // when you hit right bumper, hood goes to DEFAULT_SHOOT (7 degrees) and then when you hit 
     // shoot as above, hood doesn't actually go to shoot but stays at default shoot

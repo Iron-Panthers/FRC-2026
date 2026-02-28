@@ -62,6 +62,12 @@ public class ShooterController extends SubsystemBase {
             ShooterFlywheelTarget.IDLE,
             ShooterAcceleratorTarget.IDLE,
             ShooterOmniwheelTarget.IDLE
+        ),
+        SHUTTLE(
+            ShooterHoodTarget.SHUTTLE,
+            ShooterFlywheelTarget.SHOOT,
+            ShooterAcceleratorTarget.SHOOT,
+            ShooterOmniwheelTarget.SHOOT
         );
 
         public final ShooterHoodTarget hoodTarget;

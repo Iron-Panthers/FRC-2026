@@ -17,6 +17,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
         HALF(45), //need to update
         TOP(45), //need to update
         SHOOT_TEMP(12), //need to update
+        SHUTTLE(15),
         DEFAULT_SHOOT(11) ; // might need to update?
         
         private double position; // in rotations
