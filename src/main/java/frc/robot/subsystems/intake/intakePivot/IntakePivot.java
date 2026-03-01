@@ -14,6 +14,7 @@ import frc.robot.utility.LoggableMechanism3d;
 public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget> implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
     INTAKE(-13), 
+    MED_STOW(60),
     STOW(86);
 
     private double position;

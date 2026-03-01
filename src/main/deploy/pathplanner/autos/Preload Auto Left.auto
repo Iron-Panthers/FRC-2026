@@ -6,17 +6,17 @@
       "commands" : [ {
         "type" : "named",
         "data" : {
-          "name" : "Spin up shooter"
-        }
-      }, {
-        "type" : "path",
-        "data" : {
-          "pathName" : "Playoff Auto A 1 Left"
+          "name" : "Smart zero"
         }
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Shoot"
+          "name" : "Align to shoot"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Spin up shooter"
         }
       }, {
         "type" : "wait",
@@ -26,27 +26,17 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Spin up shooter"
-        }
-      }, {
-        "type" : "path",
-        "data" : {
-          "pathName" : "Playoff Auto A 2 Left"
-        }
-      }, {
-        "type" : "named",
-        "data" : {
           "name" : "Shoot"
         }
       }, {
         "type" : "wait",
         "data" : {
-          "waitTime" : 1.0
+          "waitTime" : 6.0
         }
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Spin up shooter"
+          "name" : "Stop shooting"
         }
       } ]
     }

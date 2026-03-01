@@ -3,13 +3,13 @@
   "robotLength": 0.7366,
   "holonomicMode": true,
   "pathFolders": [
-    "Right Paths (make these)",
     "Left Paths (auto generated)",
+    "Right Paths (make these)",
     "Testing"
   ],
   "autoFolders": [
-    "Right Autos (make these)",
     "Left Autos (auto generated)",
+    "Right Autos (make these)",
     "Testing"
   ],
   "defaultMaxVel": 3.0,

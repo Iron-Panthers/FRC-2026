@@ -7,13 +7,31 @@
         {
           "type": "named",
           "data": {
-            "name": "Spin up shooter"
+            "name": "Smart zero"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake down"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Playoff Auto A 1 Right"
+            "pathName": "2xTB 1 Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align to shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake mid"
           }
         },
         {
@@ -25,19 +43,31 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 4.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Spin up shooter"
+            "name": "Intake down"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop shooting"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Playoff Auto A 2 Right"
+            "pathName": "2xTB 2 Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align to shoot"
           }
         },
         {
@@ -47,21 +77,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Intake mid"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 4.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Spin up shooter"
+            "name": "Stop shooting"
           }
         }
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Right Autos (make these)",
   "choreoAuto": false
 }

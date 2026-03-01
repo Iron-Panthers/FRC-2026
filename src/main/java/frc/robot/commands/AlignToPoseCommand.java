@@ -25,6 +25,7 @@ public class AlignToPoseCommand extends Command {
   private Supplier<Pose2d> approachPose;
   private Pose2d currentApproachPose;
   private boolean underTrench;
+  private boolean endOnAccurate = false;
 
   public AlignToPoseCommand(Drive drive, Supplier<Pose2d> approachPose, boolean underTrench) {
     // all of this jank is basically so that we can get a command that generates the pose on the fly and still figure out when it ends
@@ -35,6 +36,11 @@ public class AlignToPoseCommand extends Command {
     this.underTrench = underTrench;
 
     addRequirements(drive); 
+  }
+
+  public AlignToPoseCommand(Drive drive, Supplier<Pose2d> approachPose, boolean underTrench, boolean endOnAccurate){
+    this(drive, approachPose, underTrench);
+    this.endOnAccurate = endOnAccurate;
   }
 
   // Called when the command is initially scheduled.
@@ -75,6 +81,12 @@ public class AlignToPoseCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (endOnAccurate && currentApproachPose.getTranslation().getDistance(
+      RobotState.getInstance().getEstimatedPose().getTranslation()) < 0.04
+      && Math.abs(currentApproachPose.getRotation().minus(
+      RobotState.getInstance().getEstimatedPose().getRotation()).getDegrees()) < 2.5){
+        return true;
+      }
     return false;
   }
 }

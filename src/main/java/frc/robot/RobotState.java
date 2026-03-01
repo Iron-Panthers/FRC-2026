@@ -380,19 +380,20 @@ public class RobotState {
   public record TargetShootingState(Rotation2d drivebaseYaw, Angle shooterAngle, LinearVelocity shooterSpeed) { }
 
   public Pose2d getShootingPose(){
-    Pose2d shootingPoseOne = getShootingPose(2.0);
-    Pose2d shootingPoseTwo = getShootingPose(4.0); //edit forf climb
-    Pose2d flippedEstimatedPose = isAllianceRed()
-                    ? FlippingUtil.flipFieldPose(estimatedPose)
-                    : estimatedPose;
+    Pose2d shootingPoseOne = getShootingPose(2.154).plus(new Transform2d(new Translation2d(), Rotation2d.kPi));
+    // Pose2d shootingPoseTwo = getShootingPose(4.0); //edit forf climb
+    // Pose2d flippedEstimatedPose = isAllianceRed()
+    //                 ? FlippingUtil.flipFieldPose(estimatedPose)
+    //                 : estimatedPose;
     Logger.recordOutput("RobotState/ShootingPoseOne", shootingPoseOne);
-    Logger.recordOutput("RobotState/ShootingPoseTwo", shootingPoseTwo);
-    if (shootingPoseOne.getTranslation().getDistance(flippedEstimatedPose.getTranslation()) <
-        shootingPoseTwo.getTranslation().getDistance(flippedEstimatedPose.getTranslation())){
-      return shootingPoseOne;
-    } else {
-      return shootingPoseTwo;
-    }
+    // Logger.recordOutput("RobotState/ShootingPoseTwo", shootingPoseTwo);
+    // if (shootingPoseOne.getTranslation().getDistance(flippedEstimatedPose.getTranslation()) <
+    //     shootingPoseTwo.getTranslation().getDistance(flippedEstimatedPose.getTranslation())){
+    //   return shootingPoseOne;
+    // } else {
+    //   return shootingPoseTwo;
+    // }
+    return shootingPoseOne;
   }
 
   public Pose2d getShootingPose(double distanceTargetToHub){

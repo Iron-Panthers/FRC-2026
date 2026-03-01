@@ -25,7 +25,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.VibrateHIDCommand;
@@ -99,6 +101,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.IntakeSimulation.IntakeSide;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.Logger;
@@ -312,11 +315,18 @@ public class RobotContainer {
   /** Use this method to define the named commands for all of the autos */
   private void nameCommands() {
     // Register Command Names in this method
+    NamedCommands.registerCommand("Smart zero", new InstantCommand(() -> swerve.smartZeroGyro()));
     NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeState.INTAKE));
     NamedCommands.registerCommand("Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
+    NamedCommands.registerCommand("Intake mid", new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
     NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
     NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
     NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
+    NamedCommands.registerCommand("Align to shoot", 
+      new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
+        .alongWith(
+          shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
+
   }
 
   private void configureBindings() {
@@ -366,10 +376,14 @@ public class RobotContainer {
     driverA.start().onTrue(swerve.zeroGyroCommand());
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     driverA.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOW)
+      .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE_DOWN))
       .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))
       .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
-    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW));
+
+    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW)
+      .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))
+      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
 
     driverA.a().onTrue(
       new InstantCommand(()-> {
@@ -377,7 +391,8 @@ public class RobotContainer {
           ? ShooterState.SHOOT
           : ShooterState.TOTAL_SPIN_UP);
       })
-      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)).alongWith(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW)));
+      
     driverA.a().onFalse( new InstantCommand (() -> 
     {
       if (shooterController.getTargetState() == ShooterState.SHOOT){
@@ -387,13 +402,15 @@ public class RobotContainer {
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
-      .andThen(shooterController.setTargetStateCommand(ShooterState.SHOOT)));
+      .andThen(shooterController.setTargetStateCommand(ShooterState.SHUTTLE)));
 
     // when you hit right bumper, hood goes to DEFAULT_SHOOT (7 degrees) and then when you hit 
     // shoot as above, hood doesn't actually go to shoot but stays at default shoot
-    driverA.rightBumper().onTrue(shooterController.setAutoAimCommand(false));
-    // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
-    //   .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
+    // driverA.rightBumper().onTrue(shooterController.setAutoAimCommand(false));
+    driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
+      .alongWith(
+        new WaitUntilCommand(() -> RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(RobotState.getInstance().getAlignPose().getTranslation()) < 1)
+        .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
     driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
       new RunCommand(() -> {
           swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(180))));
@@ -406,6 +423,9 @@ public class RobotContainer {
       // .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
       .alongWith(shooterController.setAutoAimCommand(true))
     );
+
+    // new Trigger(()-> (shooterController.getTargetState() == ShooterState.SHOOT ||
+    // shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP)).onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
   }
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
@@ -414,7 +434,8 @@ public class RobotContainer {
 
     driverB.x().onTrue(shooterController.setStoppedCommand(true)
       .alongWith(intakeController.setStoppedCommand(true))
-      .alongWith(new InstantCommand(() -> climbController.setStopped(true))));
+      .alongWith(new InstantCommand(() -> climbController.setStopped(true)))
+      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.IDLE)));
     driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW)
       .alongWith(climbController.setTargetStateCommand(ClimbState.STOW)));
     driverB.b().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW)
