@@ -23,9 +23,9 @@ public class ShooterAcceleratorConstants {
 
     public static final int CURRENT_LIMIT_AMPS =
         switch (Constants.getRobotType()) {
-            case COMP -> 20;
-            case SIM -> 20;
-            default -> 20;
+            case COMP -> 30;
+            case SIM -> 30;
+            default -> 30;
         };
 
     public static final ShooterAcceleratorPhysicalConstants PHYSICAL_CONSTANTS =

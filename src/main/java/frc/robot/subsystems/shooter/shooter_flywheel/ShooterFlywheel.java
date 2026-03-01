@@ -14,7 +14,8 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
     public enum ShooterFlywheelTarget implements GenericRollers.VelocityTarget {
         //TODO: need to change; from sprint 2025 -- ive taken away a few states
         IDLE(0),
-        SHOOT(RobotBase.isReal() ? 9.6 : 8.6); // TODO: make this uniform
+        SHOOT(RobotBase.isReal() ? 8.6 : 8.6),
+        SPEEDY_SHOOT(9); // TODO: make this uniform
 
         private double velocity;
 

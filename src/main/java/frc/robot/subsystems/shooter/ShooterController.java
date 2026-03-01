@@ -1,10 +1,14 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.units.AngularVelocityUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.intake.intakePivot.IntakePivot;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator.ShooterAcceleratorTarget;
 import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel;
@@ -20,6 +24,7 @@ import frc.robot.RobotState;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 
 public class ShooterController extends SubsystemBase {
@@ -34,14 +39,14 @@ public class ShooterController extends SubsystemBase {
         ),
         /**shoot: spinning to shoot*/
         SHOOT(
-            ShooterHoodTarget.DEFAULT_SHOOT,
+            ShooterHoodTarget.SHOOT_TEMP,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.SHOOT,
             ShooterOmniwheelTarget.SHOOT
         ),
         
         TOTAL_SPIN_UP(
-            ShooterHoodTarget.DEFAULT_SHOOT,
+            ShooterHoodTarget.SHOOT_TEMP,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.SHOOT,
             ShooterOmniwheelTarget.IDLE
@@ -57,6 +62,12 @@ public class ShooterController extends SubsystemBase {
             ShooterFlywheelTarget.IDLE,
             ShooterAcceleratorTarget.IDLE,
             ShooterOmniwheelTarget.IDLE
+        ),
+        SHUTTLE(
+            ShooterHoodTarget.SHUTTLE,
+            ShooterFlywheelTarget.SHOOT,
+            ShooterAcceleratorTarget.SHOOT,
+            ShooterOmniwheelTarget.SHOOT
         );
 
         public final ShooterHoodTarget hoodTarget;
@@ -87,6 +98,8 @@ public class ShooterController extends SubsystemBase {
     private final ShooterOmniwheel shooterOmniwheel;
     private final ShooterAccelerator shooterAccelerator;
 
+    public LoggedNetworkNumber shooterTemp = new LoggedNetworkNumber("Tuning/ShooterStateTemp", 11);
+
     public ShooterController(ShooterFlywheel shooterFlywheel, ShooterHood shooterHood, ShooterOmniwheel shooterOmniwheel, ShooterAccelerator shooterAccelerator) {
         this.shooterFlywheel = shooterFlywheel;
         this.shooterHood = shooterHood;
@@ -107,12 +120,18 @@ public class ShooterController extends SubsystemBase {
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
         }
-        else if ((targetState == ShooterState.SHOOT || targetState == ShooterState.TOTAL_SPIN_UP) && autoAim) {
+        else if ((targetState == ShooterState.SHOOT || targetState == ShooterState.TOTAL_SPIN_UP)) {
             // If shooting, update the hood target based on the calculated shooter angle
             shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
-            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+            // shooterHood.setPositionTargetManual(shooterTemp.get()/360);
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
-            shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+            if (shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) < 350 && shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) > 1){
+                shooterAccelerator.setVelocityTarget(ShooterAcceleratorTarget.SPEEDY_SHOOT);
+                shooterFlywheel.setVelocityTarget(ShooterFlywheelTarget.SPEEDY_SHOOT);
+            } else {
+                shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+                shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+            }
         }
         else {
             shooterHood.setPositionTarget(targetState.hoodTarget);

@@ -271,6 +271,7 @@ public class Drive extends SubsystemBase {
   public void clearTargetPositionController() {
     pidAutoAlignController = null;
     autoAlignHeadingController = null;
+    targetSpeeds = new ChassisSpeeds();
   }
 
   public Command setTargetPositionCommand(Pose2d targetPosition) {
