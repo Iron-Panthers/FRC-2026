@@ -155,8 +155,8 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
+          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           vision = new Vision(new VisionIOPhotonvision("arducam-7", 0));
           // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
@@ -396,7 +396,7 @@ public class RobotContainer {
     //   .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
     driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
       new RunCommand(() -> {
-          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(0))));
+          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(180))));
 
           final Translation3d hubPosition3d = RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
           Translation2d toGoal = hubPosition3d.toTranslation2d().minus(RobotState.getInstance().getEstimatedPose().getTranslation());
