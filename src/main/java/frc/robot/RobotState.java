@@ -50,11 +50,13 @@ import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.vision.VisionConstants;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.Radians;
 
 import java.lang.annotation.Target;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -217,6 +219,7 @@ public class RobotState {
     TargetShootingState targetShootingState = shootingAnglePredictor.calculateTargetShootingState();
     Logger.recordOutput("RobotState/TargetShootingState/DrivebaseYaw", targetShootingState.drivebaseYaw());
     Logger.recordOutput("RobotState/TargetShootingState/ShooterAngle", targetShootingState.shooterAngle());
+    Logger.recordOutput("RobotState/TargetShootingState/ShooterSpeed", targetShootingState.shooterSpeed());
     return targetShootingState;
   }
 
@@ -230,14 +233,29 @@ public class RobotState {
 
     public LoggedNetworkNumber tempShooterAngle = new LoggedNetworkNumber("Tuning/TempShooterAngle", 70);
 
+    // NT entries for LUT tuning — created once per key, reused every frame
+    private final HashMap<String, LoggedNetworkNumber> ntLutEntries = new HashMap<>();
+
+    private LoggedNetworkNumber getLutNTEntry(String key, double defaultValue) {
+      return ntLutEntries.computeIfAbsent(key, k -> new LoggedNetworkNumber(k, defaultValue));
+    }
+
     // Moving average filters for smooth velocity measurements
     private final LinearFilter vxFilter = LinearFilter.movingAverage(5);
     private final LinearFilter vyFilter = LinearFilter.movingAverage(5);
 
-    private final InterpolatingTreeMap<Double, HoodParams> shooterTable = 
+    private final InterpolatingTreeMap<Double, HoodParams> shooterTable =
         new InterpolatingTreeMap<>(
             InverseInterpolator.forDouble(),
             HoodParams::interpolate
+        );
+
+    // Reverse map: horizontal exit velocity (m/s) → effective distance (m)
+    // Rebuilt whenever shooterTable is rebuilt.
+    private final InterpolatingTreeMap<Double, Double> velocityToDistanceMap =
+        new InterpolatingTreeMap<>(
+            InverseInterpolator.forDouble(),
+            MathUtil::interpolate
         );
 
     public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw){
@@ -250,27 +268,37 @@ public class RobotState {
 
     public void initializeShooterTable(){
         this.shooterTable.clear();
+        this.velocityToDistanceMap.clear();
       switch (Constants.getRobotType()) {
         case SIM -> {
-        this.shooterTable.put(1.3, new HoodParams(88, 1.621));
-        this.shooterTable.put(2.0, new HoodParams(84.5, 1.621));
-        this.shooterTable.put(2.5, new HoodParams(82, 1.601));
-        this.shooterTable.put(3.0, new HoodParams(79.5, 1.602));
-        this.shooterTable.put(3.5, new HoodParams(77.5, 1.581));
-        this.shooterTable.put(4.0, new HoodParams(75.5, 1.561));
-        this.shooterTable.put(4.5, new HoodParams(74, 1.561));
+        addEntry(1.3, new HoodParams(88,   8.0, 1.621));
+        addEntry(2.0, new HoodParams(84.5, 8.2, 1.621));
+        addEntry(2.5, new HoodParams(82,   8.4, 1.601));
+        addEntry(3.0, new HoodParams(79.5, 8.6, 1.602));
+        addEntry(3.5, new HoodParams(77.5, 8.7, 1.581));
+        addEntry(4.0, new HoodParams(75.5, 8.8, 1.561));
+        addEntry(4.5, new HoodParams(74,   8.9, 1.561));
         }
         default -> {
-        this.shooterTable.put(1.3, new HoodParams(85, 1.621));
-        this.shooterTable.put(2.0, new HoodParams(83, 1.621));
-        this.shooterTable.put(2.5, new HoodParams(79, 1.601));
-        this.shooterTable.put(3.0, new HoodParams(77, 1.602)); // tuned to here
-        this.shooterTable.put(3.5, new HoodParams(75, 1.581));
-        this.shooterTable.put(4.0, new HoodParams(73.5, 1.561));
-        this.shooterTable.put(4.5, new HoodParams(72, 1.561));
+        addEntry(1.3, new HoodParams(85,   8.8, 1.621));
+        addEntry(2.0, new HoodParams(83,   9.0, 1.621));
+        addEntry(2.5, new HoodParams(79,   9.2, 1.601));
+        addEntry(3.0, new HoodParams(77,   9.4, 1.602)); // tuned to here
+        addEntry(3.5, new HoodParams(75,   9.5, 1.581));
+        addEntry(4.0, new HoodParams(73.5, 9.6, 1.561));
+        addEntry(4.5, new HoodParams(72,   9.7, 1.561));
         }
       }
+    }
 
+    private void addEntry(double distance, HoodParams defaults) {
+      String prefix = String.format("Tuning/Shooter/%.1fm/", distance);
+      double angle = getLutNTEntry(prefix + "shooterAngle", defaults.shooterAngle).get();
+      double speed = getLutNTEntry(prefix + "shooterSpeed", defaults.shooterSpeed).get();
+      double tof   = getLutNTEntry(prefix + "timeOfFlight", defaults.timeOfFlight).get();
+      HoodParams params = new HoodParams(angle, speed, tof);
+      shooterTable.put(distance, params);
+      velocityToDistanceMap.put(distance / params.timeOfFlight, distance);
     }
 
     public TargetShootingState calculateTargetShootingState(){
@@ -322,51 +350,34 @@ public class RobotState {
         Rotation2d turretAngle = shotVelocity.getAngle();
         double requiredVelocity = shotVelocity.getNorm();
 
-        // 7. Use table in reverse: velocity → effective distance → RPM
-        double adjustedHoodAngle = calculateAdjustedHood(distance, requiredVelocity);
+        // 7. Reverse-lookup: required velocity → effective distance → both angle and speed from LUT
+        double effectiveDistance = velocityToDistanceMap.get(requiredVelocity);
+        HoodParams adjustedParams = shooterTable.get(effectiveDistance);
 
         Logger.recordOutput("ShootingPredictor/Distance", distance);
+        Logger.recordOutput("ShootingPredictor/EffectiveDistance", effectiveDistance);
         Logger.recordOutput("ShootingPredictor/TurretAngle", turretAngle);
         Logger.recordOutput("ShootingPredictor/RequiredVelocity", requiredVelocity);
-        Logger.recordOutput("ShootingPredictor/AdjustedHoodAngle", adjustedHoodAngle);
+        Logger.recordOutput("ShootingPredictor/AdjustedHoodAngle", adjustedParams.shooterAngle);
+        Logger.recordOutput("ShootingPredictor/AdjustedShooterSpeed", adjustedParams.shooterSpeed);
 
-      return new TargetShootingState(turretAngle, Degrees.of(adjustedHoodAngle));
-    }
-
-    // Calculate total velocity from baseline measurement
-    // v_total = v_horizontal / cos(hood_angle)
-    public double getTotalVelocity(double distance) {
-        HoodParams params = shooterTable.get(distance);
-        double vHoriz = distance / params.timeOfFlight;
-        return vHoriz / Math.cos(Math.toRadians(params.shooterAngle));
-    }
-
-
-    public double calculateAdjustedHood(double distance, double requiredHorizontalVelocity) {
-        double totalVelocity = getTotalVelocity(distance);
-
-        // Clamp to physical limits
-        double ratio = MathUtil.clamp(
-            requiredHorizontalVelocity / totalVelocity,
-            0.0,
-            1.0
-        );
-        return Math.toDegrees(Math.acos(ratio));
+      return new TargetShootingState(turretAngle, Degrees.of(adjustedParams.shooterAngle), MetersPerSecond.of(adjustedParams.shooterSpeed));
     }
 
     // Simple data class for the LUT
-    // shooter angle in degrees, time of flight in seconds
-    public record HoodParams(double shooterAngle, double timeOfFlight) implements Interpolatable<HoodParams> {
+    // shooterAngle in degrees, shooterSpeed in m/s (surface speed), timeOfFlight in seconds
+    public record HoodParams(double shooterAngle, double shooterSpeed, double timeOfFlight) implements Interpolatable<HoodParams> {
       @Override
       public HoodParams interpolate(HoodParams endValue, double t) {
         return new HoodParams(
           MathUtil.interpolate(this.shooterAngle, endValue.shooterAngle, t),
+          MathUtil.interpolate(this.shooterSpeed, endValue.shooterSpeed, t),
           MathUtil.interpolate(this.timeOfFlight, endValue.timeOfFlight, t)
         );
       }
     }
   }
-  public record TargetShootingState(Rotation2d drivebaseYaw, Angle shooterAngle) { }
+  public record TargetShootingState(Rotation2d drivebaseYaw, Angle shooterAngle, LinearVelocity shooterSpeed) { }
 
   public Pose2d getShootingPose(){
     Pose2d shootingPoseOne = getShootingPose(2.0);
