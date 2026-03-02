@@ -270,23 +270,24 @@ public class RobotState {
         this.shooterTable.clear();
         this.velocityToDistanceMap.clear();
       switch (Constants.getRobotType()) {
-        case SIM -> {
-        addEntry(1.3, new HoodParams(88,   8.0, 1.621));
-        addEntry(2.0, new HoodParams(84.5, 8.2, 1.621));
-        addEntry(2.5, new HoodParams(82,   8.4, 1.601));
-        addEntry(3.0, new HoodParams(79.5, 8.6, 1.602));
-        addEntry(3.5, new HoodParams(77.5, 8.7, 1.581));
-        addEntry(4.0, new HoodParams(75.5, 8.8, 1.561));
-        addEntry(4.5, new HoodParams(74,   8.9, 1.561));
-        }
+        // case SIM -> {
+        // addEntry(1.3, new HoodParams(88,   8.0, 1.621));
+        // addEntry(2.0, new HoodParams(84.5, 8.2, 1.621));
+        // addEntry(2.5, new HoodParams(82,   8.4, 1.601));
+        // addEntry(3.0, new HoodParams(79.5, 8.6, 1.602));
+        // addEntry(3.5, new HoodParams(77.5, 8.7, 1.581));
+        // addEntry(4.0, new HoodParams(75.5, 8.8, 1.561));
+        // addEntry(4.5, new HoodParams(74,   8.9, 1.561));
+        // }
         default -> {
-        addEntry(1.3, new HoodParams(85,   8.8, 1.621));
-        addEntry(2.0, new HoodParams(83,   9.0, 1.621));
-        addEntry(2.5, new HoodParams(79,   9.2, 1.601));
-        addEntry(3.0, new HoodParams(77,   9.4, 1.602)); // tuned to here
-        addEntry(3.5, new HoodParams(75,   9.5, 1.581));
-        addEntry(4.0, new HoodParams(73.5, 9.6, 1.561));
-        addEntry(4.5, new HoodParams(72,   9.7, 1.561));
+        addEntry(1.3, new HoodParams(83,   8.5, 1.09));
+        addEntry(2.0, new HoodParams(77,   8.3, .97));
+        addEntry(2.5, new HoodParams(75,   8.9, 1.14));
+        addEntry(3.0, new HoodParams(73,   9.4, 1.15)); // tuned to here
+        addEntry(3.5, new HoodParams(72,   9.9, 1.22));
+        addEntry(4.0, new HoodParams(70.5, 10.4, 1.3));
+        addEntry(4.5, new HoodParams(69,   10.7, 1.34));
+        addEntry(5.2, new HoodParams(67,   11.1, 1.39));
         }
       }
     }
@@ -295,10 +296,10 @@ public class RobotState {
       String prefix = String.format("Tuning/Shooter/%.1fm/", distance);
       double angle = getLutNTEntry(prefix + "shooterAngle", defaults.shooterAngle).get();
       double speed = getLutNTEntry(prefix + "shooterSpeed", defaults.shooterSpeed).get();
-      double tof   = getLutNTEntry(prefix + "timeOfFlight", defaults.timeOfFlight).get();
+      double tof   = getLutNTEntry(prefix + "timeOfFlight", defaults.timeOfFlight).get() - .1;
       HoodParams params = new HoodParams(angle, speed, tof);
       shooterTable.put(distance, params);
-      velocityToDistanceMap.put(distance / params.timeOfFlight, distance);
+      velocityToDistanceMap.put(distance / (params.timeOfFlight), distance);
     }
 
     public TargetShootingState calculateTargetShootingState(){
@@ -324,7 +325,7 @@ public class RobotState {
       // Get the initial important things
       Pose3d robotPose3d = new Pose3d(getEstimatedPose());
 
-      double latencyCompensation = .17; // Tune later // TODO: make this an actual constant (if you change it later this is the one for sim)
+      double latencyCompensation = 0; // Tune later // TODO: make this an actual constant (if you change it later this is the one for sim)
 
         // 1. Project future position
         Translation2d futurePos = robotPose3d.getTranslation().toTranslation2d().plus(

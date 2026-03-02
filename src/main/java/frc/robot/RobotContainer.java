@@ -413,7 +413,7 @@ public class RobotContainer {
         .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
     driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
       new RunCommand(() -> {
-          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(180))));
+          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(0))));
 
           final Translation3d hubPosition3d = RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
           Translation2d toGoal = hubPosition3d.toTranslation2d().minus(RobotState.getInstance().getEstimatedPose().getTranslation());
