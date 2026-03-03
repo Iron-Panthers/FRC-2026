@@ -11,7 +11,7 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Shoot"
+          "name" : "Shoot full hopper"
         }
       }, {
         "type" : "path",
@@ -26,7 +26,7 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Shoot"
+          "name" : "Shoot full hopper"
         }
       } ]
     }

@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Intake down"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Multi Level 2xTB 1 Right"

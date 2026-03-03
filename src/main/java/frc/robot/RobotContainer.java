@@ -333,7 +333,7 @@ public class RobotContainer {
       .andThen(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
       .andThen(new WaitCommand(8))
-      .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
+      .andThen(new InstantCommand(() -> intakeController.setTargetState(IntakeState.INTAKE)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
 
     NamedCommands.registerCommand("Shoot preloaded hopper",
@@ -343,7 +343,7 @@ public class RobotContainer {
       .andThen(new WaitCommand(0.6))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
       .andThen(new WaitCommand(2))
-      .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
+      .andThen(new InstantCommand(() -> intakeController.setTargetState(IntakeState.INTAKE)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
   }
 

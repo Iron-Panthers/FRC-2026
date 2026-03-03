@@ -12,19 +12,9 @@
               "pathName" : "1xTB Climb 1 Left"
             }
           }, {
-            "type" : "parallel",
+            "type" : "named",
             "data" : {
-              "commands" : [ {
-                "type" : "named",
-                "data" : {
-                  "name" : "Shoot"
-                }
-              }, {
-                "type" : "wait",
-                "data" : {
-                  "waitTime" : 5.0
-                }
-              } ]
+              "name" : "Shoot full hopper"
             }
           }, {
             "type" : "path",
