@@ -11,18 +11,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Spin up shooter"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot preloaded hopper"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "2xB 1 Right"
