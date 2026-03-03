@@ -326,7 +326,25 @@ public class RobotContainer {
       new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
         .alongWith(
           shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
+    NamedCommands.registerCommand("Shoot full hopper",
+      new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
+        .alongWith(
+          shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
+      .andThen(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)))
+      .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
+      .andThen(new WaitCommand(8))
+      .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
+      .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
 
+    NamedCommands.registerCommand("Shoot preloaded hopper",
+      new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
+        .alongWith(
+          shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
+      .andThen(new WaitCommand(0.6)))
+      .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
+      .andThen(new WaitCommand(2))
+      .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
+      .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
   }
 
   private void configureBindings() {
