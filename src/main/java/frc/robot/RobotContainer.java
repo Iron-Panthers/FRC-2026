@@ -531,7 +531,7 @@ public class RobotContainer {
     RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAccelerator.getCurrentVelocity().in(RotationsPerSecond) > 1.0 && shooterOmniwheel.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
           new Translation3d(),
           new Rotation3d(0, 0, Math.PI/2)
-        )), RobotState.getInstance().calculateTargetShootingState().shooterSpeed());
+        )), shooterFlywheels.getCurrentVelocity());
     
     // Handle automatic shooter firing
     RobotSimState.getInstance().periodicShooter();
