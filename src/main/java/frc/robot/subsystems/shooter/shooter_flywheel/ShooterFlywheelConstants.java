@@ -21,7 +21,7 @@ public class ShooterFlywheelConstants {
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
+        case SIM -> new PIDGains(20, 0, 0, 0, .1, 0, 0);
         default -> new PIDGains(.1, 0, 0, 0, 0.137, 0, 0);
       };
 
@@ -35,7 +35,7 @@ public class ShooterFlywheelConstants {
 
     public static final ShooterFlywheelPhysicalConstants PHYSICAL_CONSTANTS = // TODO: update values
         switch (Constants.getRobotType()) {
-            case SIM -> new ShooterFlywheelPhysicalConstants(0.01, .1);
+            case SIM -> new ShooterFlywheelPhysicalConstants(0.01, 0.23938936);
             case COMP -> new ShooterFlywheelPhysicalConstants(0.1, 0.23938936);
             default -> new ShooterFlywheelPhysicalConstants(0.1, .1);
         };
