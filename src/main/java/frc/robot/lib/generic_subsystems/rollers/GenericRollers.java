@@ -23,6 +23,8 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
   protected GenericRollersIOInputsAutoLogged inputs = new GenericRollersIOInputsAutoLogged();
 
   private G velocityTarget;
+  private double manualVelocityRPS = 0;
+  private boolean useManualVelocity = false;
 
   public GenericRollers(String name, GenericRollersIO rollerIO) {
     this.name = name;
@@ -34,7 +36,7 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     rollerIO.updateInputs(inputs);
     Logger.processInputs(name, inputs);
 
-    rollerIO.runVelocity(velocityTarget.getVelocity());
+    rollerIO.runVelocity(useManualVelocity ? manualVelocityRPS : velocityTarget.getVelocity());
     Logger.recordOutput(name + "/Target", velocityTarget.toString());
     Logger.recordOutput(name + "/Target Velocity", velocityTarget.getVelocity());
 
@@ -44,7 +46,7 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     Logger.recordOutput(name + "/ControlMode", controlMode.toString());
     switch (controlMode) {
       case VELOCITY -> {
-        rollerIO.runVelocity(velocityTarget.getVelocity());
+        rollerIO.runVelocity(useManualVelocity ? manualVelocityRPS : velocityTarget.getVelocity());
       }
       case STOP -> {
         rollerIO.stop();
@@ -68,6 +70,13 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
   public void setVelocityTarget(G velocityTarget) {
     setControlMode(ControlMode.VELOCITY);
     this.velocityTarget = velocityTarget;
+    this.useManualVelocity = false;
+  }
+
+  public void setVelocityTargetManual(double velocityRPS) {
+    setControlMode(ControlMode.VELOCITY);
+    this.manualVelocityRPS = velocityRPS;
+    this.useManualVelocity = true;
   }
 
   public ControlMode getControlMode() {
