@@ -340,7 +340,7 @@ public class RobotContainer {
       new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
         .alongWith(
           shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
-      .andThen(new WaitCommand(0.6)))
+      .andThen(new WaitCommand(0.6))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
       .andThen(new WaitCommand(2))
       .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
