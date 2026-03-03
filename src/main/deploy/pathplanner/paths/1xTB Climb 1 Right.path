@@ -109,7 +109,14 @@
       "name": "Point Towards Zone"
     }
   ],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Spin up shooter",
+      "waypointRelativePos": 3.1396011396011216,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 4.0,

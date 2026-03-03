@@ -32,32 +32,32 @@
     },
     {
       "anchor": {
-        "x": 6.052888888888889,
-        "y": 4.105544444444445
+        "x": 6.92437945791726,
+        "y": 4.157917261055635
       },
       "prevControl": {
-        "x": 6.173822222222222,
-        "y": 3.279166666666667
+        "x": 7.045312791250593,
+        "y": 3.331539483277857
       },
       "nextControl": {
-        "x": 6.004556952612813,
-        "y": 4.435812675664297
+        "x": 6.876047521641183,
+        "y": 4.488185492275488
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.456,
-        "y": 3.4404111111111115
+        "x": 6.031611982881596,
+        "y": 3.64037089871612
       },
       "prevControl": {
-        "x": 6.496311111111112,
-        "y": 3.8536
+        "x": 6.071923093992708,
+        "y": 4.053559787605009
       },
       "nextControl": {
-        "x": 6.388479921501391,
-        "y": 2.7483303065003657
+        "x": 5.964091904382987,
+        "y": 2.9482900941053742
       },
       "isLocked": false,
       "linkedName": null
@@ -98,7 +98,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Spin up shooter",
+      "waypointRelativePos": 3.4738841405508074,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 4.0,
