@@ -19,37 +19,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Align to shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.6
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop shooting"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake down"
+            "name": "Shoot preloaded hopper"
           }
         },
         {
@@ -61,37 +31,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Align to shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake mid"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 4.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake down"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop shooting"
+            "name": "Shoot full hopper"
           }
         },
         {
@@ -103,31 +43,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Align to shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake mid"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 4.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop shooting"
+            "name": "Shoot full hopper"
           }
         }
       ]
