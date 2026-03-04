@@ -35,7 +35,8 @@ public class RobotSimState {
    private RobotSimState(){
         // init the arena (drive sim only, no game piece placement)
         Arena2026Rebuilt arena = new Arena2026Rebuilt(false);
-        arena.setEfficiencyMode(true);
+        // arena.setEfficiencyMode(true);
+        arena.clearGamePieces();
         arena.setShouldRunClock(true);
 
         // Add the drive simulation
