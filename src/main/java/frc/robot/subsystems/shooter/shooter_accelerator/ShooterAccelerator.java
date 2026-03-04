@@ -8,7 +8,7 @@ public class ShooterAccelerator extends GenericRollers<ShooterAccelerator.Shoote
     public enum ShooterAcceleratorTarget implements GenericRollers.VelocityTarget {
         IDLE(0),
         SHOOT(51.66),
-        SPEEDY_SHOOT(60),
+        WARMUP_ACCELERATOR(75),
         CLIMB(0);
 
         private double velocity;

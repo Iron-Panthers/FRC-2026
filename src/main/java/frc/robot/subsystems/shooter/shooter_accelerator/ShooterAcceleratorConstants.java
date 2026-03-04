@@ -18,7 +18,7 @@ public class ShooterAcceleratorConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(.1, 0, 0, 0, 0.18, 0, 0);
+        default -> new PIDGains(.3, 0, 0, 0, 0.18, 0, 0);
       };
 
     public static final int CURRENT_LIMIT_AMPS =

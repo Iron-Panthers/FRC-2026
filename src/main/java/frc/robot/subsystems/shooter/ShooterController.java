@@ -128,11 +128,11 @@ public class ShooterController extends SubsystemBase {
             // shooterHood.setPositionTargetManual(shooterTemp.get()/360);
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             shooterFlywheel.setVelocityManual(shotState.shooterSpeed());
-            // if (shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) < 350 && shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) > 1){
-            //     shooterAccelerator.setVelocityTarget(ShooterAcceleratorTarget.SPEEDY_SHOOT);
-            // } else {
-            shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
-            // }
+            if (shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) < 350){
+                shooterAccelerator.setVelocityTarget(ShooterAcceleratorTarget.WARMUP_ACCELERATOR);
+            } else {
+                shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+            }
         }
         else {
             shooterHood.setPositionTarget(targetState.hoodTarget);
