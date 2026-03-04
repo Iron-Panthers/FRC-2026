@@ -13,8 +13,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructArrayPublisher;
+import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -40,7 +39,7 @@ public class FuelSim {
     protected static final double TRENCH_HEIGHT = 0.565;
     protected static final double TRENCH_BAR_HEIGHT = 0.102;
     protected static final double TRENCH_BAR_WIDTH = 0.152;
-    protected static final double FRICTION = 0.1; // proportion of horizontal vel to lose per sec while on ground
+    protected static final double FRICTION = 0.2; // proportion of horizontal vel to lose per sec while on ground
     protected static final double FUEL_MASS = 0.448 * 0.45392; // kgs
     protected static final double FUEL_CROSS_AREA = Math.PI * FUEL_RADIUS * FUEL_RADIUS;
     // Drag coefficient of smooth sphere: https://en.wikipedia.org/wiki/Drag_coefficient#/media/File:14ilf1l.svg
@@ -326,9 +325,9 @@ public class FuelSim {
 
     /**
      * Creates a new instance of FuelSim
-     * @param tableKey NetworkTable to log fuel positions to as an array of {@link Translation3d} structs.
+     * @param logKey AdvantageKit log key for fuel positions (logged as an array of {@link Translation3d}).
      */
-    public FuelSim(String tableKey) {
+    public FuelSim(String logKey) {
         // Initialize grid
         for (int i = 0; i < GRID_COLS; i++) {
             for (int j = 0; j < GRID_ROWS; j++) {
@@ -336,16 +335,14 @@ public class FuelSim {
             }
         }
 
-        fuelPublisher = NetworkTableInstance.getDefault()
-                .getStructArrayTopic(tableKey + "/Fuels", Translation3d.struct)
-                .publish();
+        this.logKey = logKey;
     }
 
     /**
-     * Creates a new instance of FuelSim with log path "/Fuel Simulation"
+     * Creates a new instance of FuelSim with log path "FuelSimulation"
      */
     public FuelSim() {
-        this("/Fuel Simulation");
+        this("FuelSimulation");
     }
 
     /**
@@ -392,13 +389,13 @@ public class FuelSim {
         // Logger.recordOutput("Fuel Simulation/Lines (debug)", lines);
     }
 
-    protected StructArrayPublisher<Translation3d> fuelPublisher;
+    protected final String logKey;
 
     /**
-     * Adds array of `Translation3d`'s to NetworkTables at tableKey + "/Fuels"
+     * Logs fuel positions via AdvantageKit Logger
      */
     public void logFuels() {
-        fuelPublisher.set(fuels.stream().map((fuel) -> fuel.pos).toArray(Translation3d[]::new));
+        Logger.recordOutput(logKey + "/Fuels", fuels.stream().map((fuel) -> fuel.pos).toArray(Translation3d[]::new));
     }
 
     /**

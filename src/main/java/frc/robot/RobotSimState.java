@@ -47,7 +47,7 @@ public class RobotSimState {
         SimulatedArena.overrideInstance(arena);
 
         // init fuel sim
-        fuelSim = new FuelSim("FieldSimulation/Fuel");
+        fuelSim = new FuelSim("FieldSimulation");
         fuelSim.registerRobot(
             DriveConstants.mapleSimConfig.bumperWidthY, // from left to right in meters
             DriveConstants.mapleSimConfig.bumperLengthX, // from front to back in meters
@@ -66,6 +66,7 @@ public class RobotSimState {
             () -> fuelCount++);
 
         fuelSim.spawnStartingFuel();
+        fuelSim.setLoggingFrequency(20);
         fuelSim.start();
    } 
 

@@ -541,8 +541,6 @@ public class RobotContainer {
     RobotSimState.getInstance().getFuelSim().updateSim();
     Logger.recordOutput(
         "FieldSimulation/RobotPosition", RobotSimState.getInstance().getDriveSimulation().getSimulatedDriveTrainPose());
-    Logger.recordOutput(
-        "FieldSimulation/Fuel", RobotSimState.getInstance().getFuelSim().getFuelPositions());
     Logger.recordOutput("FieldSimulation/RobotFuel", RobotSimState.getInstance().getIntakeGamePieces());
     Logger.recordOutput("FieldSimulation/FuelCount", RobotSimState.getInstance().getFuelCount());
 
