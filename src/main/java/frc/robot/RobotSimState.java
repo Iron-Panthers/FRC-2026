@@ -2,50 +2,41 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static frc.robot.subsystems.swerve.DriveConstants.DRIVE_CONFIG;
+import static edu.wpi.first.units.Units.Radians;
 
-import java.util.List;
-
-import org.dyn4j.geometry.Transform;
-import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.*;
-import org.ironmaple.utils.FieldMirroringUtils;
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.RobotType;
 import frc.robot.subsystems.swerve.DriveConstants;
+import frc.robot.utility.FuelSim;
 
 public class RobotSimState {
 
 
-    public static final int INTAKE_FUEL_CAPACITY = 100;
     public static final int START_FUEL_CAPACITY = 8;
 
+   private int fuelCount = START_FUEL_CAPACITY;
+   private boolean intakeActive = false;
+
    private RobotSimState(){
-        // init the arena
+        // init the arena (drive sim only, no game piece placement)
         Arena2026Rebuilt arena = new Arena2026Rebuilt(false);
-
-        arena.setEfficiencyMode(true);
-        arena.placeGamePiecesOnField();
-
-        // start the cloock
+        // arena.setEfficiencyMode(true);
+        arena.clearGamePieces();
         arena.setShouldRunClock(true);
 
         // Add the drive simulation
@@ -56,11 +47,28 @@ public class RobotSimState {
 
         SimulatedArena.overrideInstance(arena);
 
-        // intake
-        intakeSimulation = IntakeSimulation.OverTheBumperIntake("Fuel", driveSimulation, Meters.of(DriveConstants.DRIVE_CONFIG.bumperWidthX()), Meters.of(.3), IntakeSimulation.IntakeSide.RIGHT, INTAKE_FUEL_CAPACITY);
-        // load the intake initially
-        intakeSimulation.setGamePiecesCount(START_FUEL_CAPACITY);
+        // init fuel sim
+        fuelSim = new FuelSim("FieldSimulation");
+        fuelSim.registerRobot(
+            DriveConstants.mapleSimConfig.bumperWidthY, // from left to right in meters
+            DriveConstants.mapleSimConfig.bumperLengthX, // from front to back in meters
+            Units.Inches.of(7), // from floor to top of bumpers in meters
+            driveSimulation::getSimulatedDriveTrainPose, // Supplier<Pose2d> of robot pose
+            driveSimulation::getDriveTrainSimulatedChassisSpeedsFieldRelative);
 
+        // Register intake on the right side of the robot
+        double halfLength = DriveConstants.mapleSimConfig.bumperLengthX.in(Meters) / 2.0;
+        double halfWidth = DriveConstants.mapleSimConfig.bumperWidthY.in(Meters) / 2.0;
+        double intakeReach = 0.3; // meters beyond bumper
+        fuelSim.registerIntake(
+            -halfLength, halfLength,
+            -halfWidth - intakeReach, -halfWidth,
+            () -> intakeActive && fuelCount < 100,
+            () -> fuelCount++);
+
+        fuelSim.spawnStartingFuel();
+        fuelSim.setLoggingFrequency(20);
+        fuelSim.start();
    } 
 
    // Singleton instance
@@ -81,6 +89,11 @@ public class RobotSimState {
     return driveSimulation;
    }
 
+   private FuelSim fuelSim;
+   public FuelSim getFuelSim(){
+        return fuelSim;
+    }
+
    // Get attributes of physical drivebase
    public Pose2d getRobotPose2d(){
     return driveSimulation.getSimulatedDriveTrainPose();
@@ -97,72 +110,36 @@ public class RobotSimState {
 
    // Shooting utilities
    public void shootFuel(Angle launchAngle, Transform3d shooterTransform3d, LinearVelocity launchVelocity){
-    Transform3d shooterEndpointPosition3d = new Transform3d(
+    if(fuelCount <= 0) return; // no fuel to shoot
+    fuelCount--;
+
+    // Build a transform that includes the shooter's position and combines the hood pitch with the shooter's yaw
+    Transform3d launchTransform = new Transform3d(
         shooterTransform3d.getTranslation(),
-        new Rotation3d(0, launchAngle.in(Units.Radians), shooterTransform3d.getRotation().getZ())
-    );
-    shootFuel(getRobotPose3d().plus(shooterEndpointPosition3d), launchVelocity);
-   }
-
-   public void shootFuel(Pose3d shooterEndpointPosition3d, LinearVelocity launchVelocity){
-    if(!intakeSimulation.obtainGamePieceFromIntake()) return; // remove fuel from intake when shooting
-
-
-    // Record start time to measure flight duration
-    final double startTime = Timer.getFPGATimestamp();
-    
-    RebuiltFuelOnFly flyingFuel = new RebuiltFuelOnFly(
-        shooterEndpointPosition3d.getTranslation().toTranslation2d(), // position of the chassis where t
-        new Translation2d(0, 0),
-        getChassisSpeedsFieldRelative(),
-        new Rotation2d(shooterEndpointPosition3d.getRotation().getZ()), // the yaw rotation of the shooter
-        Units.Meters.of(shooterEndpointPosition3d.getZ()), // height of shot
-        launchVelocity, // launch velocity
-        Units.Radians.of(shooterEndpointPosition3d.getRotation().getY()) // gets the pitch of the shooter endpoint position -- for shooting angle
+        new Rotation3d(0, 0, shooterTransform3d.getRotation().getZ())
     );
 
-    flyingFuel.withTargetPosition(() -> RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN)
-        .withTargetTolerance(new Translation3d(.5,.5,.2)) // just an arbitrary tolerance
-        .withHitTargetCallBack(() -> {
-            double endTime = Timer.getFPGATimestamp();
-            double flightTime = endTime - startTime;
-            Logger.recordOutput("RobotSimState/LastFlightTimeSeconds", flightTime);
-        });
-
-
-    // Show trajectory and record flight time when target is hit
-    flyingFuel.withProjectileTrajectoryDisplayCallBack(
-        (pose3ds) -> {
-            // Success callback - ball hit target
-            Logger.recordOutput("RobotSimState/FuelSuccessfulShot", pose3ds.toArray(Pose3d[]::new));
-        },
-        (pose3ds) -> {
-            // Failure callback - ball missed target
-            Logger.recordOutput("RobotSimState/FuelUnsuccessfulShot", pose3ds.toArray(Pose3d[]::new));
-        }
-    );
-
-    SimulatedArena.getInstance().addGamePieceProjectile(flyingFuel);
+    fuelSim.launchFuel(
+        launchVelocity,
+        launchAngle,
+        launchTransform);
    }
 
 
-   // Intake simulation
-   private final IntakeSimulation intakeSimulation;
+   // Intake simulation (backed by FuelSim)
 
    public void setIntakeState(boolean extended){
-    if(extended){
-        intakeSimulation.startIntake();
-    }
-    else{
-        intakeSimulation.stopIntake();
-    }
+    intakeActive = extended;
+   }
+
+   public int getFuelCount(){
+    return fuelCount;
    }
 
    public Pose3d[] getIntakeGamePieces(){
-    int gamePieceAmount = intakeSimulation.getGamePiecesAmount();
-    Pose3d[] gamePiecePoses = new Pose3d[gamePieceAmount];
-    double spacing = Units.Inches.of(5.91).in(Units.Meters); // arbitrary spacing between game pieces in the intake
-    for(int i = 0; i < gamePieceAmount; i++){
+    Pose3d[] gamePiecePoses = new Pose3d[fuelCount];
+    double spacing = Units.Inches.of(5.91).in(Units.Meters);
+    for(int i = 0; i < fuelCount; i++){
         gamePiecePoses[i] = new Pose3d(new Translation3d(driveSimulation.getSimulatedDriveTrainPose().getX(), driveSimulation.getSimulatedDriveTrainPose().getY(), i * spacing), new Rotation3d());
     }
     return gamePiecePoses;
