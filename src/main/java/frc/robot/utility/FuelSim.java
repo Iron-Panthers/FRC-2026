@@ -905,8 +905,24 @@ public class FuelSim {
             this.callback = intakeCallback;
         }
 
+        private double boundingRadius = -1;
+
+        private double getBoundingRadius() {
+            if (boundingRadius < 0) {
+                double maxX = Math.max(Math.abs(xMin), Math.abs(xMax));
+                double maxY = Math.max(Math.abs(yMin), Math.abs(yMax));
+                boundingRadius = Math.sqrt(maxX * maxX + maxY * maxY) + FUEL_RADIUS;
+            }
+            return boundingRadius;
+        }
+
         protected boolean shouldIntake(Fuel fuel, Pose2d robotPose) {
             if (!ableToIntake.getAsBoolean() || fuel.pos.getZ() > bumperHeight) return false;
+
+            // Cheap distance check before expensive coordinate transform
+            double dx = fuel.pos.getX() - robotPose.getX();
+            double dy = fuel.pos.getY() - robotPose.getY();
+            if (dx * dx + dy * dy > getBoundingRadius() * getBoundingRadius()) return false;
 
             Translation2d fuelRelativePos = new Pose2d(fuel.pos.toTranslation2d(), Rotation2d.kZero)
                     .relativeTo(robotPose)
