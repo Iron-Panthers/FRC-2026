@@ -430,18 +430,9 @@ public class RobotContainer {
       .alongWith(
         new WaitUntilCommand(() -> RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(RobotState.getInstance().getAlignPose().getTranslation()) < 1)
         .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
-    driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
-      new RunCommand(() -> {
-          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))));
-
-          final Translation3d hubPosition3d = RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
-          Translation2d toGoal = hubPosition3d.toTranslation2d().minus(RobotState.getInstance().getEstimatedPose().getTranslation());
-          double distance = toGoal.getNorm();
-          Logger.recordOutput("Tuning/DistanceTo", distance);
-      })
-      // .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
+    driverA.leftBumper().onTrue(new InstantCommand(() -> swerve.setMovementScoped(true))
       .alongWith(shooterController.setAutoAimCommand(true))
-    );
+      ).onFalse(new InstantCommand(() -> swerve.setMovementScoped(false)));
 
     // new Trigger(()-> (shooterController.getTargetState() == ShooterState.SHOOT ||
     // shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP)).onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
