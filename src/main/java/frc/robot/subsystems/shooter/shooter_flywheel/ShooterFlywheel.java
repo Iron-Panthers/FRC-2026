@@ -43,4 +43,9 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
     public void setVelocityManual(LinearVelocity velocity) {
         setVelocityTargetManual(velocity.in(MetersPerSecond) / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
     }
+
+    public boolean reachedVelocityTargetManual(){
+        return Math.abs(super.inputs.velocityRadsPerSec - Units.rotationsToRadians(manualVelocityRPS)) < 10;
+    }
+
 }

@@ -13,7 +13,7 @@ import frc.robot.utility.LoggableMechanism3d;
 
 public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget> implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(-13), 
+    INTAKE(-11), 
     MED_STOW(60),
     STOW(86);
 
