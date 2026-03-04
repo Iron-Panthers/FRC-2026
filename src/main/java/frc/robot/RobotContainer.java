@@ -102,7 +102,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.IntakeSimulation.IntakeSide;
+
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.Logger;
@@ -341,7 +341,7 @@ public class RobotContainer {
       new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
         .alongWith(
           shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
-      .andThen(new WaitCommand(0.6)))
+      .andThen(new WaitCommand(0.6))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
       .andThen(new WaitCommand(2))
       .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
@@ -538,15 +538,14 @@ public class RobotContainer {
     Logger.recordOutput("Testing/BlankPose3d", new Pose3d());
 
     SimulatedArena.getInstance().simulationPeriodic();
+    RobotSimState.getInstance().getFuelSim().updateSim();
     Logger.recordOutput(
         "FieldSimulation/RobotPosition", RobotSimState.getInstance().getDriveSimulation().getSimulatedDriveTrainPose());
-    Logger.recordOutput(
-        "FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
-    
     Logger.recordOutput("FieldSimulation/RobotFuel", RobotSimState.getInstance().getIntakeGamePieces());
+    Logger.recordOutput("FieldSimulation/FuelCount", RobotSimState.getInstance().getFuelCount());
 
     // Update the shooting logic with the correct rollers
-    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAccelerator.getCurrentVelocity().in(RotationsPerSecond) > 1.0 && shooterOmniwheel.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 10.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAccelerator.getCurrentVelocity().in(RotationsPerSecond) > 1.0 && shooterOmniwheel.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 8.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
           new Translation3d(),
           new Rotation3d(0, 0, Math.PI/2)
         )), shooterFlywheels.getCurrentVelocity());
