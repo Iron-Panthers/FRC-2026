@@ -23,7 +23,7 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
   protected GenericRollersIOInputsAutoLogged inputs = new GenericRollersIOInputsAutoLogged();
 
   private G velocityTarget;
-  private double manualVelocityRPS = 0;
+  protected double manualVelocityRPS = 0;
   private boolean useManualVelocity = false;
 
   public GenericRollers(String name, GenericRollersIO rollerIO) {
