@@ -20,6 +20,7 @@ import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel.ShooterOm
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
 import frc.robot.lib.generic_subsystems.superstructure.*;
 import frc.robot.RobotState;
+import frc.robot.RobotState.TargetShootingState;
 
 import java.util.function.Supplier;
 
@@ -121,17 +122,17 @@ public class ShooterController extends SubsystemBase {
             shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
         }
         else if ((targetState == ShooterState.SHOOT || targetState == ShooterState.TOTAL_SPIN_UP)) {
+            TargetShootingState shotState = RobotState.getInstance().calculateTargetShootingState();
             // If shooting, update the hood target based on the calculated shooter angle
-            shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(RobotState.getInstance().calculateTargetShootingState().shooterAngle()).in(Units.Rotations));
+            shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(shotState.shooterAngle()).in(Units.Rotations));
             // shooterHood.setPositionTargetManual(shooterTemp.get()/360);
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
-            if (shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) < 350 && shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) > 1){
-                shooterAccelerator.setVelocityTarget(ShooterAcceleratorTarget.SPEEDY_SHOOT);
-                shooterFlywheel.setVelocityTarget(ShooterFlywheelTarget.SPEEDY_SHOOT);
-            } else {
-                shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
-                shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
-            }
+            shooterFlywheel.setVelocityManual(shotState.shooterSpeed());
+            // if (shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) < 350 && shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) > 1){
+            //     shooterAccelerator.setVelocityTarget(ShooterAcceleratorTarget.SPEEDY_SHOOT);
+            // } else {
+            shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+            // }
         }
         else {
             shooterHood.setPositionTarget(targetState.hoodTarget);

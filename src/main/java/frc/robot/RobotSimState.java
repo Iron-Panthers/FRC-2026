@@ -42,7 +42,7 @@ public class RobotSimState {
         // init the arena
         Arena2026Rebuilt arena = new Arena2026Rebuilt(false);
 
-        arena.setEfficiencyMode(false);
+        arena.setEfficiencyMode(true);
         arena.placeGamePiecesOnField();
 
         // start the cloock
