@@ -84,6 +84,7 @@ import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
 import frc.robot.utility.FuelSim;
 import frc.robot.subsystems.shooter.shooter_hood.*;
+import frc.robot.subsystems.shooter.shooter_hood.ShooterHood.ShooterHoodTarget;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIO;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOSim;
@@ -405,9 +406,14 @@ public class RobotContainer {
       .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
 
-    driverA.a().onTrue(
+    driverA.a().whileTrue(
       new InstantCommand(()-> {
           shooterController.setTargetState(shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
+          && (matchTimerUpdater.isOurHubActive() || matchTimerUpdater.getTimeUntilOurHubShifts() < 2) // time correct
+          && shooterHood.reachedTarget() // hood in position
+          && swerve.isHeadingCorrect() // robot yaw correct
+          && shooterFlywheels.reachedVelocityTargetManual()//flywheels up to speed
+
           ? ShooterState.SHOOT
           : ShooterState.TOTAL_SPIN_UP);
       })
@@ -443,7 +449,6 @@ public class RobotContainer {
       // .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
       .alongWith(shooterController.setAutoAimCommand(true))
     );
-
     // new Trigger(()-> (shooterController.getTargetState() == ShooterState.SHOOT ||
     // shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP)).onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
   }
