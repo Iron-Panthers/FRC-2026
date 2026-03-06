@@ -294,4 +294,8 @@ public class Drive extends SubsystemBase {
   public boolean isPIDAutoAlign() {
     return driveMode == DriveModes.AUTO_ALIGN;
   }
+
+  public boolean isHeadingCorrect() {
+    return headingController.atTarget();
+  }
 }
