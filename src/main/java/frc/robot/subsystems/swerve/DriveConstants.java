@@ -437,4 +437,10 @@ public class DriveConstants {
           new GoalEndState(0, getAlliancePose().getRotation()));
     }
   }
+
+  //TODO: maybe change these?
+  public static final double TRENCH_WIDTH = 0.65;
+  public static final double TRENCH_LENGTH = 0.6;
+  public static final Pose2d TRENCH_POSE = new Pose2d(4.6, 0.65, new Rotation2d());
+
 }

@@ -450,4 +450,22 @@ public class RobotState {
       return climbRightPose;
     }
   }
+
+  public boolean isUnderTrench(){
+    
+    Pose2d robotPose = getEstimatedPose();
+    Pose2d flippedTrenchPose = FlippingUtil.flipFieldPose(DriveConstants.TRENCH_POSE);
+    boolean underTrench = (
+      (Math.abs(robotPose.getX() - DriveConstants.TRENCH_POSE.getX()) <= DriveConstants.TRENCH_LENGTH &&
+       Math.abs(robotPose.getY() - DriveConstants.TRENCH_POSE.getY()) <= DriveConstants.TRENCH_WIDTH) ||
+      (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) <= DriveConstants.TRENCH_LENGTH &&
+       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) <= DriveConstants.TRENCH_WIDTH) ||
+      (Math.abs(robotPose.getX() - DriveConstants.TRENCH_POSE.getX()) <= DriveConstants.TRENCH_WIDTH &&
+       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) <= DriveConstants.TRENCH_LENGTH) ||
+      (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) <= DriveConstants.TRENCH_WIDTH &&
+       Math.abs(robotPose.getY() - DriveConstants.TRENCH_POSE.getY()) <= DriveConstants.TRENCH_LENGTH));
+    Logger.recordOutput("Swerve/isUnderTrench", underTrench);
+    return underTrench;
+  }
+
 }

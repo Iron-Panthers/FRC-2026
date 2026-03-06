@@ -82,6 +82,7 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
+import frc.robot.utility.FuelSim;
 import frc.robot.subsystems.shooter.shooter_hood.*;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIO;
@@ -365,6 +366,7 @@ public class RobotContainer {
                     }
                 })
             .withName("Drive Teleop"));
+    new Trigger(()-> RobotState.getInstance().isUnderTrench(teleopTranslationController.getPastLinearVelocity())).onTrue(shooterController.setTargetStateCommand(ShooterState.IDLE));
     configureDriverAButtons();
     configureDriverBButtons();
     CommandScheduler.getInstance().schedule(new RunCommand(() -> vibrateIntervals()));
