@@ -84,4 +84,7 @@ public class ElasticUpdater extends SubsystemBase {
 
         Logger.recordOutput("TimeUntilOurHubShifts", timeUntilOurHubShifts);
     }
+    public double getTime() {return matchTime;}
+    public double getTimeUntilOurHubShifts() {return timeUntilOurHubShifts;}
+    public boolean isOurHubActive() {return ourHubActive;}
 }

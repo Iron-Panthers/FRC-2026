@@ -365,10 +365,9 @@ public class RobotContainer {
                     }
                 })
             .withName("Drive Teleop"));
-
     configureDriverAButtons();
     configureDriverBButtons();
-
+    CommandScheduler.getInstance().schedule(new RunCommand(() -> vibrateIntervals()));
     //Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other buttons)
 
     driverA.a().onTrue(new InstantCommand(() -> {
@@ -510,10 +509,6 @@ public class RobotContainer {
   // runs when teleop starts
   public void teleopInit() {
     CommandScheduler.getInstance().schedule(new VibrateHIDCommand(driverB.getHID(), 5, .5));
-
-    // vibrate controller at 30 seconds left
-    CommandScheduler.getInstance()
-        .schedule(new WaitCommand(105).andThen(new VibrateHIDCommand(driverB.getHID(), 3, 0.4)));
   }
 
   /** Ran when periodic disabled */
@@ -529,6 +524,25 @@ public class RobotContainer {
   
   public static double relativeAngularDifference(double currentAngle, double newAngle) {
     return (doubleToDegrees(newAngle - currentAngle) + 180) % 360 - 180;
+  }
+
+  public void vibrateIntervals() {
+  // vibrate controller at 30 seconds left
+    if ((int)matchTimerUpdater.getTime() == 30) {
+        new VibrateHIDCommand(driverB.getHID(), 1, 0.4)
+        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.166, 0))
+        .andThen(new VibrateHIDCommand(driverB.getHID(), 1, 0.4));
+    } else if ((int)matchTimerUpdater.getTimeUntilOurHubShifts() == 10 && matchTimerUpdater.isOurHubActive() == false) {
+        new VibrateHIDCommand(driverB.getHID(), 0.5, 0.4)
+        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.166, 0)) //"wait" command
+        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.5, 0.4))
+        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.166, 0))
+        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.5, 0.4));
+    } else if ((int)matchTimerUpdater.getTimeUntilOurHubShifts() == 10 && matchTimerUpdater.isOurHubActive() == true) {
+        new VibrateHIDCommand(driverB.getHID(), 0.4, 0.4)
+        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.166, 0))
+        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.4, 0.4));
+    }
   }
 
   /** Ran every 20 milliseconds */
