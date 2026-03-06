@@ -7,9 +7,7 @@ import frc.robot.RobotState;
 
 public class ElasticUpdater extends SubsystemBase {
 
-    private double matchTime;
-    private double timeUntilOurHubShifts;
-    private boolean ourHubActive;
+    double matchTime;
 
     @Override
     public void periodic() {
@@ -63,10 +61,9 @@ public class ElasticUpdater extends SubsystemBase {
         Logger.recordOutput("RedHubActive", redHubActive);
         Logger.recordOutput("BlueHubActive", blueHubActive);
     
-        ourHubActive = RobotState.isAllianceRed() ? redHubActive : blueHubActive;
-        Logger.recordOutput("OurHubActive", ourHubActive);
+        Logger.recordOutput("OurHubActive", RobotState.isAllianceRed() ? redHubActive : blueHubActive);
 
-        
+        double timeUntilOurHubShifts;
         if (timeframe == "Auto") {
             timeUntilOurHubShifts = matchTime;
         } else if (timeframe == "Transition Shift") {
@@ -87,7 +84,4 @@ public class ElasticUpdater extends SubsystemBase {
 
         Logger.recordOutput("TimeUntilOurHubShifts", timeUntilOurHubShifts);
     }
-
-    public double getTimeUntilOurHubShifts() {return timeUntilOurHubShifts;}
-    public boolean isOurHubActive() {return ourHubActive;}
 }
