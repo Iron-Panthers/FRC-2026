@@ -367,7 +367,7 @@ public class RobotContainer {
                     }
                 })
             .withName("Drive Teleop"));
-    new Trigger(()-> RobotState.getInstance().isUnderTrench(teleopTranslationController.getPastLinearVelocity())).onTrue(shooterController.setTargetStateCommand(ShooterState.IDLE));
+    new Trigger(()-> RobotState.getInstance().isUnderTrench()).onTrue(shooterController.setTargetStateCommand(ShooterState.IDLE));
     configureDriverAButtons();
     configureDriverBButtons();
     CommandScheduler.getInstance().schedule(new RunCommand(() -> vibrateIntervals()));

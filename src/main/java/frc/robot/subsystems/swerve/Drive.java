@@ -296,6 +296,6 @@ public class Drive extends SubsystemBase {
   }
   
   public boolean isHeadingCorrect() {
-    return headingController.atTarget();
+    return headingController == null || headingController.atTarget();
   }
 }
