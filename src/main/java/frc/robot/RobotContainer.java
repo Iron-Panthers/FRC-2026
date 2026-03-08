@@ -429,12 +429,18 @@ public class RobotContainer {
           ? ShooterState.SHOOT
           : ShooterState.TOTAL_SPIN_UP);
       })
-      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)).alongWith(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW)));
+      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
+      .alongWith(shooterController.getTargetState() == ShooterState.SHOOT ? 
+        ((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
+        .alongWith(new WaitCommand(0.05))
+        .alongWith(intakeController.setTargetStateCommand(IntakeState.STOW))
+        .alongWith(new WaitCommand(0.05)))
+        : new InstantCommand()).repeatedly());
       
     driverA.a().onFalse( new InstantCommand (() -> 
     {
       if (shooterController.getTargetState() == ShooterState.SHOOT){
-        shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP);
+        shooterController.setTargetState(ShooterState.COMPACT_SPIN_UP);
       }
     })
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
