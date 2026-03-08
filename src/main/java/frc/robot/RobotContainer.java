@@ -341,9 +341,9 @@ public class RobotContainer {
       new InstantCommand(() -> swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180)))))
         .alongWith(
           shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
-      .andThen(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)))
-      .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
-      .andThen(new WaitCommand(8))
+      .alongWith(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)))
+      .alongWith(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
+      .alongWith(new WaitCommand(8))
       .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
 

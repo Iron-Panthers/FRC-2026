@@ -7,8 +7,8 @@
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 2.976476868327403,
-      "y" : 0.2640332147093716
+      "x" : 2.9105555555555553,
+      "y" : 0.6280222222222225
     },
     "isLocked" : false,
     "linkedName" : null
@@ -18,12 +18,12 @@
       "y" : 0.8844365192582018
     },
     "prevControl" : {
-      "x" : 4.020118623962041,
-      "y" : 0.9203440094899173
+      "x" : 3.8167888888888886,
+      "y" : 0.8813777777777796
     },
     "nextControl" : {
-      "x" : 6.288680550476541,
-      "y" : 0.7557560178370899
+      "x" : 6.2933253554685775,
+      "y" : 0.8922264083422693
     },
     "isLocked" : false,
     "linkedName" : null
@@ -74,14 +74,14 @@
     "waypointRelativePos" : 1.0,
     "rotationDegrees" : -87.51044707800088
   }, {
-    "waypointRelativePos" : 2.15,
-    "rotationDegrees" : -178.83299999999997
+    "waypointRelativePos" : 1.959055118110243,
+    "rotationDegrees" : 0.0
   }, {
     "waypointRelativePos" : 3.05957616953219,
-    "rotationDegrees" : -126.02858765639348
+    "rotationDegrees" : 59.93929661873494
   }, {
     "waypointRelativePos" : 3.6225509796081528,
-    "rotationDegrees" : -45.33386481114519
+    "rotationDegrees" : 116.95000017888674
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
