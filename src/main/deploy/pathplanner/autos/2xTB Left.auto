@@ -9,11 +9,6 @@
           "name" : "Smart zero"
         }
       }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Intake down"
-        }
-      }, {
         "type" : "path",
         "data" : {
           "pathName" : "2xTB 1 Left"

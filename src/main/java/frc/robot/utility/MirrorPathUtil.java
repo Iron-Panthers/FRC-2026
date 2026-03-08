@@ -78,6 +78,7 @@ public class MirrorPathUtil {
           if (wpObj.has("nextControl") && !wpObj.get("nextControl").isNull()) {
             mirrorPointInPlace((ObjectNode) wpObj.get("nextControl"));
           }
+          wpObj.putNull("linkedName");
         }
       }
     }

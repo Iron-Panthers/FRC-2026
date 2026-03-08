@@ -68,7 +68,7 @@
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Right"
+    "linkedName" : null
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 2.85,

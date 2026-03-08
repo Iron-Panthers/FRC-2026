@@ -14,7 +14,7 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
     public enum ShooterFlywheelTarget implements GenericRollers.VelocityTarget {
         //TODO: need to change; from sprint 2025 -- ive taken away a few states
         IDLE(0),
-        SHOOT(8.6),
+        SHOOT(RobotBase.isReal() ? 8.6 : 8.6),
         SPEEDY_SHOOT(9); // TODO: make this uniform
 
         private double velocity;
@@ -41,7 +41,7 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
 
     /** Set flywheel to an arbitrary surface speed (m/s) from the LUT, bypassing the enum targets. */
     public void setVelocityManual(LinearVelocity velocity) {
-        setVelocityTargetManual(velocity.in(MetersPerSecond) / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
+        setVelocityTargetManual(ShooterFlywheelConstants.VELOCITY_ADJUSTMENT + velocity.in(MetersPerSecond) / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
     }
 
     public boolean reachedVelocityTargetManual(){

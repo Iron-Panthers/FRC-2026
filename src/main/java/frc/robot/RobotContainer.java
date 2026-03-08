@@ -5,6 +5,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.events.EventTrigger;
+import com.pathplanner.lib.path.EventMarker;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -163,7 +165,9 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
-          vision = new Vision(new VisionIOPhotonvision("arducam-7", 0));
+          vision = new Vision(
+            new VisionIOPhotonvision("arducam-7", 0),
+            new VisionIOPhotonvision("arducam-8", 1));
           // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
@@ -185,7 +189,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          vision = new Vision(new VisionIOPhotonvision("arducam-4", 0), new VisionIOPhotonvision("arducam-5", 1));
+          // vision = new Vision(new VisionIOPhotonvision("arducam-4", 0), new VisionIOPhotonvision("arducam-5", 1));
         }
         case ALPHA -> {
           swerve =
@@ -318,6 +322,8 @@ public class RobotContainer {
   /** Use this method to define the named commands for all of the autos */
   private void nameCommands() {
     // Register Command Names in this method
+
+    new EventTrigger("Intake down").onTrue(new InstantCommand(() ->intakeController.setTargetState(IntakeState.INTAKE)));
     NamedCommands.registerCommand("Smart zero", new InstantCommand(() -> swerve.smartZeroGyro()));
     NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeState.INTAKE));
     NamedCommands.registerCommand("Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
@@ -326,7 +332,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
     NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
     NamedCommands.registerCommand("Align to shoot", 
-      new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
+      new InstantCommand(() -> swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))))
+)
         .alongWith(
           shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
     NamedCommands.registerCommand("Shoot full hopper",
