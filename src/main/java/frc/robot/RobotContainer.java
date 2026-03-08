@@ -324,20 +324,21 @@ public class RobotContainer {
     // Register Command Names in this method
 
     new EventTrigger("Intake down").onTrue(new InstantCommand(() ->intakeController.setTargetState(IntakeState.INTAKE)));
+    new EventTrigger("Spin up shooter").onTrue(new InstantCommand(() -> {shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP); 
+      hopperController.setTargetState(HopperControllerState.INTAKE);}));
     NamedCommands.registerCommand("Smart zero", new InstantCommand(() -> swerve.smartZeroGyro()));
-    NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeState.INTAKE));
+    NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeState.INTAKE).alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
     NamedCommands.registerCommand("Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
     NamedCommands.registerCommand("Intake mid", new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
-    NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
-    NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
-    NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
+    NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP).alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+    NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT).alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+    NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE).alongWith(hopperController.setTargetStateCommand(HopperControllerState.IDLE)));
     NamedCommands.registerCommand("Align to shoot", 
       new InstantCommand(() -> swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))))
-)
-        .alongWith(
+    ).alongWith(
           shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
     NamedCommands.registerCommand("Shoot full hopper",
-      new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
+      new InstantCommand(() -> swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180)))))
         .alongWith(
           shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
       .andThen(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)))
@@ -374,7 +375,11 @@ public class RobotContainer {
                     }
                 })
             .withName("Drive Teleop"));
-    new Trigger(()-> RobotState.getInstance().isUnderTrench()).onTrue(shooterController.setTargetStateCommand(ShooterState.IDLE));
+
+    // LET THIS BE A WARNING TO ALL THOSE WHO WANT TO DO A 'TRIGGER' FOR YOUR LOGIC
+    // TODO: WTF IS THIS TRIGGER IT BROKE OUR AUTOS
+    // new Trigger(()-> RobotState.getInstance().isUnderTrench()).onTrue(shooterController.setTargetStateCommand(ShooterState.IDLE));
+
     configureDriverAButtons();
     configureDriverBButtons();
     CommandScheduler.getInstance().schedule(new RunCommand(() -> vibrateIntervals()));

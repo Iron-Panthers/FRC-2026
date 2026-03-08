@@ -452,7 +452,6 @@ public class RobotState {
   }
 
   public boolean isUnderTrench(){
-    
     Pose2d robotPose = getEstimatedPose();
     Pose2d flippedTrenchPose = FlippingUtil.flipFieldPose(DriveConstants.TRENCH_POSE);
     boolean underTrench = (

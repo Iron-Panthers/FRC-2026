@@ -81,7 +81,7 @@ public class DriveConstants {
             Units.inchesToMeters(22.5),
             Units.inchesToMeters(34),
             Units.inchesToMeters(34),
-            2, // 3.75,
+            3.75, // 3.75,
             10,
             // TODO: make it actually max acceleration in m/s^2
             6); // (multiply by max velocity to get m/s^2)
