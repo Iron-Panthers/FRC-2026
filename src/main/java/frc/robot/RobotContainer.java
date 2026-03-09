@@ -421,11 +421,7 @@ public class RobotContainer {
     driverA.a().whileTrue(
       new InstantCommand(()-> {
           shooterController.setTargetState(shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
-          && (matchTimerUpdater.isOurHubActive() || matchTimerUpdater.getTimeUntilOurHubShifts() < 2) // time correct
-          && shooterHood.reachedTarget() // hood in position
-          && swerve.isHeadingCorrect() // robot yaw correct
-          && shooterFlywheels.reachedVelocityTargetManual()//flywheels up to speed
-
+          // && (matchTimerUpdater.isOurHubActive() || matchTimerUpdater.getTimeUntilOurHubShifts() < 2) // time correct // TODO: Test this more so it works
           ? ShooterState.SHOOT
           : ShooterState.TOTAL_SPIN_UP);
       })
@@ -455,6 +451,7 @@ public class RobotContainer {
       .alongWith(
         new WaitUntilCommand(() -> RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(RobotState.getInstance().getAlignPose().getTranslation()) < 1)
         .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
+
     driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
       new RunCommand(() -> {
           swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))));
