@@ -356,7 +356,8 @@ public class RobotContainer {
 
     configureDriverAButtons();
     configureDriverBButtons();
-    CommandScheduler.getInstance().schedule(new RunCommand(() -> vibrateIntervals()));
+    new Trigger(()-> matchTimerUpdater.getTime() > 0).onTrue(new RunCommand(
+      () -> vibrateIntervals()));
     //Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other buttons)
 
   }
