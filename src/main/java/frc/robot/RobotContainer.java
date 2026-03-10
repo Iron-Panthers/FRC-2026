@@ -363,7 +363,7 @@ public class RobotContainer {
     driverA.y().onTrue(new StowCommand(intakeController, shooterController, hopperController));
 
     // SHOOTING COMMAND
-    ShootCommand shootCommand = new ShootCommand(shooterController, hopperController, intakeController);
+    ShootCommand shootCommand = new ShootCommand(shooterController, hopperController, intakeController, matchTimerUpdater);
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
       
