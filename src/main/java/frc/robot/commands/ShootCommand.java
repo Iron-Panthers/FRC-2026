@@ -46,11 +46,9 @@ public class ShootCommand {
     })
         .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
         .alongWith(shooterController.getTargetState() == ShooterState.SHOOT
-            ? (intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
-                .alongWith(new WaitCommand(0.05))
-                .alongWith(intakeController.setTargetStateCommand(IntakeState.STOW))
-                .alongWith(new WaitCommand(0.05))
-            : new InstantCommand())
+            ? ((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
+                .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))).repeatedly()
+            : intakeController.setTargetStateCommand(IntakeState.INTAKE))
         .repeatedly();
   }
 
