@@ -341,9 +341,6 @@ public class RobotContainer {
                 })
             .withName("Drive Teleop"));
 
-    // LET THIS BE A WARNING TO ALL THOSE WHO WANT TO DO A 'TRIGGER' FOR YOUR LOGIC
-    // TODO: WTF IS THIS TRIGGER IT BROKE OUR AUTOS
-    // new Trigger(()-> RobotState.getInstance().isUnderTrench()).onTrue(shooterController.setTargetStateCommand(ShooterState.IDLE));
 
     configureDriverAButtons();
     configureDriverBButtons();
@@ -371,6 +368,8 @@ public class RobotContainer {
 
     // SHUTTLE
     driverA.povRight().whileTrue(new ShuttleCommand(swerve, shooterController));
+
+    driverA.rightBumper().onTrue(shooterController.setTargetStateCommand(ShooterState.DEFAULT_SHOOT));
 
     // ARC ALIGN
     // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
