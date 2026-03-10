@@ -72,16 +72,16 @@
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.0,
-    "rotationDegrees" : 87.51044707800088
+    "rotationDegrees" : 267.5104470780009
   }, {
     "waypointRelativePos" : 2.15,
-    "rotationDegrees" : 178.83299999999997
+    "rotationDegrees" : 358.83299999999997
   }, {
     "waypointRelativePos" : 3.05957616953219,
-    "rotationDegrees" : 126.02858765639348
+    "rotationDegrees" : 306.0285876563935
   }, {
     "waypointRelativePos" : 3.6225509796081528,
-    "rotationDegrees" : 45.33386481114519
+    "rotationDegrees" : 225.3338648111452
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -119,7 +119,7 @@
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : -45.0
+    "rotation" : 135.0
   },
   "useDefaultConstraints" : true
 }

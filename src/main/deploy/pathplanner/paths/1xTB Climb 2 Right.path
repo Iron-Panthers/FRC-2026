@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 3.038,
-        "y": 2.568
+        "y": 2.8461091340450766
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.0178444444444446,
-        "y": 3.3843
+        "y": 3.6624091340450766
       },
       "isLocked": false,
       "linkedName": "Shooting Pose Right"
@@ -86,7 +86,7 @@
   "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -137.26
+    "rotation": 45.0
   },
   "useDefaultConstraints": true
 }

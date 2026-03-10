@@ -60,15 +60,15 @@
   }, {
     "anchor" : {
       "x" : 3.038,
-      "y" : 5.642000000000001
+      "y" : 5.363890865954924
     },
     "prevControl" : {
       "x" : 3.58606553822159,
-      "y" : 5.709569723890333
+      "y" : 5.431460589845257
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Right"
+    "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 2.85,
@@ -90,7 +90,7 @@
   "pointTowardsZones" : [ {
     "fieldPosition" : {
       "x" : 0.4,
-      "y" : 5.5
+      "y" : 2.710000000000001
     },
     "rotationOffset" : 0.0,
     "minWaypointRelativePos" : 1.2172897196261614,
@@ -108,7 +108,7 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 137.26
+    "rotation" : -45.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
