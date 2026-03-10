@@ -239,58 +239,32 @@ public class RobotContainer {
       }
     }
 
-    if (swerve == null) {
-      swerve =
-          new Drive(
-              new GyroIO() {},
-              new ModuleIO() {},
-              new ModuleIO() {},
-              new ModuleIO() {},
-              new ModuleIO() {});
-    }
-    if (vision == null) {
-      vision = new Vision(new VisionIO() {}, new VisionIO() {});
-    }
+    // SWERVE
+    if (swerve == null) swerve = new Drive( new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
 
-    if (canWatchdog == null) {
-      canWatchdog = new CANWatchdog(new CANWatchdogIO() {}, rgb);
-    }
+    // VISION
+    if (vision == null) vision = new Vision(new VisionIO() {}, new VisionIO() {});
 
-    if (rgb == null) {
-      rgb = new RGB(new RGBIO() {});
-    }
+    // CAN WATCHDOG
+    if (canWatchdog == null) canWatchdog = new CANWatchdog(new CANWatchdogIO() {}, rgb);
+
+    // RGB
+    if (rgb == null) rgb = new RGB(new RGBIO() {});
 
     // INTAKE
-    if( intakePivot == null) {
-      intakePivot = new IntakePivot( new IntakePivotIO() {});
-    }
-    if( intakeRollers == null) {
-      intakeRollers = new IntakeRollers( new IntakeRollersIO() {});
-    }
+    if( intakePivot == null) intakePivot = new IntakePivot( new IntakePivotIO() {});
+    if( intakeRollers == null) intakeRollers = new IntakeRollers( new IntakeRollersIO() {});
     intakeController = new IntakeController(intakePivot, intakeRollers);
 
-    if (hopper == null) {
-      hopper = new Hopper(new HopperIO() {});
-    }
+    // HOPPER
+    if (hopper == null) hopper = new Hopper(new HopperIO() {});
     hopperController = new HopperController(hopper);
 
-
-    if (shooterFlywheels == null) {
-      shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIO() {});
-    }
-
-    if (shooterHood == null) {
-      shooterHood = new ShooterHood(new ShooterHoodIO() {});
-    }
-
-    if (shooterOmniwheel == null) {
-      shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIO() {});
-    }
-
-    if (shooterAccelerator == null) {
-      shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIO() {});
-    }
-
+    // SHOOTER
+    if (shooterFlywheels == null) shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIO() {}); 
+    if (shooterHood == null) shooterHood = new ShooterHood(new ShooterHoodIO() {});
+    if (shooterOmniwheel == null) shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIO() {});
+    if (shooterAccelerator == null) shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIO() {});
     shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator);
 
 
@@ -385,39 +359,25 @@ public class RobotContainer {
     CommandScheduler.getInstance().schedule(new RunCommand(() -> vibrateIntervals()));
     //Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other buttons)
 
-    driverA.a().onTrue(new InstantCommand(() -> {
-      // Only shoot in simulation
-      if (Constants.getRobotType() == Constants.RobotType.SIM) {
-
-        Transform3d shooterPose = ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
-          new Translation3d(),
-          new Rotation3d(0, 0, Math.PI/2)
-        )); // rotation because of how the modeled shooter was in sim litterally just that i fear
-
-        // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
-        Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
-        LinearVelocity launchVelocity = shooterController.getCurrentVelocity(); 
-
-        // Shoot the fuel using the calculated parameters - velocity must match calculation!
-        RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
-      }
-      })
-    );
   }
 
   private void configureDriverAButtons() {
+    // ZERO GYRO
     driverA.start().onTrue(swerve.zeroGyroCommand());
+    // SMART ZERO GYRO
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    // INTAKE
     driverA.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOW)
       .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE_DOWN))
       .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))
       .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
-
+    // STOW ROBOT
     driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW)
       .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
 
+    // SHOOTING COMMAND
     driverA.a().whileTrue(
       new InstantCommand(()-> {
           shooterController.setTargetState(shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
@@ -427,6 +387,7 @@ public class RobotContainer {
       })
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
       .alongWith(shooterController.getTargetState() == ShooterState.SHOOT ? 
+      // THIS IS FOR MAKING THE INTAKE GO UP AND DOWN WHILE WE ARE SHOOTING
         ((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
         .alongWith(new WaitCommand(0.05))
         .alongWith(intakeController.setTargetStateCommand(IntakeState.STOW))
@@ -440,32 +401,33 @@ public class RobotContainer {
       }
     })
       .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+    
+    // DEFENSE MODE
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
+
+    // SHUTTLE
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetStateCommand(ShooterState.SHUTTLE)));
 
-    // when you hit right bumper, hood goes to DEFAULT_SHOOT (7 degrees) and then when you hit 
-    // shoot as above, hood doesn't actually go to shoot but stays at default shoot
-    // driverA.rightBumper().onTrue(shooterController.setAutoAimCommand(false));
+    // ALIGN TO SHOOT
     driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
       .alongWith(
         new WaitUntilCommand(() -> RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(RobotState.getInstance().getAlignPose().getTranslation()) < 1)
         .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
 
-    driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
-      new RunCommand(() -> {
-          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))));
+    // // ARC ALIGN
+    // driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
+    //   new RunCommand(() -> {
+    //       swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))));
 
-          final Translation3d hubPosition3d = RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
-          Translation2d toGoal = hubPosition3d.toTranslation2d().minus(RobotState.getInstance().getEstimatedPose().getTranslation());
-          double distance = toGoal.getNorm();
-          Logger.recordOutput("Tuning/DistanceTo", distance);
-      })
-      // .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
-      .alongWith(shooterController.setAutoAimCommand(true))
-    );
-    // new Trigger(()-> (shooterController.getTargetState() == ShooterState.SHOOT ||
-    // shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP)).onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
+    //       final Translation3d hubPosition3d = RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
+    //       Translation2d toGoal = hubPosition3d.toTranslation2d().minus(RobotState.getInstance().getEstimatedPose().getTranslation());
+    //       double distance = toGoal.getNorm();
+    //       Logger.recordOutput("Tuning/DistanceTo", distance);
+    //   })
+    //   .alongWith(shooterController.setAutoAimCommand(true))
+    // );
+
   }
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
