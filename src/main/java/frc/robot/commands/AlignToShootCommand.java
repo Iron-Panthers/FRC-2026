@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -20,16 +22,22 @@ import frc.robot.subsystems.swerve.DriveConstants;
  * Aligns the robot to the shooting pose and spins up the shooter once
  * close enough. Intended to be used with whileTrue.
  */
-public class AlignToShootCommand extends ParallelCommandGroup {
-  public AlignToShootCommand(Drive swerve, ShooterController shooterController) {
-    addCommands(
-      new RunCommand(() -> {
-          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))));
+public class AlignToShootCommand extends Command{
+  private Drive swerve;
+  private ShooterController shooterController;
 
-          final Translation3d hubPosition3d = RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
-          Translation2d toGoal = hubPosition3d.toTranslation2d().minus(RobotState.getInstance().getEstimatedPose().getTranslation());
-          double distance = toGoal.getNorm();
-          Logger.recordOutput("Tuning/DistanceTo", distance);
-      }));
+  public AlignToShootCommand(Drive swerve, ShooterController shooterController) {
+    this.swerve = swerve;
+    this.shooterController = shooterController;
+  }
+
+  public void initialize() {
+    swerve.setMovementScoped(true);
+    shooterController.setAutoAimCommand(true);
+  }
+
+  public void end(boolean interrupted) {
+    swerve.setMovementScoped(false);
+    shooterController.setAutoAimCommand(false);
   }
 }

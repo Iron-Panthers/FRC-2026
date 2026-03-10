@@ -87,6 +87,12 @@ public class DriveConstants {
             6); // (multiply by max velocity to get m/s^2)
       };
 
+    // max velocity of the robot for shooting while moving
+    public static final double MAX_SCOPED_VELOCITY = switch (getRobotType()) {
+        case SIM -> 1.5;
+        default -> 1.5;
+    };
+
     public static final Matrix<N3, N1> STATE_STD_DEVS = VecBuilder.fill(0.001, 0.001, 0.001);
   
     public static final Translation2d[] MODULE_TRANSLATIONS =
@@ -300,7 +306,7 @@ public class DriveConstants {
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.01);
-        case SIM -> new HeadingControllerConstants(6, 0, 8, 20, 0.01);
+        case SIM -> new HeadingControllerConstants(1, 0, 5, 20, 0.01);
         case VISION -> new HeadingControllerConstants(3, 0, 5, 15, 0.007);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
