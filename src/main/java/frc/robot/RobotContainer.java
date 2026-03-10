@@ -410,24 +410,24 @@ public class RobotContainer {
     driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
       .andThen(shooterController.setTargetStateCommand(ShooterState.SHUTTLE)));
 
+    // ARC ALIGN
+    // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
+    //   .alongWith(
+    //     new WaitUntilCommand(() -> RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(RobotState.getInstance().getAlignPose().getTranslation()) < 1)
+    //     .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
+
     // ALIGN TO SHOOT
-    driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
-      .alongWith(
-        new WaitUntilCommand(() -> RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(RobotState.getInstance().getAlignPose().getTranslation()) < 1)
-        .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
+    driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
+      new RunCommand(() -> {
+          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))));
 
-    // // ARC ALIGN
-    // driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
-    //   new RunCommand(() -> {
-    //       swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))));
-
-    //       final Translation3d hubPosition3d = RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
-    //       Translation2d toGoal = hubPosition3d.toTranslation2d().minus(RobotState.getInstance().getEstimatedPose().getTranslation());
-    //       double distance = toGoal.getNorm();
-    //       Logger.recordOutput("Tuning/DistanceTo", distance);
-    //   })
-    //   .alongWith(shooterController.setAutoAimCommand(true))
-    // );
+          final Translation3d hubPosition3d = RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
+          Translation2d toGoal = hubPosition3d.toTranslation2d().minus(RobotState.getInstance().getEstimatedPose().getTranslation());
+          double distance = toGoal.getNorm();
+          Logger.recordOutput("Tuning/DistanceTo", distance);
+      })
+      .alongWith(shooterController.setAutoAimCommand(true))
+    );
 
   }
   private void configureDriverBButtons() {
