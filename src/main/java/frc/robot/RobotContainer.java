@@ -347,7 +347,6 @@ public class RobotContainer {
 
     configureDriverAButtons();
     configureDriverBButtons();
-    new Trigger(()-> matchTimerUpdater.getTime() > 0).onTrue(new RunCommand( () -> vibrateIntervals()));
     //Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other buttons)
 
   }
@@ -461,25 +460,6 @@ public class RobotContainer {
   
   public static double relativeAngularDifference(double currentAngle, double newAngle) {
     return (doubleToDegrees(newAngle - currentAngle) + 180) % 360 - 180;
-  }
-
-  public void vibrateIntervals() {
-  // vibrate controller at 30 seconds left
-    if ((int)matchTimerUpdater.getTime() == 30) {
-        new VibrateHIDCommand(driverB.getHID(), 1, 0.4)
-        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.166, 0))
-        .andThen(new VibrateHIDCommand(driverB.getHID(), 1, 0.4));
-    } else if ((int)matchTimerUpdater.getTimeUntilOurHubShifts() == 10 && matchTimerUpdater.isOurHubActive() == false) {
-        new VibrateHIDCommand(driverB.getHID(), 0.5, 0.4)
-        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.166, 0)) //"wait" command
-        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.5, 0.4))
-        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.166, 0))
-        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.5, 0.4));
-    } else if ((int)matchTimerUpdater.getTimeUntilOurHubShifts() == 10 && matchTimerUpdater.isOurHubActive() == true) {
-        new VibrateHIDCommand(driverB.getHID(), 0.4, 0.4)
-        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.166, 0))
-        .andThen(new VibrateHIDCommand(driverB.getHID(), 0.4, 0.4));
-    }
   }
 
   /** Ran every 20 milliseconds */
