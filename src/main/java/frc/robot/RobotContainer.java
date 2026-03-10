@@ -379,7 +379,7 @@ public class RobotContainer {
     //     .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
 
     // ALIGN TO SHOOT
-    driverA.rightBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
+    driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
   }
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
