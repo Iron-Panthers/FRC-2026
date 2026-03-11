@@ -59,16 +59,16 @@
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 3.210955555555555,
-      "y" : 5.626200000000001
+      "x" : 3.038,
+      "y" : 5.363890865954924
     },
     "prevControl" : {
-      "x" : 4.853633333328293,
-      "y" : 5.928533333333334
+      "x" : 4.680677777772738,
+      "y" : 5.6662241992882585
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : null
+    "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.2807363576594288,
@@ -99,13 +99,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 133.452
+    "rotation" : 135.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 135.0
+    "rotation" : 315.0
   },
   "useDefaultConstraints" : true
 }
