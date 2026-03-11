@@ -5,6 +5,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.events.EventTrigger;
+import com.pathplanner.lib.path.EventMarker;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -26,26 +28,27 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.AlignToPoseCommand;
+import frc.robot.commands.AlignToShootCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShuttleCommand;
+import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
 import frc.robot.subsystems.canWatchdog.CANWatchdog;
 import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
-import frc.robot.subsystems.canWatchdog.CANWatchdogIOComp;
 import frc.robot.subsystems.climb.ClimbController;
 import frc.robot.subsystems.climb.ClimbController.ClimbState;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIO;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIOSim;
-import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot.ClimbClawPivotTarget;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIO;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
-import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot.ClimbDeployPivotTarget;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
@@ -56,7 +59,6 @@ import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
 import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOTalonFX;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.hopper.HopperController;
 import frc.robot.subsystems.hopper.Hopper.Hopper;
@@ -66,7 +68,6 @@ import frc.robot.subsystems.hopper.Hopper.HopperIOTalonFX;
 import frc.robot.subsystems.hopper.HopperController.HopperControllerState;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
-import frc.robot.subsystems.rgb.RGBIOAddressableLED;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.GyroIO;
@@ -75,8 +76,6 @@ import frc.robot.subsystems.swerve.GyroIOSim;
 import frc.robot.subsystems.swerve.ModuleIO;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
-import frc.robot.subsystems.swerve.DriveConstants.ApproachPose;
-import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonvision;
@@ -94,17 +93,13 @@ import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIO;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOSim;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOTalonFX;
 import frc.robot.subsystems.shooter.shooter_flywheel.*;
-import frc.robot.lib.generic_subsystems.superstructure.*;
-import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure.ControlMode;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.function.BooleanSupplier;
 import org.ironmaple.simulation.SimulatedArena;
 
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -161,7 +156,9 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
-          vision = new Vision(new VisionIOPhotonvision("arducam-7", 0));
+          vision = new Vision(
+            new VisionIOPhotonvision("arducam-7", 0),
+            new VisionIOPhotonvision("arducam-8", 1));
           // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
@@ -183,7 +180,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          vision = new Vision(new VisionIOPhotonvision("arducam-4", 0), new VisionIOPhotonvision("arducam-5", 1));
+          // vision = new Vision(new VisionIOPhotonvision("arducam-4", 0), new VisionIOPhotonvision("arducam-5", 1));
         }
         case ALPHA -> {
           swerve =
@@ -233,58 +230,32 @@ public class RobotContainer {
       }
     }
 
-    if (swerve == null) {
-      swerve =
-          new Drive(
-              new GyroIO() {},
-              new ModuleIO() {},
-              new ModuleIO() {},
-              new ModuleIO() {},
-              new ModuleIO() {});
-    }
-    if (vision == null) {
-      vision = new Vision(new VisionIO() {}, new VisionIO() {});
-    }
+    // SWERVE
+    if (swerve == null) swerve = new Drive( new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
 
-    if (canWatchdog == null) {
-      canWatchdog = new CANWatchdog(new CANWatchdogIO() {}, rgb);
-    }
+    // VISION
+    if (vision == null) vision = new Vision(new VisionIO() {}, new VisionIO() {});
 
-    if (rgb == null) {
-      rgb = new RGB(new RGBIO() {});
-    }
+    // CAN WATCHDOG
+    if (canWatchdog == null) canWatchdog = new CANWatchdog(new CANWatchdogIO() {}, rgb);
+
+    // RGB
+    if (rgb == null) rgb = new RGB(new RGBIO() {});
 
     // INTAKE
-    if( intakePivot == null) {
-      intakePivot = new IntakePivot( new IntakePivotIO() {});
-    }
-    if( intakeRollers == null) {
-      intakeRollers = new IntakeRollers( new IntakeRollersIO() {});
-    }
+    if( intakePivot == null) intakePivot = new IntakePivot( new IntakePivotIO() {});
+    if( intakeRollers == null) intakeRollers = new IntakeRollers( new IntakeRollersIO() {});
     intakeController = new IntakeController(intakePivot, intakeRollers);
 
-    if (hopper == null) {
-      hopper = new Hopper(new HopperIO() {});
-    }
+    // HOPPER
+    if (hopper == null) hopper = new Hopper(new HopperIO() {});
     hopperController = new HopperController(hopper);
 
-
-    if (shooterFlywheels == null) {
-      shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIO() {});
-    }
-
-    if (shooterHood == null) {
-      shooterHood = new ShooterHood(new ShooterHoodIO() {});
-    }
-
-    if (shooterOmniwheel == null) {
-      shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIO() {});
-    }
-
-    if (shooterAccelerator == null) {
-      shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIO() {});
-    }
-
+    // SHOOTER
+    if (shooterFlywheels == null) shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIO() {}); 
+    if (shooterHood == null) shooterHood = new ShooterHood(new ShooterHoodIO() {});
+    if (shooterOmniwheel == null) shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIO() {});
+    if (shooterAccelerator == null) shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIO() {});
     shooterController = new ShooterController(shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator);
 
 
@@ -316,24 +287,28 @@ public class RobotContainer {
   /** Use this method to define the named commands for all of the autos */
   private void nameCommands() {
     // Register Command Names in this method
+
+    new EventTrigger("Intake down").onTrue(new InstantCommand(() ->intakeController.setTargetState(IntakeState.INTAKE)));
+    new EventTrigger("Spin up shooter").onTrue(new InstantCommand(() -> {shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP); 
+      hopperController.setTargetState(HopperControllerState.INTAKE);}));
     NamedCommands.registerCommand("Smart zero", new InstantCommand(() -> swerve.smartZeroGyro()));
-    NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeState.INTAKE));
+    NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeState.INTAKE).alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
     NamedCommands.registerCommand("Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
     NamedCommands.registerCommand("Intake mid", new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
-    NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
-    NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
-    NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
+    NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP).alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+    NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT).alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+    NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE).alongWith(hopperController.setTargetStateCommand(HopperControllerState.IDLE)));
     NamedCommands.registerCommand("Align to shoot", 
-      new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
-        .alongWith(
+      new InstantCommand(() -> swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))))
+    ).alongWith(
           shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
     NamedCommands.registerCommand("Shoot full hopper",
-      new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
+      new InstantCommand(() -> swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180)))))
         .alongWith(
           shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
-      .andThen(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)))
-      .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
-      .andThen(new WaitCommand(8))
+      .alongWith(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)))
+      .alongWith(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
+      .alongWith(new WaitCommand(8))
       .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
 
@@ -366,85 +341,44 @@ public class RobotContainer {
                 })
             .withName("Drive Teleop"));
 
+
     configureDriverAButtons();
     configureDriverBButtons();
-
     //Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other buttons)
 
-    driverA.a().onTrue(new InstantCommand(() -> {
-      // Only shoot in simulation
-      if (Constants.getRobotType() == Constants.RobotType.SIM) {
-
-        Transform3d shooterPose = ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
-          new Translation3d(),
-          new Rotation3d(0, 0, Math.PI/2)
-        )); // rotation because of how the modeled shooter was in sim litterally just that i fear
-
-        // Angle shooterAngle = Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition()));
-        Angle shooterAngle = RobotState.getInstance().calculateTargetShootingState().shooterAngle();
-        LinearVelocity launchVelocity = shooterController.getCurrentVelocity(); 
-
-        // Shoot the fuel using the calculated parameters - velocity must match calculation!
-        RobotSimState.getInstance().shootFuel(shooterAngle, shooterPose, launchVelocity);
-      }
-      })
-    );
   }
 
   private void configureDriverAButtons() {
+    // ZERO GYRO
     driverA.start().onTrue(swerve.zeroGyroCommand());
+    // SMART ZERO GYRO
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.b().onTrue(climbController.setTargetStateCommand(ClimbState.STOW)
-      .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE_DOWN))
-      .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))
-      .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))
-      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
+    // INTAKE
+    driverA.b().onTrue(new IntakeCommand(climbController, intakeController, shooterController, hopperController));
+    // STOW ROBOT
+    driverA.y().onTrue(new StowCommand(intakeController, shooterController, hopperController));
 
-    driverA.y().onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW)
-      .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))
-      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
-
-    driverA.a().onTrue(
-      new InstantCommand(()-> {
-          shooterController.setTargetState(shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
-          ? ShooterState.SHOOT
-          : ShooterState.TOTAL_SPIN_UP);
-      })
-      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)).alongWith(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW)));
+    // SHOOTING COMMAND
+    ShootCommand shootCommand = new ShootCommand(shooterController, hopperController, intakeController, matchTimerUpdater);
+    driverA.a().whileTrue(shootCommand.whileHeld());
+    driverA.a().onFalse(shootCommand.onRelease());
       
-    driverA.a().onFalse( new InstantCommand (() -> 
-    {
-      if (shooterController.getTargetState() == ShooterState.SHOOT){
-        shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP);
-      }
-    })
-      .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+    // DEFENSE MODE
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
-    driverA.povRight().whileTrue(new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0)))
-      .andThen(shooterController.setTargetStateCommand(ShooterState.SHUTTLE)));
 
-    // when you hit right bumper, hood goes to DEFAULT_SHOOT (7 degrees) and then when you hit 
-    // shoot as above, hood doesn't actually go to shoot but stays at default shoot
-    // driverA.rightBumper().onTrue(shooterController.setAutoAimCommand(false));
-    driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
-      .alongWith(
-        new WaitUntilCommand(() -> RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(RobotState.getInstance().getAlignPose().getTranslation()) < 1)
-        .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
-    driverA.leftBumper().whileTrue( // automatically go to the right orientation to shoot
-      new RunCommand(() -> {
-          swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))));
+    // SHUTTLE
+    driverA.povRight().whileTrue(new ShuttleCommand(swerve, shooterController));
 
-          final Translation3d hubPosition3d = RobotState.isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
-          Translation2d toGoal = hubPosition3d.toTranslation2d().minus(RobotState.getInstance().getEstimatedPose().getTranslation());
-          double distance = toGoal.getNorm();
-          Logger.recordOutput("Tuning/DistanceTo", distance);
-      })
-      // .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
-      .alongWith(shooterController.setAutoAimCommand(true))
-    );
+    driverA.rightBumper().onTrue(shooterController.setTargetStateCommand(ShooterState.DEFAULT_SHOOT));
 
-    // new Trigger(()-> (shooterController.getTargetState() == ShooterState.SHOOT ||
-    // shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP)).onTrue(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
+    // ARC ALIGN
+    // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
+    //   .alongWith(
+    //     new WaitUntilCommand(() -> RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(RobotState.getInstance().getAlignPose().getTranslation()) < 1)
+    //     .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
+
+    // ALIGN TO SHOOT
+    driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
   }
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
@@ -510,10 +444,6 @@ public class RobotContainer {
   // runs when teleop starts
   public void teleopInit() {
     CommandScheduler.getInstance().schedule(new VibrateHIDCommand(driverB.getHID(), 5, .5));
-
-    // vibrate controller at 30 seconds left
-    CommandScheduler.getInstance()
-        .schedule(new WaitCommand(105).andThen(new VibrateHIDCommand(driverB.getHID(), 3, 0.4)));
   }
 
   /** Ran when periodic disabled */

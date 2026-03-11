@@ -45,14 +45,20 @@ public class ShooterController extends SubsystemBase {
             ShooterAcceleratorTarget.SHOOT,
             ShooterOmniwheelTarget.SHOOT
         ),
-        
+        /**default_shoot: default shooting position*/
+        DEFAULT_SHOOT(
+            ShooterHoodTarget.DEFAULT_SHOOT,
+            ShooterFlywheelTarget.SHOOT,
+            ShooterAcceleratorTarget.SHOOT,
+            ShooterOmniwheelTarget.SHOOT
+        ),
         TOTAL_SPIN_UP(
             ShooterHoodTarget.SHOOT_TEMP,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.SHOOT,
             ShooterOmniwheelTarget.IDLE
         ),
-        FLY_SPIN_UP(
+        COMPACT_SPIN_UP(
             ShooterHoodTarget.STOW,
             ShooterFlywheelTarget.SHOOT,
             ShooterAcceleratorTarget.IDLE,
@@ -121,10 +127,14 @@ public class ShooterController extends SubsystemBase {
             shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
         }
-        else if ((targetState == ShooterState.SHOOT || targetState == ShooterState.TOTAL_SPIN_UP)) {
+        else if ((targetState == ShooterState.SHOOT || targetState == ShooterState.TOTAL_SPIN_UP || targetState == ShooterState.DEFAULT_SHOOT)) {
             TargetShootingState shotState = RobotState.getInstance().calculateTargetShootingState();
             // If shooting, update the hood target based on the calculated shooter angle
-            shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(shotState.shooterAngle()).in(Units.Rotations));
+            if (targetState == ShooterState.DEFAULT_SHOOT) {
+                shooterHood.setPositionTarget(targetState.hoodTarget);
+            } else {
+                shooterHood.setPositionTargetManual(Units.Rotations.of(.25).minus(shotState.shooterAngle()).in(Units.Rotations));
+            }
             // shooterHood.setPositionTargetManual(shooterTemp.get()/360);
 
             // set our omniwheels
@@ -138,7 +148,12 @@ public class ShooterController extends SubsystemBase {
                 shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
             }
 
-            shooterFlywheel.setVelocityManual(shotState.shooterSpeed());
+            if (targetState == ShooterState.DEFAULT_SHOOT) {
+                shooterFlywheel.setVelocityTarget(ShooterFlywheelTarget.SHOOT);
+            } else {
+                shooterFlywheel.setVelocityManual(shotState.shooterSpeed());
+            }
+
             if (shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) < 350){
                 shooterAccelerator.setVelocityTarget(ShooterAcceleratorTarget.WARMUP_ACCELERATOR);
             } else {
