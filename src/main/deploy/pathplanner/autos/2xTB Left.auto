@@ -11,7 +11,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "2xTB 1 Left"
+          "pathName" : "2xTB 1 I Left"
         }
       }, {
         "type" : "named",
@@ -46,7 +46,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "2xTB 2 Left"
+          "pathName" : "2xTB 2 I Left"
         }
       }, {
         "type" : "named",
