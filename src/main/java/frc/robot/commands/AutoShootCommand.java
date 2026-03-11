@@ -11,29 +11,27 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.climb.ClimbController;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.hopper.HopperController;
+import frc.robot.subsystems.hopper.HopperController.HopperControllerState;
 import frc.robot.subsystems.intake.IntakeController;
+import frc.robot.subsystems.intake.IntakeController.IntakeState;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel;
 import frc.robot.subsystems.shooter.shooter_hood.ShooterHood;
 import frc.robot.subsystems.swerve.Drive;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-
-public class AutoToShootCommand extends SequentialCommandGroup {
-  public AutoToShootCommand(Drive swerve, ShooterController shooterController, HopperController hopperController, 
+public class AutoShootCommand extends SequentialCommandGroup {
+  public AutoShootCommand(Drive swerve, ShooterController shooterController, HopperController hopperController, 
     IntakeController intakeController, ElasticUpdater matchTimerUpdater, ClimbController climbController) {
     addCommands(
           new AlignToShootCommand(swerve, shooterController),
-          new ShooterController(new ShooterFlywheel(null), null, null, null)
-          new InstantCommand() -> shooterController.setTargetState(ShooterState.SHOOT),          
-          // new ShootCommand(shooterController, hopperController, intakeController, matchTimerUpdater),
-          new IntakeCommand(climbController, intakeController, shooterController, hopperController),
-          new WaitCommand(4)
-
+          new InstantCommand(() -> shooterController.setTargetState(ShooterState.SHOOT))
+            .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
+            .alongWith(((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
+              .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))).repeatedly()).withDeadline(new WaitCommand(4)),
+          new IntakeCommand(climbController, intakeController, shooterController, hopperController)
           );
       }
     
 
 }
-
