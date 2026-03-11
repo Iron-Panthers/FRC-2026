@@ -26,14 +26,14 @@ public class IntakePivotConstants {
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(100, 0, 0, 0, 7.52, 0, 0.32);
+        case COMP -> new PIDGains(100, 0, 0, 0, 20, 0.1807, 0.32);
         case SIM -> new PIDGains(40, 0, 0, 0, 3.6144, 0.1807, 0.53);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(2, 8);
+        case COMP -> new MotionMagicConfig(4000, 4000);
         case SIM -> new MotionMagicConfig(7.5, 10);
         default -> new MotionMagicConfig(0, 0);
       };
