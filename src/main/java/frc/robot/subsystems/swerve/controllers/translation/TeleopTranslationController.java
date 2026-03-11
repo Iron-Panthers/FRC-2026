@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve.controllers.translation;
 
 import static frc.robot.subsystems.swerve.DriveConstants.DRIVE_CONFIG;
+import static frc.robot.subsystems.swerve.DriveConstants.MAX_SCOPED_VELOCITY;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,6 +21,9 @@ public class TeleopTranslationController extends BaseTranslationController {
   private Translation2d pastLinearVelocity = new Translation2d();
   private double clampedVelocityDiff = 0;
   private double acceleration;
+
+  // if true, the controller will reduce the speed of the robot (for shooting while moving)
+  private boolean scoped = false;
 
   /* teleop control with specified yaw supplier, typically "arbitrary" yaw */
   public TeleopTranslationController(Supplier<Rotation2d> yawSupplier) {
@@ -66,10 +70,18 @@ public class TeleopTranslationController extends BaseTranslationController {
     pastLinearVelocity = newVelocity;
 
     return ChassisSpeeds.fromFieldRelativeSpeeds(
-        newVelocity.getX() * DRIVE_CONFIG.maxLinearVelocity(),
-        newVelocity.getY() * DRIVE_CONFIG.maxLinearVelocity(),
+        newVelocity.getX() * getMaxLinearVelocity(),
+        newVelocity.getY() * getMaxLinearVelocity(),
         omega * DRIVE_CONFIG.maxAngularVelocity(),
         yawSupplier.get());
+  }
+
+  private double getMaxLinearVelocity() {
+    if (scoped) {
+      return MAX_SCOPED_VELOCITY;
+    } else {
+      return DRIVE_CONFIG.maxLinearVelocity();
+    }
   }
 
   public Translation2d calculateLinearVelocity(double x, double y) {
@@ -97,5 +109,9 @@ public class TeleopTranslationController extends BaseTranslationController {
 
   public void setPastLinearVelocity(Translation2d pastLinearVelocity) {
     this.pastLinearVelocity = pastLinearVelocity;
+  }
+
+  public void setScoped(boolean scoped) {
+    this.scoped = scoped;
   }
 }

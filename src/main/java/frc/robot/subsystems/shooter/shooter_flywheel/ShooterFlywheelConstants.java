@@ -25,7 +25,7 @@ public class ShooterFlywheelConstants {
         default -> new PIDGains(.1, 0, 0, 0, 0.137, 0, 0);
       };
 
-
+    public static final double VELOCITY_ADJUSTMENT = 0.1;
     public static final int CURRENT_LIMIT_AMPS =
         switch (Constants.getRobotType()) {
             case COMP -> 40;

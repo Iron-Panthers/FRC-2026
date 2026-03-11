@@ -41,11 +41,11 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
 
     /** Set flywheel to an arbitrary surface speed (m/s) from the LUT, bypassing the enum targets. */
     public void setVelocityManual(LinearVelocity velocity) {
-        setVelocityTargetManual(velocity.in(MetersPerSecond) / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
+        setVelocityTargetManual(ShooterFlywheelConstants.VELOCITY_ADJUSTMENT + velocity.in(MetersPerSecond) / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
     }
 
     public boolean reachedVelocityTargetManual(){
-        return Math.abs(super.inputs.velocityRadsPerSec - Units.rotationsToRadians(manualVelocityRPS)) < 10;
+        return Math.abs(super.inputs.velocityRadsPerSec - Units.rotationsToRadians(manualVelocityRPS)) < 50;
     }
 
 }

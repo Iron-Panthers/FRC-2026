@@ -229,6 +229,17 @@ public class Drive extends SubsystemBase {
     }
   }
 
+  public void setMovementScoped(boolean scoped) {
+    teleopController.setScoped(scoped);
+    if (headingController == null) {
+      headingController =
+          new TeleopHeadingController(
+              () -> fieldRelativeYaw, new Rotation2d(), HEADING_CONTROLLER_CONSTANTS);
+    }
+    headingController.setScoped(scoped);
+  }
+
+
   public void clearHeadingControl() {
     headingController = null;
   }
@@ -293,5 +304,9 @@ public class Drive extends SubsystemBase {
 
   public boolean isPIDAutoAlign() {
     return driveMode == DriveModes.AUTO_ALIGN;
+  }
+  
+  public boolean isHeadingCorrect() {
+    return headingController == null || headingController.atTarget();
   }
 }
