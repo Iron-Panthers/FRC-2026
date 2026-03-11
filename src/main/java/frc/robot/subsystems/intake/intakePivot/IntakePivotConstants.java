@@ -56,7 +56,7 @@ public class IntakePivotConstants {
   public static final double SUPPLY_CURRENT_LIMIT = 30;
 
   // ZEROING CONSTANTS
-  public static final double ZEROING_VOLTS = 1;
+  public static final double ZEROING_VOLTS = 3;
   public static final double ZEROING_OFFSET = 87/360.0; // offset in rotations
 
   public static final Transform3d BASE_TO_INTAKE_PIVOT_TRANSFORM =

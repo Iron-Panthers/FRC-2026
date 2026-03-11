@@ -17,7 +17,7 @@ public class IntakeController extends SubsystemBase {
     public enum IntakeState {
         STOW(IntakePivotTarget.STOW, IntakeRollersTarget.IDLE),
         MIDDLE_STOW(IntakePivotTarget.MED_STOW, IntakeRollersTarget.INTAKE_REALLY_SLOW),
-        HIGH_MIDDLE_STOW(IntakePivotTarget.MED_STOW, IntakeRollersTarget.INTAKE_REALLY_SLOW),
+        HIGH_MIDDLE_STOW(IntakePivotTarget.HIGH_MED_STOW, IntakeRollersTarget.INTAKE_REALLY_SLOW),
         IDLE(IntakePivotTarget.INTAKE, IntakeRollersTarget.IDLE),
         INTAKE(IntakePivotTarget.INTAKE, IntakeRollersTarget.INTAKE),
         INTAKE_DOWN(IntakePivotTarget.INTAKE, IntakeRollersTarget.INTAKE_DOWN),

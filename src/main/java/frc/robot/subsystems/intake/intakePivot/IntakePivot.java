@@ -15,7 +15,7 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
     INTAKE(-11), 
     MED_STOW(60),
-    HIGH_MED_STOW(65),
+    HIGH_MED_STOW(20),
     STOW(86);
 
     private double position;

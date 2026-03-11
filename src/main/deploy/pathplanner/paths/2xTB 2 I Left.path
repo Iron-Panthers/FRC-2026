@@ -18,12 +18,12 @@
       "y" : 7.61021398002853
     },
     "prevControl" : {
-      "x" : 3.09453637660485,
-      "y" : 7.623152639087019
+      "x" : 2.7290154211150655,
+      "y" : 7.763190984578887
     },
     "nextControl" : {
-      "x" : 6.321896211924043,
-      "y" : 7.594336926271667
+      "x" : 6.31568167231392,
+      "y" : 7.460831176020222
     },
     "isLocked" : false,
     "linkedName" : null
@@ -33,12 +33,12 @@
       "y" : 7.325563480741799
     },
     "prevControl" : {
-      "x" : 6.582056961233324,
-      "y" : 7.815991112320746
+      "x" : 6.677639383155398,
+      "y" : 7.687876631079479
     },
     "nextControl" : {
-      "x" : 8.0107547205644,
-      "y" : 6.905196290747188
+      "x" : 8.040074148332094,
+      "y" : 6.955181903507748
     },
     "isLocked" : false,
     "linkedName" : null
@@ -71,8 +71,8 @@
     "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
-    "waypointRelativePos" : 1.0,
-    "rotationDegrees" : 267.5104470780009
+    "waypointRelativePos" : 0.9236234458259289,
+    "rotationDegrees" : 90.0
   }, {
     "waypointRelativePos" : 2.15,
     "rotationDegrees" : 358.83299999999997

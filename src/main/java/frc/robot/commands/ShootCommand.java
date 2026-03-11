@@ -40,17 +40,14 @@ public class ShootCommand{
   public Command whileHeld() {
     return new InstantCommand(() -> {
       shooterController.setTargetState(
-          shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
-        && (matchTimerUpdater.isOurHubActive() || matchTimerUpdater.getTimeUntilOurHubShifts() < 2 || matchTimerUpdater.getTime() == -1 || matchTimerUpdater.getTimeUntilOurHubShifts() > 24) // time correct 
+          (shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP || shooterController.getTargetState() == ShooterState.SHOOT)
+        && (matchTimerUpdater.isOurHubActive() || matchTimerUpdater.getTimeUntilOurHubShifts() < 2 || matchTimerUpdater.getTimeUntilOurHubShifts() > 24) // time correct 
               ? ShooterState.SHOOT
               : ShooterState.TOTAL_SPIN_UP);
-    })
+    }).repeatedly()
         .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
-        .alongWith(shooterController.getTargetState() == ShooterState.SHOOT
-            ? ((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
-                .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))).repeatedly()
-            : intakeController.setTargetStateCommand(IntakeState.INTAKE))
-        .repeatedly();
+        .alongWith(((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
+                .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))).repeatedly());
   }
 
   /** Command to bind to onFalse – runs when the button is released. */
