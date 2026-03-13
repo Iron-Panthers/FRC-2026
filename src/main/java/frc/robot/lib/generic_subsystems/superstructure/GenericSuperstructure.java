@@ -62,10 +62,6 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
       }
       case ZEROING -> {
         superstructureIO.runCharacterization();
-        if (filteredAmps >= 20) {
-          superstructureIO.setOffset();
-          setControlMode(ControlMode.STOP);
-        }
       }
       case STOP -> {
         superstructureIO.stop();
@@ -109,6 +105,11 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
   /** This is the zeroing function for the subsystem. */
   public void setOffset() {
     superstructureIO.setOffset();
+  }
+
+  public void endZeroing() {
+    superstructureIO.setOffset();
+    setControlMode(ControlMode.STOP);
   }
 
   public double getSupplyCurrentAmps() {

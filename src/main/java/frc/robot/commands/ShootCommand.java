@@ -47,7 +47,9 @@ public class ShootCommand{
     }).repeatedly()
         .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
         .alongWith(((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
-                .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))).repeatedly());
+                .andThen(new WaitCommand(1))
+                .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))
+                .andThen(new WaitCommand(1))).repeatedly());
   }
 
   /** Command to bind to onFalse – runs when the button is released. */

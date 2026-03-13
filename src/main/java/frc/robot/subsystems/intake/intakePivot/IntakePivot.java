@@ -13,10 +13,10 @@ import frc.robot.utility.LoggableMechanism3d;
 
 public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget> implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(-11), 
+    INTAKE(-5), 
     MED_STOW(60),
     HIGH_MED_STOW(20),
-    STOW(86);
+    STOW(77);
 
     private double position;
     private static final double EPSILON = IntakePivotConstants.POSITION_TARGET_EPSILON;

@@ -100,4 +100,8 @@ public class IntakeController extends SubsystemBase {
             .alongWith(setTargetStateCommand(IntakeState.ZEROING)
             .alongWith(setStoppedCommand(false)));
     }
+
+    public Command stopZeroingCommand() {
+        return new InstantCommand(()-> intakePivot.endZeroing());
+    }
 }

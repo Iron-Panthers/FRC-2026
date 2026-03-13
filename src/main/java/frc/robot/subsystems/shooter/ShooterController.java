@@ -214,4 +214,8 @@ public class ShooterController extends SubsystemBase {
     public Command setAutoAimCommand(boolean autoAim){
         return new InstantCommand(()-> setAutoAim(autoAim));
     }
+
+    public Command stopZeroingCommand() {
+        return new InstantCommand(()-> shooterHood.endZeroing());
+    }
 }

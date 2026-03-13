@@ -347,8 +347,8 @@ public class RobotContainer {
 
     configureDriverAButtons();
     configureDriverBButtons();
+    new Trigger(()-> (int)matchTimerUpdater.getTimeUntilOurHubShifts() == 7).onTrue(new VibrateHIDCommand(driverB.getHID(), 1, 0.4));
     //Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other buttons)
-
   }
 
   private void configureDriverAButtons() {
@@ -402,7 +402,10 @@ public class RobotContainer {
       .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))); 
     
       driverB.povLeft().onTrue(intakeController.zeroCommand());
+      driverB.povLeft().onFalse(intakeController.stopZeroingCommand());
+
       driverB.povDown().onTrue(shooterController.zeroCommand());
+      driverB.povDown().onTrue(shooterController.stopZeroingCommand());
   }
 
   private void configureAutos() {

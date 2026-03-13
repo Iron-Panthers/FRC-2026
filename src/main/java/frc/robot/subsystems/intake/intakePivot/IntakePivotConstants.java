@@ -17,7 +17,7 @@ public class IntakePivotConstants {
         case COMP -> new IntakePivotConfig(
             // Reduction between sensor and mechansim
             CAN.at(22, "Intake Pivot"),
-            77.625, InvertedValue.CounterClockwise_Positive); 
+            28.125, InvertedValue.CounterClockwise_Positive); 
         case SIM -> new IntakePivotConfig(
             // Reduction between motor and mechansim
             CAN.at(9, "Intake Pivot"),  12 * 0.3750, InvertedValue.Clockwise_Positive);
@@ -26,14 +26,14 @@ public class IntakePivotConstants {
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(100, 0, 0, 0, 20, 0.1807, 0.32);
+        case COMP -> new PIDGains(400, 0, 0, 0, 5.37, 0.75, 0.8);
         case SIM -> new PIDGains(40, 0, 0, 0, 3.6144, 0.1807, 0.53);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(4000, 4000);
+        case COMP -> new MotionMagicConfig(9, 2);
         case SIM -> new MotionMagicConfig(7.5, 10);
         default -> new MotionMagicConfig(0, 0);
       };
@@ -57,7 +57,7 @@ public class IntakePivotConstants {
 
   // ZEROING CONSTANTS
   public static final double ZEROING_VOLTS = 3;
-  public static final double ZEROING_OFFSET = 87/360.0; // offset in rotations
+  public static final double ZEROING_OFFSET = 82.7/360.0; // offset in rotations
 
   public static final Transform3d BASE_TO_INTAKE_PIVOT_TRANSFORM =
       switch (Constants.getRobotType()) {
