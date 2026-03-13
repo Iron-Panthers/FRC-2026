@@ -158,7 +158,7 @@ public class RobotContainer {
           intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           vision = new Vision(
-            new VisionIOPhotonvision("arducam-7", 0),
+            new VisionIOPhotonvision("arducam-6", 0),
             new VisionIOPhotonvision("arducam-8", 1));
           // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());

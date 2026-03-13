@@ -7,38 +7,23 @@
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 3.128432072537573,
-      "y" : 5.59696175700861
+      "x" : 1.7996888888888891,
+      "y" : 8.443066666666668
     },
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   }, {
     "anchor" : {
-      "x" : 4.547622222222222,
-      "y" : 7.5270888888888905
+      "x" : 7.481469298245615,
+      "y" : 7.175263157894738
     },
     "prevControl" : {
-      "x" : 1.0298777777777768,
-      "y" : 7.770700000000002
+      "x" : 6.712171052631579,
+      "y" : 7.665690789473685
     },
     "nextControl" : {
-      "x" : 6.321674165802072,
-      "y" : 7.404232106092502
-    },
-    "isLocked" : false,
-    "linkedName" : null
-  }, {
-    "anchor" : {
-      "x" : 7.3513552068473595,
-      "y" : 7.325563480741799
-    },
-    "prevControl" : {
-      "x" : 6.677639383155398,
-      "y" : 7.687876631079479
-    },
-    "nextControl" : {
-      "x" : 8.040074148332094,
-      "y" : 6.955181903507748
+      "x" : 8.140868811962655,
+      "y" : 6.7548959679001275
     },
     "isLocked" : false,
     "linkedName" : null
@@ -48,12 +33,27 @@
       "y" : 4.6269627192982465
     },
     "prevControl" : {
-      "x" : 8.087291666666667,
-      "y" : 4.857752192982457
+      "x" : 7.910948810220934,
+      "y" : 4.964212844509383
     },
     "nextControl" : {
-      "x" : 7.046520514228711,
-      "y" : 3.932622279704278
+      "x" : 7.23708888888889,
+      "y" : 2.235855555555557
+    },
+    "isLocked" : false,
+    "linkedName" : null
+  }, {
+    "anchor" : {
+      "x" : 4.654811111107648,
+      "y" : 7.614788888890344
+    },
+    "prevControl" : {
+      "x" : 7.880222222218759,
+      "y" : 7.6050444444459
+    },
+    "nextControl" : {
+      "x" : 2.605096713438602,
+      "y" : 7.620981379517743
     },
     "isLocked" : false,
     "linkedName" : null
@@ -63,30 +63,27 @@
       "y" : 5.363890865954924
     },
     "prevControl" : {
-      "x" : 6.696125741399763,
-      "y" : 5.934128113879005
+      "x" : 2.277933333333333,
+      "y" : 6.932746421510478
     },
     "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
-    "waypointRelativePos" : 0.9236234458259289,
-    "rotationDegrees" : 90.0
+    "waypointRelativePos" : 0.4955595026642977,
+    "rotationDegrees" : 236.9125469839937
   }, {
-    "waypointRelativePos" : 2.15,
+    "waypointRelativePos" : 1.145648312611008,
     "rotationDegrees" : 358.83299999999997
   }, {
-    "waypointRelativePos" : 3.05957616953219,
-    "rotationDegrees" : 306.0285876563935
-  }, {
-    "waypointRelativePos" : 3.6225509796081528,
-    "rotationDegrees" : 225.3338648111452
+    "waypointRelativePos" : 2.8,
+    "rotationDegrees" : 300.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
-    "minWaypointRelativePos" : 2.35,
-    "maxWaypointRelativePos" : 3.0895721925133692,
+    "minWaypointRelativePos" : 1.3275401069518729,
+    "maxWaypointRelativePos" : 2.2,
     "constraints" : {
       "maxVelocity" : 2.0,
       "maxAcceleration" : 4.0,
@@ -99,7 +96,7 @@
   "pointTowardsZones" : [ ],
   "eventMarkers" : [ {
     "name" : "Spin up shooter",
-    "waypointRelativePos" : 3.4971878515185626,
+    "waypointRelativePos" : 3.0,
     "endWaypointRelativePos" : null,
     "command" : null
   } ],

@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Smart zero"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2xT 1 I Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto shoot full hopper"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2xT 2 I Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto shoot full hopper"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": "Right Autos (make these)",
+  "choreoAuto": false
+}
