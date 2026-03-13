@@ -40,7 +40,7 @@ public class ShootCommand{
   public Command whileHeld() {
     return new InstantCommand(() -> {
       shooterController.setTargetState(
-          (shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP || shooterController.getTargetState() == ShooterState.SHOOT)
+          (shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP || shooterController.getTargetState() == ShooterState.SHOOT) && shooterController.flywheelsUpToSpeed()
         && (matchTimerUpdater.isOurHubActive() || matchTimerUpdater.getTimeUntilOurHubShifts() < 2 || matchTimerUpdater.getTimeUntilOurHubShifts() > 24) // time correct 
               ? ShooterState.SHOOT
               : ShooterState.TOTAL_SPIN_UP);
