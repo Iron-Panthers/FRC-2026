@@ -19,6 +19,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Smart zero"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Auto shoot full hopper"
           }
         },
@@ -26,6 +32,12 @@
           "type": "path",
           "data": {
             "pathName": "2xT 2 I Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Smart zero"
           }
         },
         {

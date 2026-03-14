@@ -7,38 +7,38 @@
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 5.856908659549228,
-      "y" : 5.224021352313169
+      "x" : 7.0757295373665485,
+      "y" : 5.353131672597866
     },
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   }, {
     "anchor" : {
-      "x" : 7.481469298245615,
-      "y" : 7.175263157894738
+      "x" : 6.483973902728352,
+      "y" : 7.128398576512456
     },
     "prevControl" : {
-      "x" : 6.712171052631579,
-      "y" : 7.665690789473685
+      "x" : 5.691512505110351,
+      "y" : 7.58044280643503
     },
     "nextControl" : {
-      "x" : 8.140868811962655,
-      "y" : 6.7548959679001275
+      "x" : 7.509206858338022,
+      "y" : 6.543574327277267
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 7.827653508771929,
-      "y" : 4.6269627192982465
+      "x" : 6.892823250296561,
+      "y" : 4.352526690391461
     },
     "prevControl" : {
-      "x" : 8.087291666666667,
-      "y" : 4.857752192982457
+      "x" : 7.152461408191299,
+      "y" : 4.583316164075671
     },
     "nextControl" : {
-      "x" : 7.046520514228711,
-      "y" : 3.932622279704278
+      "x" : 6.111690255753343,
+      "y" : 3.658186250797492
     },
     "isLocked" : false,
     "linkedName" : null
@@ -48,22 +48,25 @@
       "y" : 5.363890865954924
     },
     "prevControl" : {
-      "x" : 6.696125741399763,
-      "y" : 5.934128113879005
+      "x" : 6.882064056939502,
+      "y" : 5.665148279952551
     },
     "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
-    "waypointRelativePos" : 0.4955595026642977,
-    "rotationDegrees" : 236.9125469839937
+    "waypointRelativePos" : 0.45825932504440625,
+    "rotationDegrees" : 124.21097538981041
   }, {
     "waypointRelativePos" : 1.145648312611008,
     "rotationDegrees" : 358.83299999999997
   }, {
+    "waypointRelativePos" : 1.801065719360589,
+    "rotationDegrees" : 327.43165237672235
+  }, {
     "waypointRelativePos" : 2.3941958887545267,
-    "rotationDegrees" : 300.0
+    "rotationDegrees" : 225.06036465330806
   } ],
   "constraintZones" : [ {
     "name" : "Intake",

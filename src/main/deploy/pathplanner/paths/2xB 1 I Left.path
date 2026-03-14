@@ -2,16 +2,16 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 3.038,
-      "y" : 5.363890865954924
+      "x" : 3.5467141162514837,
+      "y" : 5.611352313167261
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 5.855949561403509,
-      "y" : 5.256105778235627
+      "x" : 6.364663677654993,
+      "y" : 5.503567225447964
     },
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Left"
+    "linkedName" : null
   }, {
     "anchor" : {
       "x" : 7.7,
@@ -56,9 +56,6 @@
     "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
-    "waypointRelativePos" : 0.37300177619893204,
-    "rotationDegrees" : 255.68350161726505
-  }, {
     "waypointRelativePos" : 1.0817051509769038,
     "rotationDegrees" : 0.0
   }, {

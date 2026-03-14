@@ -2,12 +2,12 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 4.596344444444444,
+      "x" : 4.407449584816133,
       "y" : 7.644022222222223
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 7.414294005847952,
+      "x" : 7.225399146219641,
       "y" : 7.536237134502925
     },
     "isLocked" : false,
@@ -116,7 +116,7 @@
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 270.61605990839917
+    "rotation" : 0.0
   },
   "useDefaultConstraints" : true
 }

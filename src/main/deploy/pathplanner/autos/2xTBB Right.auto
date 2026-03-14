@@ -5,39 +5,51 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Smart zero"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Multi Level 2xTB 1 I Right"
+            "pathName": "2xTB 1 I Right"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Multi Level 2xTB 2 I Right"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Multi Level 2xTB 2 I Right"
+            "name": "Smart zero"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Auto shoot full hopper"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2xB 2 I Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Smart zero"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Auto shoot full hopper"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "Right Autos (make these)",
   "choreoAuto": false
 }

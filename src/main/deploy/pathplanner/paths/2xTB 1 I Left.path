@@ -2,13 +2,13 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 4.375172004744959,
-      "y" : 7.612562277580073
+      "x" : 4.407449584816133,
+      "y" : 7.644022222222223
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 5.6662752075919345,
-      "y" : 7.504970344009492
+      "x" : 6.09664294187426,
+      "y" : 7.687876631079479
     },
     "isLocked" : false,
     "linkedName" : null
@@ -62,7 +62,7 @@
     "waypointRelativePos" : 1.918294849023086,
     "rotationDegrees" : 0.0
   }, {
-    "waypointRelativePos" : 2.61,
+    "waypointRelativePos" : 2.365896980461812,
     "rotationDegrees" : 240.0
   } ],
   "constraintZones" : [ {

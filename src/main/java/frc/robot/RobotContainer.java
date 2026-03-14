@@ -344,7 +344,6 @@ public class RobotContainer {
                 })
             .withName("Drive Teleop"));
 
-
     configureDriverAButtons();
     configureDriverBButtons();
     new Trigger(()-> (int)matchTimerUpdater.getTimeUntilOurHubShifts() == 7).onTrue(new VibrateHIDCommand(driverB.getHID(), 1, 0.4));

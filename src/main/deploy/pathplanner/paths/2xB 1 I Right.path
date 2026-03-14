@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.038,
-        "y": 2.8461091340450766
+        "x": 3.5467141162514837,
+        "y": 2.5986476868327397
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.855949561403509,
-        "y": 2.953894221764374
+        "x": 6.364663677654993,
+        "y": 2.706432774552037
       },
       "isLocked": false,
-      "linkedName": "Shooting Pose Right"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -61,10 +61,6 @@
     }
   ],
   "rotationTargets": [
-    {
-      "waypointRelativePos": 0.37300177619893204,
-      "rotationDegrees": -75.68350161726502
-    },
     {
       "waypointRelativePos": 1.0817051509769038,
       "rotationDegrees": 180.0
