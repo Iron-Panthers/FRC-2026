@@ -2,43 +2,58 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 4.375172004744959,
-      "y" : 7.613000000000001
+      "x" : 3.038,
+      "y" : 5.363890865954924
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 5.6662752075919345,
-      "y" : 7.50540806642942
+      "x" : 3.374567022538553,
+      "y" : 6.149311981020167
+    },
+    "isLocked" : false,
+    "linkedName" : "Shooting Pose Left"
+  }, {
+    "anchor" : {
+      "x" : 4.515041518386715,
+      "y" : 7.644839857651246
+    },
+    "prevControl" : {
+      "x" : 2.3201660735468574,
+      "y" : 7.849264531435351
+    },
+    "nextControl" : {
+      "x" : 5.038059143690425,
+      "y" : 7.596127431765116
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 8.549739027283511,
-      "y" : 6.494000000000001
+      "x" : 5.763107947805457,
+      "y" : 7.257508896797154
     },
     "prevControl" : {
-      "x" : 8.53940290485555,
-      "y" : 7.5069399979402025
+      "x" : 5.429572953736656,
+      "y" : 7.849264531435351
     },
     "nextControl" : {
-      "x" : 8.56049822064057,
-      "y" : 5.4395990510083045
+      "x" : 6.641893904468544,
+      "y" : 5.698372522072318
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 8.549739027283511,
-      "y" : 4.7613760379596695
+      "x" : 6.483973902728352,
+      "y" : 3.7930486358244373
     },
     "prevControl" : {
-      "x" : 8.56049822064057,
-      "y" : 5.449964412811388
+      "x" : 7.302423413340262,
+      "y" : 3.6088974959367572
     },
     "nextControl" : {
-      "x" : 8.531167258769802,
-      "y" : 3.5727828530823427
+      "x" : 5.192870699881375,
+      "y" : 4.0835468564650075
     },
     "isLocked" : false,
     "linkedName" : null
@@ -48,24 +63,30 @@
       "y" : 5.363890865954924
     },
     "prevControl" : {
-      "x" : 6.849786476868328,
-      "y" : 5.806647686832742
+      "x" : 7.118766310794781,
+      "y" : 6.741067615658364
     },
     "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
-    "waypointRelativePos" : 1.0817051509769038,
-    "rotationDegrees" : -180.0
+    "waypointRelativePos" : 0.9236234458259289,
+    "rotationDegrees" : 90.0
   }, {
-    "waypointRelativePos" : 1.918294849023086,
-    "rotationDegrees" : -180.0
+    "waypointRelativePos" : 2.15,
+    "rotationDegrees" : 358.83299999999997
+  }, {
+    "waypointRelativePos" : 2.7566607460035537,
+    "rotationDegrees" : 354.63000563858805
+  }, {
+    "waypointRelativePos" : 3.2611012433392546,
+    "rotationDegrees" : 201.5552867968779
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
-    "minWaypointRelativePos" : 1.1676040494938178,
-    "maxWaypointRelativePos" : 2.3554555680539977,
+    "minWaypointRelativePos" : 2.35,
+    "maxWaypointRelativePos" : 3.0895721925133692,
     "constraints" : {
       "maxVelocity" : 2.0,
       "maxAcceleration" : 4.0,
@@ -74,28 +95,11 @@
       "nominalVoltage" : 12.0,
       "unlimited" : false
     }
-  }, {
-    "name" : "Constraints Zone",
-    "minWaypointRelativePos" : 0,
-    "maxWaypointRelativePos" : 0.9651293588301448,
-    "constraints" : {
-      "maxVelocity" : 3.75,
-      "maxAcceleration" : 8.0,
-      "maxAngularVelocity" : 540.0,
-      "maxAngularAcceleration" : 720.0,
-      "nominalVoltage" : 12.0,
-      "unlimited" : false
-    }
   } ],
   "pointTowardsZones" : [ ],
   "eventMarkers" : [ {
-    "name" : "Intake down",
-    "waypointRelativePos" : 0.2632170978627626,
-    "endWaypointRelativePos" : null,
-    "command" : null
-  }, {
     "name" : "Spin up shooter",
-    "waypointRelativePos" : 2.5309336332958314,
+    "waypointRelativePos" : 3.4971878515185626,
     "endWaypointRelativePos" : null,
     "command" : null
   } ],
@@ -115,7 +119,7 @@
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : -180.0
+    "rotation" : 315.0
   },
   "useDefaultConstraints" : true
 }

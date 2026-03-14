@@ -3,15 +3,15 @@
   "waypoints" : [ {
     "anchor" : {
       "x" : 3.038,
-      "y" : 5.642000000000001
+      "y" : 5.363890865954924
     },
     "prevControl" : null,
     "nextControl" : {
       "x" : 3.0178444444444446,
-      "y" : 4.825700000000001
+      "y" : 4.547590865954924
     },
     "isLocked" : false,
-    "linkedName" : null
+    "linkedName" : "Shooting Pose Left"
   }, {
     "anchor" : {
       "x" : 1.447344444444444,
@@ -54,9 +54,9 @@
   "pointTowardsZones" : [ {
     "fieldPosition" : {
       "x" : 0.4,
-      "y" : 5.5
+      "y" : 2.710000000000001
     },
-    "rotationOffset" : -80.0,
+    "rotationOffset" : 80.0,
     "minWaypointRelativePos" : 0.0,
     "maxWaypointRelativePos" : 0.0,
     "name" : "Point Towards Zone"
@@ -78,7 +78,7 @@
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 137.26
+    "rotation" : 135.0
   },
   "useDefaultConstraints" : true
 }

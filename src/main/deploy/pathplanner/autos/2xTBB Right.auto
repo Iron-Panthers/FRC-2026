@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2xTB 2 I Right"
+            "pathName": "2xB 2 I Right"
           }
         },
         {
@@ -49,7 +49,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "Right Autos (make these)",
   "choreoAuto": false
 }

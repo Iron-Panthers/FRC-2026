@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
+import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShuttleCommand;
@@ -157,7 +158,7 @@ public class RobotContainer {
           intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           vision = new Vision(
-            new VisionIOPhotonvision("arducam-7", 0),
+            new VisionIOPhotonvision("arducam-6", 0),
             new VisionIOPhotonvision("arducam-8", 1));
           // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
@@ -312,6 +313,8 @@ public class RobotContainer {
       .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
 
+    NamedCommands.registerCommand("Auto shoot full hopper", new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController));
+    
     NamedCommands.registerCommand("Shoot preloaded hopper",
       new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
         .alongWith(
@@ -341,11 +344,10 @@ public class RobotContainer {
                 })
             .withName("Drive Teleop"));
 
-
     configureDriverAButtons();
     configureDriverBButtons();
+    new Trigger(()-> (int)matchTimerUpdater.getTimeUntilOurHubShifts() == 7).onTrue(new VibrateHIDCommand(driverB.getHID(), 1, 0.4));
     //Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other buttons)
-
   }
 
   private void configureDriverAButtons() {
@@ -399,7 +401,10 @@ public class RobotContainer {
       .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))); 
     
       driverB.povLeft().onTrue(intakeController.zeroCommand());
+      driverB.povLeft().onFalse(intakeController.stopZeroingCommand());
+
       driverB.povDown().onTrue(shooterController.zeroCommand());
+      driverB.povDown().onTrue(shooterController.stopZeroingCommand());
   }
 
   private void configureAutos() {

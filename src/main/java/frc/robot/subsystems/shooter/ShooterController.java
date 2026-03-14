@@ -61,7 +61,7 @@ public class ShooterController extends SubsystemBase {
         COMPACT_SPIN_UP(
             ShooterHoodTarget.STOW,
             ShooterFlywheelTarget.SHOOT,
-            ShooterAcceleratorTarget.IDLE,
+            ShooterAcceleratorTarget.SHOOT,
             ShooterOmniwheelTarget.IDLE
         ),
         ZEROING(
@@ -213,5 +213,13 @@ public class ShooterController extends SubsystemBase {
 
     public Command setAutoAimCommand(boolean autoAim){
         return new InstantCommand(()-> setAutoAim(autoAim));
+    }
+
+    public Command stopZeroingCommand() {
+        return new InstantCommand(()-> shooterHood.endZeroing());
+    }
+
+    public boolean flywheelsUpToSpeed(){
+        return shooterFlywheel.reachedVelocityTargetManual();
     }
 }

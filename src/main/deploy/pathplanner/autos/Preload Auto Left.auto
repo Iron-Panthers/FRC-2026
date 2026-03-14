@@ -11,32 +11,7 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Align to shoot"
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Spin up shooter"
-        }
-      }, {
-        "type" : "wait",
-        "data" : {
-          "waitTime" : 1.0
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Shoot"
-        }
-      }, {
-        "type" : "wait",
-        "data" : {
-          "waitTime" : 6.0
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Stop shooting"
+          "name" : "Auto shoot full hopper"
         }
       } ]
     }

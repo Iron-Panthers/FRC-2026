@@ -9,104 +9,34 @@
           "name" : "Smart zero"
         }
       }, {
-        "type" : "named",
+        "type" : "path",
         "data" : {
-          "name" : "Spin up shooter"
+          "pathName" : "2xB 1 I Left"
         }
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Align to shoot"
-        }
-      }, {
-        "type" : "wait",
-        "data" : {
-          "waitTime" : 0.6
+          "name" : "Smart zero"
         }
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Shoot"
-        }
-      }, {
-        "type" : "wait",
-        "data" : {
-          "waitTime" : 2.0
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Stop shooting"
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Intake down"
+          "name" : "Auto shoot full hopper"
         }
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "2xB 1 Left"
+          "pathName" : "2xB 2 I Left"
         }
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Align to shoot"
+          "name" : "Smart zero"
         }
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Intake mid"
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Shoot"
-        }
-      }, {
-        "type" : "wait",
-        "data" : {
-          "waitTime" : 4.0
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Intake down"
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Stop shooting"
-        }
-      }, {
-        "type" : "path",
-        "data" : {
-          "pathName" : "2xB 2 Left"
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Align to shoot"
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Shoot"
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Intake mid"
-        }
-      }, {
-        "type" : "wait",
-        "data" : {
-          "waitTime" : 4.0
-        }
-      }, {
-        "type" : "named",
-        "data" : {
-          "name" : "Stop shooting"
+          "name" : "Auto shoot full hopper"
         }
       } ]
     }

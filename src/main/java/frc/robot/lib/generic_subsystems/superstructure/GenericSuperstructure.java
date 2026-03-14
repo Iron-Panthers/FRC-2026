@@ -3,6 +3,7 @@ package frc.robot.lib.generic_subsystems.superstructure;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -32,6 +33,8 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
 
   protected Optional<Double> positionTargetManual = Optional.empty();
 
+  private final LinearFilter linearFilter = LinearFilter.movingAverage(15);
+
   protected GenericSuperstructureIOInputsAutoLogged inputs =
       new GenericSuperstructureIOInputsAutoLogged();
   protected G positionTarget;
@@ -42,6 +45,7 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
   }
 
   public void periodic() {
+    double filteredAmps = linearFilter.calculate(getSupplyCurrentAmps());
     // Process inputs
     superstructureIO.updateInputs(inputs);
     Logger.processInputs(name, inputs);
@@ -58,10 +62,6 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
       }
       case ZEROING -> {
         superstructureIO.runCharacterization();
-        if (getSupplyCurrentAmps() >= 2) {
-          superstructureIO.setOffset();
-          setControlMode(ControlMode.STOP);
-        }
       }
       case STOP -> {
         superstructureIO.stop();
@@ -105,6 +105,11 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
   /** This is the zeroing function for the subsystem. */
   public void setOffset() {
     superstructureIO.setOffset();
+  }
+
+  public void endZeroing() {
+    superstructureIO.setOffset();
+    setControlMode(ControlMode.STOP);
   }
 
   public double getSupplyCurrentAmps() {

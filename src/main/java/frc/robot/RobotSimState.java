@@ -63,7 +63,7 @@ public class RobotSimState {
         fuelSim.registerIntake(
             -halfLength, halfLength,
             -halfWidth - intakeReach, -halfWidth,
-            () -> intakeActive && fuelCount < 100,
+            () -> intakeActive && fuelCount < 60,
             () -> fuelCount++);
 
         fuelSim.spawnStartingFuel();

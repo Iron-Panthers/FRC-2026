@@ -28,14 +28,13 @@ import java.io.IOException;
  */
 public class MirrorPathUtil {
   private static final double FIELD_WIDTH_METERS = 8.21;
-  private static final double CENTER_Y = FIELD_WIDTH_METERS / 2.0; // 4.105
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
   /**
    * Mirrors a Y coordinate across the field centerline.
    */
   private static double mirrorY(double y) {
-    return 2 * CENTER_Y - y;
+    return FIELD_WIDTH_METERS - y;
   }
 
   /**
@@ -61,9 +60,24 @@ public class MirrorPathUtil {
   }
 
   /**
-   * Mirrors a PathPlanner path (modifies the given root in place).
+   * Converts a linked waypoint name from the Right path to the Left path form:
+   * e.g. "Shooting Pose Right" -> "Shooting Pose Left"
    */
-  private static void mirrorPathInPlace(ObjectNode root) {
+  private static String mirrorLinkedName(String linkedName) {
+    if (linkedName == null) return null;
+    if (linkedName.endsWith(" Right")) {
+      return linkedName.substring(0, linkedName.length() - 6) + " Left";
+    }
+    return linkedName;
+  }
+
+  /**
+   * Mirrors a PathPlanner path (modifies the given root in place).
+   * When add180 is true (path name ends with "I Right"): rotation targets, point-towards
+   * zones, and ideal starting state are mirrored and rotated 180°; goal end state is only mirrored.
+   * When add180 is false: all rotations are only mirrored (no +180°). Linked waypoints become "___ Left".
+   */
+  private static void mirrorPathInPlace(ObjectNode root, boolean add180) {
     // Mirror waypoints
     JsonNode waypoints = root.get("waypoints");
     if (waypoints != null && waypoints.isArray()) {
@@ -78,29 +92,53 @@ public class MirrorPathUtil {
           if (wpObj.has("nextControl") && !wpObj.get("nextControl").isNull()) {
             mirrorPointInPlace((ObjectNode) wpObj.get("nextControl"));
           }
-          wpObj.putNull("linkedName");
+          // Linked waypoints: use "___ Left" instead of referencing the other side
+          if (wpObj.has("linkedName") && !wpObj.get("linkedName").isNull()) {
+            String name = wpObj.get("linkedName").asText();
+            wpObj.put("linkedName", mirrorLinkedName(name));
+          }
         }
       }
     }
 
-    // Mirror rotation targets
+    double rotationOffset = add180 ? 180 : 0;
+
+    // Mirror rotation targets (+180° only when path ends with "I Right")
     JsonNode rotationTargets = root.get("rotationTargets");
     if (rotationTargets != null && rotationTargets.isArray()) {
       for (JsonNode rt : rotationTargets) {
         if (rt.isObject() && rt.has("rotationDegrees")) {
-          ((ObjectNode) rt).put("rotationDegrees", mirrorRotationDeg(rt.get("rotationDegrees").asDouble()));
+          ((ObjectNode) rt).put("rotationDegrees", mirrorRotationDeg(rt.get("rotationDegrees").asDouble()) + rotationOffset);
         }
       }
     }
 
-    // Mirror goal end state and ideal starting state
+    // Point towards zones: mirror fieldPosition and rotation (+180° only when path ends with "I Right")
+    JsonNode pointTowardsZones = root.get("pointTowardsZones");
+    if (pointTowardsZones != null && pointTowardsZones.isArray()) {
+      for (JsonNode zone : pointTowardsZones) {
+        if (zone.isObject()) {
+          ObjectNode zoneObj = (ObjectNode) zone;
+          if (zoneObj.has("fieldPosition") && zoneObj.get("fieldPosition").isObject()) {
+            mirrorPointInPlace((ObjectNode) zoneObj.get("fieldPosition"));
+          }
+          if (zoneObj.has("rotationOffset")) {
+            zoneObj.put("rotationOffset", mirrorRotationDeg(zoneObj.get("rotationOffset").asDouble()) + rotationOffset);
+          }
+        }
+      }
+    }
+
+    // Goal end state: only mirror rotation (no +180°)
     if (root.has("goalEndState") && root.get("goalEndState").isObject()) {
       ObjectNode ges = (ObjectNode) root.get("goalEndState");
       if (ges.has("rotation")) ges.put("rotation", mirrorRotationDeg(ges.get("rotation").asDouble()));
     }
+
+    // Ideal starting state (+180° only when path ends with "I Right")
     if (root.has("idealStartingState") && root.get("idealStartingState").isObject()) {
       ObjectNode iss = (ObjectNode) root.get("idealStartingState");
-      if (iss.has("rotation")) iss.put("rotation", mirrorRotationDeg(iss.get("rotation").asDouble()));
+      if (iss.has("rotation")) iss.put("rotation", mirrorRotationDeg(iss.get("rotation").asDouble()) + rotationOffset);
     }
 
     root.put("folder", "Left Paths (auto generated)");
@@ -108,12 +146,26 @@ public class MirrorPathUtil {
 
   /**
    * Mirrors a single path file: reads the .path file, mirrors it, writes "* Left.path".
+   * Only processes paths that end with " Right". Paths ending with "I Right" get +180° applied
+   * to rotation targets, point-towards zones, and ideal starting state; other Right paths do not.
    */
   public static void mirrorPathFile(String inputPath) throws IOException {
     File inputFile = new File(inputPath);
     if (!inputFile.exists()) {
       throw new IOException("Input file does not exist: " + inputPath);
     }
+
+    String name = inputFile.getName();
+    int dot = name.lastIndexOf('.');
+    String baseName = dot > 0 ? name.substring(0, dot) : name;
+
+    // Only mirror paths that end with " Right"
+    if (!baseName.endsWith(" Right")) {
+      return;
+    }
+
+    // +180° only when path name ends with "I Right"
+    boolean add180 = baseName.endsWith("I Right");
 
     JsonNode root = MAPPER.readTree(inputFile);
     if (!root.isObject()) {
@@ -122,18 +174,13 @@ public class MirrorPathUtil {
 
     // Deep copy so we don't modify the original tree while writing
     ObjectNode copy = (ObjectNode) MAPPER.readTree(MAPPER.writeValueAsString(root));
-    mirrorPathInPlace(copy);
+    mirrorPathInPlace(copy, add180);
 
     String parent = inputFile.getParent();
-    String name = inputFile.getName();
-    int dot = name.lastIndexOf('.');
-    String baseName = dot > 0 ? name.substring(0, dot) : name;
     String ext = dot > 0 ? name.substring(dot) : "";
-    // Strip " Right" suffix if present before appending " Left"
-    if (baseName.endsWith(" Right")) {
-      baseName = baseName.substring(0, baseName.length() - 6);
-    }
-    File outputFile = new File(parent, baseName + " Left" + ext);
+    // Strip " Right" suffix before appending " Left"
+    String baseWithoutRight = baseName.substring(0, baseName.length() - 6);
+    File outputFile = new File(parent, baseWithoutRight + " Left" + ext);
 
     MAPPER.writerWithDefaultPrettyPrinter().writeValue(outputFile, copy);
   }
