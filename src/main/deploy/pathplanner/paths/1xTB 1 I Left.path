@@ -2,13 +2,13 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 4.407449584816133,
-      "y" : 7.644022222222223
+      "x" : 4.472004744958482,
+      "y" : 7.677117437722421
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 6.139679715302492,
-      "y" : 7.860023724792409
+      "x" : 6.204234875444841,
+      "y" : 7.893118940292608
     },
     "isLocked" : false,
     "linkedName" : null
@@ -70,7 +70,7 @@
     "minWaypointRelativePos" : 0,
     "maxWaypointRelativePos" : 1.626546681664772,
     "constraints" : {
-      "maxVelocity" : 2.0,
+      "maxVelocity" : 2.2,
       "maxAcceleration" : 3.5,
       "maxAngularVelocity" : 540.0,
       "maxAngularAcceleration" : 720.0,
@@ -98,17 +98,17 @@
     "command" : null
   }, {
     "name" : "Intake stow",
-    "waypointRelativePos" : 0.269966254218219,
+    "waypointRelativePos" : 0.013498312710901192,
     "endWaypointRelativePos" : null,
     "command" : null
   }, {
     "name" : "Intake down",
-    "waypointRelativePos" : 0.546681664791898,
+    "waypointRelativePos" : 0.12148481439820491,
     "endWaypointRelativePos" : null,
     "command" : null
   }, {
     "name" : "Spin up shooter",
-    "waypointRelativePos" : 2.55,
+    "waypointRelativePos" : 2.6726659167604505,
     "endWaypointRelativePos" : null,
     "command" : null
   } ],
