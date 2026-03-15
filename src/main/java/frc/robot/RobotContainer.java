@@ -290,8 +290,11 @@ public class RobotContainer {
     // Register Command Names in this method
 
     new EventTrigger("Intake down").onTrue(new InstantCommand(() ->intakeController.setTargetState(IntakeState.INTAKE)));
+    new EventTrigger("Intake stow").onTrue(new InstantCommand(() ->intakeController.setTargetState(IntakeState.STOW)));
     new EventTrigger("Spin up shooter").onTrue(new InstantCommand(() -> {shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP); 
       hopperController.setTargetState(HopperControllerState.INTAKE);}));
+    new EventTrigger("Intake mid").onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
+
     NamedCommands.registerCommand("Smart zero", new InstantCommand(() -> swerve.smartZeroGyro()));
     NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeState.INTAKE).alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
     NamedCommands.registerCommand("Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
@@ -371,7 +374,8 @@ public class RobotContainer {
     // SHUTTLE
     driverA.povRight().whileTrue(new ShuttleCommand(swerve, shooterController));
 
-    driverA.rightBumper().onTrue(shooterController.setTargetStateCommand(ShooterState.DEFAULT_SHOOT));
+    driverA.rightBumper().onTrue(shooterController.setTargetStateCommand(ShooterState.DEFAULT_SHOOT)
+      .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE)));
 
     // ARC ALIGN
     // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)

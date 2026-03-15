@@ -46,10 +46,11 @@ public class ShootCommand{
               : ShooterState.TOTAL_SPIN_UP);
     }).repeatedly()
         .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
-        .alongWith(((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
-                .andThen(new WaitCommand(1))
-                .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))
-                .andThen(new WaitCommand(1))).repeatedly());
+        .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE));
+        // .alongWith(((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
+        //         .andThen(new WaitCommand(0.6))
+        //         .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))
+        //         .andThen(new WaitCommand(0.6))).repeatedly());
   }
 
   /** Command to bind to onFalse – runs when the button is released. */

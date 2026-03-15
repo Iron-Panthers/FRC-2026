@@ -18,8 +18,8 @@ public class StowCommand extends ParallelCommandGroup {
       ShooterController shooterController,
       HopperController hopperController) {
     addCommands(
-        intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW),
-        shooterController.setTargetStateCommand(ShooterState.IDLE),
-        hopperController.setTargetStateCommand(HopperControllerState.SLOW));
+        intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
+        // shooterController.setTargetStateCommand(ShooterState.IDLE),
+        // hopperController.setTargetStateCommand(HopperControllerState.SLOW));
   }
 }

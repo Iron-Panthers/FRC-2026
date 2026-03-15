@@ -24,12 +24,13 @@ public class AutoShootCommand extends SequentialCommandGroup {
   public AutoShootCommand(Drive swerve, ShooterController shooterController, HopperController hopperController, 
     IntakeController intakeController, ElasticUpdater matchTimerUpdater, ClimbController climbController) {
     addCommands(
-          new AlignToShootCommand(swerve, shooterController).alongWith(
+          // new AlignToShootCommand(swerve, shooterController).alongWith(
           new InstantCommand(() -> shooterController.setTargetState(ShooterState.SHOOT))
             .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
-            .alongWith(((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
-              .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))).repeatedly())
-              ).withDeadline(new WaitCommand(4)),
+            // .alongWith(((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
+            //   .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))).repeatedly())
+    // )
+    .withDeadline(new WaitCommand(4)),
           new IntakeCommand(climbController, intakeController, shooterController, hopperController)
           );
       }
