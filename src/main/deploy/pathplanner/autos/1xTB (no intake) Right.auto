@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1xTB 1 I Right"
+            "pathName": "1xTB Long 1 I Right"
           }
         },
         {
@@ -27,25 +27,24 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Auto shoot full hopper (no intake)"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "1xTB I 2 Right"
-                      }
-                    }
-                  ]
+                  "name": "Auto shoot full hopper (no intake)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Align to shoot"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1xTB I 2 Right"
           }
         },
         {
@@ -76,7 +75,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Right Autos (make these)",
   "choreoAuto": false
 }

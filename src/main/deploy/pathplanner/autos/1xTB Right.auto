@@ -88,7 +88,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Right Autos (make these)",
   "choreoAuto": false
 }
