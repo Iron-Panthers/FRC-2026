@@ -24,19 +24,16 @@ public class ShootCommand{
   private final HopperController hopperController;
   private final IntakeController intakeController;
   private final ElasticUpdater matchTimerUpdater;
-  private final boolean intakeActive;
 
   public ShootCommand(
       ShooterController shooterController,
       HopperController hopperController,
       IntakeController intakeController,
-      ElasticUpdater matchTimerUpdater,
-      boolean intakeActive) {
+      ElasticUpdater matchTimerUpdater) {
     this.shooterController = shooterController;
     this.hopperController = hopperController;
     this.intakeController = intakeController;
     this.matchTimerUpdater = matchTimerUpdater;
-    this.intakeActive = intakeActive;
   }
 
   /** Command to bind to whileTrue – repeats while the button is held. */
@@ -49,11 +46,8 @@ public class ShootCommand{
               : ShooterState.TOTAL_SPIN_UP);
     }).repeatedly()
         .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
-        .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE))
-        .alongWith(((intakeController.setTargetStateCommand(intakeActive ? IntakeState.MIDDLE_STOW : IntakeState.IDLE))
-                .andThen(new WaitCommand(0.6))
-                .andThen(intakeController.setTargetStateCommand(intakeActive ? IntakeState.HIGH_MIDDLE_STOW: IntakeState.IDLE))
-                .andThen(new WaitCommand(0.6))).repeatedly());
+        // .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE))
+        .alongWith(new WaitCommand(1).andThen(new AgitateIntakeCommand(intakeController, 30)));
   }
 
   /** Command to bind to onFalse – runs when the button is released. */

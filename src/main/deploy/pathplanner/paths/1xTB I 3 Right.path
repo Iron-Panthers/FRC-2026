@@ -3,40 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.038,
-        "y": 2.8461091240450767
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 2.89015908409312,
-        "y": 3.0477103730090027
-      },
-      "isLocked": false,
-      "linkedName": "Shooting Pose Right"
-    },
-    {
-      "anchor": {
         "x": 2.685978647686834,
         "y": 3.201162514827995
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.320771055753263,
+        "y": 2.254353499406881
+      },
+      "isLocked": false,
+      "linkedName": "Shooting Pose Right 2"
+    },
+    {
+      "anchor": {
+        "x": 13.068600237247924,
+        "y": 2.630925266903914
+      },
       "prevControl": {
-        "x": 2.8841346449629834,
-        "y": 3.048734824615571
+        "x": 12.068600237247924,
+        "y": 2.630925266903914
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.391549295774647,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 90.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.4632290786136949,
+      "maxWaypointRelativePos": 0.669484361792056,
       "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 10.0,
+        "maxVelocity": 0.1,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -56,13 +65,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": -158.7
   },
   "useDefaultConstraints": true
 }

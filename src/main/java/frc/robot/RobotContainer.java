@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.AgitateIntakeCommand;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
@@ -114,8 +115,6 @@ public class RobotContainer {
 
   // DO NOT DELETE -- this actually does something important
   private RobotState robotState = RobotState.getInstance();
-
-  private boolean intakeActive = true;
 
   private ElasticSetpoints elasticSetpoints = ElasticSetpoints.getInstance();
 
@@ -315,8 +314,9 @@ public class RobotContainer {
       .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
 
-    NamedCommands.registerCommand("Auto shoot full hopper", new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController, false));
+    NamedCommands.registerCommand("Auto shoot full hopper", new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController, true));
     NamedCommands.registerCommand("Align and auto shoot full hopper", new AlignToShootCommand(swerve, shooterController).withDeadline(new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController, false)));
+    NamedCommands.registerCommand("Auto shoot full hopper (no intake)", new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController, false));
     NamedCommands.registerCommand("Shoot preloaded hopper",
       new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
         .alongWith(
@@ -326,6 +326,7 @@ public class RobotContainer {
       .andThen(new WaitCommand(2))
       .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
+    NamedCommands.registerCommand("Agitate Intake (10 seconds)", new AgitateIntakeCommand(intakeController, 10));
   }
 
   private void configureBindings() {
@@ -353,7 +354,7 @@ public class RobotContainer {
   }
 
   private void configureDriverAButtons() {
-    driverA.povLeft().onTrue(new InstantCommand(()-> intakeActive = !intakeActive));
+    driverA.povLeft().onTrue(new InstantCommand(()-> intakeController.setIntakePivotActive(!intakeController.getIntakePivotActive())));
     // ZERO GYRO
     driverA.start().onTrue(swerve.zeroGyroCommand());
     // SMART ZERO GYRO
@@ -364,7 +365,7 @@ public class RobotContainer {
     driverA.y().onTrue(new StowCommand(intakeController, shooterController, hopperController));
 
     // SHOOTING COMMAND
-    ShootCommand shootCommand = new ShootCommand(shooterController, hopperController, intakeController, matchTimerUpdater, intakeActive);
+    ShootCommand shootCommand = new ShootCommand(shooterController, hopperController, intakeController, matchTimerUpdater);
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
       

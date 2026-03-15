@@ -44,12 +44,6 @@
                     }
                   ]
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Agitate Intake (10 seconds)"
-                }
               }
             ]
           }
@@ -68,12 +62,6 @@
                 "type": "named",
                 "data": {
                   "name": "Align to shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Agitate Intake (10 seconds)"
                 }
               }
             ]

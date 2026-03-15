@@ -1,57 +1,47 @@
 {
-  "version": "2025.0",
-  "command": {
-    "type": "sequential",
-    "data": {
-      "commands": [
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "1xTB Climb 1 I Left"
+  "version" : "2025.0",
+  "command" : {
+    "type" : "sequential",
+    "data" : {
+      "commands" : [ {
+        "type" : "sequential",
+        "data" : {
+          "commands" : [ {
+            "type" : "path",
+            "data" : {
+              "pathName" : "1xTB Climb 1 I Left"
+            }
+          }, {
+            "type" : "parallel",
+            "data" : {
+              "commands" : [ {
+                "type" : "named",
+                "data" : {
+                  "name" : "Shoot"
                 }
-              },
-              {
-                "type": "parallel",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Shoot"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 5.0
-                      }
-                    }
-                  ]
+              }, {
+                "type" : "wait",
+                "data" : {
+                  "waitTime" : 5.0
                 }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "1xTB Climb 2 Left"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Climb"
-                }
-              }
-            ]
-          }
+              } ]
+            }
+          }, {
+            "type" : "path",
+            "data" : {
+              "pathName" : "1xTB Climb 2 Left"
+            }
+          }, {
+            "type" : "named",
+            "data" : {
+              "name" : "Climb"
+            }
+          } ]
         }
-      ]
+      } ]
     }
   },
-  "resetOdom": true,
-  "folder": "Left Autos (auto generated)",
-  "choreoAuto": false
+  "resetOdom" : true,
+  "folder" : "Left Autos (auto generated)",
+  "choreoAuto" : false
 }

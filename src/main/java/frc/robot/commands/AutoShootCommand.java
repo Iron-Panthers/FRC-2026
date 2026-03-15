@@ -29,11 +29,10 @@ public class AutoShootCommand extends SequentialCommandGroup {
           // new AlignToShootCommand(swerve, shooterController).alongWith(
           new InstantCommand(() -> shooterController.setTargetState(ShooterState.SHOOT))
             .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
-            .alongWith(((intakeController.setTargetStateCommand(intakeActive ? IntakeState.MIDDLE_STOW : IntakeState.IDLE))
-              .andThen(intakeController.setTargetStateCommand(intakeActive ? IntakeState.HIGH_MIDDLE_STOW : IntakeState.IDLE))).repeatedly()
+            .alongWith(new WaitCommand(1).andThen(intakeActive ? new AgitateIntakeCommand(intakeController, 4) : new InstantCommand())
     )
     .withDeadline(new WaitCommand(4)),
-          new IntakeCommand(climbController, intakeController, shooterController, hopperController)
+          intakeActive ? new IntakeCommand(climbController, intakeController, shooterController, hopperController) : new InstantCommand()
           );
       }
     
