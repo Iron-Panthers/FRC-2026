@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 3.038,
-        "y": 2.856
+        "x": 2.685978647686834,
+        "y": 3.201162514827995
       },
       "prevControl": {
-        "x": 7.108007117437722,
-        "y": 1.8661542111506515
+        "x": 6.7559857651245565,
+        "y": 2.2113167259786466
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shooting Pose Right"
+      "linkedName": "Shooting Pose Right 2"
     }
   ],
   "rotationTargets": [
@@ -139,7 +139,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": -158.7
   },
   "reversed": false,
   "folder": "Right Paths (make these)",

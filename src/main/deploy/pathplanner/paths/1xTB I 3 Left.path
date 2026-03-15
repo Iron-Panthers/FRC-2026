@@ -2,16 +2,16 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 2.685978647686834,
-      "y" : 5.008837485172005
+      "x" : 3.038,
+      "y" : 5.363890875954924
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 3.320771055753263,
-      "y" : 5.9556465005931205
+      "x" : 3.672792408066429,
+      "y" : 6.310699891376038
     },
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Right 2"
+    "linkedName" : "Shooting Pose Left"
   }, {
     "anchor" : {
       "x" : 13.068600237247924,
@@ -63,7 +63,7 @@
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 158.70000000000005
+    "rotation" : 135.0
   },
   "useDefaultConstraints" : true
 }
