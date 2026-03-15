@@ -32,7 +32,8 @@ public class AutoShootCommand extends SequentialCommandGroup {
             .alongWith(new WaitCommand(1).andThen(intakeActive ? new AgitateIntakeCommand(intakeController, 4) : new InstantCommand())
     )
     .withDeadline(new WaitCommand(4)),
-          intakeActive ? new IntakeCommand(climbController, intakeController, shooterController, hopperController) : new InstantCommand()
+          (intakeActive ? new IntakeCommand(climbController, intakeController, shooterController, hopperController) : new InstantCommand()),
+          shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)
           );
       }
     
