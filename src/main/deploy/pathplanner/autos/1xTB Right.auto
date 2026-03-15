@@ -29,15 +29,15 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Auto shoot full hopper"
+            "pathName": "Agitate"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Auto shoot full hopper"
+            "name": "Align and auto shoot full hopper"
           }
         }
       ]

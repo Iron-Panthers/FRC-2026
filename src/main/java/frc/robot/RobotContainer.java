@@ -115,6 +115,8 @@ public class RobotContainer {
   // DO NOT DELETE -- this actually does something important
   private RobotState robotState = RobotState.getInstance();
 
+  private boolean intakeActive = true;
+
   private ElasticSetpoints elasticSetpoints = ElasticSetpoints.getInstance();
 
   private ElasticUpdater matchTimerUpdater = new ElasticUpdater();
@@ -302,10 +304,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP).alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
     NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT).alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
     NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE).alongWith(hopperController.setTargetStateCommand(HopperControllerState.IDLE)));
-    NamedCommands.registerCommand("Align to shoot", 
-      new InstantCommand(() -> swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))))
-    ).alongWith(
-          shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
+    NamedCommands.registerCommand("Align to shoot", new AlignToShootCommand(swerve, shooterController));
     NamedCommands.registerCommand("Shoot full hopper",
       new InstantCommand(() -> swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180)))))
         .alongWith(
@@ -316,8 +315,8 @@ public class RobotContainer {
       .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
 
-    NamedCommands.registerCommand("Auto shoot full hopper", new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController));
-    
+    NamedCommands.registerCommand("Auto shoot full hopper", new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController, false));
+    NamedCommands.registerCommand("Align and auto shoot full hopper", new AlignToShootCommand(swerve, shooterController).withDeadline(new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController, false)));
     NamedCommands.registerCommand("Shoot preloaded hopper",
       new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
         .alongWith(
@@ -354,6 +353,7 @@ public class RobotContainer {
   }
 
   private void configureDriverAButtons() {
+    driverA.povLeft().onTrue(new InstantCommand(()-> intakeActive = !intakeActive));
     // ZERO GYRO
     driverA.start().onTrue(swerve.zeroGyroCommand());
     // SMART ZERO GYRO
@@ -364,7 +364,7 @@ public class RobotContainer {
     driverA.y().onTrue(new StowCommand(intakeController, shooterController, hopperController));
 
     // SHOOTING COMMAND
-    ShootCommand shootCommand = new ShootCommand(shooterController, hopperController, intakeController, matchTimerUpdater);
+    ShootCommand shootCommand = new ShootCommand(shooterController, hopperController, intakeController, matchTimerUpdater, intakeActive);
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
       
