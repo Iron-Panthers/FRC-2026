@@ -11,10 +11,10 @@ import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 public class AgitateIntakeCommand extends SequentialCommandGroup{
     public AgitateIntakeCommand (IntakeController intakeController, double length) {
         addCommands(
-            (intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW )
-                .andThen(new WaitCommand(0.6))
-                .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))
-                .andThen(new WaitCommand(0.6))).repeatedly()
+            (new InstantCommand (()-> intakeController.setTargetState(IntakeState.MIDDLE_STOW))
+                .andThen(new WaitCommand(0.3))
+                .andThen(new InstantCommand (()-> intakeController.setTargetState(IntakeState.HIGH_MIDDLE_STOW)))
+                .andThen(new WaitCommand(0.3))).repeatedly()
             .withDeadline(new WaitCommand(length)));
         
     }
