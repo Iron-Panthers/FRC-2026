@@ -59,7 +59,7 @@ public class RobotSimState {
         // Register intake on the right side of the robot
         double halfLength = DriveConstants.mapleSimConfig.bumperLengthX.in(Meters) / 2.0;
         double halfWidth = DriveConstants.mapleSimConfig.bumperWidthY.in(Meters) / 2.0;
-        double intakeReach = 0.3; // meters beyond bumper
+        double intakeReach = 0.1; // meters beyond bumper
         fuelSim.registerIntake(
             -halfLength, halfLength,
             -halfWidth - intakeReach, -halfWidth,

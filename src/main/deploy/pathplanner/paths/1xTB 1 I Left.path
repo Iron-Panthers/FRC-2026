@@ -2,13 +2,13 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 4.407449584816133,
-      "y" : 7.644022222222223
+      "x" : 4.6656702253855284,
+      "y" : 7.612562277580073
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 6.139679715302492,
-      "y" : 7.860023724792409
+      "x" : 6.397900355871887,
+      "y" : 7.828563780150259
     },
     "isLocked" : false,
     "linkedName" : null
@@ -44,16 +44,16 @@
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 3.038,
-      "y" : 5.354000000000001
+      "x" : 2.685978647686834,
+      "y" : 5.008837485172005
     },
     "prevControl" : {
-      "x" : 7.108007117437722,
-      "y" : 6.343845788849349
+      "x" : 6.7559857651245565,
+      "y" : 5.998683274021355
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Left"
+    "linkedName" : "Shooting Pose Right 2"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.1,
@@ -66,12 +66,12 @@
     "rotationDegrees" : 240.0
   } ],
   "constraintZones" : [ {
-    "name" : "Intake",
-    "minWaypointRelativePos" : 1.6265466816647827,
-    "maxWaypointRelativePos" : 2.35,
+    "name" : "Constraints Zone",
+    "minWaypointRelativePos" : 0,
+    "maxWaypointRelativePos" : 1.626546681664772,
     "constraints" : {
-      "maxVelocity" : 2.0,
-      "maxAcceleration" : 4.0,
+      "maxVelocity" : 2.2,
+      "maxAcceleration" : 3.5,
       "maxAngularVelocity" : 540.0,
       "maxAngularAcceleration" : 720.0,
       "nominalVoltage" : 12.0,
@@ -79,11 +79,11 @@
     }
   }, {
     "name" : "Constraints Zone",
-    "minWaypointRelativePos" : 0,
-    "maxWaypointRelativePos" : 1.626546681664772,
+    "minWaypointRelativePos" : 1.5725534308211366,
+    "maxWaypointRelativePos" : 2.1124859392575943,
     "constraints" : {
-      "maxVelocity" : 3.75,
-      "maxAcceleration" : 8.0,
+      "maxVelocity" : 1.5,
+      "maxAcceleration" : 4.0,
       "maxAngularVelocity" : 540.0,
       "maxAngularAcceleration" : 720.0,
       "nominalVoltage" : 12.0,
@@ -97,13 +97,18 @@
     "endWaypointRelativePos" : null,
     "command" : null
   }, {
-    "name" : "Spin up shooter",
-    "waypointRelativePos" : 2.55,
+    "name" : "Intake stow",
+    "waypointRelativePos" : 0.013498312710901192,
     "endWaypointRelativePos" : null,
     "command" : null
   }, {
-    "name" : "Intake mid",
-    "waypointRelativePos" : 2.6591676040494816,
+    "name" : "Intake down",
+    "waypointRelativePos" : 0.12148481439820491,
+    "endWaypointRelativePos" : null,
+    "command" : null
+  }, {
+    "name" : "Spin up shooter",
+    "waypointRelativePos" : 2.6726659167604505,
     "endWaypointRelativePos" : null,
     "command" : null
   } ],
@@ -117,7 +122,7 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 135.0
+    "rotation" : 158.70000000000005
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",

@@ -25,7 +25,7 @@ public class TeleopHeadingController extends BaseHeadingController {
   public double update() {
     if (scoped) {
       // if scoped, set the setpoint to the current heading to prevent rotation
-      setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))));
+      setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotState.isAllianceRed() ? 0 : 180))));
     }
     double output = super.update();
     Logger.recordOutput(

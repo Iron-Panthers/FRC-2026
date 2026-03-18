@@ -43,6 +43,8 @@ public class IntakeController extends SubsystemBase {
     private IntakeState targetState = IntakeState.STOW;
     private boolean stopped = false;
 
+    private boolean intakePivotActive = true;
+
     private final IntakePivot intakePivot;
     private final IntakeRollers intakeRollers;
 
@@ -67,7 +69,9 @@ public class IntakeController extends SubsystemBase {
             intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
             intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
         }
-
+        if (!intakePivotActive) {
+            intakePivot.setPositionTarget(IntakePivotTarget.INTAKE);
+        }
         intakePivot.periodic();
         intakeRollers.periodic();
     }
@@ -103,5 +107,13 @@ public class IntakeController extends SubsystemBase {
 
     public Command stopZeroingCommand() {
         return new InstantCommand(()-> intakePivot.endZeroing());
+    }
+
+    public void setIntakePivotActive(boolean isActive) {
+        intakePivotActive = isActive;
+    }
+
+    public boolean getIntakePivotActive() {
+        return intakePivotActive;
     }
 }

@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import org.ironmaple.simulation.IntakeSimulation.IntakeSide;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -22,15 +24,16 @@ import frc.robot.subsystems.swerve.Drive;
 
 public class AutoShootCommand extends SequentialCommandGroup {
   public AutoShootCommand(Drive swerve, ShooterController shooterController, HopperController hopperController, 
-    IntakeController intakeController, ElasticUpdater matchTimerUpdater, ClimbController climbController) {
+    IntakeController intakeController, ElasticUpdater matchTimerUpdater, ClimbController climbController, boolean intakeActive) {
     addCommands(
-          new AlignToShootCommand(swerve, shooterController).alongWith(
+          // new AlignToShootCommand(swerve, shooterController).alongWith(
           new InstantCommand(() -> shooterController.setTargetState(ShooterState.SHOOT))
             .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
-            .alongWith(((intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW))
-              .andThen(intakeController.setTargetStateCommand(IntakeState.HIGH_MIDDLE_STOW))).repeatedly())
-              ).withDeadline(new WaitCommand(4)),
-          new IntakeCommand(climbController, intakeController, shooterController, hopperController)
+            .alongWith(new WaitCommand(1).andThen(intakeActive ? new AgitateIntakeCommand(intakeController, 4) : new InstantCommand())
+    )
+    .withDeadline(new WaitCommand(4)),
+          (intakeActive ? new IntakeCommand(climbController, intakeController, shooterController, hopperController) : new InstantCommand()),
+          shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)
           );
       }
     

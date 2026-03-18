@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.AgitateIntakeCommand;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
@@ -290,8 +291,11 @@ public class RobotContainer {
     // Register Command Names in this method
 
     new EventTrigger("Intake down").onTrue(new InstantCommand(() ->intakeController.setTargetState(IntakeState.INTAKE)));
+    new EventTrigger("Intake stow").onTrue(new InstantCommand(() ->intakeController.setTargetState(IntakeState.STOW)));
     new EventTrigger("Spin up shooter").onTrue(new InstantCommand(() -> {shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP); 
       hopperController.setTargetState(HopperControllerState.INTAKE);}));
+    new EventTrigger("Intake mid").onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
+
     NamedCommands.registerCommand("Smart zero", new InstantCommand(() -> swerve.smartZeroGyro()));
     NamedCommands.registerCommand("Intake down", intakeController.setTargetStateCommand(IntakeState.INTAKE).alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
     NamedCommands.registerCommand("Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
@@ -299,10 +303,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP).alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
     NamedCommands.registerCommand("Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT).alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
     NamedCommands.registerCommand("Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE).alongWith(hopperController.setTargetStateCommand(HopperControllerState.IDLE)));
-    NamedCommands.registerCommand("Align to shoot", 
-      new InstantCommand(() -> swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180))))
-    ).alongWith(
-          shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
+    NamedCommands.registerCommand("Align to shoot", new AlignToShootCommand(swerve, shooterController));
     NamedCommands.registerCommand("Shoot full hopper",
       new InstantCommand(() -> swerve.setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180)))))
         .alongWith(
@@ -313,8 +314,9 @@ public class RobotContainer {
       .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
 
-    NamedCommands.registerCommand("Auto shoot full hopper", new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController));
-    
+    NamedCommands.registerCommand("Auto shoot full hopper", new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController, true));
+    NamedCommands.registerCommand("Align and auto shoot full hopper", new AlignToShootCommand(swerve, shooterController).withDeadline(new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController, false)));
+    NamedCommands.registerCommand("Auto shoot full hopper (no intake)", new AutoShootCommand(swerve, shooterController, hopperController, intakeController, matchTimerUpdater, climbController, false));
     NamedCommands.registerCommand("Shoot preloaded hopper",
       new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
         .alongWith(
@@ -324,6 +326,7 @@ public class RobotContainer {
       .andThen(new WaitCommand(2))
       .andThen(new InstantCommand(() -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
       .andThen(new InstantCommand(() -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
+    NamedCommands.registerCommand("Agitate Intake (10 seconds)", new AgitateIntakeCommand(intakeController, 10));
   }
 
   private void configureBindings() {
@@ -351,6 +354,7 @@ public class RobotContainer {
   }
 
   private void configureDriverAButtons() {
+    driverA.povLeft().onTrue(new InstantCommand(()-> intakeController.setIntakePivotActive(!intakeController.getIntakePivotActive())));
     // ZERO GYRO
     driverA.start().onTrue(swerve.zeroGyroCommand());
     // SMART ZERO GYRO
@@ -371,7 +375,8 @@ public class RobotContainer {
     // SHUTTLE
     driverA.povRight().whileTrue(new ShuttleCommand(swerve, shooterController));
 
-    driverA.rightBumper().onTrue(shooterController.setTargetStateCommand(ShooterState.DEFAULT_SHOOT));
+    driverA.rightBumper().onTrue(shooterController.setTargetStateCommand(ShooterState.DEFAULT_SHOOT)
+      .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE)));
 
     // ARC ALIGN
     // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
@@ -480,7 +485,7 @@ public class RobotContainer {
     Logger.recordOutput("FieldSimulation/FuelCount", RobotSimState.getInstance().getFuelCount());
 
     // Update the shooting logic with the correct rollers
-    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAccelerator.getCurrentVelocity().in(RotationsPerSecond) > 1.0 && shooterOmniwheel.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 8.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
+    RobotSimState.getInstance().setShooterRunning(shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0 && shooterAccelerator.getCurrentVelocity().in(RotationsPerSecond) > 1.0 && shooterOmniwheel.getCurrentVelocity().in(RotationsPerSecond) > 1.0, 5.0, Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())), ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(new Transform3d(
           new Translation3d(),
           new Rotation3d(0, 0, Math.PI/2)
         )), shooterFlywheels.getCurrentVelocity());
