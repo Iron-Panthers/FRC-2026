@@ -40,6 +40,8 @@ public class Drive extends SubsystemBase {
 
   private DriveModes driveMode = DriveModes.TELEOP;
 
+  private boolean isScoped = false;
+
   private GyroIO gyroIO;
   private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private Module[] modules = new Module[4];
@@ -114,6 +116,13 @@ public class Drive extends SubsystemBase {
       case TRAJECTORY -> {
         Logger.recordOutput("Swerve/DistanceFromSetpoint", RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(targetPosition.getTranslation()));
         targetSpeeds = trajectorySpeeds;
+        if (headingController != null && isScoped) {
+          // 0.d0001 to make the wheels stop in a diamond shape instead of straight so they do not
+          // vibrate
+          double rotationVelocity = headingController.update();
+          targetSpeeds.omegaRadiansPerSecond =
+              Math.abs(rotationVelocity) > 0.0001 ? rotationVelocity : 0.0001;
+        }
       }
       case AUTO_ALIGN -> {
         if (pidAutoAlignController != null) {
@@ -230,6 +239,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void setMovementScoped(boolean scoped) {
+    this.isScoped = scoped;
     teleopController.setScoped(scoped);
     if (headingController == null) {
       headingController =

@@ -12,7 +12,7 @@
         "y": -0.2330666666666672
       },
       "isLocked": false,
-      "linkedName": "Shooting Pose Right"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -48,32 +48,32 @@
     },
     {
       "anchor": {
-        "x": 4.654811111107648,
-        "y": 0.5952111111096565
+        "x": 6.236512455516015,
+        "y": 1.3720996441281137
       },
       "prevControl": {
-        "x": 7.880222222218759,
-        "y": 0.6049555555541009
+        "x": 8.854078058079127,
+        "y": 3.256700956383563
       },
       "nextControl": {
-        "x": 2.605096713438602,
-        "y": 0.5890186204822575
+        "x": 6.033627182385398,
+        "y": 1.2260258068172694
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.038,
-        "y": 2.8461091340450766
+        "x": 3.9340450771055764,
+        "y": 0.8341399762752064
       },
       "prevControl": {
-        "x": 2.277933333333333,
-        "y": 1.277253578489523
+        "x": 4.676429418742587,
+        "y": 0.7695848161328582
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shooting Pose Right"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
@@ -115,7 +115,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 3.1,
     "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
