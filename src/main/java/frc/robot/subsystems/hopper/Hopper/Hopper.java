@@ -7,7 +7,7 @@ public class Hopper extends GenericRollers<Hopper.HopperTarget>{
     public enum HopperTarget implements GenericRollers.VelocityTarget{
         IDLE(0),
         SLOW(0),
-        INTAKE(20);
+        INTAKE(70);
 
         private double velocity;
 

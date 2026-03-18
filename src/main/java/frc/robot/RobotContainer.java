@@ -149,13 +149,13 @@ public class RobotContainer {
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
         case COMP -> {
-          // swerve =
-          //     new Drive(
-          //         new GyroIOPigeon2(),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
+          swerve =
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           // intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
           // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           vision = new Vision(
@@ -172,7 +172,7 @@ public class RobotContainer {
             new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
           shooterAccelerator = 
             new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
-          // hopper = new Hopper(new HopperIOTalonFX());
+          hopper = new Hopper(new HopperIOTalonFX());
         }
         case VISION -> {
           swerve =
