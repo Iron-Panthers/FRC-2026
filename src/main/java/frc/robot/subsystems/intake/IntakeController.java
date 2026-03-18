@@ -1,5 +1,7 @@
 package frc.robot.subsystems.intake;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -43,7 +45,7 @@ public class IntakeController extends SubsystemBase {
     private IntakeState targetState = IntakeState.STOW;
     private boolean stopped = false;
 
-    private boolean intakePivotActive = true;
+    private boolean intakePivotActive = false;
 
     private final IntakePivot intakePivot;
     private final IntakeRollers intakeRollers;
@@ -61,7 +63,7 @@ public class IntakeController extends SubsystemBase {
         //if else set control mode to zero
         } else if (intakePivot.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
             intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
-        } else if ((intakePivot.getPositionTarget() == IntakePivotTarget.STOW || intakePivot.getPositionTarget() == IntakePivotTarget.MED_STOW) && !intakePivot.reachedTarget()) {
+        } else if ((intakePivot.getPositionTarget() == IntakePivotTarget.STOW) && !intakePivot.reachedTarget()) {
             intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
             intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE_SLOW);
         } else {
@@ -74,6 +76,8 @@ public class IntakeController extends SubsystemBase {
         }
         intakePivot.periodic();
         intakeRollers.periodic();
+
+        Logger.recordOutput("Intake/Is Pivot Active", intakePivotActive);
     }
 
 

@@ -73,7 +73,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Shooting Pose Right 2"
+      "linkedName": "Shooting Pose 2 Right"
     }
   ],
   "rotationTargets": [
@@ -104,7 +104,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.626546681664772,
       "constraints": {
-        "maxVelocity": 2.2,
+        "maxVelocity": 1.5,
         "maxAcceleration": 3.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -131,12 +131,6 @@
     {
       "name": "Intake down",
       "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "",
-      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     },
