@@ -2,12 +2,11 @@ package frc.robot.subsystems.climb.climb_claw_pivot;
 
 import static frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotConstants.*;
 
-import com.ctre.phoenix6.controls.VoltageOut;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOTalonFX;
-import org.littletonrobotics.junction.AutoLogOutput;
 
-public class ClimbClawPivotIOTalonFX extends GenericSuperstructureIOTalonFX implements ClimbClawPivotIO {
+public class ClimbClawPivotIOTalonFX extends GenericSuperstructureIOTalonFX
+    implements ClimbClawPivotIO {
 
   public ClimbClawPivotIOTalonFX() {
     super(
