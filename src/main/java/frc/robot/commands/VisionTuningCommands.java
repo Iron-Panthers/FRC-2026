@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -47,8 +46,7 @@ public class VisionTuningCommands {
       Vision vision, LoggedDashboardChooser<Command> chooser) {
     // We may want to run this at a competition
     chooser.addOption(
-        "TUNING | Vision Camera Position Measurement",
-        measureCameraPositions(vision));
+        "TUNING | Vision Camera Position Measurement", measureCameraPositions(vision));
   }
 
   /** The transform of the calibration tag, relative to the robot base. */
@@ -97,24 +95,26 @@ public class VisionTuningCommands {
                 printTransform(transform);
               }
 
-            //   Transform3d frontLeftTransform = adjustedTransforms[0];
-            //   Transform3d frontRightTransform = adjustedTransforms[1];
-            //   double frontWidth = frontLeftTransform.getY() - frontRightTransform.getY();
-            //   frontLeftTransform =
-            //       new Transform3d(
-            //           new Translation3d(
-            //               frontLeftTransform.getX(), frontWidth / 2, frontLeftTransform.getZ()),
-            //           frontLeftTransform.getRotation());
-            //   frontRightTransform =
-            //       new Transform3d(
-            //           new Translation3d(
-            //               frontRightTransform.getX(), -frontWidth / 2, frontRightTransform.getZ()),
-            //           frontRightTransform.getRotation());
+              //   Transform3d frontLeftTransform = adjustedTransforms[0];
+              //   Transform3d frontRightTransform = adjustedTransforms[1];
+              //   double frontWidth = frontLeftTransform.getY() - frontRightTransform.getY();
+              //   frontLeftTransform =
+              //       new Transform3d(
+              //           new Translation3d(
+              //               frontLeftTransform.getX(), frontWidth / 2,
+              // frontLeftTransform.getZ()),
+              //           frontLeftTransform.getRotation());
+              //   frontRightTransform =
+              //       new Transform3d(
+              //           new Translation3d(
+              //               frontRightTransform.getX(), -frontWidth / 2,
+              // frontRightTransform.getZ()),
+              //           frontRightTransform.getRotation());
 
-            //   System.out.print("Robot to front left camera (centered Y compensated): ");
-            //   printTransform(frontLeftTransform);
-            //   System.out.print("Robot to front right camera (centered Y compensated): ");
-            //   printTransform(frontRightTransform);
+              //   System.out.print("Robot to front left camera (centered Y compensated): ");
+              //   printTransform(frontLeftTransform);
+              //   System.out.print("Robot to front right camera (centered Y compensated): ");
+              //   printTransform(frontRightTransform);
             });
   }
 
