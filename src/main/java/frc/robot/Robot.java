@@ -100,7 +100,7 @@ public class Robot extends LoggedRobot {
     Logger.start();
 
     robotContainer = new RobotContainer();
-    
+
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
     CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
   }

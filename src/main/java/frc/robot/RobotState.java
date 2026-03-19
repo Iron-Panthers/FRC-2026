@@ -5,17 +5,12 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Radians;
-
-import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Radian;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
@@ -29,11 +24,9 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.Interpolatable;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
-import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
@@ -43,31 +36,13 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.vision.VisionConstants;
-
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Radian;
-import static edu.wpi.first.units.Units.Radians;
-
-import java.lang.annotation.Target;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import org.dyn4j.geometry.Rotation;
-import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
-import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltHub;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedNetworkInput;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /* based on wpimath/../PoseEstimator.java */
@@ -81,7 +56,8 @@ public class RobotState {
   public record VisionMeasurement(Pose2d visionPose, double timestamp) {}
 
   private static final double poseBufferSizeSeconds = 2; // shorter?
-  private static final Pose2d initialPose = isAllianceRed()
+  private static final Pose2d initialPose =
+      isAllianceRed()
           ? FlippingUtil.flipFieldPose(DriveConstants.INITIAL_POSE)
           : DriveConstants.INITIAL_POSE;
 
@@ -116,7 +92,8 @@ public class RobotState {
 
   private RobotState() {
     for (int i = 0; i < 3; ++i) {
-      matrixQ.set(i, 0, DriveConstants.STATE_STD_DEVS.get(i, 0) * DriveConstants.STATE_STD_DEVS.get(i, 0));
+      matrixQ.set(
+          i, 0, DriveConstants.STATE_STD_DEVS.get(i, 0) * DriveConstants.STATE_STD_DEVS.get(i, 0));
     }
   }
 
@@ -179,27 +156,32 @@ public class RobotState {
 
   /**
    * Gets the scuffed path planner built command for following a path to a certain pose
+   *
    * @param approachPose2d
    * @param underTrench
    * @return
    */
-  public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench){
+  public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench) {
     Logger.recordOutput("RobotState/EstimatedPose", estimatedPose);
     Logger.recordOutput("RobotState/ApproachPose", approachPose2d);
 
-    Command finalPathfindingCommand = null; 
+    Command finalPathfindingCommand = null;
 
-    if(underTrench){
-      Pathfinding.setDynamicObstacles(DriveConstants.OBSTACLES_FOR_TRENCH_PATHFINDING, estimatedPose.getTranslation());
-      finalPathfindingCommand =  AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
-    }else{
-      Pathfinding.setDynamicObstacles(DriveConstants.OBSTACLES_FOR_BUMP_PATHFINDING, estimatedPose.getTranslation());
-      finalPathfindingCommand =  AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
+    if (underTrench) {
+      Pathfinding.setDynamicObstacles(
+          DriveConstants.OBSTACLES_FOR_TRENCH_PATHFINDING, estimatedPose.getTranslation());
+      finalPathfindingCommand =
+          AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
+    } else {
+      Pathfinding.setDynamicObstacles(
+          DriveConstants.OBSTACLES_FOR_BUMP_PATHFINDING, estimatedPose.getTranslation());
+      finalPathfindingCommand =
+          AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
     }
 
     return finalPathfindingCommand;
-
   }
+
   public void addRobotSpeeds(ChassisSpeeds chassisSpeeds) {
     this.robotSpeeds = chassisSpeeds;
   }
@@ -208,18 +190,28 @@ public class RobotState {
     return lastApproachPose;
   }
 
-
   // methods that use the shootingAnglePredictor -- as an abstraction
 
   private ShootingAnglePredictor shootingAnglePredictor;
-  public void initializeShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw) {
-    shootingAnglePredictor = new ShootingAnglePredictor(chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier, shooterYaw);
+
+  public void initializeShootingAnglePredictor(
+      Supplier<ChassisSpeeds> chassisSpeedsSupplier,
+      Supplier<LinearVelocity> shooterVelocitySupplier,
+      Supplier<Transform3d> shooterPositionSupplier,
+      Angle shooterYaw) {
+    shootingAnglePredictor =
+        new ShootingAnglePredictor(
+            chassisSpeedsSupplier, shooterVelocitySupplier, shooterPositionSupplier, shooterYaw);
   }
-  public TargetShootingState calculateTargetShootingState(){
+
+  public TargetShootingState calculateTargetShootingState() {
     TargetShootingState targetShootingState = shootingAnglePredictor.calculateTargetShootingState();
-    Logger.recordOutput("RobotState/TargetShootingState/DrivebaseYaw", targetShootingState.drivebaseYaw());
-    Logger.recordOutput("RobotState/TargetShootingState/ShooterAngle", targetShootingState.shooterAngle());
-    Logger.recordOutput("RobotState/TargetShootingState/ShooterSpeed", targetShootingState.shooterSpeed());
+    Logger.recordOutput(
+        "RobotState/TargetShootingState/DrivebaseYaw", targetShootingState.drivebaseYaw());
+    Logger.recordOutput(
+        "RobotState/TargetShootingState/ShooterAngle", targetShootingState.shooterAngle());
+    Logger.recordOutput(
+        "RobotState/TargetShootingState/ShooterSpeed", targetShootingState.shooterSpeed());
     return targetShootingState;
   }
 
@@ -231,7 +223,8 @@ public class RobotState {
     private Supplier<LinearVelocity> shooterVelocitySupplier;
     private Supplier<Transform3d> shooterPositionSupplier;
 
-    public LoggedNetworkNumber tempShooterAngle = new LoggedNetworkNumber("Tuning/TempShooterAngle", 70);
+    public LoggedNetworkNumber tempShooterAngle =
+        new LoggedNetworkNumber("Tuning/TempShooterAngle", 70);
 
     // NT entries for LUT tuning — created once per key, reused every frame
     private final HashMap<String, LoggedNetworkNumber> ntLutEntries = new HashMap<>();
@@ -245,41 +238,45 @@ public class RobotState {
     private final LinearFilter vyFilter = LinearFilter.movingAverage(5);
 
     private final InterpolatingTreeMap<Double, HoodParams> shooterTable =
-        new InterpolatingTreeMap<>(
-            InverseInterpolator.forDouble(),
-            HoodParams::interpolate
-        );
+        new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), HoodParams::interpolate);
 
-
-    public ShootingAnglePredictor(Supplier<ChassisSpeeds> chassisSpeedsSupplier, Supplier<LinearVelocity> shooterVelocitySupplier, Supplier<Transform3d> shooterPositionSupplier, Angle shooterYaw){
+    public ShootingAnglePredictor(
+        Supplier<ChassisSpeeds> chassisSpeedsSupplier,
+        Supplier<LinearVelocity> shooterVelocitySupplier,
+        Supplier<Transform3d> shooterPositionSupplier,
+        Angle shooterYaw) {
       this.chassisSpeedsSupplier = chassisSpeedsSupplier;
-      this.shooterPositionSupplier = () -> (new Transform3d(new Translation3d(0,0,0), new Rotation3d(0, 0, shooterYaw.in(Radian)))).plus(shooterPositionSupplier.get());
+      this.shooterPositionSupplier =
+          () ->
+              (new Transform3d(
+                      new Translation3d(0, 0, 0), new Rotation3d(0, 0, shooterYaw.in(Radian))))
+                  .plus(shooterPositionSupplier.get());
       this.shooterVelocitySupplier = shooterVelocitySupplier;
 
       initializeShooterTable();
     }
 
-    public void initializeShooterTable(){
-        this.shooterTable.clear();
+    public void initializeShooterTable() {
+      this.shooterTable.clear();
       switch (Constants.getRobotType()) {
         case SIM -> {
-          addEntry(1.3, new HoodParams(87,   9, 1.621));
+          addEntry(1.3, new HoodParams(87, 9, 1.621));
           addEntry(2.0, new HoodParams(83.5, 9, 1.621));
-          addEntry(2.5, new HoodParams(81,   9, 1.601));
+          addEntry(2.5, new HoodParams(81, 9, 1.601));
           addEntry(3.0, new HoodParams(78.5, 9, 1.602));
           addEntry(3.5, new HoodParams(76.5, 9, 1.581));
           addEntry(4.0, new HoodParams(74.5, 9, 1.561));
-          addEntry(4.5, new HoodParams(73,   9, 1.561));
+          addEntry(4.5, new HoodParams(73, 9, 1.561));
         }
         default -> {
-        addEntry(1.3, new HoodParams(83,   8.5, 1.09));
-        addEntry(2.0, new HoodParams(77,   8.3, .97));
-        addEntry(2.5, new HoodParams(75,   8.9, 1.14));
-        addEntry(3.0, new HoodParams(73,   9.4, 1.15)); // tuned to here
-        addEntry(3.5, new HoodParams(72,   9.9, 1.22));
-        addEntry(4.0, new HoodParams(70.5, 10.4, 1.3));
-        addEntry(4.5, new HoodParams(69,   10.7, 1.34));
-        addEntry(5.2, new HoodParams(67,   11.1, 1.39));
+          addEntry(1.3, new HoodParams(83, 8.5, 1.09));
+          addEntry(2.0, new HoodParams(77, 8.3, .97));
+          addEntry(2.5, new HoodParams(75, 8.9, 1.14));
+          addEntry(3.0, new HoodParams(73, 9.4, 1.15)); // tuned to here
+          addEntry(3.5, new HoodParams(72, 9.9, 1.22));
+          addEntry(4.0, new HoodParams(70.5, 10.4, 1.3));
+          addEntry(4.5, new HoodParams(69, 10.7, 1.34));
+          addEntry(5.2, new HoodParams(67, 11.1, 1.39));
         }
       }
     }
@@ -288,23 +285,24 @@ public class RobotState {
       String prefix = String.format("Tuning/Shooter/%.1fm/", distance);
       double angle = getLutNTEntry(prefix + "shooterAngle", defaults.shooterAngle).get();
       double speed = getLutNTEntry(prefix + "shooterSpeed", defaults.shooterSpeed).get();
-      double tof   = getLutNTEntry(prefix + "timeOfFlight", defaults.timeOfFlight).get();
+      double tof = getLutNTEntry(prefix + "timeOfFlight", defaults.timeOfFlight).get();
       HoodParams params = new HoodParams(angle, speed, tof);
       shooterTable.put(distance, params);
     }
 
-    public TargetShootingState calculateTargetShootingState(){
+    public TargetShootingState calculateTargetShootingState() {
 
       initializeShooterTable();
 
       // Get target hub position
-      final Translation3d hubPosition3d = isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
+      final Translation3d hubPosition3d =
+          isAllianceRed() ? DriveConstants.RED_HUB_ORIGIN : DriveConstants.BLUE_HUB_ORIGIN;
 
       // Get chassis speeds and apply moving average filter for smoothness
       ChassisSpeeds rawSpeeds = chassisSpeedsSupplier.get();
       double filteredVx = vxFilter.calculate(rawSpeeds.vxMetersPerSecond);
       double filteredVy = vyFilter.calculate(rawSpeeds.vyMetersPerSecond);
-      
+
       Translation2d robotVelocity = new Translation2d(filteredVx, filteredVy);
 
       // Log the raw and filtered velocities for tuning
@@ -316,72 +314,88 @@ public class RobotState {
       // Get the initial important things
       Pose3d robotPose3d = new Pose3d(getEstimatedPose());
 
-      double latencyCompensation = 0.15; // Tune later // TODO: make this an actual constant (if you change it later this is the one for sim)
+      double latencyCompensation =
+          0.15; // Tune later // TODO: make this an actual constant (if you change it later this is
+      // the one for sim)
 
-        // 1. Project future position
-        Translation2d futurePos = robotPose3d.getTranslation().toTranslation2d().plus(
-            robotVelocity.times(latencyCompensation)
-        );
+      // 1. Project future position
+      Translation2d futurePos =
+          robotPose3d
+              .getTranslation()
+              .toTranslation2d()
+              .plus(robotVelocity.times(latencyCompensation));
 
-        // 2. Get target vector
-        Translation2d toGoal = hubPosition3d.toTranslation2d().minus(futurePos);
-        double distance = toGoal.getNorm();
-        Translation2d targetDirection = toGoal.div(distance);
+      // 2. Get target vector
+      Translation2d toGoal = hubPosition3d.toTranslation2d().minus(futurePos);
+      double distance = toGoal.getNorm();
+      Translation2d targetDirection = toGoal.div(distance);
 
-        // 3. Look up baseline velocity from table
-        HoodParams baseline = shooterTable.get(distance);
-        double baselineVelocity = distance / baseline.timeOfFlight;
+      // 3. Look up baseline velocity from table
+      HoodParams baseline = shooterTable.get(distance);
+      double baselineVelocity = distance / baseline.timeOfFlight;
 
-        // 4. Build target velocity vector
-        Translation2d targetVelocity = targetDirection.times(baselineVelocity);
+      // 4. Build target velocity vector
+      Translation2d targetVelocity = targetDirection.times(baselineVelocity);
 
-        // 5. THE MAGIC: subtract robot velocity
-        Translation2d shotVelocity = targetVelocity.minus(robotVelocity);
+      // 5. THE MAGIC: subtract robot velocity
+      Translation2d shotVelocity = targetVelocity.minus(robotVelocity);
 
-        // 6. Extract turret angle from horizontal velocity compensation
-        Rotation2d turretAngle = shotVelocity.getAngle();
-        double shotHorizontalSpeed = shotVelocity.getNorm();
+      // 6. Extract turret angle from horizontal velocity compensation
+      Rotation2d turretAngle =
+          shotVelocity
+              .getAngle()
+              .plus(isAllianceRed() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180));
+      double shotHorizontalSpeed = shotVelocity.getNorm();
 
-        // 7. Decompose the LUT's tuned trajectory into horizontal & vertical velocity
-        //    v_v comes from the tuned hood angle — this preserves the tuned vertical trajectory
-        double baselineVerticalVelocity = baselineVelocity * Math.tan(Math.toRadians(baseline.shooterAngle));
+      // 7. Decompose the LUT's tuned trajectory into horizontal & vertical velocity
+      //    v_v comes from the tuned hood angle — this preserves the tuned vertical trajectory
+      double baselineVerticalVelocity =
+          baselineVelocity * Math.tan(Math.toRadians(baseline.shooterAngle));
 
-        // 8. Recompute hood angle: keep the tuned v_v, use the compensated horizontal speed
-        double adjustedHoodAngle = Math.toDegrees(Math.atan2(baselineVerticalVelocity, shotHorizontalSpeed));
+      // 8. Recompute hood angle: keep the tuned v_v, use the compensated horizontal speed
+      double adjustedHoodAngle =
+          Math.toDegrees(Math.atan2(baselineVerticalVelocity, shotHorizontalSpeed));
 
-        // 9. Scale shooter speed by ratio of new vs static total exit velocity
-        double staticExitSpeed = baselineVelocity / Math.cos(Math.toRadians(baseline.shooterAngle));
-        double newExitSpeed = Math.sqrt(shotHorizontalSpeed * shotHorizontalSpeed + baselineVerticalVelocity * baselineVerticalVelocity);
-        double adjustedShooterSpeed = baseline.shooterSpeed * (newExitSpeed / staticExitSpeed);
+      // 9. Scale shooter speed by ratio of new vs static total exit velocity
+      double staticExitSpeed = baselineVelocity / Math.cos(Math.toRadians(baseline.shooterAngle));
+      double newExitSpeed =
+          Math.sqrt(
+              shotHorizontalSpeed * shotHorizontalSpeed
+                  + baselineVerticalVelocity * baselineVerticalVelocity);
+      double adjustedShooterSpeed = baseline.shooterSpeed * (newExitSpeed / staticExitSpeed);
 
-        Logger.recordOutput("ShootingPredictor/Distance", distance);
-        Logger.recordOutput("ShootingPredictor/BaselineVh", baselineVelocity);
-        Logger.recordOutput("ShootingPredictor/BaselineVv", baselineVerticalVelocity);
-        Logger.recordOutput("ShootingPredictor/ShotHorizontalSpeed", shotHorizontalSpeed);
-        Logger.recordOutput("ShootingPredictor/TurretAngle", turretAngle);
-        Logger.recordOutput("ShootingPredictor/AdjustedHoodAngle", adjustedHoodAngle);
-        Logger.recordOutput("ShootingPredictor/AdjustedShooterSpeed", adjustedShooterSpeed);
+      Logger.recordOutput("ShootingPredictor/Distance", distance);
+      Logger.recordOutput("ShootingPredictor/BaselineVh", baselineVelocity);
+      Logger.recordOutput("ShootingPredictor/BaselineVv", baselineVerticalVelocity);
+      Logger.recordOutput("ShootingPredictor/ShotHorizontalSpeed", shotHorizontalSpeed);
+      Logger.recordOutput("ShootingPredictor/TurretAngle", turretAngle);
+      Logger.recordOutput("ShootingPredictor/AdjustedHoodAngle", adjustedHoodAngle);
+      Logger.recordOutput("ShootingPredictor/AdjustedShooterSpeed", adjustedShooterSpeed);
 
-      return new TargetShootingState(turretAngle, Degrees.of(adjustedHoodAngle), MetersPerSecond.of(adjustedShooterSpeed));
+      return new TargetShootingState(
+          turretAngle, Degrees.of(adjustedHoodAngle), MetersPerSecond.of(adjustedShooterSpeed));
     }
 
     // Simple data class for the LUT
     // shooterAngle in degrees, shooterSpeed in m/s (surface speed), timeOfFlight in seconds
-    public record HoodParams(double shooterAngle, double shooterSpeed, double timeOfFlight) implements Interpolatable<HoodParams> {
+    public record HoodParams(double shooterAngle, double shooterSpeed, double timeOfFlight)
+        implements Interpolatable<HoodParams> {
       @Override
       public HoodParams interpolate(HoodParams endValue, double t) {
         return new HoodParams(
-          MathUtil.interpolate(this.shooterAngle, endValue.shooterAngle, t),
-          MathUtil.interpolate(this.shooterSpeed, endValue.shooterSpeed, t),
-          MathUtil.interpolate(this.timeOfFlight, endValue.timeOfFlight, t)
-        );
+            MathUtil.interpolate(this.shooterAngle, endValue.shooterAngle, t),
+            MathUtil.interpolate(this.shooterSpeed, endValue.shooterSpeed, t),
+            MathUtil.interpolate(this.timeOfFlight, endValue.timeOfFlight, t));
       }
     }
   }
-  public record TargetShootingState(Rotation2d drivebaseYaw, Angle shooterAngle, LinearVelocity shooterSpeed) { }
 
-  public Pose2d getShootingPose(){
-    Pose2d shootingPoseOne = getShootingPose(2.154).plus(new Transform2d(new Translation2d(), Rotation2d.kPi));
+  public record TargetShootingState(
+      Rotation2d drivebaseYaw, Angle shooterAngle, LinearVelocity shooterSpeed) {}
+
+  public Pose2d getShootingPose() {
+    Pose2d shootingPoseOne =
+        getShootingPose(2.154).plus(new Transform2d(new Translation2d(), Rotation2d.kPi));
     // Pose2d shootingPoseTwo = getShootingPose(4.0); //edit forf climb
     // Pose2d flippedEstimatedPose = isAllianceRed()
     //                 ? FlippingUtil.flipFieldPose(estimatedPose)
@@ -397,34 +411,52 @@ public class RobotState {
     return shootingPoseOne;
   }
 
-  public Pose2d getShootingPose(double distanceTargetToHub){
-    Pose2d flippedEstimatedPose = isAllianceRed()
-                    ? FlippingUtil.flipFieldPose(estimatedPose)
-                    : estimatedPose;
+  public Pose2d getShootingPose(double distanceTargetToHub) {
+    Pose2d flippedEstimatedPose =
+        isAllianceRed() ? FlippingUtil.flipFieldPose(estimatedPose) : estimatedPose;
     Translation2d hubCoords = new Pose2d(4.62, 4.03, new Rotation2d()).getTranslation();
     Translation2d translHubCoords = hubCoords.minus(flippedEstimatedPose.getTranslation());
     double distanceToHub = translHubCoords.getNorm();
     double angle = Math.atan2(translHubCoords.getY(), translHubCoords.getX());
 
-    if (distanceTargetToHub >= 2.5 && (angle > -35.64/180*Math.PI  && Math.abs(angle) < 28.25/180*Math.PI)){
+    if (distanceTargetToHub >= 2.5
+        && (angle > -35.64 / 180 * Math.PI && Math.abs(angle) < 28.25 / 180 * Math.PI)) {
       distanceTargetToHub = 2;
     }
-    
-    double y = -distanceTargetToHub*Math.sin(angle) + translHubCoords.getY() + flippedEstimatedPose.getY();
-    double x = -distanceTargetToHub*Math.cos(angle) + translHubCoords.getX() + flippedEstimatedPose.getX();
 
-    if (y > 7.307){
-      return new Pose2d(2.326, 7.307, new Rotation2d(Math.atan2(hubCoords.getY() - 7.307, hubCoords.getX() - 2.326)));
+    double y =
+        -distanceTargetToHub * Math.sin(angle)
+            + translHubCoords.getY()
+            + flippedEstimatedPose.getY();
+    double x =
+        -distanceTargetToHub * Math.cos(angle)
+            + translHubCoords.getX()
+            + flippedEstimatedPose.getX();
+
+    if (y > 7.307) {
+      return new Pose2d(
+          2.326,
+          7.307,
+          new Rotation2d(Math.atan2(hubCoords.getY() - 7.307, hubCoords.getX() - 2.326)));
     }
-    if (y < 0.753){
-      return new Pose2d(2.326, 0.753, new Rotation2d(Math.atan2(hubCoords.getY() - 0.753, hubCoords.getX() - 2.326)));
+    if (y < 0.753) {
+      return new Pose2d(
+          2.326,
+          0.753,
+          new Rotation2d(Math.atan2(hubCoords.getY() - 0.753, hubCoords.getX() - 2.326)));
     }
-    if (x > 3.322){
-      if (angle > 0){
-        return new Pose2d(3.322, 2.502, new Rotation2d(Math.atan2(hubCoords.getY() - 2.502, hubCoords.getX() - 3.322)));
+    if (x > 3.322) {
+      if (angle > 0) {
+        return new Pose2d(
+            3.322,
+            2.502,
+            new Rotation2d(Math.atan2(hubCoords.getY() - 2.502, hubCoords.getX() - 3.322)));
       }
-      if (angle < 0){
-        return new Pose2d(3.322, 5.522, new Rotation2d(Math.atan2(hubCoords.getY() - 5.522, hubCoords.getX() - 3.322)));
+      if (angle < 0) {
+        return new Pose2d(
+            3.322,
+            5.522,
+            new Rotation2d(Math.atan2(hubCoords.getY() - 5.522, hubCoords.getX() - 3.322)));
       }
     }
     return new Pose2d(x, y, new Rotation2d(angle));
@@ -432,7 +464,7 @@ public class RobotState {
 
   @AutoLogOutput(key = "RobotState/isAllianceRed")
   public static boolean isAllianceRed() {
-    //where true is red and false is blue
+    // where true is red and false is blue
     var alliance = DriverStation.getAlliance();
     if (RobotBase.isReal()) {
       return alliance.get() == DriverStation.Alliance.Red;
@@ -440,31 +472,37 @@ public class RobotState {
     return false;
   }
 
-  public Pose2d getClimbTarget(){
+  public Pose2d getClimbTarget() {
     Pose2d climbLeftPose = DriveConstants.CLIMB_LEFT_POSE;
     Pose2d climbRightPose = DriveConstants.CLIMB_RIGHT_POSE;
-    if (climbRightPose.getTranslation().getDistance(estimatedPose.getTranslation()) <
-        climbLeftPose.getTranslation().getDistance(estimatedPose.getTranslation())){
+    if (climbRightPose.getTranslation().getDistance(estimatedPose.getTranslation())
+        < climbLeftPose.getTranslation().getDistance(estimatedPose.getTranslation())) {
       return climbLeftPose;
-    }else{
+    } else {
       return climbRightPose;
     }
   }
 
-  public boolean isUnderTrench(){
+  public boolean isUnderTrench() {
     Pose2d robotPose = getEstimatedPose();
     Pose2d flippedTrenchPose = FlippingUtil.flipFieldPose(DriveConstants.TRENCH_POSE);
-    boolean underTrench = (
-      (Math.abs(robotPose.getX() - DriveConstants.TRENCH_POSE.getX()) <= DriveConstants.TRENCH_LENGTH &&
-       Math.abs(robotPose.getY() - DriveConstants.TRENCH_POSE.getY()) <= DriveConstants.TRENCH_WIDTH) ||
-      (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) <= DriveConstants.TRENCH_LENGTH &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) <= DriveConstants.TRENCH_WIDTH) ||
-      (Math.abs(robotPose.getX() - DriveConstants.TRENCH_POSE.getX()) <= DriveConstants.TRENCH_WIDTH &&
-       Math.abs(robotPose.getY() - flippedTrenchPose.getY()) <= DriveConstants.TRENCH_LENGTH) ||
-      (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) <= DriveConstants.TRENCH_WIDTH &&
-       Math.abs(robotPose.getY() - DriveConstants.TRENCH_POSE.getY()) <= DriveConstants.TRENCH_LENGTH));
+    boolean underTrench =
+        ((Math.abs(robotPose.getX() - DriveConstants.TRENCH_POSE.getX())
+                    <= DriveConstants.TRENCH_LENGTH
+                && Math.abs(robotPose.getY() - DriveConstants.TRENCH_POSE.getY())
+                    <= DriveConstants.TRENCH_WIDTH)
+            || (Math.abs(robotPose.getX() - flippedTrenchPose.getX())
+                    <= DriveConstants.TRENCH_LENGTH
+                && Math.abs(robotPose.getY() - flippedTrenchPose.getY())
+                    <= DriveConstants.TRENCH_WIDTH)
+            || (Math.abs(robotPose.getX() - DriveConstants.TRENCH_POSE.getX())
+                    <= DriveConstants.TRENCH_WIDTH
+                && Math.abs(robotPose.getY() - flippedTrenchPose.getY())
+                    <= DriveConstants.TRENCH_LENGTH)
+            || (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) <= DriveConstants.TRENCH_WIDTH
+                && Math.abs(robotPose.getY() - DriveConstants.TRENCH_POSE.getY())
+                    <= DriveConstants.TRENCH_LENGTH));
     Logger.recordOutput("Swerve/isUnderTrench", underTrench);
     return underTrench;
   }
-
 }
