@@ -1,13 +1,10 @@
 package frc.robot.lib.generic_subsystems.rollers;
 
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -61,13 +58,7 @@ public abstract class GenericRollersIOSim implements GenericRollersIO {
    * @param gravityTypeValue Gravity compensation type
    */
   @Override
-  public void setSlot0(
-      double kP,
-      double kI,
-      double kD,
-      double kS,
-      double kV,
-      double kA) {
+  public void setSlot0(double kP, double kI, double kD, double kS, double kV, double kA) {
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
@@ -75,7 +66,6 @@ public abstract class GenericRollersIOSim implements GenericRollersIO {
     gainsConfig.kS = kS;
     gainsConfig.kV = kV;
     gainsConfig.kA = kA;
-    
 
     talon.getConfigurator().apply(gainsConfig);
   }

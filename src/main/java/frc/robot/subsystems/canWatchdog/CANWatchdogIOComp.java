@@ -94,6 +94,7 @@ public class CANWatchdogIOComp implements CANWatchdogIO {
       }
     }
   }
+
   /**
    * Sleep that handles interrupts and uses an int. Don't do this please?
    *

@@ -69,8 +69,6 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
     return this;
   }
 
-  
-
   /**
    * Voltage applied to the motor during zeroing.
    *
@@ -116,7 +114,7 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
     this.zeroingOffset = zeroingOffset;
     return this;
   }
-  
+
   /** Sensor discontinuity */
   public double sensorDiscontinuityPoint = 0.5;
 
@@ -163,7 +161,8 @@ public class GenericSuperstructureConfiguration extends GenericMechanismConfigur
   }
 
   @Override
-  public GenericSuperstructureConfiguration withCANCoderDirection(SensorDirectionValue canCoderDirection) {
+  public GenericSuperstructureConfiguration withCANCoderDirection(
+      SensorDirectionValue canCoderDirection) {
     super.withCANCoderDirection(canCoderDirection);
     return this;
   }
