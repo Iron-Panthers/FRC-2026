@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve;
 import static frc.robot.subsystems.swerve.DriveConstants.HEADING_CONTROLLER_CONSTANTS;
 import static frc.robot.subsystems.swerve.DriveConstants.KINEMATICS;
 
-import com.ctre.phoenix6.swerve.SwerveModule;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,7 +12,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -25,8 +23,6 @@ import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
 import frc.robot.subsystems.swerve.controllers.translation.PIDAutoAlignController;
 import frc.robot.subsystems.swerve.controllers.translation.TeleopTranslationController;
 import java.util.Arrays;
-import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -114,7 +110,12 @@ public class Drive extends SubsystemBase {
         }
       }
       case TRAJECTORY -> {
-        Logger.recordOutput("Swerve/DistanceFromSetpoint", RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(targetPosition.getTranslation()));
+        Logger.recordOutput(
+            "Swerve/DistanceFromSetpoint",
+            RobotState.getInstance()
+                .getEstimatedPose()
+                .getTranslation()
+                .getDistance(targetPosition.getTranslation()));
         targetSpeeds = trajectorySpeeds;
         if (headingController != null && isScoped) {
           // 0.d0001 to make the wheels stop in a diamond shape instead of straight so they do not
@@ -141,7 +142,7 @@ public class Drive extends SubsystemBase {
     RobotState.getInstance().addRobotSpeeds(getRobotSpeeds());
     // run modules
     /* use kinematics to get desired module states */
-    if (driveMode != DriveModes.DEFENSE){
+    if (driveMode != DriveModes.DEFENSE) {
       ChassisSpeeds discretizedSpeeds =
           ChassisSpeeds.discretize(targetSpeeds, Constants.PERIODIC_LOOP_SEC);
 
@@ -156,7 +157,7 @@ public class Drive extends SubsystemBase {
 
       Logger.recordOutput("Swerve/ModuleTargetStates", moduleTargetStates);
     }
-    
+
     Logger.recordOutput("Swerve/TargetSpeeds", targetSpeeds);
     Logger.recordOutput("Swerve/DriveMode", driveMode);
     Logger.recordOutput(
@@ -176,9 +177,9 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  public void setDefenseMode(){
-      driveMode = DriveModes.DEFENSE;
-    }
+  public void setDefenseMode() {
+    driveMode = DriveModes.DEFENSE;
+  }
 
   public void driveTeleopController(double xAxis, double yAxis, double omega, double acceleration) {
     if (DriverStation.isTeleopEnabled()) {
@@ -207,13 +208,11 @@ public class Drive extends SubsystemBase {
 
   public void smartZeroGyro() {
     gyroYawOffset =
-        gyroInputs
-            .yawPosition
-            .minus(
-                RobotState.isAllianceRed()
-                    ? FlippingUtil.flipFieldRotation(
-                        RobotState.getInstance().getEstimatedPose().getRotation())
-                    : RobotState.getInstance().getEstimatedPose().getRotation());
+        gyroInputs.yawPosition.minus(
+            RobotState.isAllianceRed()
+                ? FlippingUtil.flipFieldRotation(
+                    RobotState.getInstance().getEstimatedPose().getRotation())
+                : RobotState.getInstance().getEstimatedPose().getRotation());
   }
 
   @AutoLogOutput(key = "Swerve/ModuleStates")
@@ -249,12 +248,11 @@ public class Drive extends SubsystemBase {
     headingController.setScoped(scoped);
   }
 
-
   public void clearHeadingControl() {
     headingController = null;
   }
 
-  public void setTargetPosition(Pose2d targetPosition){
+  public void setTargetPosition(Pose2d targetPosition) {
     this.targetPosition = targetPosition;
   }
 
@@ -315,7 +313,7 @@ public class Drive extends SubsystemBase {
   public boolean isPIDAutoAlign() {
     return driveMode == DriveModes.AUTO_ALIGN;
   }
-  
+
   public boolean isHeadingCorrect() {
     return headingController == null || headingController.atTarget();
   }

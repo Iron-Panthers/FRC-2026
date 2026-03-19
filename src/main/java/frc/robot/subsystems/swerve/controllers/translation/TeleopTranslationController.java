@@ -52,7 +52,9 @@ public class TeleopTranslationController extends BaseTranslationController {
   public ChassisSpeeds update() {
     Translation2d linearVelocity = calculateLinearVelocity(controllerX, controllerY);
     double omega = MathUtil.applyDeadband(controllerOmega, 0.001);
-    omega = Math.copySign(Math.pow(Math.abs(omega), SmartDashboard.getNumber("Turning Sensitivity", 1.5)), omega);
+    omega =
+        Math.copySign(
+            Math.pow(Math.abs(omega), SmartDashboard.getNumber("Turning Sensitivity", 1.5)), omega);
 
     // acceleration limiting
     Translation2d linearVelocityDiff = linearVelocity.minus(pastLinearVelocity);

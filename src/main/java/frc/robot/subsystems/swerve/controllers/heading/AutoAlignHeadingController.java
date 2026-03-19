@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.subsystems.swerve.DriveConstants;
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
 
 public class AutoAlignHeadingController extends BaseHeadingController {
@@ -25,19 +24,15 @@ public class AutoAlignHeadingController extends BaseHeadingController {
     setTargetHeading(targetHeading, 0, DriveConstants.ROTATION_FINISH_PERCENT);
   }
 
-  public void setTargetHeading(
-      Rotation2d targetHeading, double t, double rotationFinishPercent) {
+  public void setTargetHeading(Rotation2d targetHeading, double t, double rotationFinishPercent) {
     super.setTargetHeading(targetHeading);
     double a = HEADING_CONTROLLER_CONSTANTS.maxAcceleration();
     double v = HEADING_CONTROLLER_CONSTANTS.maxVelocity();
     t = rotationFinishPercent * t;
-    double d = Math.abs(super.getHeadingSupplier()
-              .get()
-              .minus(targetHeading).getRadians());
+    double d = Math.abs(super.getHeadingSupplier().get().minus(targetHeading).getRadians());
     if (a != 0 && v != 0) {
-      if ((t*t)-(4/a)*d 
-      > 0){
-        v = (-t+Math.sqrt((t*t)-(4/a)*d))/(-2/a);
+      if ((t * t) - (4 / a) * d > 0) {
+        v = (-t + Math.sqrt((t * t) - (4 / a) * d)) / (-2 / a);
       }
     } else {
       System.out.println("AutoAlignHeadingController: max velocity or acceleration is set to 0");
