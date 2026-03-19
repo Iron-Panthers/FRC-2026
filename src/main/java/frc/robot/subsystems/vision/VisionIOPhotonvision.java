@@ -7,7 +7,6 @@ import java.util.stream.IntStream;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -19,8 +18,7 @@ public class VisionIOPhotonvision implements VisionIO {
     camera = new PhotonCamera(name);
     estimator =
         new PhotonPoseEstimator(
-            VisionConstants.APRIL_TAG_FIELD_LAYOUT,
-            VisionConstants.CAMERA_TRANSFORM[index]);
+            VisionConstants.APRIL_TAG_FIELD_LAYOUT, VisionConstants.CAMERA_TRANSFORM[index]);
   }
 
   @Override

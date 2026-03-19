@@ -1,21 +1,19 @@
 package frc.robot.subsystems.climb.climb_deploy_pivot;
 
-import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.subsystems.climb.*;
+import org.littletonrobotics.junction.Logger;
 
-
-public class ClimbDeployPivot extends GenericSuperstructure<ClimbDeployPivot.ClimbDeployPivotTarget> { //FIX
-  public enum ClimbDeployPivotTarget implements GenericSuperstructure.PositionTarget { 
+public class ClimbDeployPivot
+    extends GenericSuperstructure<ClimbDeployPivot.ClimbDeployPivotTarget> { // FIX
+  public enum ClimbDeployPivotTarget implements GenericSuperstructure.PositionTarget {
     // IN ROTATIONS
     STOW(-0.02),
     DEPLOY(1.0),
     L1(1.0),
     L2(1.0),
     L3(1.0);
-    //stow deploy l1 l2 l3
+    // stow deploy l1 l2 l3
 
     private double position = 0;
     private static final double EPSILON = ClimbDeployPivotConstants.POSITION_TARGET_EPSILON;
@@ -45,6 +43,7 @@ public class ClimbDeployPivot extends GenericSuperstructure<ClimbDeployPivot.Cli
     super.periodic();
 
     Logger.recordOutput(
-        "Superstructure/ClimbDeployPivot/PositionTargetRotations", getPositionTarget().getPosition() / 360d);
+        "Superstructure/ClimbDeployPivot/PositionTargetRotations",
+        getPositionTarget().getPosition() / 360d);
   }
 }

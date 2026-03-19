@@ -11,8 +11,8 @@ import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 
 /**
- * Deploys the intake to pick up game pieces. Stows climb, sequences intake
- * deploy then intake, idles the shooter, and sets hopper to slow.
+ * Deploys the intake to pick up game pieces. Stows climb, sequences intake deploy then intake,
+ * idles the shooter, and sets hopper to slow.
  */
 public class IntakeCommand extends SequentialCommandGroup {
   public IntakeCommand(
@@ -21,7 +21,8 @@ public class IntakeCommand extends SequentialCommandGroup {
       ShooterController shooterController,
       HopperController hopperController) {
     addCommands(
-        climbController.setTargetStateCommand(ClimbState.STOW)
+        climbController
+            .setTargetStateCommand(ClimbState.STOW)
             .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE_DOWN))
             .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))
             .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE))

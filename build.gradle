@@ -1,6 +1,64 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2026.2.1"
+    id "com.diffplug.spotless" version "8.4.0"
+}
+
+// ---------------------------------------------------------------------------
+// Spotless – Java formatting
+//
+//   ./gradlew spotlessApply   – auto-fix all files
+//   ./gradlew spotlessCheck   – CI-friendly check (fails on violations)
+//
+// Customise the rules below to match your team's style.  Every option is
+// commented so you can tweak, add, or remove steps without leaving Gradle.
+// ---------------------------------------------------------------------------
+spotless {
+    java {
+        // Which files to format (defaults to java sourcesets, so usually fine)
+        target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+        targetExclude '**/BuildConstants.java', '**/generated/**'
+
+        // ---- Import ordering ----
+        // Groups are separated by blank lines.  Use '|' to join groups
+        // *without* a blank line.  Prefix with '\\#' for static imports.
+        // An empty string '' means "everything else".
+        importOrder('com', 'edu', 'frc', 'java', 'javax', 'org', '', '\\#')
+        removeUnusedImports()
+
+        // ---- Code formatting engine ----
+        // google-java-format: opinionated, deterministic, zero-config.
+        //   .aosp()              → 4-space indent (Android style) instead of 2
+        //   .reflowLongStrings() → break long string literals
+        //   .formatJavadoc(false)→ leave Javadoc untouched
+        //   .reorderImports(false)→ let importOrder() handle imports instead
+        googleJavaFormat()
+            .reflowLongStrings()
+            .reorderImports(false)
+
+        // ---- Annotations ----
+        // Ensures type annotations (@Nullable, etc.) stay on the same line
+        // as the type they qualify.
+        formatAnnotations()
+
+        // ---- Trailing whitespace & final newline ----
+        trimTrailingWhitespace()
+        endWithNewline()
+
+        // ---- Escape hatch ----
+        // Wrap any hand-formatted block with:
+        //   // spotless:off
+        //   ...
+        //   // spotless:on
+        toggleOffOn()
+
+        // custom 'no johns', { text ->
+        //     if (text =~ /john/) {
+        //         throw new AssertionError('Johns are not allowed')
+        //     }
+        //     return text
+        // }
+    }
 }
 
 java {

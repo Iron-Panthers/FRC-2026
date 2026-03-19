@@ -1,19 +1,18 @@
 package frc.robot.subsystems.intake.intakePivot;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
-import frc.robot.subsystems.intake.intakePivot.IntakePivotConstants;
 import frc.robot.utility.LoggableMechanism3d;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
-public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget> implements LoggableMechanism3d {
+public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget>
+    implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(-5), 
+    INTAKE(-5),
     MED_STOW(60),
     HIGH_MED_STOW(20),
     STOW(83);
@@ -47,8 +46,7 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
   public void periodic() {
     super.periodic();
     Logger.recordOutput(
-        "Intake/IntakePivot/PositionTargetRotations",
-        getPositionTarget().getPosition());
+        "Intake/IntakePivot/PositionTargetRotations", getPositionTarget().getPosition());
   }
 
   @Override
@@ -77,7 +75,6 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
         .plus(IntakePivotConstants.BASE_TO_INTAKE_PIVOT_TRANSFORM)
         .plus(
             new Transform3d(
-                Translation3d.kZero, new Rotation3d(0, Math.toRadians(getPosition()*360), 0)));
+                Translation3d.kZero, new Rotation3d(0, Math.toRadians(getPosition() * 360), 0)));
   }
 }
-

@@ -1,4 +1,5 @@
 package frc.robot.subsystems.hopper.Hopper;
+
 import static frc.robot.subsystems.hopper.Hopper.HopperConstants.*;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -6,22 +7,24 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.lib.generic_subsystems.rollers.*;
+
 public class HopperIOSim extends GenericRollersIOSim {
-private final FlywheelSim hopperSim;
+  private final FlywheelSim hopperSim;
 
   public HopperIOSim() {
-    super(HOPPER_CONFIG.motorID(), CURRENT_LIMIT_AMPS, HOPPER_CONFIG.inverted(), HOPPER_CONFIG.brake(), HOPPER_CONFIG.reduction());
-    super.setSlot0(
-            GAINS.kP(),
-            GAINS.kI(),
-            GAINS.kD(),
-            GAINS.kS(),
-            GAINS.kV(),
-            GAINS.kA()
-    );
+    super(
+        HOPPER_CONFIG.motorID(),
+        CURRENT_LIMIT_AMPS,
+        HOPPER_CONFIG.inverted(),
+        HOPPER_CONFIG.brake(),
+        HOPPER_CONFIG.reduction());
+    super.setSlot0(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
     hopperSim =
         new FlywheelSim(
-            LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), PHYSICAL_CONSTANTS.momentOfIntertia(), HOPPER_CONFIG.reduction()),
+            LinearSystemId.createFlywheelSystem(
+                DCMotor.getKrakenX60Foc(1),
+                PHYSICAL_CONSTANTS.momentOfIntertia(),
+                HOPPER_CONFIG.reduction()),
             DCMotor.getKrakenX60Foc(1));
   }
 
@@ -52,5 +55,3 @@ private final FlywheelSim hopperSim;
     inputs.supplyCurrentAmps = 1.0; // Not simulated
   }
 }
-
-

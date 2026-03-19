@@ -2,12 +2,11 @@ package frc.robot.subsystems.climb.climb_deploy_pivot;
 
 import static frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotConstants.*;
 
-import com.ctre.phoenix6.controls.VoltageOut;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOTalonFX;
-import org.littletonrobotics.junction.AutoLogOutput;
 
-public class ClimbDeployPivotIOTalonFX extends GenericSuperstructureIOTalonFX implements ClimbDeployPivotIO {
+public class ClimbDeployPivotIOTalonFX extends GenericSuperstructureIOTalonFX
+    implements ClimbDeployPivotIO {
 
   public ClimbDeployPivotIOTalonFX() {
     super(

@@ -1,24 +1,23 @@
 package frc.robot.subsystems.climb.climb_claw_pivot;
 
-import org.littletonrobotics.junction.Logger;
-
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.subsystems.climb.*;
+import org.littletonrobotics.junction.Logger;
 
-
-public class ClimbClawPivot extends GenericSuperstructure<ClimbClawPivot.ClimbClawPivotTarget> { //FIX
-  public enum ClimbClawPivotTarget implements GenericSuperstructure.PositionTarget { 
+public class ClimbClawPivot
+    extends GenericSuperstructure<ClimbClawPivot.ClimbClawPivotTarget> { // FIX
+  public enum ClimbClawPivotTarget implements GenericSuperstructure.PositionTarget {
     STOW(-0.02),
     DEPLOY(1.0),
     L1(1.0),
     L2(1.0),
     L3(1.0);
 
-    //stow deploy l1 l2 l3
+    // stow deploy l1 l2 l3
 
     private double position = 0;
     private static final double EPSILON = ClimbClawPivotConstants.POSITION_TARGET_EPSILON;
-    
+
     private ClimbClawPivotTarget(double position) {
       this.position = position;
     }
