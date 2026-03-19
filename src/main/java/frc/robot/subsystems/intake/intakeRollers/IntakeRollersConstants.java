@@ -1,7 +1,5 @@
 package frc.robot.subsystems.intake.intakeRollers;
 
-import com.ctre.phoenix6.signals.InvertedValue;
-
 import frc.robot.Constants;
 import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
 
@@ -9,13 +7,16 @@ public class IntakeRollersConstants {
   // MOTOR AND SENSOR CONFIGURATION
   public static final IntakeRollerConfig INTAKE_ROLLER_CONFIG =
       switch (Constants.getRobotType()) {
-        case SIM -> new IntakeRollerConfig(
-            CAN.at(64, "Intake Roller"), CAN.at(65, "Intake Roller 2"), 2, false, true); 
-        case COMP -> new IntakeRollerConfig(
-            CAN.at(43, "Intake Roller"), CAN.at(10, "Intake Roller 2"), 2, true, false);
-        default -> new IntakeRollerConfig(
-            CAN.at(0, "Intake Roller"), CAN.at(0, "Intake Roller 2"), 2, false, true); 
-    };
+        case SIM ->
+            new IntakeRollerConfig(
+                CAN.at(64, "Intake Roller"), CAN.at(65, "Intake Roller 2"), 2, false, true);
+        case COMP ->
+            new IntakeRollerConfig(
+                CAN.at(43, "Intake Roller"), CAN.at(10, "Intake Roller 2"), 2, true, false);
+        default ->
+            new IntakeRollerConfig(
+                CAN.at(0, "Intake Roller"), CAN.at(0, "Intake Roller 2"), 2, false, true);
+      };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
   public static final PIDGains GAINS =
@@ -25,9 +26,7 @@ public class IntakeRollersConstants {
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
-  
   public static final boolean OPPOSE_MOTOR = true;
-
 
   // CURRENT LIMITS
   public static final double UPPER_VOLT_LIMIT = 12;
@@ -48,6 +47,5 @@ public class IntakeRollersConstants {
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
 
-  public static record IntakeRollerPhysicalConstants(
-      double momentOfInertia) {}
+  public static record IntakeRollerPhysicalConstants(double momentOfInertia) {}
 }
