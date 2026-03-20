@@ -66,10 +66,11 @@ public abstract class BaseHeadingController {
   }
 
   public boolean atTarget() {
-    return hasReachedTarget = epsilonEquals(
-        headingSupplier.get().getRadians(),
-        controller.getGoal().position,
-        HEADING_CONTROLLER_CONSTANTS.tolerance() * (hasReachedTarget ? 4 : 1));
+    return hasReachedTarget =
+        epsilonEquals(
+            headingSupplier.get().getRadians(),
+            controller.getGoal().position,
+            HEADING_CONTROLLER_CONSTANTS.tolerance() * (hasReachedTarget ? 4 : 1));
   }
 
   protected boolean epsilonEquals(double a, double b, double epsilon) {

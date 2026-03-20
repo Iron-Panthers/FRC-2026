@@ -1,5 +1,7 @@
 package frc.robot.subsystems.intake.intakeRollers;
 
+import static frc.robot.subsystems.intake.intakeRollers.IntakeRollersConstants.*;
+
 import com.ctre.phoenix6.sim.ChassisReference;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -8,37 +10,39 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIOSim;
-import static frc.robot.subsystems.intake.intakeRollers.IntakeRollersConstants.*;
 
 public class IntakeRollersIOSim extends GenericRollersIOSim implements IntakeRollersIO {
-    private final FlywheelSim intakeRollersSim;
-    private final SimpleMotorFeedforward feedforward;
-    private double rotorPositionRotations = 0.0;
-    private double velocitySetpointRPS = 0.0;
+  private final FlywheelSim intakeRollersSim;
+  private final SimpleMotorFeedforward feedforward;
+  private double rotorPositionRotations = 0.0;
+  private double velocitySetpointRPS = 0.0;
 
   public IntakeRollersIOSim() {
-    super(INTAKE_ROLLER_CONFIG.motorID(), CURRENT_LIMIT_AMPS, INTAKE_ROLLER_CONFIG.inverted(), INTAKE_ROLLER_CONFIG.brake(), INTAKE_ROLLER_CONFIG.reduction());
-    super.setSlot0(
-        GAINS.kP(),
-        GAINS.kI(),
-        GAINS.kD(),
-        GAINS.kS(),
-        GAINS.kV(),
-        GAINS.kA());
-    
+    super(
+        INTAKE_ROLLER_CONFIG.motorID(),
+        CURRENT_LIMIT_AMPS,
+        INTAKE_ROLLER_CONFIG.inverted(),
+        INTAKE_ROLLER_CONFIG.brake(),
+        INTAKE_ROLLER_CONFIG.reduction());
+    super.setSlot0(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
+
     // Create feedforward controller using configured gains
     feedforward = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());
-    
+
     intakeRollersSim =
         new FlywheelSim(
-            LinearSystemId.createFlywheelSystem(DCMotor.getKrakenX60Foc(1), PHYSICAL_CONSTANTS.momentOfInertia(), INTAKE_ROLLER_CONFIG.reduction()),
+            LinearSystemId.createFlywheelSystem(
+                DCMotor.getKrakenX60Foc(1),
+                PHYSICAL_CONSTANTS.momentOfInertia(),
+                INTAKE_ROLLER_CONFIG.reduction()),
             DCMotor.getKrakenX60Foc(1));
-    
+
     // Enable physics simulation for Phoenix
     var simState = talon.getSimState();
-    simState.Orientation = INTAKE_ROLLER_CONFIG.inverted() 
-        ? ChassisReference.Clockwise_Positive 
-        : ChassisReference.CounterClockwise_Positive;
+    simState.Orientation =
+        INTAKE_ROLLER_CONFIG.inverted()
+            ? ChassisReference.Clockwise_Positive
+            : ChassisReference.CounterClockwise_Positive;
     simState.setMotorType(TalonFXSimState.MotorType.KrakenX60);
   }
 
@@ -51,7 +55,7 @@ public class IntakeRollersIOSim extends GenericRollersIOSim implements IntakeRol
   @Override
   public void updateInputs(GenericRollersIOInputs inputs) {
     double currentVelocityRPS = intakeRollersSim.getAngularVelocityRadPerSec() / (2.0 * Math.PI);
-    
+
     // Set TalonFX sim state
     talon.getSimState().setSupplyVoltage(RobotController.getBatteryVoltage());
     talon.getSimState().setRawRotorPosition(rotorPositionRotations);

@@ -1,8 +1,8 @@
 package frc.robot.subsystems.swerve.controllers.translation;
 
-import static frc.robot.subsystems.swerve.DriveConstants.PID_AUTOALIGN_CONSTANTS;
 import static frc.robot.subsystems.swerve.DriveConstants.AUTOALIGN_POSITION_DEADBAND;
 import static frc.robot.subsystems.swerve.DriveConstants.AUTOALIGN_VELOCITY_DEADBAND;
+import static frc.robot.subsystems.swerve.DriveConstants.PID_AUTOALIGN_CONSTANTS;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -51,6 +51,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
     magController.disableContinuousInput();
     magController.setTolerance(0, 0);
   }
+
   // calculate how to get to the desired position
   public void calculateLinearMovement() {
     double currToTargDy = positionSupplier.get().getY() - targetPosition.getY();
@@ -129,8 +130,10 @@ public class PIDAutoAlignController extends BaseTranslationController {
     calculateLinearMovement();
     Logger.recordOutput("Swerve/PIDAutoalign/XVel", xVel);
     Logger.recordOutput("Swerve/PIDAutoalign/YVel", yVel);
-    return ChassisSpeeds.fromFieldRelativeSpeeds(-xVel, -yVel, 0, positionSupplier.get().getRotation().plus(Rotation2d.k180deg));
+    return ChassisSpeeds.fromFieldRelativeSpeeds(
+        -xVel, -yVel, 0, positionSupplier.get().getRotation().plus(Rotation2d.k180deg));
   }
+
   // log your data in advantage kit
   public Pose2d getTargetPosition() {
     return targetPosition;
@@ -177,9 +180,8 @@ public class PIDAutoAlignController extends BaseTranslationController {
   }
 
   public boolean atTarget() {
-    return hasReachedTarget = positionSupplier
-      .get().getTranslation()
-      .getDistance(targetPosition.getTranslation()) 
-        < PID_AUTOALIGN_CONSTANTS.tolerance() * (hasReachedTarget ? 4 : 1);
+    return hasReachedTarget =
+        positionSupplier.get().getTranslation().getDistance(targetPosition.getTranslation())
+            < PID_AUTOALIGN_CONSTANTS.tolerance() * (hasReachedTarget ? 4 : 1);
   }
 }

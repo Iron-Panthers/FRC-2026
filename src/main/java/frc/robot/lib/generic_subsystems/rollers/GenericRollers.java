@@ -2,7 +2,6 @@ package frc.robot.lib.generic_subsystems.rollers;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheelConstants;
-
 import org.littletonrobotics.junction.Logger;
 
 public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
@@ -39,7 +38,9 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     Logger.processInputs(name, inputs);
 
     rollerIO.runVelocity(useManualVelocity ? manualVelocityRPS : velocityTarget.getVelocity());
-    Logger.recordOutput(name + "/Manual Target", manualVelocityRPS * ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
+    Logger.recordOutput(
+        name + "/Manual Target",
+        manualVelocityRPS * ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
     Logger.recordOutput(name + "/Target", velocityTarget.toString());
     Logger.recordOutput(name + "/Target Velocity", velocityTarget.getVelocity());
 
@@ -55,7 +56,6 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
         rollerIO.stop();
       }
     }
-
   }
 
   public G getVelocityTarget() {
