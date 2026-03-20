@@ -12,12 +12,12 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywheelTarget>{
     public enum ShooterFlywheelTarget implements GenericRollers.VelocityTarget {
-        //TODO: need to change; from sprint 2025 -- ive taken away a few states
         IDLE(0),
         SHOOT(RobotBase.isReal() ? 8.6 : 8.6),
         SPEEDY_SHOOT(9); // TODO: make this uniform
 
         private double velocity;
+        private double supplyCurrentLimit;
 
         /** Input velocity in meters per second */
         private ShooterFlywheelTarget(double velocity) {
@@ -27,6 +27,10 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
         /** Velocity in rotations per second */
         public double getVelocity() {
             return velocity;
+        }
+
+        public double getSupplyCurrentLimit(){
+            return supplyCurrentLimit;
         }
     }
 
@@ -40,8 +44,10 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
     }
 
     /** Set flywheel to an arbitrary surface speed (m/s) from the LUT, bypassing the enum targets. */
-    public void setVelocityManual(LinearVelocity velocity) {
-        setVelocityTargetManual(ShooterFlywheelConstants.VELOCITY_ADJUSTMENT + velocity.in(MetersPerSecond) / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
+    public void setVelocityManual(LinearVelocity velocity, double supplyCurrentAmps) {
+        setVelocityTargetManual(ShooterFlywheelConstants.VELOCITY_ADJUSTMENT + 
+            velocity.in(MetersPerSecond) / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters(), 
+            supplyCurrentAmps);
     }
 
     public boolean reachedVelocityTargetManual(){

@@ -10,6 +10,7 @@ public class Hopper extends GenericRollers<Hopper.HopperTarget>{
         INTAKE(20);
 
         private double velocity;
+        private double supplyCurrentLimit;
 
         private HopperTarget(double velocity) {
             this.velocity = velocity;
@@ -19,6 +20,10 @@ public class Hopper extends GenericRollers<Hopper.HopperTarget>{
         public double getVelocity() {
             return velocity;
         } 
+        
+        public double getSupplyCurrentLimit(){
+            return supplyCurrentLimit;
+        }
     }
 
     public Hopper(GenericRollersIO IntakeRollersIO){

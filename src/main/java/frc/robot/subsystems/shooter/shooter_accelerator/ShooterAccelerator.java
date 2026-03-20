@@ -12,6 +12,7 @@ public class ShooterAccelerator extends GenericRollers<ShooterAccelerator.Shoote
         CLIMB(0);
 
         private double velocity;
+        private double supplyCurrentLimit;
 
         private ShooterAcceleratorTarget(double velocity) {
             this.velocity = velocity;
@@ -19,6 +20,10 @@ public class ShooterAccelerator extends GenericRollers<ShooterAccelerator.Shoote
 
         public double getVelocity() {
             return velocity;
+        }
+        
+        public double getSupplyCurrentLimit(){
+            return supplyCurrentLimit;
         }
     }
 
