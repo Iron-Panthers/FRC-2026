@@ -19,6 +19,8 @@ import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel.ShooterOmniwheelTarget;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+import frc.robot.subsystems.shooter.serializer.Serializer;
+import frc.robot.subsystems.shooter.serializer.Serializer.SerializerTarget;
 
 public class ShooterController extends SubsystemBase {
   public enum ShooterState {
@@ -28,54 +30,68 @@ public class ShooterController extends SubsystemBase {
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.IDLE,
         ShooterAcceleratorTarget.IDLE,
-        ShooterOmniwheelTarget.IDLE),
+        ShooterOmniwheelTarget.IDLE,
+        SerializerTarget.IDLE),
     /** shoot: spinning to shoot */
     SHOOT(
         ShooterHoodTarget.SHOOT_TEMP,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
-        ShooterOmniwheelTarget.SHOOT),
+        ShooterOmniwheelTarget.SHOOT,
+        SerializerTarget.INTAKE),
     /** default_shoot: default shooting position */
     DEFAULT_SHOOT(
         ShooterHoodTarget.DEFAULT_SHOOT,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
-        ShooterOmniwheelTarget.SHOOT),
+        ShooterOmniwheelTarget.SHOOT,
+        SerializerTarget.INTAKE),
     TOTAL_SPIN_UP(
         ShooterHoodTarget.SHOOT_TEMP,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
-        ShooterOmniwheelTarget.IDLE),
+        ShooterOmniwheelTarget.IDLE,
+        SerializerTarget.IDLE),
     COMPACT_SPIN_UP(
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
-        ShooterOmniwheelTarget.IDLE),
+        ShooterOmniwheelTarget.IDLE,
+        SerializerTarget.IDLE),
     ZEROING(
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.IDLE,
         ShooterAcceleratorTarget.IDLE,
-        ShooterOmniwheelTarget.IDLE),
+        ShooterOmniwheelTarget.IDLE,
+        SerializerTarget.IDLE),
     SHUTTLE(
         ShooterHoodTarget.SHUTTLE,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
-        ShooterOmniwheelTarget.SHOOT);
+        ShooterOmniwheelTarget.SHOOT,
+        SerializerTarget.INTAKE);
 
     public final ShooterHoodTarget hoodTarget;
     public final ShooterFlywheelTarget flywheelTarget;
     public final ShooterAcceleratorTarget acceleratorTarget;
     public final ShooterOmniwheelTarget omniwheelTarget;
+    public final SerializerTarget serializerTarget;
 
     private ShooterState(
         ShooterHoodTarget hoodTarget,
         ShooterFlywheelTarget flywheelTarget,
         ShooterAcceleratorTarget acceleratorTarget,
-        ShooterOmniwheelTarget omniwheelTarget) {
+        ShooterOmniwheelTarget omniwheelTarget,
+        SerializerTarget serializerTarget) {
       this.hoodTarget = hoodTarget;
       this.flywheelTarget = flywheelTarget;
       this.acceleratorTarget = acceleratorTarget;
       this.omniwheelTarget = omniwheelTarget;
+      this.serializerTarget = serializerTarget;
+    }
+
+    public SerializerTarget getSerializerTarget() {
+      return serializerTarget;
     }
   }
 
@@ -88,6 +104,7 @@ public class ShooterController extends SubsystemBase {
   private final ShooterHood shooterHood;
   private final ShooterOmniwheel shooterOmniwheel;
   private final ShooterAccelerator shooterAccelerator;
+  private final Serializer serializer;
 
   public LoggedNetworkNumber shooterTemp = new LoggedNetworkNumber("Tuning/ShooterStateTemp", 11);
 
@@ -95,11 +112,13 @@ public class ShooterController extends SubsystemBase {
       ShooterFlywheel shooterFlywheel,
       ShooterHood shooterHood,
       ShooterOmniwheel shooterOmniwheel,
-      ShooterAccelerator shooterAccelerator) {
+      ShooterAccelerator shooterAccelerator,
+      Serializer serializer) {
     this.shooterFlywheel = shooterFlywheel;
     this.shooterHood = shooterHood;
     this.shooterOmniwheel = shooterOmniwheel;
     this.shooterAccelerator = shooterAccelerator;
+    this.serializer = serializer;
   }
 
   @Override
@@ -109,10 +128,12 @@ public class ShooterController extends SubsystemBase {
       shooterFlywheel.setControlMode(ControlMode.STOP);
       shooterOmniwheel.setControlMode(ControlMode.STOP);
       shooterAccelerator.setControlMode(ControlMode.STOP);
+      serializer.setControlMode(ControlMode.STOP);
     } else if (shooterHood.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
       shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
       shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
       shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+      //TODO:should we set the state of serializer to target?
     } else if ((targetState == ShooterState.SHOOT
         || targetState == ShooterState.TOTAL_SPIN_UP
         || targetState == ShooterState.DEFAULT_SHOOT)) {
@@ -158,6 +179,7 @@ public class ShooterController extends SubsystemBase {
     shooterHood.periodic();
     shooterOmniwheel.periodic();
     shooterAccelerator.periodic();
+    serializer.periodic();
 
     Logger.recordOutput("Shooter/TargetState", targetState);
     Logger.recordOutput("Shooter/IsStopped", stopped);
