@@ -1,17 +1,17 @@
-package frc.robot.subsystems.hopper.Hopper;
+package frc.robot.subsystems.shooter.serializer;
 
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIO;
 
-public class Hopper extends GenericRollers<Hopper.HopperTarget> {
-  public enum HopperTarget implements GenericRollers.VelocityTarget {
+public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
+  public enum SerializerTarget implements GenericRollers.VelocityTarget {
     IDLE(0),
     SLOW(0),
     INTAKE(20);
 
     private double velocity;
 
-    private HopperTarget(double velocity) {
+    private SerializerTarget(double velocity) {
       this.velocity = velocity;
     }
 
@@ -21,7 +21,7 @@ public class Hopper extends GenericRollers<Hopper.HopperTarget> {
     }
   }
 
-  public Hopper(GenericRollersIO IntakeRollersIO) {
-    super("Hopper", IntakeRollersIO);
+  public Serializer(GenericRollersIO IntakeRollersIO) {
+    super("Serializer", IntakeRollersIO);
   }
 }

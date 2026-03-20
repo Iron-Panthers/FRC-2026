@@ -1,6 +1,6 @@
-package frc.robot.subsystems.hopper.Hopper;
+package frc.robot.subsystems.shooter.serializer;
 
-import static frc.robot.subsystems.hopper.Hopper.HopperConstants.*;
+import static frc.robot.subsystems.shooter.serializer.SerializerConstants.*;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -8,23 +8,23 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.lib.generic_subsystems.rollers.*;
 
-public class HopperIOSim extends GenericRollersIOSim {
-  private final FlywheelSim hopperSim;
+public class SerializerSim extends GenericRollersIOSim {
+  private final FlywheelSim serializerSim;
 
-  public HopperIOSim() {
+  public SerializerSim() {
     super(
-        HOPPER_CONFIG.motorID(),
+        SERIALIZER_CONFIG.motorID(),
         CURRENT_LIMIT_AMPS,
-        HOPPER_CONFIG.inverted(),
-        HOPPER_CONFIG.brake(),
-        HOPPER_CONFIG.reduction());
+        SERIALIZER_CONFIG.inverted(),
+        SERIALIZER_CONFIG.brake(),
+        SERIALIZER_CONFIG.reduction());
     super.setSlot0(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
-    hopperSim =
+    serializerSim =
         new FlywheelSim(
             LinearSystemId.createFlywheelSystem(
                 DCMotor.getKrakenX60Foc(1),
                 PHYSICAL_CONSTANTS.momentOfIntertia(),
-                HOPPER_CONFIG.reduction()),
+                SERIALIZER_CONFIG.reduction()),
             DCMotor.getKrakenX60Foc(1));
   }
 
@@ -36,13 +36,13 @@ public class HopperIOSim extends GenericRollersIOSim {
     double appliedVelocity = talon.getSimState().getMotorVoltage();
 
     // Simulate physics
-    hopperSim.setInputVoltage(appliedVelocity);
-    hopperSim.update(0.02);
+    serializerSim.setInputVoltage(appliedVelocity);
+    serializerSim.update(0.02);
 
     double rotations = 0; // can't really be simulated
 
     // Divides our angular velocity by our reduction
-    double velocityRPS = hopperSim.getAngularVelocityRadPerSec() / HOPPER_CONFIG.reduction();
+    double velocityRPS = serializerSim.getAngularVelocityRadPerSec() / SERIALIZER_CONFIG.reduction();
     // FIXME: Doesn't work when reduction is 1
 
     talon.getSimState().setRawRotorPosition(rotations);

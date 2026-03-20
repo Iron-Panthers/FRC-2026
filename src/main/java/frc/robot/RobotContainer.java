@@ -47,12 +47,6 @@ import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIO;
 import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
-import frc.robot.subsystems.hopper.Hopper.Hopper;
-import frc.robot.subsystems.hopper.Hopper.HopperIO;
-import frc.robot.subsystems.hopper.Hopper.HopperIOSim;
-import frc.robot.subsystems.hopper.Hopper.HopperIOTalonFX;
-import frc.robot.subsystems.hopper.HopperController;
-import frc.robot.subsystems.hopper.HopperController.HopperControllerState;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
 import frc.robot.subsystems.intake.intakePivot.IntakePivot;
@@ -67,6 +61,10 @@ import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
+import frc.robot.subsystems.shooter.serializer.Serializer;
+import frc.robot.subsystems.shooter.serializer.SerializerIO;
+import frc.robot.subsystems.shooter.serializer.SerializerSim;
+import frc.robot.subsystems.shooter.serializer.SerializerIOTalonFX;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIO;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOSim;
@@ -123,8 +121,7 @@ public class RobotContainer {
   private IntakePivot intakePivot;
   private IntakeRollers intakeRollers;
   private IntakeController intakeController;
-  private Hopper hopper;
-  private HopperController hopperController;
+  private Serializer serializer;
   private ShooterFlywheel shooterFlywheels;
   private ShooterHood shooterHood;
   private ShooterController shooterController;
@@ -159,7 +156,7 @@ public class RobotContainer {
           shooterHood = new ShooterHood(new ShooterHoodIOTalonFX());
           shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
           shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
-          hopper = new Hopper(new HopperIOTalonFX());
+          serializer = new Serializer(new SerializerIOTalonFX());
         }
         case VISION -> {
           swerve =
@@ -204,7 +201,7 @@ public class RobotContainer {
           intakePivot = new IntakePivot(new IntakePivotIOSim());
           intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
 
-          hopper = new Hopper(new HopperIOSim());
+          serializer = new Serializer(new SerializerSim());
 
           shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIOSim());
           shooterHood = new ShooterHood(new ShooterHoodIOSim());
@@ -241,9 +238,8 @@ public class RobotContainer {
     if (intakeRollers == null) intakeRollers = new IntakeRollers(new IntakeRollersIO() {});
     intakeController = new IntakeController(intakePivot, intakeRollers);
 
-    // HOPPER
-    if (hopper == null) hopper = new Hopper(new HopperIO() {});
-    hopperController = new HopperController(hopper);
+    // SERIALIZER
+    if (serializer == null) serializer = new Serializer(new SerializerIO() {});
 
     // SHOOTER
     if (shooterFlywheels == null)
@@ -254,7 +250,7 @@ public class RobotContainer {
     if (shooterAccelerator == null)
       shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIO() {});
     shooterController =
-        new ShooterController(shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator);
+        new ShooterController(shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator, serializer);
 
     // init climb
     if (climbClawPivot == null) {
@@ -299,7 +295,6 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP);
-                  hopperController.setTargetState(HopperControllerState.INTAKE);
                 }));
     new EventTrigger("Intake mid")
         .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
@@ -309,7 +304,8 @@ public class RobotContainer {
         "Intake down",
         intakeController
             .setTargetStateCommand(IntakeState.INTAKE)
-            .alongWith(hopperController.setTargetStateCommand(HopperControllerState.SLOW)));
+            .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE)));
+            //probably have to change this, come back later
     NamedCommands.registerCommand(
         "Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
     NamedCommands.registerCommand(
@@ -318,22 +314,19 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Spin up shooter",
         shooterController
-            .setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)
-            .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+            .setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
     NamedCommands.registerCommand(
         "Shoot",
         shooterController
-            .setTargetStateCommand(ShooterState.SHOOT)
-            .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE)));
+            .setTargetStateCommand(ShooterState.SHOOT));
     NamedCommands.registerCommand(
         "Stop shooting",
         shooterController
-            .setTargetStateCommand(ShooterState.IDLE)
-            .alongWith(hopperController.setTargetStateCommand(HopperControllerState.IDLE)));
+            .setTargetStateCommand(ShooterState.IDLE));
     NamedCommands.registerCommand(
         "Align to shoot", new AlignToShootCommand(swerve, shooterController));
     NamedCommands.registerCommand(
-        "Shoot full hopper",
+        "Shoot full serializer",
         new InstantCommand(
                 () ->
                     swerve.setTargetHeading(
@@ -356,39 +349,36 @@ public class RobotContainer {
                     () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
 
     NamedCommands.registerCommand(
-        "Auto shoot full hopper",
+        "Auto shoot full serializer",
         new AutoShootCommand(
             swerve,
             shooterController,
-            hopperController,
             intakeController,
             matchTimerUpdater,
             climbController,
             true));
     NamedCommands.registerCommand(
-        "Align and auto shoot full hopper",
+        "Align and auto shoot full serializer",
         new AlignToShootCommand(swerve, shooterController)
             .withDeadline(
                 new AutoShootCommand(
                     swerve,
                     shooterController,
-                    hopperController,
                     intakeController,
                     matchTimerUpdater,
                     climbController,
                     false)));
     NamedCommands.registerCommand(
-        "Auto shoot full hopper (no intake)",
+        "Auto shoot full serializer (no intake)",
         new AutoShootCommand(
             swerve,
             shooterController,
-            hopperController,
             intakeController,
             matchTimerUpdater,
             climbController,
             false));
     NamedCommands.registerCommand(
-        "Shoot preloaded hopper",
+        "Shoot preloaded serializer",
         new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
             .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
             .andThen(new WaitCommand(0.6))
@@ -449,13 +439,13 @@ public class RobotContainer {
         .b()
         .onTrue(
             new IntakeCommand(
-                climbController, intakeController, shooterController, hopperController));
+                climbController, intakeController, shooterController));
     // STOW ROBOT
-    driverA.y().onTrue(new StowCommand(intakeController, shooterController, hopperController));
+    driverA.y().onTrue(new StowCommand(intakeController, shooterController));
 
     // SHOOTING COMMAND
     ShootCommand shootCommand =
-        new ShootCommand(shooterController, hopperController, intakeController, matchTimerUpdater);
+        new ShootCommand(shooterController, intakeController, matchTimerUpdater);
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
 
@@ -496,8 +486,7 @@ public class RobotContainer {
             shooterController
                 .setStoppedCommand(true)
                 .alongWith(intakeController.setStoppedCommand(true))
-                .alongWith(new InstantCommand(() -> climbController.setStopped(true)))
-                .alongWith(hopperController.setTargetStateCommand(HopperControllerState.IDLE)));
+                .alongWith(new InstantCommand(() -> climbController.setStopped(true))));
     driverB
         .a()
         .onTrue(

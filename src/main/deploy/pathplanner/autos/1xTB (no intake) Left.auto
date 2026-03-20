@@ -24,7 +24,7 @@
           "commands" : [ {
             "type" : "named",
             "data" : {
-              "name" : "Auto shoot full hopper (no intake)"
+              "name" : "Auto shoot full serializer (no intake)"
             }
           }, {
             "type" : "named",
@@ -44,7 +44,7 @@
           "commands" : [ {
             "type" : "named",
             "data" : {
-              "name" : "Auto shoot full hopper (no intake)"
+              "name" : "Auto shoot full serializer (no intake)"
             }
           }, {
             "type" : "named",

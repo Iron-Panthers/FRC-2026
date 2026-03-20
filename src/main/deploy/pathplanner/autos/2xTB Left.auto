@@ -21,7 +21,7 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Auto shoot full hopper"
+          "name" : "Auto shoot full serializer"
         }
       }, {
         "type" : "path",
@@ -36,7 +36,7 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Auto shoot full hopper"
+          "name" : "Auto shoot full serializer"
         }
       } ]
     }
