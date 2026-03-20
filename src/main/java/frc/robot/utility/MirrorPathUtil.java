@@ -21,8 +21,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Utility class to mirror PathPlanner paths across the field centerline.
- * FRC field width is 8.21 m, so centerline is at y = 4.105 m.
+ * Utility class to mirror PathPlanner paths across the field centerline. FRC field width is 8.21 m,
+ * so centerline is at y = 4.105 m.
  *
  * <p>Uses Jackson's JsonNode / ObjectNode (tree model) to read and write the path JSON.
  */
@@ -30,38 +30,30 @@ public class MirrorPathUtil {
   private static final double FIELD_WIDTH_METERS = 8.21;
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
-  /**
-   * Mirrors a Y coordinate across the field centerline.
-   */
+  /** Mirrors a Y coordinate across the field centerline. */
   private static double mirrorY(double y) {
     return FIELD_WIDTH_METERS - y;
   }
 
-  /**
-   * Normalizes an angle in degrees to [-180, 180).
-   */
+  /** Normalizes an angle in degrees to [-180, 180). */
   private static double normalizeAngleDeg(double deg) {
     return ((deg + 180) % 360 + 360) % 360 - 180;
   }
 
-  /**
-   * Mirrors a rotation angle across the horizontal centerline.
-   */
+  /** Mirrors a rotation angle across the horizontal centerline. */
   private static double mirrorRotationDeg(double deg) {
     return normalizeAngleDeg(-deg);
   }
 
-  /**
-   * Mirrors a point node (object with "x" and "y") in place.
-   */
+  /** Mirrors a point node (object with "x" and "y") in place. */
   private static void mirrorPointInPlace(ObjectNode point) {
     if (point == null || !point.has("y")) return;
     point.put("y", mirrorY(point.get("y").asDouble()));
   }
 
   /**
-   * Converts a linked waypoint name from the Right path to the Left path form:
-   * e.g. "Shooting Pose Right" -> "Shooting Pose Left"
+   * Converts a linked waypoint name from the Right path to the Left path form: e.g. "Shooting Pose
+   * Right" -> "Shooting Pose Left"
    */
   private static String mirrorLinkedName(String linkedName) {
     if (linkedName == null) return null;
@@ -72,10 +64,10 @@ public class MirrorPathUtil {
   }
 
   /**
-   * Mirrors a PathPlanner path (modifies the given root in place).
-   * When add180 is true (path name ends with "I Right"): rotation targets, point-towards
-   * zones, and ideal starting state are mirrored and rotated 180°; goal end state is only mirrored.
-   * When add180 is false: all rotations are only mirrored (no +180°). Linked waypoints become "___ Left".
+   * Mirrors a PathPlanner path (modifies the given root in place). When add180 is true (path name
+   * ends with "I Right"): rotation targets, point-towards zones, and ideal starting state are
+   * mirrored and rotated 180°; goal end state is only mirrored. When add180 is false: all rotations
+   * are only mirrored (no +180°). Linked waypoints become "___ Left".
    */
   private static void mirrorPathInPlace(ObjectNode root, boolean add180) {
     // Mirror waypoints
@@ -108,12 +100,16 @@ public class MirrorPathUtil {
     if (rotationTargets != null && rotationTargets.isArray()) {
       for (JsonNode rt : rotationTargets) {
         if (rt.isObject() && rt.has("rotationDegrees")) {
-          ((ObjectNode) rt).put("rotationDegrees", mirrorRotationDeg(rt.get("rotationDegrees").asDouble()) + rotationOffset);
+          ((ObjectNode) rt)
+              .put(
+                  "rotationDegrees",
+                  mirrorRotationDeg(rt.get("rotationDegrees").asDouble()) + rotationOffset);
         }
       }
     }
 
-    // Point towards zones: mirror fieldPosition and rotation (+180° only when path ends with "I Right")
+    // Point towards zones: mirror fieldPosition and rotation (+180° only when path ends with "I
+    // Right")
     JsonNode pointTowardsZones = root.get("pointTowardsZones");
     if (pointTowardsZones != null && pointTowardsZones.isArray()) {
       for (JsonNode zone : pointTowardsZones) {
@@ -123,7 +119,9 @@ public class MirrorPathUtil {
             mirrorPointInPlace((ObjectNode) zoneObj.get("fieldPosition"));
           }
           if (zoneObj.has("rotationOffset")) {
-            zoneObj.put("rotationOffset", mirrorRotationDeg(zoneObj.get("rotationOffset").asDouble()) + rotationOffset);
+            zoneObj.put(
+                "rotationOffset",
+                mirrorRotationDeg(zoneObj.get("rotationOffset").asDouble()) + rotationOffset);
           }
         }
       }
@@ -132,22 +130,24 @@ public class MirrorPathUtil {
     // Goal end state: only mirror rotation (no +180°)
     if (root.has("goalEndState") && root.get("goalEndState").isObject()) {
       ObjectNode ges = (ObjectNode) root.get("goalEndState");
-      if (ges.has("rotation")) ges.put("rotation", mirrorRotationDeg(ges.get("rotation").asDouble()));
+      if (ges.has("rotation"))
+        ges.put("rotation", mirrorRotationDeg(ges.get("rotation").asDouble()));
     }
 
     // Ideal starting state (+180° only when path ends with "I Right")
     if (root.has("idealStartingState") && root.get("idealStartingState").isObject()) {
       ObjectNode iss = (ObjectNode) root.get("idealStartingState");
-      if (iss.has("rotation")) iss.put("rotation", mirrorRotationDeg(iss.get("rotation").asDouble()) + rotationOffset);
+      if (iss.has("rotation"))
+        iss.put("rotation", mirrorRotationDeg(iss.get("rotation").asDouble()) + rotationOffset);
     }
 
     root.put("folder", "Left Paths (auto generated)");
   }
 
   /**
-   * Mirrors a single path file: reads the .path file, mirrors it, writes "* Left.path".
-   * Only processes paths that end with " Right". Paths ending with "I Right" get +180° applied
-   * to rotation targets, point-towards zones, and ideal starting state; other Right paths do not.
+   * Mirrors a single path file: reads the .path file, mirrors it, writes "* Left.path". Only
+   * processes paths that end with " Right". Paths ending with "I Right" get +180° applied to
+   * rotation targets, point-towards zones, and ideal starting state; other Right paths do not.
    */
   public static void mirrorPathFile(String inputPath) throws IOException {
     File inputFile = new File(inputPath);
@@ -185,9 +185,7 @@ public class MirrorPathUtil {
     MAPPER.writerWithDefaultPrettyPrinter().writeValue(outputFile, copy);
   }
 
-  /**
-   * Main for Gradle JavaExec: each argument is a path to a .path file.
-   */
+  /** Main for Gradle JavaExec: each argument is a path to a .path file. */
   public static void main(String[] args) {
     if (args.length == 0) {
       System.err.println("Usage: MirrorPathUtil <path-to-.path-file> [ ... ]");

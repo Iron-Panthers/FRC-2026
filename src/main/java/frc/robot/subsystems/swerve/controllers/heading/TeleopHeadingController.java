@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swerve.controllers.heading;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.RobotState;
 import frc.robot.subsystems.swerve.DriveConstants.HeadingControllerConstants;
 import java.util.function.Supplier;
@@ -25,7 +24,7 @@ public class TeleopHeadingController extends BaseHeadingController {
   public double update() {
     if (scoped) {
       // if scoped, set the setpoint to the current heading to prevent rotation
-      setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw().plus(new Rotation2d(Math.toRadians(RobotState.isAllianceRed() ? 0 : 180))));
+      setTargetHeading(RobotState.getInstance().calculateTargetShootingState().drivebaseYaw());
     }
     double output = super.update();
     Logger.recordOutput(

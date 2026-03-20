@@ -1,7 +1,5 @@
 package frc.robot.lib.generic_subsystems.superstructure;
 
-import java.util.ArrayList;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -22,6 +20,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import java.util.ArrayList;
 
 public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
   // Talon FX Motor
@@ -88,7 +87,8 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
               new CANcoderConfiguration()
                   .withMagnetSensor(
                       new MagnetSensorConfigs()
-                          .withAbsoluteSensorDiscontinuityPoint(superstructureConfig.sensorDiscontinuityPoint)
+                          .withAbsoluteSensorDiscontinuityPoint(
+                              superstructureConfig.sensorDiscontinuityPoint)
                           .withSensorDirection(superstructureConfig.canCoderDirection)
                           .withMagnetOffset(superstructureConfig.canCoderOffset)));
       config.Feedback.withRemoteCANcoder(canCoder);
@@ -100,9 +100,11 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
 
     // Initialize follower motors
     followerMotors = new ArrayList<>();
-    for(GenericSuperstructureConfiguration.FollowerMotorConfig followerConfig : superstructureConfig.followerMotors) {
+    for (GenericSuperstructureConfiguration.FollowerMotorConfig followerConfig :
+        superstructureConfig.followerMotors) {
       TalonFX followerTalon = new TalonFX(followerConfig.id());
-      followerTalon.setControl(new Follower(superstructureConfig.id, followerConfig.motorAlignmentValue()));
+      followerTalon.setControl(
+          new Follower(superstructureConfig.id, followerConfig.motorAlignmentValue()));
       followerTalon.setNeutralMode(NeutralModeValue.Brake);
       followerTalon.getConfigurator().apply(config);
       followerMotors.add(followerTalon);

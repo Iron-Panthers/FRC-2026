@@ -1,13 +1,9 @@
 package frc.robot.lib.generic_subsystems.mechanism;
 
-import java.util.ArrayList;
-
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-
-import frc.robot.lib.generic_subsystems.rollers.GenericRollersConfiguration;
-import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
+import java.util.ArrayList;
 
 public abstract class GenericMechanismConfiguration {
 
@@ -201,9 +197,8 @@ public abstract class GenericMechanismConfiguration {
     return this;
   }
 
+  public record FollowerMotorConfig(int id, MotorAlignmentValue motorAlignmentValue) {}
 
-  public record FollowerMotorConfig(int id, MotorAlignmentValue motorAlignmentValue) {
-  }
   public ArrayList<FollowerMotorConfig> followerMotors = new ArrayList<>();
 
   /**
@@ -213,7 +208,8 @@ public abstract class GenericMechanismConfiguration {
    * @param inverted Inversion state of the follower motor
    * @return itself
    */
-  public GenericMechanismConfiguration withAdditionalFollowerMotor(int id, MotorAlignmentValue motorAlignmentValue) {
+  public GenericMechanismConfiguration withAdditionalFollowerMotor(
+      int id, MotorAlignmentValue motorAlignmentValue) {
     this.followerMotors.add(new FollowerMotorConfig(id, motorAlignmentValue));
     return this;
   }

@@ -2,6 +2,4 @@ package frc.robot.subsystems.intake.intakeRollers;
 
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIO;
 
-public interface IntakeRollersIO extends GenericRollersIO {
-    
-}
+public interface IntakeRollersIO extends GenericRollersIO {}

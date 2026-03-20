@@ -1,28 +1,19 @@
 package frc.robot.lib.generic_subsystems.rollers;
 
-import java.util.ArrayList;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-import com.ctre.phoenix6.configs.Slot0Configs;
+import java.util.ArrayList;
 
 public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   protected final TalonFX talon;
@@ -45,8 +36,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     mechanismReduction = rollersConfig.reduction;
 
     config = new TalonFXConfiguration();
-    config.MotorOutput.Inverted =
-        rollersConfig.motorDirection;
+    config.MotorOutput.Inverted = rollersConfig.motorDirection;
     config.MotorOutput.NeutralMode = rollersConfig.neutralMode;
     config.CurrentLimits.SupplyCurrentLimit = rollersConfig.supplyCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -54,9 +44,11 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
 
     // Initialize follower motors
     followerMotors = new ArrayList<>();
-    for(GenericRollersConfiguration.FollowerMotorConfig followerConfig : rollersConfig.followerMotors) {
+    for (GenericRollersConfiguration.FollowerMotorConfig followerConfig :
+        rollersConfig.followerMotors) {
       TalonFX followerTalon = new TalonFX(followerConfig.id());
-      followerTalon.setControl(new Follower(rollersConfig.id, followerConfig.motorAlignmentValue()));
+      followerTalon.setControl(
+          new Follower(rollersConfig.id, followerConfig.motorAlignmentValue()));
       followerTalon.setNeutralMode(rollersConfig.neutralMode);
       followerTalon.getConfigurator().apply(config);
       followerMotors.add(followerTalon);
@@ -67,7 +59,6 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     appliedVolts = talon.getMotorVoltage();
     supplyCurrent = talon.getSupplyCurrent();
     BaseStatusSignal.setUpdateFrequencyForAll(50, position, velocity, appliedVolts, supplyCurrent);
-
 
     talon.optimizeBusUtilization();
   }
@@ -106,13 +97,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
    * @param kG Gravity gain
    */
   @Override
-  public void setSlot0(
-      double kP,
-      double kI,
-      double kD,
-      double kS,
-      double kV,
-      double kA) {
+  public void setSlot0(double kP, double kI, double kD, double kS, double kV, double kA) {
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
@@ -120,7 +105,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     gainsConfig.kS = kS;
     gainsConfig.kV = kV;
     gainsConfig.kA = kA;
-  
+
     talon.getConfigurator().apply(gainsConfig);
   }
   

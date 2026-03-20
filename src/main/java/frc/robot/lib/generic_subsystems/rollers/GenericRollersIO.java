@@ -2,8 +2,6 @@ package frc.robot.lib.generic_subsystems.rollers;
 
 import org.littletonrobotics.junction.AutoLog;
 
-import com.ctre.phoenix6.signals.GravityTypeValue;
-
 public interface GenericRollersIO {
   @AutoLog
   class GenericRollersIOInputs {

@@ -28,8 +28,14 @@ public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTar
             return supplyCurrentLimit;
         }
     }
-    public IntakeRollers(IntakeRollersIO intakeRollersIO) {
-        super("Intake/Intake Rollers", intakeRollersIO);
-        setVelocityTarget(IntakeRollersTarget.IDLE);
+
+    public double getVelocity() {
+      return velocity;
     }
+  }
+
+  public IntakeRollers(IntakeRollersIO intakeRollersIO) {
+    super("Intake/Intake Rollers", intakeRollersIO);
+    setVelocityTarget(IntakeRollersTarget.IDLE);
+  }
 }

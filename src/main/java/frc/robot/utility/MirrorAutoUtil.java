@@ -15,7 +15,6 @@ package frc.robot.utility;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.File;
 import java.io.IOException;
@@ -23,15 +22,13 @@ import java.io.IOException;
 /**
  * Utility class to mirror PathPlanner auto files to use left-side (mirrored) paths.
  *
- * <p>Recursively finds all "path" type commands and updates their pathName to reference
- * the left version (appends " Left" to the path name).
+ * <p>Recursively finds all "path" type commands and updates their pathName to reference the left
+ * version (appends " Left" to the path name).
  */
 public class MirrorAutoUtil {
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
-  /**
-   * Recursively finds and updates all path references in a command structure.
-   */
+  /** Recursively finds and updates all path references in a command structure. */
   private static void mirrorPathsInCommand(JsonNode command) {
     if (command == null || !command.isObject()) return;
 
@@ -69,7 +66,8 @@ public class MirrorAutoUtil {
   }
 
   /**
-   * Mirrors a single auto file: reads the .auto file, updates path references, writes "* Left.auto".
+   * Mirrors a single auto file: reads the .auto file, updates path references, writes "*
+   * Left.auto".
    */
   public static void mirrorAutoFile(String inputPath) throws IOException {
     File inputFile = new File(inputPath);
@@ -108,9 +106,7 @@ public class MirrorAutoUtil {
     MAPPER.writerWithDefaultPrettyPrinter().writeValue(outputFile, copy);
   }
 
-  /**
-   * Main for Gradle JavaExec: each argument is a path to a .auto file.
-   */
+  /** Main for Gradle JavaExec: each argument is a path to a .auto file. */
   public static void main(String[] args) {
     if (args.length == 0) {
       System.err.println("Usage: MirrorAutoUtil <path-to-.auto-file> [ ... ]");

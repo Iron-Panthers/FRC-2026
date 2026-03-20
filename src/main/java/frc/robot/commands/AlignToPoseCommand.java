@@ -4,19 +4,13 @@
 
 package frc.robot.commands;
 
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotState;
 import frc.robot.subsystems.swerve.Drive;
-import frc.robot.subsystems.swerve.Drive.DriveModes;
 import frc.robot.subsystems.swerve.DriveConstants;
+import java.util.function.Supplier;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlignToPoseCommand extends Command {
@@ -28,17 +22,20 @@ public class AlignToPoseCommand extends Command {
   private boolean endOnAccurate = false;
 
   public AlignToPoseCommand(Drive drive, Supplier<Pose2d> approachPose, boolean underTrench) {
-    // all of this jank is basically so that we can get a command that generates the pose on the fly and still figure out when it ends
+    // all of this jank is basically so that we can get a command that generates the pose on the fly
+    // and still figure out when it ends
     this.drive = drive;
-    this.approachPose = RobotState.isAllianceRed()
-        ? () -> FlippingUtil.flipFieldPose(approachPose.get())
-        : approachPose;
+    this.approachPose =
+        RobotState.isAllianceRed()
+            ? () -> FlippingUtil.flipFieldPose(approachPose.get())
+            : approachPose;
     this.underTrench = underTrench;
 
-    addRequirements(drive); 
+    addRequirements(drive);
   }
 
-  public AlignToPoseCommand(Drive drive, Supplier<Pose2d> approachPose, boolean underTrench, boolean endOnAccurate){
+  public AlignToPoseCommand(
+      Drive drive, Supplier<Pose2d> approachPose, boolean underTrench, boolean endOnAccurate) {
     this(drive, approachPose, underTrench);
     this.endOnAccurate = endOnAccurate;
   }
@@ -50,8 +47,11 @@ public class AlignToPoseCommand extends Command {
     drive.setTargetPosition(currentApproachPose); // :)
     try {
       poseAlignCommand =
-          new VelocityClamp(drive).andThen(RobotState.getInstance().getPathPlannerApproachPoseCommand(currentApproachPose, underTrench));
-          poseAlignCommand.initialize();
+          new VelocityClamp(drive)
+              .andThen(
+                  RobotState.getInstance()
+                      .getPathPlannerApproachPoseCommand(currentApproachPose, underTrench));
+      poseAlignCommand.initialize();
     } catch (Exception e) {
       e.printStackTrace();
       System.out.println("Already at target.");
@@ -61,11 +61,15 @@ public class AlignToPoseCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!poseAlignCommand.isFinished() && RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(currentApproachPose.getTranslation())
-         >= DriveConstants.PATHPLANNER_PID_OFFSET){
+    if (!poseAlignCommand.isFinished()
+        && RobotState.getInstance()
+                .getEstimatedPose()
+                .getTranslation()
+                .getDistance(currentApproachPose.getTranslation())
+            >= DriveConstants.PATHPLANNER_PID_OFFSET) {
       poseAlignCommand.execute();
     } else {
-      if (!drive.isPIDAutoAlign()){
+      if (!drive.isPIDAutoAlign()) {
         drive.setPIDAutoAlignTargetPosition(currentApproachPose);
       }
     }
@@ -81,12 +85,19 @@ public class AlignToPoseCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (endOnAccurate && currentApproachPose.getTranslation().getDistance(
-      RobotState.getInstance().getEstimatedPose().getTranslation()) < 0.04
-      && Math.abs(currentApproachPose.getRotation().minus(
-      RobotState.getInstance().getEstimatedPose().getRotation()).getDegrees()) < 2.5){
-        return true;
-      }
+    if (endOnAccurate
+        && currentApproachPose
+                .getTranslation()
+                .getDistance(RobotState.getInstance().getEstimatedPose().getTranslation())
+            < 0.04
+        && Math.abs(
+                currentApproachPose
+                    .getRotation()
+                    .minus(RobotState.getInstance().getEstimatedPose().getRotation())
+                    .getDegrees())
+            < 2.5) {
+      return true;
+    }
     return false;
   }
 }

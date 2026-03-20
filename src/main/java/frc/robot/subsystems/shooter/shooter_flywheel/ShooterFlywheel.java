@@ -1,14 +1,12 @@
 package frc.robot.subsystems.shooter.shooter_flywheel;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
-import org.littletonrobotics.junction.AutoLogOutput;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.lib.generic_subsystems.rollers.*;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywheelTarget>{
     public enum ShooterFlywheelTarget implements GenericRollers.VelocityTarget {
@@ -34,14 +32,15 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
         }
     }
 
-    public ShooterFlywheel(ShooterFlywheelIO io) {
-        super("Shooter/Shooter Flywheels", io);
+    /** Velocity in rotations per second */
+    public double getVelocity() {
+      return velocity;
     }
+  }
 
-    @AutoLogOutput(key = "Shooter/Shooter Flywheels/CurrentVelocity")
-    public LinearVelocity getCurrentVelocity() {
-        return MetersPerSecond.of(Units.radiansToRotations(inputs.velocityRadsPerSec) * ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
-    }
+  public ShooterFlywheel(ShooterFlywheelIO io) {
+    super("Shooter/Shooter Flywheels", io);
+  }
 
     /** Set flywheel to an arbitrary surface speed (m/s) from the LUT, bypassing the enum targets. */
     public void setVelocityManual(LinearVelocity velocity, double supplyCurrentAmps) {
@@ -50,8 +49,16 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
             supplyCurrentAmps);
     }
 
-    public boolean reachedVelocityTargetManual(){
-        return Math.abs(super.inputs.velocityRadsPerSec - Units.rotationsToRadians(manualVelocityRPS)) < 20;
-    }
+  /** Set flywheel to an arbitrary surface speed (m/s) from the LUT, bypassing the enum targets. */
+  public void setVelocityManual(LinearVelocity velocity) {
+    setVelocityTargetManual(
+        ShooterFlywheelConstants.VELOCITY_ADJUSTMENT
+            + velocity.in(MetersPerSecond)
+                / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
+  }
 
+  public boolean reachedVelocityTargetManual() {
+    return Math.abs(super.inputs.velocityRadsPerSec - Units.rotationsToRadians(manualVelocityRPS))
+        < 20;
+  }
 }

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import static frc.robot.subsystems.intake.intakePivot.IntakePivotConstants.SUPPLY_CURRENT_LIMIT;
 import static frc.robot.subsystems.swerve.DriveConstants.CURRENT_LIMIT_AMPS;
 import static frc.robot.subsystems.swerve.DriveConstants.DRIVE_CONFIG;
 import static frc.robot.subsystems.swerve.DriveConstants.MODULE_CONSTANTS;

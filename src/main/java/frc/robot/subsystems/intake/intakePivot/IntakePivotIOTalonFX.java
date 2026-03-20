@@ -5,8 +5,7 @@ import static frc.robot.subsystems.intake.intakePivot.IntakePivotConstants.*;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOTalonFX;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-//import frc.robot.subsystems.intake.intakePivot.IntakePivotConstants;
+// import frc.robot.subsystems.intake.intakePivot.IntakePivotConstants;
 public class IntakePivotIOTalonFX extends GenericSuperstructureIOTalonFX implements IntakePivotIO {
 
   public IntakePivotIOTalonFX() {
@@ -35,4 +34,3 @@ public class IntakePivotIOTalonFX extends GenericSuperstructureIOTalonFX impleme
         GRAVITY_TYPE);
   }
 }
-
