@@ -21,7 +21,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.swerve.controllers.heading.AutoAlignHeadingController;
+import frc.robot.subsystems.swerve.controllers.heading.BaseHeadingController;
 import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
+import frc.robot.subsystems.swerve.controllers.translation.AxisAssist;
 import frc.robot.subsystems.swerve.controllers.translation.PIDAutoAlignController;
 import frc.robot.subsystems.swerve.controllers.translation.TeleopTranslationController;
 import java.util.Arrays;
@@ -35,6 +37,7 @@ public class Drive extends SubsystemBase {
     TELEOP,
     TRAJECTORY,
     AUTO_ALIGN,
+    AXIS_ASSIST,
     DEFENSE;
   }
 
@@ -64,6 +67,7 @@ public class Drive extends SubsystemBase {
   private TeleopHeadingController headingController = null;
   private PIDAutoAlignController pidAutoAlignController = null;
   private AutoAlignHeadingController autoAlignHeadingController = null;
+  private AxisAssist axisAssistController;
 
   public Drive(GyroIO gyroIO, ModuleIO fl, ModuleIO fr, ModuleIO bl, ModuleIO br) {
     this.gyroIO = gyroIO;
@@ -130,6 +134,12 @@ public class Drive extends SubsystemBase {
           targetSpeeds.omegaRadiansPerSecond = autoAlignHeadingController.update();
         }
       }
+      case AXIS_ASSIST -> {
+        if (axisAssistController != null) {
+          targetSpeeds = axisAssistController.update();
+          targetSpeeds.omegaRadiansPerSecond = headingController.update();
+        }
+      }
       case DEFENSE -> {
         modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
         modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(135))));
@@ -174,19 +184,29 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput("Swerve/PID/VelocityX", pidAutoAlignController.getXVel());
       Logger.recordOutput("Swerve/PID/VelocityY", pidAutoAlignController.getYVel());
     }
+    if (axisAssistController != null) {
+      Logger.recordOutput("Swerve/PID/VelocityX", axisAssistController.getXVel());
+      Logger.recordOutput("Swerve/PID/VelocityY", axisAssistController.getYVel());
+    }
   }
 
   public void setDefenseMode(){
       driveMode = DriveModes.DEFENSE;
-    }
+  }
+  public void setTeleopMode(){
+    driveMode =  DriveModes.TELEOP;
+  }
 
   public void driveTeleopController(double xAxis, double yAxis, double omega, double acceleration) {
     if (DriverStation.isTeleopEnabled()) {
-      if (driveMode != DriveModes.TELEOP) {
+      if (driveMode != DriveModes.TELEOP && driveMode != DriveModes.AXIS_ASSIST) {
         driveMode = DriveModes.TELEOP;
         teleopController.setPastLinearVelocity(new Translation2d());
       }
       teleopController.acceptJoystickInput(xAxis, yAxis, omega, acceleration);
+      if(axisAssistController != null && driveMode == DriveModes.AXIS_ASSIST){
+        axisAssistController.acceptJoystickInput(yAxis, acceleration);
+      }
     }
   }
 
@@ -258,6 +278,29 @@ public class Drive extends SubsystemBase {
     this.targetPosition = targetPosition;
   }
 
+  public double setAxisPosition(double targetPosition, Rotation2d targetAngle){
+    //nguerrna be smart
+    clearHeadingControl();
+    driveMode = DriveModes.AXIS_ASSIST;
+    if (axisAssistController == null) {
+      axisAssistController = 
+        new AxisAssist(
+          () -> RobotState.getInstance().getEstimatedPose(), 
+          () -> gyroInputs.yawPosition, 
+          targetPosition);
+    } else {
+      // axisAssistController.setTargetPosition(targetPosition);
+    }
+    if (headingController == null) {
+      headingController =
+          new TeleopHeadingController(
+            () -> gyroInputs.yawPosition, targetAngle, HEADING_CONTROLLER_CONSTANTS);
+    } else {
+      headingController.setTargetHeading(targetAngle);
+    }
+    return targetPosition;
+  }
+
   public Pose2d setPIDAutoAlignTargetPosition(Pose2d targetPosition) {
     setTargetPosition(targetPosition);
 
@@ -292,6 +335,7 @@ public class Drive extends SubsystemBase {
   public void clearTargetPositionController() {
     pidAutoAlignController = null;
     autoAlignHeadingController = null;
+    axisAssistController = null;
     targetSpeeds = new ChassisSpeeds();
   }
 

@@ -353,7 +353,17 @@ public class RobotContainer {
     //Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other buttons)
   }
 
+
+
   private void configureDriverAButtons() {
+    driverA.leftStick().whileTrue(
+      new InstantCommand(
+      () -> swerve.setAxisPosition(3,new Rotation2d()), swerve));
+    driverA.leftStick().onFalse(
+      new InstantCommand(
+      () -> swerve.clearTargetPositionController()).alongWith(
+        new InstantCommand(() -> swerve.setTeleopMode())));
+
     driverA.povLeft().onTrue(new InstantCommand(()-> intakeController.setIntakePivotActive(!intakeController.getIntakePivotActive())));
     // ZERO GYRO
     driverA.start().onTrue(swerve.zeroGyroCommand());
