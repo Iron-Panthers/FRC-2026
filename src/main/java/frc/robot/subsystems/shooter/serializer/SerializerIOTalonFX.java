@@ -1,24 +1,24 @@
-package frc.robot.subsystems.hopper.Hopper;
+package frc.robot.subsystems.shooter.serializer;
 
-import static frc.robot.subsystems.hopper.Hopper.HopperConstants.*;
+import static frc.robot.subsystems.shooter.serializer.SerializerConstants.*;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersConfiguration;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIOTalonFX;
 
-public class HopperIOTalonFX extends GenericRollersIOTalonFX {
-  public HopperIOTalonFX() {
-    //   super(HOPPER_CONFIG.motorID(), CURRENT_LIMIT_AMPS, HOPPER_CONFIG.inverted(),
-    // HOPPER_CONFIG.brake(), HOPPER_CONFIG.reduction());
+public class SerializerIOTalonFX extends GenericRollersIOTalonFX {
+  public SerializerIOTalonFX() {
+    //   super(SERIALIZER_CONFIG.motorID(), CURRENT_LIMIT_AMPS, SERIALIZER_CONFIG.inverted(),
+    // SERIALIZER_CONFIG.brake(), SERIALIZER_CONFIG.reduction());
     super(
         new GenericRollersConfiguration()
-            .withID(HOPPER_CONFIG.motorID())
+            .withID(SERIALIZER_CONFIG.motorID())
             .withMotorDirection(
-                HOPPER_CONFIG.inverted()
+                SERIALIZER_CONFIG.inverted()
                     ? InvertedValue.CounterClockwise_Positive
                     : InvertedValue.Clockwise_Positive)
             .withSupplyCurrentLimit(CURRENT_LIMIT_AMPS)
-            .withReduction(HOPPER_CONFIG.reduction())
+            .withReduction(SERIALIZER_CONFIG.reduction())
             .withUpperVoltageLimit(UPPER_VOLT_LIMIT)
             .withLowerVoltageLimit(LOWER_VOLT_LIMIT));
     super.setSlot0(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
