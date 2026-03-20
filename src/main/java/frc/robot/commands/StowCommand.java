@@ -1,19 +1,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.subsystems.hopper.HopperController;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
 import frc.robot.subsystems.shooter.ShooterController;
 
-/** Stows the robot: moves intake to middle stow, idles the shooter, and sets hopper to slow. */
+/** Stows the robot: moves intake to middle stow, idles the shooter, and sets serializer to slow. */
 public class StowCommand extends ParallelCommandGroup {
   public StowCommand(
       IntakeController intakeController,
-      ShooterController shooterController,
-      HopperController hopperController) {
+      ShooterController shooterController) {
     addCommands(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
     // shooterController.setTargetStateCommand(ShooterState.IDLE),
-    // hopperController.setTargetStateCommand(HopperControllerState.SLOW));
   }
 }

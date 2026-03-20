@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.climb.ClimbController;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
-import frc.robot.subsystems.hopper.HopperController;
-import frc.robot.subsystems.hopper.HopperController.HopperControllerState;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
@@ -20,7 +18,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
   public AutoShootCommand(
       Drive swerve,
       ShooterController shooterController,
-      HopperController hopperController,
       IntakeController intakeController,
       ElasticUpdater matchTimerUpdater,
       ClimbController climbController,
@@ -28,7 +25,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
     addCommands(
         // new AlignToShootCommand(swerve, shooterController).alongWith(
         new InstantCommand(() -> shooterController.setTargetState(ShooterState.SHOOT))
-            .alongWith(hopperController.setTargetStateCommand(HopperControllerState.INTAKE))
             .alongWith(
                 new WaitCommand(1)
                     .andThen(
@@ -38,7 +34,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
             .withDeadline(new WaitCommand(4)),
         (intakeActive
             ? new IntakeCommand(
-                climbController, intakeController, shooterController, hopperController)
+                climbController, intakeController, shooterController)
             : new InstantCommand()),
         shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
   }
