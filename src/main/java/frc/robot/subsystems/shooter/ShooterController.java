@@ -133,6 +133,7 @@ public class ShooterController extends SubsystemBase {
       shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
       shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
       shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+      serializer.setVelocityTarget(targetState.serializerTarget);
       //TODO:should we set the state of serializer to target?
     } else if ((targetState == ShooterState.SHOOT
         || targetState == ShooterState.TOTAL_SPIN_UP
@@ -169,11 +170,13 @@ public class ShooterController extends SubsystemBase {
       } else {
         shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
       }
+      serializer.setVelocityTarget(targetState.serializerTarget);
     } else {
       shooterHood.setPositionTarget(targetState.hoodTarget);
       shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
       shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
       shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+      serializer.setVelocityTarget(targetState.serializerTarget);
     }
     shooterFlywheel.periodic();
     shooterHood.periodic();
