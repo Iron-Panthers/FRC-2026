@@ -1,7 +1,7 @@
 package frc.robot.subsystems.shooter.serializer;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
+import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
 public class SerializerConstants {
   public static final SerializerConfig SERIALIZER_CONFIG =

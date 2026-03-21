@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.intakePivot;
+package frc.robot.subsystems.intake.intake_pivot;
 
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
-import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
+import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
 public class IntakePivotConstants {
   public static final IntakePivotConfig INTAKE_PIVOT_CONFIG =
@@ -16,7 +16,7 @@ public class IntakePivotConstants {
         case COMP ->
             new IntakePivotConfig(
                 // Reduction between sensor and mechansim
-                CAN.at(22, "Intake Pivot"), 28.125, InvertedValue.CounterClockwise_Positive);
+                CAN.at(19, "Intake Pivot"), 28.125, InvertedValue.CounterClockwise_Positive);
         case SIM ->
             new IntakePivotConfig(
                 // Reduction between motor and mechansim

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.shooter.shooter_flywheel;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
+import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
 public class ShooterFlywheelConstants {
   public static final ShooterFlywheelConfig SHOOTER_FLYWHEEL_CONFIG =
@@ -28,7 +28,7 @@ public class ShooterFlywheelConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(3, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(.1, 0, 0, 0, 0.137, 0, 0);
+        default -> new PIDGains(.3, 0, 0, 0, 0.137, 0, 0);
       };
 
   public static final double VELOCITY_ADJUSTMENT = 0.1;

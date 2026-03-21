@@ -1,7 +1,7 @@
 package frc.robot.subsystems.shooter.shooter_accelerator;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
+import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
 public class ShooterAcceleratorConstants {
   public static final ShooterAcceleratorConfig SHOOTER_ACCELERATOR_CONFIG =
@@ -28,7 +28,7 @@ public class ShooterAcceleratorConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(.3, 0, 0, 0, 0.18, 0, 0);
+        default -> new PIDGains(.6, 0, 0, 0, 0.12, 0, 0);
       };
 
   public static final int CURRENT_LIMIT_AMPS =

@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
-import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
+import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
 public class ShooterHoodConstants {
   public static final ShooterHoodConfig SHOOTER_HOOD_CONFIG =
@@ -63,7 +63,7 @@ public class ShooterHoodConstants {
   public static final double SUPPLY_CURRENT_LIMIT = 30;
 
   // TODO Change Limits
-  public static final double ZEROING_VOLTS = -3;
+  public static final double ZEROING_VOLTS = -1;
   public static final double ZEROING_OFFSET = 0; // offset in degrees
   public static final double ZEROING_VOLTAGE_THRESHOLD = 5;
 

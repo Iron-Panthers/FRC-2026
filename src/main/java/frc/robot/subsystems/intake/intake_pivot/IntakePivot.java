@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.intakePivot;
+package frc.robot.subsystems.intake.intake_pivot;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
