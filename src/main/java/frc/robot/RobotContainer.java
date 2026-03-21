@@ -519,7 +519,7 @@ public class RobotContainer {
     driverB.povLeft().onFalse(intakeController.stopZeroingCommand());
 
     driverB.povDown().onTrue(shooterController.zeroCommand());
-    driverB.povDown().onTrue(shooterController.stopZeroingCommand());
+    driverB.povDown().onFalse(shooterController.stopZeroingCommand());
   }
 
   private void configureAutos() {
