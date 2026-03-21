@@ -30,7 +30,6 @@ import frc.robot.commands.AgitateIntakeCommand;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
-import frc.robot.commands.AxisAssistCommand;
 import frc.robot.commands.HubAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommandFactory;
@@ -85,7 +84,6 @@ import frc.robot.subsystems.swerve.GyroIOSim;
 import frc.robot.subsystems.swerve.ModuleIO;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
-import frc.robot.subsystems.swerve.controllers.translation.AxisAssist;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonvision;
@@ -416,9 +414,7 @@ public class RobotContainer {
   }
 
   private void configureDriverAButtons() {
-    driverA
-        .rightStick()
-        .whileTrue(new HubAxisAssistCommand(swerve));
+    driverA.rightStick().whileTrue(new HubAxisAssistCommand(swerve));
 
     driverA
         .povLeft()

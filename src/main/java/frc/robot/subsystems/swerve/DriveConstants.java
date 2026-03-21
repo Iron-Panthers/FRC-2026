@@ -396,7 +396,6 @@ public class DriveConstants {
   public static final Translation3d RED_HUB_ORIGIN = new Translation3d(11.938, 4.034536, 1.5748);
   public static final double HUB_WIDTH = Units.inchesToMeters(24);
 
-
   public record DrivebaseConfig(
       double wheelRadius,
       double trackWidth,

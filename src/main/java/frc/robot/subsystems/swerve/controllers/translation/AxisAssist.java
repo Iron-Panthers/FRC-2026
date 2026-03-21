@@ -156,7 +156,5 @@ public class AxisAssist extends BaseTranslationController {
 
   private double getMaxLinearVelocity() {
     return DRIVE_CONFIG.maxLinearVelocity();
-    
   }
-
 }
