@@ -38,8 +38,8 @@ import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
-import frc.robot.subsystems.canWatchdog.CANWatchdog;
-import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
+import frc.robot.subsystems.can_watchdog.CANWatchdog;
+import frc.robot.subsystems.can_watchdog.CANWatchdogIO;
 import frc.robot.subsystems.climb.ClimbController;
 import frc.robot.subsystems.climb.ClimbController.ClimbState;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
@@ -51,14 +51,14 @@ import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
-import frc.robot.subsystems.intake.intakePivot.IntakePivot;
-import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
-import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
-import frc.robot.subsystems.intake.intakePivot.IntakePivotIOTalonFX;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOTalonFX;
+import frc.robot.subsystems.intake.intake_pivot.IntakePivot;
+import frc.robot.subsystems.intake.intake_pivot.IntakePivotIO;
+import frc.robot.subsystems.intake.intake_pivot.IntakePivotIOSim;
+import frc.robot.subsystems.intake.intake_pivot.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
+import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIO;
+import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.shooter.ShooterController;
@@ -444,8 +444,8 @@ public class RobotContainer {
     driverA.y().onTrue(new StowCommand(intakeController, shooterController));
 
     // SHOOTING COMMAND
-    ShootCommand shootCommand =
-        new ShootCommand(shooterController, intakeController, matchTimerUpdater);
+    ShootCommandFactory shootCommand =
+        new ShootCommandFactory(shooterController, intakeController, matchTimerUpdater);
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
 

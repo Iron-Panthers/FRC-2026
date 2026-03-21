@@ -15,12 +15,12 @@ import frc.robot.subsystems.shooter.ShooterController.ShooterState;
  * <p>Use {@link #whileHeld()} for the whileTrue binding and {@link #onRelease()} for the onFalse
  * binding.
  */
-public class ShootCommand {
+public class ShootCommandFactory {
   private final ShooterController shooterController;
   private final IntakeController intakeController;
   private final ElasticUpdater matchTimerUpdater;
 
-  public ShootCommand(
+  public ShootCommandFactory(
       ShooterController shooterController,
       IntakeController intakeController,
       ElasticUpdater matchTimerUpdater) {

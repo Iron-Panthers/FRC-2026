@@ -1,6 +1,6 @@
-package frc.robot.subsystems.intake.intakeRollers;
+package frc.robot.subsystems.intake.intake_rollers;
 
-import static frc.robot.subsystems.intake.intakeRollers.IntakeRollersConstants.*;
+import static frc.robot.subsystems.intake.intake_rollers.IntakeRollersConstants.*;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;

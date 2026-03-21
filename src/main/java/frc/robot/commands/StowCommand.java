@@ -8,7 +8,8 @@ import frc.robot.subsystems.shooter.ShooterController;
 /** Stows the robot: moves intake to middle stow, idles the shooter, and sets serializer to slow. */
 public class StowCommand extends ParallelCommandGroup {
   public StowCommand(IntakeController intakeController, ShooterController shooterController) {
-    addCommands(intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW));
-    // shooterController.setTargetStateCommand(ShooterState.IDLE),
+    addCommands(
+        intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW),
+        shooterController.setTargetStateCommand(ShooterState.IDLE));
   }
 }
