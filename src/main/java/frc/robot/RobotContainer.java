@@ -463,16 +463,7 @@ public class RobotContainer {
         .onTrue(
             intakeController
                 .setTargetStateCommand(IntakeState.STOW));
-    driverB
-        .b()
-        .onTrue(
-            intakeController
-                .setTargetStateCommand(IntakeState.STOW));
-    driverB
-        .y()
-        .onTrue(
-            intakeController
-                .setTargetStateCommand(IntakeState.STOW));
+
     driverB
         .rightBumper()
         .onTrue(
