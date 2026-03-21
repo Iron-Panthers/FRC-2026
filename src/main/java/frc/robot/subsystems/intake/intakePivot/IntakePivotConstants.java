@@ -16,7 +16,7 @@ public class IntakePivotConstants {
         case COMP ->
             new IntakePivotConfig(
                 // Reduction between sensor and mechansim
-                CAN.at(19, "Intake Pivot"), 28.125, InvertedValue.CounterClockwise_Positive);
+                CAN.at(22, "Intake Pivot"), 28.125, InvertedValue.CounterClockwise_Positive);
         case SIM ->
             new IntakePivotConfig(
                 // Reduction between motor and mechansim

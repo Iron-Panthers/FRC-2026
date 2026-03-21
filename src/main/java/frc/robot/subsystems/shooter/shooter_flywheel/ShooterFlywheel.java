@@ -49,6 +49,6 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
 
   public boolean reachedVelocityTargetManual() {
     return Math.abs(super.inputs.velocityRadsPerSec - Units.rotationsToRadians(manualVelocityRPS))
-        < 40;
+        < 20;
   }
 }

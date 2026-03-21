@@ -32,7 +32,7 @@ import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.AxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.ShootCommandFactory;
+import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
@@ -443,8 +443,8 @@ public class RobotContainer {
     driverA.y().onTrue(new StowCommand(intakeController, shooterController));
 
     // SHOOTING COMMAND
-    ShootCommandFactory shootCommand =
-        new ShootCommandFactory(shooterController, hopperController, intakeController, matchTimerUpdater);
+    ShootCommand shootCommand =
+        new ShootCommand(shooterController, intakeController, matchTimerUpdater);
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
 
@@ -518,7 +518,7 @@ public class RobotContainer {
     driverB.povLeft().onFalse(intakeController.stopZeroingCommand());
 
     driverB.povDown().onTrue(shooterController.zeroCommand());
-    driverB.povDown().onFalse(shooterController.stopZeroingCommand());
+    driverB.povDown().onTrue(shooterController.stopZeroingCommand());
   }
 
   private void configureAutos() {
