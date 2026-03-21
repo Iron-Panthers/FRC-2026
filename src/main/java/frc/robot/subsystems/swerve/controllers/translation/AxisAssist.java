@@ -110,7 +110,7 @@ public class AxisAssist extends BaseTranslationController {
     Logger.recordOutput("Swerve/AxisAssist/XVel", xVel);
     return ChassisSpeeds.fromFieldRelativeSpeeds(
         xVel.in(Units.Meters),
-        yVel.in(Units.Meters),
+        -yVel.in(Units.Meters),
         0,
         headingSupplier.get().plus(Rotation2d.k180deg));
   }
