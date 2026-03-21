@@ -33,7 +33,7 @@ import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.AxisAssistCommand;
 import frc.robot.commands.HubAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
