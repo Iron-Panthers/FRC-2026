@@ -11,6 +11,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -279,7 +281,7 @@ public class Drive extends SubsystemBase {
     this.targetPosition = targetPosition;
   }
 
-  public double setAxisPosition(double targetPosition, Rotation2d targetAngle) {
+  public double setAxisPosition(Distance targetPosition, Rotation2d targetAngle) {
     // nguerrna be smart
     clearHeadingControl();
     driveMode = DriveModes.AXIS_ASSIST;
@@ -288,7 +290,7 @@ public class Drive extends SubsystemBase {
           new AxisAssist(
               () -> RobotState.getInstance().getEstimatedPose(),
               () -> gyroInputs.yawPosition,
-              targetPosition);
+              targetPosition.in(Units.Meters));
     } else {
       // axisAssistController.setTargetPosition(targetPosition);
     }
@@ -299,7 +301,7 @@ public class Drive extends SubsystemBase {
     } else {
       headingController.setTargetHeading(targetAngle);
     }
-    return targetPosition;
+    return targetPosition.in(Units.Meters);
   }
 
   public Pose2d setPIDAutoAlignTargetPosition(Pose2d targetPosition) {

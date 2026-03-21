@@ -31,6 +31,7 @@ import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.AxisAssistCommand;
+import frc.robot.commands.HubAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.ShuttleCommand;
@@ -417,7 +418,7 @@ public class RobotContainer {
   private void configureDriverAButtons() {
     driverA
         .rightStick()
-        .whileTrue(new AxisAssistCommand(swerve));
+        .whileTrue(new HubAxisAssistCommand(swerve));
 
     driverA
         .povLeft()

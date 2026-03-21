@@ -318,7 +318,7 @@ public class DriveConstants {
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.01);
-        case SIM -> new HeadingControllerConstants(1, 0, 5, 20, 0.01);
+        case SIM -> new HeadingControllerConstants(6, 0, 5, 200, 0.01);
         case VISION -> new HeadingControllerConstants(3, 0, 5, 15, 0.007);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
