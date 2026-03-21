@@ -31,7 +31,7 @@ import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
@@ -444,8 +444,8 @@ public class RobotContainer {
     driverA.y().onTrue(new StowCommand(intakeController, shooterController));
 
     // SHOOTING COMMAND
-    ShootCommand shootCommand =
-        new ShootCommand(shooterController, intakeController, matchTimerUpdater);
+    ShootCommandFactory shootCommand =
+        new ShootCommandFactory(shooterController, hopperController, intakeController, matchTimerUpdater);
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
 
