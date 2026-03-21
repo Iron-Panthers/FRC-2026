@@ -96,8 +96,14 @@ public class AxisAssist extends BaseTranslationController {
   public Distance calculateLinearVelocity(double y) {
     double magnitude = MathUtil.applyDeadband(Math.abs(y), 0.1);
     magnitude = Math.pow(magnitude, 1.5) * 3;
-    if (y > 0) {
-      magnitude = magnitude * -1;
+    if(RobotState.isAllianceRed()){
+      if (y < 0) {
+        magnitude = magnitude * -1;
+      }
+    }else{
+      if (y > 0) {
+        magnitude = magnitude * -1;
+      }
     }
     return Units.Meters.of(magnitude);
   }
