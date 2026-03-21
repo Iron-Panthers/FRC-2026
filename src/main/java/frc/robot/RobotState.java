@@ -469,7 +469,7 @@ public class RobotState {
     if (RobotBase.isReal()) {
       return alliance.get() == DriverStation.Alliance.Red;
     }
-    return false;
+    return true;
   }
 
   public Pose2d getClimbTarget() {

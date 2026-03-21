@@ -289,7 +289,7 @@ public class Drive extends SubsystemBase {
       axisAssistController =
           new AxisAssist(
               () -> RobotState.getInstance().getEstimatedPose(),
-              () -> gyroInputs.yawPosition,
+              () -> fieldRelativeYaw,
               targetPosition.in(Units.Meters));
     } else {
       // axisAssistController.setTargetPosition(targetPosition);
@@ -297,7 +297,7 @@ public class Drive extends SubsystemBase {
     if (headingController == null) {
       headingController =
           new TeleopHeadingController(
-              () -> gyroInputs.yawPosition, targetAngle, HEADING_CONTROLLER_CONSTANTS);
+              () -> fieldRelativeYaw, targetAngle, HEADING_CONTROLLER_CONSTANTS);
     } else {
       headingController.setTargetHeading(targetAngle);
     }
@@ -313,7 +313,7 @@ public class Drive extends SubsystemBase {
       pidAutoAlignController =
           new PIDAutoAlignController(
               () -> RobotState.getInstance().getEstimatedPose(),
-              () -> gyroInputs.yawPosition,
+              () -> fieldRelativeYaw,
               targetPosition);
     } else {
       pidAutoAlignController.setTargetPosition(targetPosition);

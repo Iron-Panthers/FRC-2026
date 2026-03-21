@@ -16,14 +16,22 @@ public class HubAxisAssistCommand extends AxisAssistCommand {
     super(
         swerve,
         () -> getAxisPosition(),
-        () ->
-            new Rotation2d(
-                (RobotState.getInstance().getEstimatedPose().getRotation().getRadians()
-                            > -Math.PI / 2
-                        && RobotState.getInstance().getEstimatedPose().getRotation().getRadians()
-                            < Math.PI / 2)
-                    ? 0
-                    : Math.PI));
+        () -> getTargetHeading());
+  }
+
+  private static Rotation2d getTargetHeading() {
+    double poseRadians =
+        RobotState.getInstance().getEstimatedPose().getRotation().getRadians();
+    // Pick 0 or PI in the field frame based on which way the robot is facing
+    double fieldTarget =
+        (poseRadians > -Math.PI / 2 && poseRadians < Math.PI / 2) ? 0 : Math.PI;
+    // The heading controller operates on fieldRelativeYaw (driver-relative).
+    // On red alliance, fieldRelativeYaw is offset by ~180° from the odometry heading,
+    // so we must flip the target to stay in the same frame.
+    if (RobotState.isAllianceRed()) {
+      fieldTarget += Math.PI;
+    }
+    return new Rotation2d(fieldTarget);
   }
 
   private static Distance getAxisPosition() {
