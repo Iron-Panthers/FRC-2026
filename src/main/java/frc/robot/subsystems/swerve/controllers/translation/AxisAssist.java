@@ -3,7 +3,6 @@ package frc.robot.subsystems.swerve.controllers.translation;
 import static frc.robot.subsystems.swerve.DriveConstants.AUTOALIGN_POSITION_DEADBAND;
 import static frc.robot.subsystems.swerve.DriveConstants.AUTOALIGN_VELOCITY_DEADBAND;
 import static frc.robot.subsystems.swerve.DriveConstants.DRIVE_CONFIG;
-import static frc.robot.subsystems.swerve.DriveConstants.MAX_SCOPED_VELOCITY;
 import static frc.robot.subsystems.swerve.DriveConstants.PID_AUTOALIGN_CONSTANTS;
 
 import edu.wpi.first.math.MathUtil;
@@ -22,7 +21,6 @@ import org.littletonrobotics.junction.Logger;
 public class AxisAssist extends BaseTranslationController {
 
   // supplies the position values
-  private boolean scoped = false;
   private ProfiledPIDController magController;
   private Supplier<Double> positionSupplier;
   private Supplier<Rotation2d> headingSupplier;
@@ -97,7 +95,7 @@ public class AxisAssist extends BaseTranslationController {
 
   public Distance calculateLinearVelocity(double y) {
     double magnitude = MathUtil.applyDeadband(Math.abs(y), 0.1);
-    magnitude = Math.pow(magnitude, 1.5);
+    magnitude = Math.pow(magnitude, 1.5) * 3;
     if (y > 0) {
       magnitude = magnitude * -1;
     }
@@ -157,14 +155,8 @@ public class AxisAssist extends BaseTranslationController {
   }
 
   private double getMaxLinearVelocity() {
-    if (scoped) {
-      return MAX_SCOPED_VELOCITY;
-    } else {
-      return DRIVE_CONFIG.maxLinearVelocity();
-    }
+    return DRIVE_CONFIG.maxLinearVelocity();
+    
   }
 
-  public void setScoped(boolean scoped) {
-    this.scoped = scoped;
-  }
 }

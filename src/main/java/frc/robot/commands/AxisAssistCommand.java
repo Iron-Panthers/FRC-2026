@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static frc.robot.subsystems.swerve.DriveConstants.HUB_WIDTH;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,7 +17,8 @@ public class AxisAssistCommand extends Command{
     
   @Override
   public void initialize() {
-    swerve.setAxisPosition(DriveConstants.BLUE_HUB_ORIGIN.getX()+ Units.inchesToMeters(DriveConstants.DRIVE_CONFIG.bumperWidthX()/2), new Rotation2d(Math.round(RobotState.getInstance().getEstimatedPose().getRotation().getDegrees()/90)*90));
+    swerve.setAxisPosition(DriveConstants.BLUE_HUB_ORIGIN.getX() + DriveConstants.DRIVE_CONFIG.bumperWidthX()/2 + DriveConstants.HUB_WIDTH + Units.inchesToMeters(1), 
+    new Rotation2d(Math.round(RobotState.getInstance().getEstimatedPose().getRotation().getRadians()/Math.PI)*Math.PI));
   }
 
   @Override

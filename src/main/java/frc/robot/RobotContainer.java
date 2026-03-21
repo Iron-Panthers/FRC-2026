@@ -416,7 +416,7 @@ public class RobotContainer {
 
   private void configureDriverAButtons() {
     driverA
-        .leftStick()
+        .rightStick()
         .whileTrue(new AxisAssistCommand(swerve));
 
     driverA

@@ -137,7 +137,10 @@ public class Drive extends SubsystemBase {
       case AXIS_ASSIST -> {
         if (axisAssistController != null) {
           targetSpeeds = axisAssistController.update();
-          targetSpeeds.omegaRadiansPerSecond = headingController.update();
+
+          if(headingController != null){
+            targetSpeeds.omegaRadiansPerSecond = headingController.update();
+          }
         }
       }
       case DEFENSE -> {

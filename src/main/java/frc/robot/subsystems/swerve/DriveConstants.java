@@ -46,8 +46,8 @@ public class DriveConstants {
                 Units.inchesToMeters(1.97),
                 Units.inchesToMeters(19.75),
                 Units.inchesToMeters(23.75),
-                Units.inchesToMeters(34),
-                Units.inchesToMeters(34),
+                Units.inchesToMeters(33),
+                Units.inchesToMeters(37),
                 3.75,
                 10,
                 6);
@@ -394,6 +394,8 @@ public class DriveConstants {
 
   public static final Translation3d BLUE_HUB_ORIGIN = new Translation3d(4.5974, 4.034536, 1.5748);
   public static final Translation3d RED_HUB_ORIGIN = new Translation3d(11.938, 4.034536, 1.5748);
+  public static final double HUB_WIDTH = Units.inchesToMeters(24);
+
 
   public record DrivebaseConfig(
       double wheelRadius,
