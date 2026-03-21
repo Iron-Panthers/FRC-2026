@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.swerve.controllers.heading.AutoAlignHeadingController;
-import frc.robot.subsystems.swerve.controllers.heading.BaseHeadingController;
 import frc.robot.subsystems.swerve.controllers.heading.TeleopHeadingController;
 import frc.robot.subsystems.swerve.controllers.translation.AxisAssist;
 import frc.robot.subsystems.swerve.controllers.translation.PIDAutoAlignController;
@@ -191,11 +190,12 @@ public class Drive extends SubsystemBase {
     }
   }
 
-  public void setDefenseMode(){
-      driveMode = DriveModes.DEFENSE;
+  public void setDefenseMode() {
+    driveMode = DriveModes.DEFENSE;
   }
-  public void setTeleopMode(){
-    driveMode =  DriveModes.TELEOP;
+
+  public void setTeleopMode() {
+    driveMode = DriveModes.TELEOP;
   }
 
   public void driveTeleopController(double xAxis, double yAxis, double omega, double acceleration) {
@@ -205,7 +205,7 @@ public class Drive extends SubsystemBase {
         teleopController.setPastLinearVelocity(new Translation2d());
       }
       teleopController.acceptJoystickInput(xAxis, yAxis, omega, acceleration);
-      if(axisAssistController != null && driveMode == DriveModes.AXIS_ASSIST){
+      if (axisAssistController != null && driveMode == DriveModes.AXIS_ASSIST) {
         axisAssistController.acceptJoystickInput(yAxis, acceleration);
       }
     }
@@ -276,23 +276,23 @@ public class Drive extends SubsystemBase {
     this.targetPosition = targetPosition;
   }
 
-  public double setAxisPosition(double targetPosition, Rotation2d targetAngle){
-    //nguerrna be smart
+  public double setAxisPosition(double targetPosition, Rotation2d targetAngle) {
+    // nguerrna be smart
     clearHeadingControl();
     driveMode = DriveModes.AXIS_ASSIST;
     if (axisAssistController == null) {
-      axisAssistController = 
-        new AxisAssist(
-          () -> RobotState.getInstance().getEstimatedPose(), 
-          () -> gyroInputs.yawPosition, 
-          targetPosition);
+      axisAssistController =
+          new AxisAssist(
+              () -> RobotState.getInstance().getEstimatedPose(),
+              () -> gyroInputs.yawPosition,
+              targetPosition);
     } else {
       // axisAssistController.setTargetPosition(targetPosition);
     }
     if (headingController == null) {
       headingController =
           new TeleopHeadingController(
-            () -> gyroInputs.yawPosition, targetAngle, HEADING_CONTROLLER_CONSTANTS);
+              () -> gyroInputs.yawPosition, targetAngle, HEADING_CONTROLLER_CONSTANTS);
     } else {
       headingController.setTargetHeading(targetAngle);
     }

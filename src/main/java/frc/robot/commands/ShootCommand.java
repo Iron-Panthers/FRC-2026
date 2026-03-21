@@ -9,8 +9,8 @@ import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 
 /**
- * Handles the shooting sequence while held. Toggles between spin-up and shoot states, runs serializer
- * intake, and cycles the intake up/down while shooting.
+ * Handles the shooting sequence while held. Toggles between spin-up and shoot states, runs
+ * serializer intake, and cycles the intake up/down while shooting.
  *
  * <p>Use {@link #whileHeld()} for the whileTrue binding and {@link #onRelease()} for the onFalse
  * binding.
@@ -51,10 +51,10 @@ public class ShootCommand {
   /** Command to bind to onFalse – runs when the button is released. */
   public Command onRelease() {
     return new InstantCommand(
-            () -> {
-              if (shooterController.getTargetState() == ShooterState.SHOOT) {
-                shooterController.setTargetState(ShooterState.COMPACT_SPIN_UP);
-              }
-            });
+        () -> {
+          if (shooterController.getTargetState() == ShooterState.SHOOT) {
+            shooterController.setTargetState(ShooterState.COMPACT_SPIN_UP);
+          }
+        });
   }
 }
