@@ -418,6 +418,8 @@ public class RobotContainer {
     configureDriverBButtons();
     new Trigger(() -> (int) matchTimerUpdater.getTimeUntilOurHubShifts() == 7)
         .onTrue(new VibrateHIDCommand(driverB.getHID(), 1, 0.4));
+
+    new Trigger(() -> vision.getMultiTags()).whileTrue(new RunCommand(()-> swerve.smartZeroGyro()));
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
   }
