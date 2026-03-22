@@ -10,17 +10,19 @@ public class AxisAssistCommand extends Command {
   Drive swerve;
   Supplier<Distance> targetXPosition;
   Supplier<Rotation2d> targetHeading;
+  Supplier<Boolean> isControlledOnY;
 
   public AxisAssistCommand(
-      Drive swerve, Supplier<Distance> targetXPosition, Supplier<Rotation2d> targetHeading) {
+      Drive swerve, Supplier<Distance> targetXPosition, Supplier<Rotation2d> targetHeading, Supplier<Boolean> isControlledOnY) {
     this.swerve = swerve;
     this.targetXPosition = targetXPosition;
     this.targetHeading = targetHeading;
+    this.isControlledOnY = isControlledOnY;
   }
 
   @Override
   public void initialize() {
-    swerve.setAxisPosition(targetXPosition.get(), targetHeading.get());
+    swerve.setAxisPosition(targetXPosition.get(), targetHeading.get(), isControlledOnY.get());
   }
 
   @Override

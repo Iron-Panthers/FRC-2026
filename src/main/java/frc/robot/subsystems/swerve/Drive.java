@@ -211,7 +211,7 @@ public class Drive extends SubsystemBase {
       }
       teleopController.acceptJoystickInput(xAxis, yAxis, omega, acceleration);
       if (axisAssistController != null && driveMode == DriveModes.AXIS_ASSIST) {
-        axisAssistController.acceptJoystickInput(yAxis, acceleration);
+        axisAssistController.acceptJoystickInput(xAxis, yAxis, acceleration);
       }
     }
   }
@@ -281,7 +281,7 @@ public class Drive extends SubsystemBase {
     this.targetPosition = targetPosition;
   }
 
-  public double setAxisPosition(Distance targetPosition, Rotation2d targetAngle) {
+  public double setAxisPosition(Distance targetPosition, Rotation2d targetAngle, boolean controlY) {
     // nguerrna be smart
     clearHeadingControl();
     driveMode = DriveModes.AXIS_ASSIST;
@@ -290,7 +290,9 @@ public class Drive extends SubsystemBase {
           new AxisAssist(
               () -> RobotState.getInstance().getEstimatedPose(),
               () -> fieldRelativeYaw,
-              targetPosition.in(Units.Meters));
+              targetPosition.in(Units.Meters),
+              controlY
+              );
     } else {
       // axisAssistController.setTargetPosition(targetPosition);
     }

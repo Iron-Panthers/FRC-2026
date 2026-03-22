@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve.controllers.translation;
 
+import static edu.wpi.first.units.Units.Meters;
 import static frc.robot.subsystems.swerve.DriveConstants.AUTOALIGN_POSITION_DEADBAND;
 import static frc.robot.subsystems.swerve.DriveConstants.AUTOALIGN_VELOCITY_DEADBAND;
 import static frc.robot.subsystems.swerve.DriveConstants.DRIVE_CONFIG;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.Constants;
@@ -28,39 +30,46 @@ public class AxisAssist extends BaseTranslationController {
   // target position
   private double targetPosition;
   private double startPosition;
-  private Distance xVel;
-  private final Supplier<Distance> velocity;
+  private Distance pidAxisVel;
+  private final Supplier<Distance> pidAxisVelocity;
   protected boolean hasReachedTarget = false;
 
-  private double controllerY;
   private double acceleration;
-
-  public AxisAssist(
-      Supplier<Pose2d> positionSupplier, Supplier<Rotation2d> yawSupplier, double targetPosition) {
-    super(yawSupplier);
-    this.positionSupplier = () -> positionSupplier.get().getX();
-    headingSupplier = () -> positionSupplier.get().getRotation();
-    this.targetPosition = targetPosition;
-    this.velocity = () -> RobotState.getInstance().getVelocity().getMeasureX();
-    xVel = velocity.get();
-    // setting up the ProfiledPIDController
-    magController =
-        new ProfiledPIDController(
-            PID_AUTOALIGN_CONSTANTS.kP(),
-            PID_AUTOALIGN_CONSTANTS.kI(),
-            PID_AUTOALIGN_CONSTANTS.kD(),
-            new Constraints(
-                PID_AUTOALIGN_CONSTANTS.maxVelocity(), PID_AUTOALIGN_CONSTANTS.maxAcceleration()),
-            Constants.PERIODIC_LOOP_SEC);
-    setTargetPosition(targetPosition);
-    magController.disableContinuousInput();
-    magController.setTolerance(0, 0);
-  }
-
-  public void acceptJoystickInput(double controllerY, double acceleration) {
-    this.controllerY = controllerY;
-    this.acceleration = acceleration;
-  }
+  private boolean controlY;
+  private double controllerX;
+  private double controllerY;
+    
+      public AxisAssist(
+          Supplier<Pose2d> positionSupplier, Supplier<Rotation2d> yawSupplier, double targetPosition, boolean controlY) {
+        super(yawSupplier);
+        this.positionSupplier = () -> controlY ? positionSupplier.get().getX() : positionSupplier.get().getY();
+        headingSupplier = () -> positionSupplier.get().getRotation();
+        this.targetPosition = targetPosition;
+        this.controlY = controlY;
+        this.pidAxisVelocity = () -> controlY ? RobotState.getInstance().getVelocity().getMeasureX(): RobotState.getInstance().getVelocity().getMeasureY();
+        pidAxisVel = pidAxisVelocity.get();
+    
+        // setting up the ProfiledPIDController
+        magController =
+            new ProfiledPIDController(
+                PID_AUTOALIGN_CONSTANTS.kP(),
+                PID_AUTOALIGN_CONSTANTS.kI(),
+                PID_AUTOALIGN_CONSTANTS.kD(),
+                new Constraints(
+                    PID_AUTOALIGN_CONSTANTS.maxVelocity(), PID_AUTOALIGN_CONSTANTS.maxAcceleration()),
+                Constants.PERIODIC_LOOP_SEC);
+        setTargetPosition(targetPosition);
+        magController.disableContinuousInput();
+        magController.setTolerance(0, 0);
+      }
+    
+      /* accept driver input from joysticks */
+    public void acceptJoystickInput(
+          double controllerX, double controllerY, double acceleration) {
+      this.controllerX = controllerX;
+      this.controllerY = controllerY;
+      this.acceleration = acceleration;
+    }
 
   // calculate how to get to the desired position
   public void calculateLinearMovement() {
@@ -79,9 +88,9 @@ public class AxisAssist extends BaseTranslationController {
     double magVel = pidOutput + magController.getSetpoint().velocity;
     magVel = (Math.abs(magVel) < AUTOALIGN_VELOCITY_DEADBAND ? 0 : magVel);
 
-    xVel = Units.Meters.of(magVel);
+    pidAxisVel = Units.Meters.of(magVel);
     if (Math.abs(positionSupplier.get() - targetPosition) < AUTOALIGN_POSITION_DEADBAND) {
-      xVel = Units.Meters.of(0);
+      pidAxisVel = Units.Meters.of(0);
     }
 
     Logger.recordOutput("Swerve/AxisAssist/SetpointPos", magController.getSetpoint().position);
@@ -111,12 +120,12 @@ public class AxisAssist extends BaseTranslationController {
   // update the values
   public ChassisSpeeds update() {
     calculateLinearMovement();
-    Distance yVel = calculateLinearVelocity(controllerY);
-    Logger.recordOutput("Swerve/AxisAssist/YVel", yVel);
-    Logger.recordOutput("Swerve/AxisAssist/XVel", xVel);
+    Distance controlAxisVel = calculateLinearVelocity(controlY ? controllerY : controllerX);
+    Logger.recordOutput("Swerve/AxisAssist/ControlAxisVel", controlAxisVel);
+    Logger.recordOutput("Swerve/AxisAssist/PidAxisVel", pidAxisVel);
     return ChassisSpeeds.fromFieldRelativeSpeeds(
-        xVel.in(Units.Meters),
-        yVel.in(Units.Meters),
+        controlY ? pidAxisVel.in(Units.Meters): controlAxisVel.in(Units.Meters),
+        controlY ? controlAxisVel.in(Units.Meters): pidAxisVel.in(Units.Meters),
         0,
         headingSupplier.get().plus(Rotation2d.k180deg));
   }
@@ -127,11 +136,11 @@ public class AxisAssist extends BaseTranslationController {
   }
 
   public Distance getXVel() {
-    return Units.Meters.of(0).minus(xVel);
+    return Units.Meters.of(0).minus(controlY ? pidAxisVel : Meters.of(0));
   }
 
   public Distance getYVel() {
-    return Units.Meters.of(0);
+    return Units.Meters.of(0).minus(!controlY ? pidAxisVel : Meters.of(0));
   }
 
   // public Distance getYVel() {
@@ -149,9 +158,9 @@ public class AxisAssist extends BaseTranslationController {
 
   public Distance calculateForwardVelocity() {
     if (targetPosition - positionSupplier.get() < 0) {
-      return Units.Meters.of(0).minus(xVel);
+      return Units.Meters.of(0).minus(pidAxisVel);
     }
-    return xVel;
+    return pidAxisVel;
   }
 
   public boolean atTarget() {

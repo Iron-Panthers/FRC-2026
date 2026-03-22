@@ -9,14 +9,15 @@ import frc.robot.RobotState;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 
-public class HubAxisAssistCommand extends AxisAssistCommand {
-  public HubAxisAssistCommand(Drive swerve) {
+public class WallAxisAssistCommand extends AxisAssistCommand {
+  public WallAxisAssistCommand(Drive swerve) {
     // Init our Axis Assist Command with the target position of the center of the hub and the target
     // heading of the nearest 180 degree rotation
     super(
         swerve,
-        () -> getAxisPosition(),
-        () -> getTargetHeading());
+        () -> Meters.of(2),//getAxisPosition(),
+        () -> getTargetHeading(),
+        () -> false);
   }
 
   private static Rotation2d getTargetHeading() {

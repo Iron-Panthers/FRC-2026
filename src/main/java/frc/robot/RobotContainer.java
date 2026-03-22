@@ -30,7 +30,7 @@ import frc.robot.commands.AgitateIntakeCommand;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
-import frc.robot.commands.HubAxisAssistCommand;
+import frc.robot.commands.WallAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.ShuttleCommand;
@@ -414,7 +414,7 @@ public class RobotContainer {
   }
 
   private void configureDriverAButtons() {
-    driverA.rightStick().whileTrue(new HubAxisAssistCommand(swerve));
+    driverA.rightStick().whileTrue(new WallAxisAssistCommand(swerve));
 
     driverA
         .povLeft()
