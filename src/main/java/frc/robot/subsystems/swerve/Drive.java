@@ -291,8 +291,7 @@ public class Drive extends SubsystemBase {
               () -> RobotState.getInstance().getEstimatedPose(),
               () -> fieldRelativeYaw,
               targetPosition.in(Units.Meters),
-              controlY
-              );
+              controlY);
     } else {
       // axisAssistController.setTargetPosition(targetPosition);
     }

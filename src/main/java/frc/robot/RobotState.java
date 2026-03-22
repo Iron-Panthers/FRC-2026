@@ -470,7 +470,8 @@ public class RobotState {
     if (RobotBase.isReal()) {
       return alliance.get() == DriverStation.Alliance.Red;
     }
-    return DriverStationSim.getAllianceStationId().name().contains("Red") || DriverStationSim.getAllianceStationId().name().contains("Unknown");
+    return DriverStationSim.getAllianceStationId().name().contains("Red")
+        || DriverStationSim.getAllianceStationId().name().contains("Unknown");
   }
 
   public Pose2d getClimbTarget() {

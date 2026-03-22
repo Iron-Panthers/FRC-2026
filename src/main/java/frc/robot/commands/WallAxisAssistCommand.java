@@ -73,15 +73,11 @@ public class WallAxisAssistCommand extends AxisAssistCommand {
       double robotY = RobotState.getInstance().getEstimatedPose().getY();
       if (robotY < FIELD_WIDTH / 2) {
         // Closer to bottom wall (Y = 0)
-        return Meters.of(
-            DriveConstants.DRIVE_CONFIG.bumperWidthY() / 2
-                + Units.inchesToMeters(3));
+        return Meters.of(DriveConstants.DRIVE_CONFIG.bumperWidthY() / 2 + Units.inchesToMeters(6));
       } else {
         // Closer to top wall (Y = FIELD_WIDTH)
         return Meters.of(
-            FIELD_WIDTH
-                - DriveConstants.DRIVE_CONFIG.bumperWidthY() / 2
-                - Units.inchesToMeters(3));
+            FIELD_WIDTH - DriveConstants.DRIVE_CONFIG.bumperWidthY() / 2 - Units.inchesToMeters(6));
       }
     } else {
       // Align to the nearest hub X position

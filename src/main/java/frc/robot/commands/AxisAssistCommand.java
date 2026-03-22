@@ -13,7 +13,10 @@ public class AxisAssistCommand extends Command {
   Supplier<Boolean> isControlledOnY;
 
   public AxisAssistCommand(
-      Drive swerve, Supplier<Distance> targetXPosition, Supplier<Rotation2d> targetHeading, Supplier<Boolean> isControlledOnY) {
+      Drive swerve,
+      Supplier<Distance> targetXPosition,
+      Supplier<Rotation2d> targetHeading,
+      Supplier<Boolean> isControlledOnY) {
     this.swerve = swerve;
     this.targetXPosition = targetXPosition;
     this.targetHeading = targetHeading;

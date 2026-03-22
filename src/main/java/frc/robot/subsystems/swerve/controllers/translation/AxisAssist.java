@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.Constants;
@@ -38,38 +37,45 @@ public class AxisAssist extends BaseTranslationController {
   private boolean controlY;
   private double controllerX;
   private double controllerY;
-    
-      public AxisAssist(
-          Supplier<Pose2d> positionSupplier, Supplier<Rotation2d> yawSupplier, double targetPosition, boolean controlY) {
-        super(yawSupplier);
-        this.positionSupplier = () -> controlY ? positionSupplier.get().getX() : positionSupplier.get().getY();
-        headingSupplier = () -> positionSupplier.get().getRotation();
-        this.targetPosition = targetPosition;
-        this.controlY = controlY;
-        this.pidAxisVelocity = () -> controlY ? RobotState.getInstance().getVelocity().getMeasureX(): RobotState.getInstance().getVelocity().getMeasureY();
-        pidAxisVel = pidAxisVelocity.get();
-    
-        // setting up the ProfiledPIDController
-        magController =
-            new ProfiledPIDController(
-                PID_AUTOALIGN_CONSTANTS.kP(),
-                PID_AUTOALIGN_CONSTANTS.kI(),
-                PID_AUTOALIGN_CONSTANTS.kD(),
-                new Constraints(
-                    PID_AUTOALIGN_CONSTANTS.maxVelocity(), PID_AUTOALIGN_CONSTANTS.maxAcceleration()),
-                Constants.PERIODIC_LOOP_SEC);
-        setTargetPosition(targetPosition);
-        magController.disableContinuousInput();
-        magController.setTolerance(0, 0);
-      }
-    
-      /* accept driver input from joysticks */
-    public void acceptJoystickInput(
-          double controllerX, double controllerY, double acceleration) {
-      this.controllerX = controllerX;
-      this.controllerY = controllerY;
-      this.acceleration = acceleration;
-    }
+
+  public AxisAssist(
+      Supplier<Pose2d> positionSupplier,
+      Supplier<Rotation2d> yawSupplier,
+      double targetPosition,
+      boolean controlY) {
+    super(yawSupplier);
+    this.positionSupplier =
+        () -> controlY ? positionSupplier.get().getX() : positionSupplier.get().getY();
+    headingSupplier = () -> positionSupplier.get().getRotation();
+    this.targetPosition = targetPosition;
+    this.controlY = controlY;
+    this.pidAxisVelocity =
+        () ->
+            controlY
+                ? RobotState.getInstance().getVelocity().getMeasureX()
+                : RobotState.getInstance().getVelocity().getMeasureY();
+    pidAxisVel = pidAxisVelocity.get();
+
+    // setting up the ProfiledPIDController
+    magController =
+        new ProfiledPIDController(
+            PID_AUTOALIGN_CONSTANTS.kP(),
+            PID_AUTOALIGN_CONSTANTS.kI(),
+            PID_AUTOALIGN_CONSTANTS.kD(),
+            new Constraints(
+                PID_AUTOALIGN_CONSTANTS.maxVelocity(), PID_AUTOALIGN_CONSTANTS.maxAcceleration()),
+            Constants.PERIODIC_LOOP_SEC);
+    setTargetPosition(targetPosition);
+    magController.disableContinuousInput();
+    magController.setTolerance(0, 0);
+  }
+
+  /* accept driver input from joysticks */
+  public void acceptJoystickInput(double controllerX, double controllerY, double acceleration) {
+    this.controllerX = controllerX;
+    this.controllerY = controllerY;
+    this.acceleration = acceleration;
+  }
 
   // calculate how to get to the desired position
   public void calculateLinearMovement() {
@@ -105,11 +111,11 @@ public class AxisAssist extends BaseTranslationController {
   public Distance calculateLinearVelocity(double y) {
     double magnitude = MathUtil.applyDeadband(Math.abs(y), 0.1);
     magnitude = Math.pow(magnitude, 1.5) * 3;
-    if(RobotState.isAllianceRed()){
+    if (RobotState.isAllianceRed()) {
       if (y < 0) {
         magnitude = magnitude * -1;
       }
-    }else{
+    } else {
       if (y > 0) {
         magnitude = magnitude * -1;
       }
@@ -124,8 +130,8 @@ public class AxisAssist extends BaseTranslationController {
     Logger.recordOutput("Swerve/AxisAssist/ControlAxisVel", controlAxisVel);
     Logger.recordOutput("Swerve/AxisAssist/PidAxisVel", pidAxisVel);
     return ChassisSpeeds.fromFieldRelativeSpeeds(
-        controlY ? pidAxisVel.in(Units.Meters): controlAxisVel.in(Units.Meters),
-        controlY ? controlAxisVel.in(Units.Meters): pidAxisVel.in(Units.Meters),
+        controlY ? pidAxisVel.in(Units.Meters) : controlAxisVel.in(Units.Meters),
+        controlY ? controlAxisVel.in(Units.Meters) : pidAxisVel.in(Units.Meters),
         0,
         headingSupplier.get().plus(Rotation2d.k180deg));
   }
