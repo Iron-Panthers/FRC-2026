@@ -142,4 +142,14 @@ public class Vision extends SubsystemBase {
     }
     return results;
   }
+
+  public boolean getMultiTags() {
+    boolean isUsingMultiTagsForEstimate = false;
+    for(VisionIOInputsAutoLogged ioInputsAutoLogged : inputs){
+      if(ioInputsAutoLogged.tagIDs.length > 1){
+        isUsingMultiTagsForEstimate = true;
+      }
+    }
+    return isUsingMultiTagsForEstimate;
+  }
 }
