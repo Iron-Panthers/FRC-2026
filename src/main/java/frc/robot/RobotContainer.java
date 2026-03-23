@@ -36,16 +36,8 @@ import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
-import frc.robot.subsystems.can_watchdog.CANWatchdog;
 import frc.robot.subsystems.can_watchdog.CANWatchdogIO;
-import frc.robot.subsystems.climb.ClimbController;
-import frc.robot.subsystems.climb.ClimbController.ClimbState;
-import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
-import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIO;
-import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivotIOSim;
-import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivot;
-import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIO;
-import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
+import frc.robot.subsystems.can_watchdog.CANWatchdog;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
@@ -127,9 +119,6 @@ public class RobotContainer {
   private ShooterController shooterController;
   private ShooterOmniwheel shooterOmniwheel;
   private ShooterAccelerator shooterAccelerator;
-  private ClimbClawPivot climbClawPivot;
-  private ClimbDeployPivot climbDeployPivot;
-  private ClimbController climbController;
 
   public RobotContainer() {
 
@@ -207,9 +196,6 @@ public class RobotContainer {
           shooterHood = new ShooterHood(new ShooterHoodIOSim());
           shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIOSim());
           shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIOSim());
-
-          climbClawPivot = new ClimbClawPivot(new ClimbClawPivotIOSim());
-          climbDeployPivot = new ClimbDeployPivot(new ClimbDeployPivotIOSim());
         }
       }
     }
@@ -252,15 +238,6 @@ public class RobotContainer {
     shooterController =
         new ShooterController(
             shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator, serializer);
-
-    // init climb
-    if (climbClawPivot == null) {
-      climbClawPivot = new ClimbClawPivot(new ClimbClawPivotIO() {});
-    }
-    if (climbDeployPivot == null) {
-      climbDeployPivot = new ClimbDeployPivot(new ClimbDeployPivotIO() {});
-    }
-    climbController = new ClimbController(climbClawPivot, climbDeployPivot);
 
     // init shooter with testing values
     RobotState.getInstance()
@@ -346,7 +323,11 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Auto shoot full serializer",
         new AutoShootCommand(
-            swerve, shooterController, intakeController, matchTimerUpdater, climbController, true));
+            swerve,
+            shooterController,
+            intakeController,
+            matchTimerUpdater,
+            true));
     NamedCommands.registerCommand(
         "Align and auto shoot full serializer",
         new AlignToShootCommand(swerve, shooterController)
@@ -356,7 +337,6 @@ public class RobotContainer {
                     shooterController,
                     intakeController,
                     matchTimerUpdater,
-                    climbController,
                     false)));
     NamedCommands.registerCommand(
         "Auto shoot full serializer (no intake)",
@@ -365,7 +345,6 @@ public class RobotContainer {
             shooterController,
             intakeController,
             matchTimerUpdater,
-            climbController,
             false));
     NamedCommands.registerCommand(
         "Shoot preloaded serializer",
@@ -427,7 +406,11 @@ public class RobotContainer {
     // SMART ZERO GYRO
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     // INTAKE
-    driverA.b().onTrue(new IntakeCommand(climbController, intakeController, shooterController));
+    driverA
+        .b()
+        .onTrue(
+            new IntakeCommand(
+                intakeController, shooterController));
     // STOW ROBOT
     driverA.y().onTrue(new StowCommand(intakeController, shooterController));
 
@@ -465,43 +448,24 @@ public class RobotContainer {
   private void configureDriverBButtons() {
     driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
     driverB.leftBumper().onFalse(intakeController.setTargetStateCommand(IntakeState.IDLE));
-    // TODO: the code below all has something to do with climb, which hasn't been merged into dev,
-    // so they're commented for now
 
     driverB
         .x()
         .onTrue(
             shooterController
                 .setStoppedCommand(true)
-                .alongWith(intakeController.setStoppedCommand(true))
-                .alongWith(new InstantCommand(() -> climbController.setStopped(true))));
+                .alongWith(intakeController.setStoppedCommand(true)));
     driverB
         .a()
         .onTrue(
             intakeController
-                .setTargetStateCommand(IntakeState.STOW)
-                .alongWith(climbController.setTargetStateCommand(ClimbState.STOW)));
-    driverB
-        .b()
-        .onTrue(
-            intakeController
-                .setTargetStateCommand(IntakeState.STOW)
-                .andThen(climbController.setTargetStateCommand(ClimbState.DEPLOY))
-                .alongWith(
-                    new AlignToPoseCommand(
-                        swerve, () -> RobotState.getInstance().getClimbTarget(), false)));
-    driverB
-        .y()
-        .onTrue(
-            intakeController
-                .setTargetStateCommand(IntakeState.STOW)
-                .andThen(climbController.setTargetStateCommand(ClimbState.L3)));
+                .setTargetStateCommand(IntakeState.STOW));
+
     driverB
         .rightBumper()
         .onTrue(
-            climbController
-                .setTargetStateCommand(ClimbState.STOW)
-                .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE)));
+            intakeController
+                .setTargetStateCommand(IntakeState.INTAKE));
 
     driverB.povLeft().onTrue(intakeController.zeroCommand());
     driverB.povLeft().onFalse(intakeController.stopZeroingCommand());
