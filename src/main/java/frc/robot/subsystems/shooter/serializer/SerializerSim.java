@@ -42,7 +42,8 @@ public class SerializerSim extends GenericRollersIOSim {
     double rotations = 0; // can't really be simulated
 
     // Divides our angular velocity by our reduction
-    double velocityRPS = serializerSim.getAngularVelocityRadPerSec() / SERIALIZER_CONFIG.reduction();
+    double velocityRPS =
+        serializerSim.getAngularVelocityRadPerSec() / SERIALIZER_CONFIG.reduction();
     // FIXME: Doesn't work when reduction is 1
 
     talon.getSimState().setRawRotorPosition(rotations);

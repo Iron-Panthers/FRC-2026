@@ -1,4 +1,4 @@
-package frc.robot.subsystems.canWatchdog;
+package frc.robot.subsystems.can_watchdog;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.rgb.RGB;

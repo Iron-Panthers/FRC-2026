@@ -1,7 +1,7 @@
 package frc.robot.subsystems.shooter.shooter_accelerator;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
+import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
 public class ShooterAcceleratorConstants {
   public static final ShooterAcceleratorConfig SHOOTER_ACCELERATOR_CONFIG =

@@ -129,9 +129,11 @@ task mirrorAutos(type: JavaExec) {
 // Make build and deploy depend on mirrorAutos (which depends on mirrorPaths)
 tasks.named('build').configure {
     dependsOn mirrorAutos
+    dependsOn spotlessApply
 }
 tasks.named('deploy').configure {
     dependsOn mirrorAutos
+    dependsOn spotlessApply
 }
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
