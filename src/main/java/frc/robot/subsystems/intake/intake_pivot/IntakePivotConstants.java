@@ -26,7 +26,7 @@ public class IntakePivotConstants {
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(400, 0, 0, 0, 5.37, 0.75, 0.8);
+        case COMP -> new PIDGains(200, 0, 0, 0, 3.33, 0.6, 0.75);
         case SIM -> new PIDGains(40, 0, 0, 0, 3.6144, 0.1807, 0.53);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
