@@ -59,7 +59,12 @@ public class VisionIOPhotonvision implements VisionIO {
         FIDs.add(id);
       }
       if (badTag) continue;
-      allTagIDs.addAll(FIDs);
+
+      for (int tag : FIDs) {
+        if (!allTagIDs.contains(tag)) {
+          allTagIDs.add(tag);
+        }
+      }
 
       var observation =
           new PoseObservation(
