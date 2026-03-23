@@ -7,10 +7,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
 import frc.robot.lib.generic_subsystems.superstructure.*;
-import frc.robot.subsystems.intake.intakePivot.IntakePivot;
-import frc.robot.subsystems.intake.intakePivot.IntakePivot.IntakePivotTarget;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollers.IntakeRollersTarget;
+import frc.robot.subsystems.intake.intake_pivot.IntakePivot;
+import frc.robot.subsystems.intake.intake_pivot.IntakePivot.IntakePivotTarget;
+import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
+import frc.robot.subsystems.intake.intake_rollers.IntakeRollers.IntakeRollersTarget;
 
 public class IntakeController extends SubsystemBase {
   public enum IntakeState {

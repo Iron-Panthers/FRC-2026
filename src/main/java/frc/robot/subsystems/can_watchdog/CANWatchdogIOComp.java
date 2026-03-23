@@ -1,4 +1,4 @@
-package frc.robot.subsystems.canWatchdog;
+package frc.robot.subsystems.can_watchdog;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;

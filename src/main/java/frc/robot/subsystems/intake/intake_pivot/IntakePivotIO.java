@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.intakePivot;
+package frc.robot.subsystems.intake.intake_pivot;
 
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIO;
 

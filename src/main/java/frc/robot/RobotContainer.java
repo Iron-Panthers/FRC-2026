@@ -36,8 +36,8 @@ import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
-import frc.robot.subsystems.canWatchdog.CANWatchdog;
-import frc.robot.subsystems.canWatchdog.CANWatchdogIO;
+import frc.robot.subsystems.can_watchdog.CANWatchdog;
+import frc.robot.subsystems.can_watchdog.CANWatchdogIO;
 import frc.robot.subsystems.climb.ClimbController;
 import frc.robot.subsystems.climb.ClimbController.ClimbState;
 import frc.robot.subsystems.climb.climb_claw_pivot.ClimbClawPivot;
@@ -49,22 +49,22 @@ import frc.robot.subsystems.climb.climb_deploy_pivot.ClimbDeployPivotIOSim;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
-import frc.robot.subsystems.intake.intakePivot.IntakePivot;
-import frc.robot.subsystems.intake.intakePivot.IntakePivotIO;
-import frc.robot.subsystems.intake.intakePivot.IntakePivotIOSim;
-import frc.robot.subsystems.intake.intakePivot.IntakePivotIOTalonFX;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollers;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIO;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOSim;
-import frc.robot.subsystems.intake.intakeRollers.IntakeRollersIOTalonFX;
+import frc.robot.subsystems.intake.intake_pivot.IntakePivot;
+import frc.robot.subsystems.intake.intake_pivot.IntakePivotIO;
+import frc.robot.subsystems.intake.intake_pivot.IntakePivotIOSim;
+import frc.robot.subsystems.intake.intake_pivot.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
+import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIO;
+import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 import frc.robot.subsystems.shooter.serializer.Serializer;
 import frc.robot.subsystems.shooter.serializer.SerializerIO;
-import frc.robot.subsystems.shooter.serializer.SerializerSim;
 import frc.robot.subsystems.shooter.serializer.SerializerIOTalonFX;
+import frc.robot.subsystems.shooter.serializer.SerializerSim;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIO;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOSim;
@@ -250,7 +250,8 @@ public class RobotContainer {
     if (shooterAccelerator == null)
       shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIO() {});
     shooterController =
-        new ShooterController(shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator, serializer);
+        new ShooterController(
+            shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator, serializer);
 
     // init climb
     if (climbClawPivot == null) {
@@ -305,24 +306,18 @@ public class RobotContainer {
         intakeController
             .setTargetStateCommand(IntakeState.INTAKE)
             .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE)));
-            //probably have to change this, come back later
+    // probably have to change this, come back later
     NamedCommands.registerCommand(
         "Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
     NamedCommands.registerCommand(
         "Intake mid",
         new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
     NamedCommands.registerCommand(
-        "Spin up shooter",
-        shooterController
-            .setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
+        "Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
     NamedCommands.registerCommand(
-        "Shoot",
-        shooterController
-            .setTargetStateCommand(ShooterState.SHOOT));
+        "Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
     NamedCommands.registerCommand(
-        "Stop shooting",
-        shooterController
-            .setTargetStateCommand(ShooterState.IDLE));
+        "Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
     NamedCommands.registerCommand(
         "Align to shoot", new AlignToShootCommand(swerve, shooterController));
     NamedCommands.registerCommand(
@@ -351,12 +346,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Auto shoot full serializer",
         new AutoShootCommand(
-            swerve,
-            shooterController,
-            intakeController,
-            matchTimerUpdater,
-            climbController,
-            true));
+            swerve, shooterController, intakeController, matchTimerUpdater, climbController, true));
     NamedCommands.registerCommand(
         "Align and auto shoot full serializer",
         new AlignToShootCommand(swerve, shooterController)
@@ -435,17 +425,13 @@ public class RobotContainer {
     // SMART ZERO GYRO
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     // INTAKE
-    driverA
-        .b()
-        .onTrue(
-            new IntakeCommand(
-                climbController, intakeController, shooterController));
+    driverA.b().onTrue(new IntakeCommand(climbController, intakeController, shooterController));
     // STOW ROBOT
     driverA.y().onTrue(new StowCommand(intakeController, shooterController));
 
     // SHOOTING COMMAND
     ShootCommandFactory shootCommand =
-        new ShootCommandFactory(shooterController, hopperController, intakeController, matchTimerUpdater);
+        new ShootCommandFactory(shooterController, intakeController, matchTimerUpdater);
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
 

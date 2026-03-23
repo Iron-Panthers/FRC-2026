@@ -1,7 +1,7 @@
-package frc.robot.subsystems.intake.intakeRollers;
+package frc.robot.subsystems.intake.intake_rollers;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.canWatchdog.CANWatchdogConstants.CAN;
+import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
 public class IntakeRollersConstants {
   // MOTOR AND SENSOR CONFIGURATION

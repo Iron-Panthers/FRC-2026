@@ -9,6 +9,8 @@ import frc.robot.RobotState;
 import frc.robot.RobotState.TargetShootingState;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
 import frc.robot.lib.generic_subsystems.superstructure.*;
+import frc.robot.subsystems.shooter.serializer.Serializer;
+import frc.robot.subsystems.shooter.serializer.Serializer.SerializerTarget;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator.ShooterAcceleratorTarget;
 import frc.robot.subsystems.shooter.shooter_flywheel.ShooterFlywheel;
@@ -19,8 +21,6 @@ import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel.ShooterOmniwheelTarget;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
-import frc.robot.subsystems.shooter.serializer.Serializer;
-import frc.robot.subsystems.shooter.serializer.Serializer.SerializerTarget;
 
 public class ShooterController extends SubsystemBase {
   public enum ShooterState {
@@ -134,7 +134,7 @@ public class ShooterController extends SubsystemBase {
       shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
       shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
       serializer.setVelocityTarget(targetState.serializerTarget);
-      //TODO:should we set the state of serializer to target?
+      // TODO:should we set the state of serializer to target?
     } else if ((targetState == ShooterState.SHOOT
         || targetState == ShooterState.TOTAL_SPIN_UP
         || targetState == ShooterState.DEFAULT_SHOOT)) {
