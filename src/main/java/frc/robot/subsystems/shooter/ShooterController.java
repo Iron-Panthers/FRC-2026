@@ -138,38 +138,58 @@ public class ShooterController extends SubsystemBase {
     } else if ((targetState == ShooterState.SHOOT
         || targetState == ShooterState.TOTAL_SPIN_UP
         || targetState == ShooterState.DEFAULT_SHOOT)) {
+          
       TargetShootingState shotState = RobotState.getInstance().calculateTargetShootingState();
+
       // If shooting, update the hood target based on the calculated shooter angle
+      // Hood
       if (targetState == ShooterState.DEFAULT_SHOOT) {
         shooterHood.setPositionTarget(targetState.hoodTarget);
       } else {
         shooterHood.setPositionTargetManual(
             Units.Rotations.of(.25).minus(shotState.shooterAngle()).in(Units.Rotations));
       }
-      // shooterHood.setPositionTargetManual(shooterTemp.get()/360);
 
+      // Flywheels
       if (targetState == ShooterState.DEFAULT_SHOOT) {
         shooterFlywheel.setVelocityTarget(ShooterFlywheelTarget.SHOOT);
       } else {
         shooterFlywheel.setVelocityManual(
             shotState.shooterSpeed(), targetState.flywheelTarget.getSupplyCurrentLimit());
       }
+      
+      // Omniwheels
+      if (targetState == ShooterState.SHOOT) {
+        if (shooterFlywheel.reachedVelocityTargetManual()) {
+          shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
+        } else {
+          shooterOmniwheel.setVelocityTarget(ShooterOmniwheelTarget.IDLE);
+        }
+      } else {
+        shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
+      }
 
+      // Acclerator
       if (shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) < 350) {
         shooterAccelerator.setVelocityTarget(ShooterAcceleratorTarget.WARMUP_ACCELERATOR);
       } else {
         shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
       }
+
+      // Serializer
+      serializer.setVelocityTarget(targetState.serializerTarget);
     } else {
       shooterHood.setPositionTarget(targetState.hoodTarget);
       shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
       shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
       shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+      serializer.setVelocityTarget(targetState.serializerTarget);
     }
     shooterFlywheel.periodic();
     shooterHood.periodic();
     shooterOmniwheel.periodic();
     shooterAccelerator.periodic();
+    serializer.periodic();
 
     Logger.recordOutput("Shooter/TargetState", targetState);
     Logger.recordOutput("Shooter/IsStopped", stopped);
