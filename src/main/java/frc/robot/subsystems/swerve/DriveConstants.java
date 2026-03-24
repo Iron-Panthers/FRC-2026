@@ -348,9 +348,6 @@ public class DriveConstants {
 
   public static final Pose2d INITIAL_POSE = new Pose2d(2.9, 3.8, new Rotation2d(1, 0));
 
-  public static final Pose2d CLIMB_LEFT_POSE = new Pose2d(1.7, 4.45, new Rotation2d());
-  public static final Pose2d CLIMB_RIGHT_POSE = new Pose2d(1.7, 3.2, new Rotation2d());
-
   public static final PPHolonomicDriveController HOLONOMIC_DRIVE_CONTROLLER =
       new PPHolonomicDriveController(
           TRAJECTORY_CONFIG.linearPID(),

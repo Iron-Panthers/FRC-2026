@@ -7,8 +7,7 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 public class ShooterOmniwheel extends GenericRollers<ShooterOmniwheel.ShooterOmniwheelTarget> {
   public enum ShooterOmniwheelTarget implements GenericRollers.VelocityTarget {
     IDLE(0),
-    SHOOT(50),
-    CLIMB(0);
+    SHOOT(50);
 
     private double velocity;
 

@@ -23,9 +23,6 @@ public class RGB extends SubsystemBase {
             true)),
     MISSING_CAN_DEVICE(
         new RGBMessage(LEDPattern.solid(Color.kRed), MessagePriority.B_MISSING_CAN_DEVICE, true)),
-    CLIMB(
-        new RGBMessage(
-            LEDPattern.solid(Color.kRed).blink(Seconds.of(1 / 8)), MessagePriority.C_CLIMB, true)),
     READY_TO_INTAKE(
         new RGBMessage(
             LEDPattern.solid(Color.kBlue).blink(Seconds.of(1 / 8)),
