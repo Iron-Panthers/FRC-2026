@@ -474,17 +474,6 @@ public class RobotState {
         || DriverStationSim.getAllianceStationId().name().contains("Unknown");
   }
 
-  public Pose2d getClimbTarget() {
-    Pose2d climbLeftPose = DriveConstants.CLIMB_LEFT_POSE;
-    Pose2d climbRightPose = DriveConstants.CLIMB_RIGHT_POSE;
-    if (climbRightPose.getTranslation().getDistance(estimatedPose.getTranslation())
-        < climbLeftPose.getTranslation().getDistance(estimatedPose.getTranslation())) {
-      return climbLeftPose;
-    } else {
-      return climbRightPose;
-    }
-  }
-
   public boolean isUnderTrench() {
     Pose2d robotPose = getEstimatedPose();
     Pose2d flippedTrenchPose = FlippingUtil.flipFieldPose(DriveConstants.TRENCH_POSE);

@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.climb.ClimbController;
-import frc.robot.subsystems.climb.ClimbController.ClimbState;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
 import frc.robot.subsystems.shooter.ShooterController;
@@ -14,13 +12,10 @@ import frc.robot.subsystems.shooter.ShooterController.ShooterState;
  */
 public class IntakeCommand extends SequentialCommandGroup {
   public IntakeCommand(
-      ClimbController climbController,
       IntakeController intakeController,
       ShooterController shooterController) {
     addCommands(
-        climbController
-            .setTargetStateCommand(ClimbState.STOW)
-            .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE_DOWN))
+        intakeController.setTargetStateCommand(IntakeState.INTAKE_DOWN)
             .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))
             .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE)));
   }

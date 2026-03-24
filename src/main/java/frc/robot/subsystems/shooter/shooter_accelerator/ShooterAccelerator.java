@@ -9,8 +9,7 @@ public class ShooterAccelerator
   public enum ShooterAcceleratorTarget implements GenericRollers.VelocityTarget {
     IDLE(0),
     SHOOT(51.66),
-    WARMUP_ACCELERATOR(75),
-    CLIMB(0);
+    WARMUP_ACCELERATOR(75);
 
     private double velocity;
 
