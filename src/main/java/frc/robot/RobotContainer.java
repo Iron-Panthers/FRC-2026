@@ -30,13 +30,13 @@ import frc.robot.commands.AgitateIntakeCommand;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.HubAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
-import frc.robot.commands.WallAxisAssistCommand;
 import frc.robot.subsystems.can_watchdog.CANWatchdog;
 import frc.robot.subsystems.can_watchdog.CANWatchdogIO;
 import frc.robot.subsystems.climb.ClimbController;
@@ -414,7 +414,7 @@ public class RobotContainer {
   }
 
   private void configureDriverAButtons() {
-    driverA.rightStick().whileTrue(new WallAxisAssistCommand(swerve));
+    driverA.rightStick().whileTrue(new HubAxisAssistCommand(swerve));
 
     driverA
         .povLeft()

@@ -13,20 +13,19 @@ public class WallAxisAssistCommand extends AxisAssistCommand {
   public WallAxisAssistCommand(Drive swerve) {
     // Init our Axis Assist Command with the target position of the nearest wall/hub and the target
     // heading of the nearest 180 degree rotation.
-    // When horizontal (closer to top/bottom wall), PID controls Y axis, driver controls X → controlY = false
-    // When vertical (closer to hub X position), PID controls X axis, driver controls Y → controlY = true
-    super(
-        swerve,
-        () -> getAxisPosition(),
-        () -> getTargetHeading(),
-        () -> !isHorizontal());
+    // When horizontal (closer to top/bottom wall), PID controls Y axis, driver controls X →
+    // controlY = false
+    // When vertical (closer to hub X position), PID controls X axis, driver controls Y → controlY =
+    // true
+    super(swerve, () -> getAxisPosition(), () -> getTargetHeading(), () -> !isHorizontal());
   }
 
   private static final double FIELD_WIDTH = 8.21;
 
   /**
-   * Checks if the robot is closer to a horizontal wall (top/bottom, Y=0 or Y=FIELD_WIDTH)
-   * than to the nearest hub X position.
+   * Checks if the robot is closer to a horizontal wall (top/bottom, Y=0 or Y=FIELD_WIDTH) than to
+   * the nearest hub X position.
+   *
    * @return true if closer to a horizontal wall, false if closer to a hub X position
    */
   private static boolean isHorizontal() {
@@ -37,16 +36,24 @@ public class WallAxisAssistCommand extends AxisAssistCommand {
     double distToHorizontalWall = Math.min(robotY, FIELD_WIDTH - robotY);
 
     // Distance to the nearest hub X position
-    double distToHubX = Math.min(
-        Math.abs(robotX - (DriveConstants.BLUE_HUB_ORIGIN.getX() + DriveConstants.HUB_WIDTH / 2 + Units.inchesToMeters(10))),
-        Math.abs(robotX - (DriveConstants.RED_HUB_ORIGIN.getX() - DriveConstants.HUB_WIDTH / 2 - Units.inchesToMeters(10))));
+    double distToHubX =
+        Math.min(
+            Math.abs(
+                robotX
+                    - (DriveConstants.BLUE_HUB_ORIGIN.getX()
+                        + DriveConstants.HUB_WIDTH / 2
+                        + Units.inchesToMeters(10))),
+            Math.abs(
+                robotX
+                    - (DriveConstants.RED_HUB_ORIGIN.getX()
+                        - DriveConstants.HUB_WIDTH / 2
+                        - Units.inchesToMeters(10))));
 
     return distToHorizontalWall < distToHubX;
   }
 
   private static Rotation2d getTargetHeading() {
-    double poseRadians =
-        RobotState.getInstance().getEstimatedPose().getRotation().getRadians();
+    double poseRadians = RobotState.getInstance().getEstimatedPose().getRotation().getRadians();
 
     double fieldTarget;
     if (isHorizontal()) {
@@ -54,8 +61,7 @@ public class WallAxisAssistCommand extends AxisAssistCommand {
       fieldTarget = (poseRadians > 0) ? Math.PI / 2 : -Math.PI / 2;
     } else {
       // For vertical hub alignment, snap to 0 or PI
-      fieldTarget =
-          (poseRadians > -Math.PI / 2 && poseRadians < Math.PI / 2) ? 0 : Math.PI;
+      fieldTarget = (poseRadians > -Math.PI / 2 && poseRadians < Math.PI / 2) ? Math.PI : 0;
     }
 
     // The heading controller operates on fieldRelativeYaw (driver-relative).

@@ -163,9 +163,6 @@ public class AxisAssist extends BaseTranslationController {
   }
 
   public Distance calculateForwardVelocity() {
-    if (targetPosition - positionSupplier.get() < 0) {
-      return Units.Meters.of(0).minus(pidAxisVel);
-    }
     return pidAxisVel;
   }
 
