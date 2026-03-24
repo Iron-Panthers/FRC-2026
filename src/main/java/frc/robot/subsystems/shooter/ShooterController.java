@@ -148,78 +148,78 @@ public class ShooterController extends SubsystemBase {
       }
       // shooterHood.setPositionTargetManual(shooterTemp.get()/360);
 
-            if (targetState == ShooterState.DEFAULT_SHOOT) {
-                shooterFlywheel.setVelocityTarget(ShooterFlywheelTarget.SHOOT);
-            } else {
-                shooterFlywheel.setVelocityManual(shotState.shooterSpeed(), targetState.flywheelTarget.getSupplyCurrentLimit());
-            }
+      if (targetState == ShooterState.DEFAULT_SHOOT) {
+        shooterFlywheel.setVelocityTarget(ShooterFlywheelTarget.SHOOT);
+      } else {
+        shooterFlywheel.setVelocityManual(
+            shotState.shooterSpeed(), targetState.flywheelTarget.getSupplyCurrentLimit());
+      }
 
-            if (shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) < 350){
-                shooterAccelerator.setVelocityTarget(ShooterAcceleratorTarget.WARMUP_ACCELERATOR);
-            } else {
-                shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
-            }
-        }
-        else {
-            shooterHood.setPositionTarget(targetState.hoodTarget);
-            shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
-            shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
-            shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
-        }
-        shooterFlywheel.periodic();
-        shooterHood.periodic();
-        shooterOmniwheel.periodic();
-        shooterAccelerator.periodic();
-        
-        Logger.recordOutput("Shooter/TargetState", targetState);
-        Logger.recordOutput("Shooter/IsStopped", stopped);
-        Logger.recordOutput("Shooter/AutoAim", autoAim);
+      if (shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) < 350) {
+        shooterAccelerator.setVelocityTarget(ShooterAcceleratorTarget.WARMUP_ACCELERATOR);
+      } else {
+        shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
+      }
+    } else {
+      shooterHood.setPositionTarget(targetState.hoodTarget);
+      shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
+      shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
+      shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
     }
+    shooterFlywheel.periodic();
+    shooterHood.periodic();
+    shooterOmniwheel.periodic();
+    shooterAccelerator.periodic();
 
-    public ShooterState getTargetState() {
-        return targetState;
-    }
+    Logger.recordOutput("Shooter/TargetState", targetState);
+    Logger.recordOutput("Shooter/IsStopped", stopped);
+    Logger.recordOutput("Shooter/AutoAim", autoAim);
+  }
 
-    public void setTargetState(ShooterState targetState) {
-        setStopped(false);
-        this.targetState = targetState;
-    }
+  public ShooterState getTargetState() {
+    return targetState;
+  }
 
-    public Command setTargetStateCommand(ShooterState target) {
-        return new InstantCommand(() -> setTargetState(target), this);
-    }
+  public void setTargetState(ShooterState targetState) {
+    setStopped(false);
+    this.targetState = targetState;
+  }
 
-    public void setStopped(boolean stopped){
-        this.stopped = stopped;
-    }
+  public Command setTargetStateCommand(ShooterState target) {
+    return new InstantCommand(() -> setTargetState(target), this);
+  }
 
-    public Command setStoppedCommand(boolean stopped){
-        return new InstantCommand(()-> setStopped(stopped));
-    }
+  public void setStopped(boolean stopped) {
+    this.stopped = stopped;
+  }
 
-    public Command zeroCommand(){
-        return new InstantCommand(() -> shooterHood.setControlMode(GenericSuperstructure.ControlMode.ZEROING))
-            .alongWith(setTargetStateCommand(ShooterState.ZEROING)
-            .alongWith(setStoppedCommand(false)));
-    }
+  public Command setStoppedCommand(boolean stopped) {
+    return new InstantCommand(() -> setStopped(stopped));
+  }
 
-    public LinearVelocity getCurrentVelocity(){
-        return shooterFlywheel.getCurrentVelocity();
-    }
+  public Command zeroCommand() {
+    return new InstantCommand(
+            () -> shooterHood.setControlMode(GenericSuperstructure.ControlMode.ZEROING))
+        .alongWith(setTargetStateCommand(ShooterState.ZEROING).alongWith(setStoppedCommand(false)));
+  }
 
-    public void setAutoAim(boolean autoAim){
-        this.autoAim = autoAim;
-    }
+  public LinearVelocity getCurrentVelocity() {
+    return shooterFlywheel.getCurrentVelocity();
+  }
 
-    public Command setAutoAimCommand(boolean autoAim){
-        return new InstantCommand(()-> setAutoAim(autoAim));
-    }
+  public void setAutoAim(boolean autoAim) {
+    this.autoAim = autoAim;
+  }
 
-    public Command stopZeroingCommand() {
-        return new InstantCommand(()-> shooterHood.endZeroing());
-    }
+  public Command setAutoAimCommand(boolean autoAim) {
+    return new InstantCommand(() -> setAutoAim(autoAim));
+  }
 
-    public boolean flywheelsUpToSpeed(){
-        return shooterFlywheel.reachedVelocityTargetManual();
-    }
+  public Command stopZeroingCommand() {
+    return new InstantCommand(() -> shooterHood.endZeroing());
+  }
+
+  public boolean flywheelsUpToSpeed() {
+    return shooterFlywheel.reachedVelocityTargetManual();
+  }
 }

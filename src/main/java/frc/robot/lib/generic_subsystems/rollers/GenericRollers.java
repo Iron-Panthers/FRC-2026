@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.Logger;
 public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
   public interface VelocityTarget {
     double getVelocity();
+
     double getSupplyCurrentLimit();
   }
 
@@ -14,7 +15,6 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     VELOCITY,
     STOP
   }
-  
 
   private ControlMode controlMode = ControlMode.STOP;
 
@@ -27,6 +27,7 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
 
   private G velocityTarget;
   protected double manualVelocityRPS = 0;
+  protected double manualSupplyCurrentAmps = 0;
   private boolean useManualVelocity = false;
 
   public GenericRollers(String name, GenericRollersIO rollerIO) {
@@ -39,9 +40,6 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     rollerIO.updateInputs(inputs);
     Logger.processInputs(name, inputs);
 
-    rollerIO.setSupplyCurrentLimit(velocityTarget.getSupplyCurrentLimit());
-
-    rollerIO.runVelocity(useManualVelocity ? manualVelocityRPS : velocityTarget.getVelocity());
     Logger.recordOutput(
         name + "/Manual Target",
         manualVelocityRPS * ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
@@ -55,6 +53,8 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     Logger.recordOutput(name + "/ControlMode", controlMode.toString());
     switch (controlMode) {
       case VELOCITY -> {
+        rollerIO.setSupplyCurrentLimit(
+            useManualVelocity ? manualSupplyCurrentAmps : velocityTarget.getSupplyCurrentLimit());
         rollerIO.runVelocity(useManualVelocity ? manualVelocityRPS : velocityTarget.getVelocity());
       }
       case STOP -> {
@@ -83,10 +83,12 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
   }
 
   public void setVelocityTargetManual(double velocityRPS, double supplyCurrentAmps) {
-    // Run setamps and put that as parameter and where you call the method(intakerollers), get the number of amps from the enum
+    // Run setamps and put that as parameter and where you call the method(intakerollers), get the
+    // number of amps from the enum
     rollerIO.setSupplyCurrentLimit(supplyCurrentAmps);
     setControlMode(ControlMode.VELOCITY);
     this.manualVelocityRPS = velocityRPS;
+    this.manualSupplyCurrentAmps = supplyCurrentAmps;
     this.useManualVelocity = true;
   }
 

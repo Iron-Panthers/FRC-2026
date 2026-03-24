@@ -10,6 +10,7 @@ public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
     INTAKE(20);
 
     private double velocity;
+    private double supplyCurrentLimit;
 
     private SerializerTarget(double velocity) {
       this.velocity = velocity;
@@ -18,6 +19,11 @@ public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
     @Override
     public double getVelocity() {
       return velocity;
+    }
+
+    @Override
+    public double getSupplyCurrentLimit() {
+      return supplyCurrentLimit;
     }
   }
 

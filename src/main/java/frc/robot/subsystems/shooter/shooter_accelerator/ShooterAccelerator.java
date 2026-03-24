@@ -11,24 +11,19 @@ public class ShooterAccelerator
     SHOOT(51.66),
     WARMUP_ACCELERATOR(75);
 
-        private double velocity;
-        private double supplyCurrentLimit;
+    private double velocity;
+    private double supplyCurrentLimit;
 
-        private ShooterAcceleratorTarget(double velocity) {
-            this.velocity = velocity;
-        }
-
-        public double getVelocity() {
-            return velocity;
-        }
-        
-        public double getSupplyCurrentLimit(){
-            return supplyCurrentLimit;
-        }
+    private ShooterAcceleratorTarget(double velocity) {
+      this.velocity = velocity;
     }
 
     public double getVelocity() {
       return velocity;
+    }
+
+    public double getSupplyCurrentLimit() {
+      return supplyCurrentLimit;
     }
   }
 

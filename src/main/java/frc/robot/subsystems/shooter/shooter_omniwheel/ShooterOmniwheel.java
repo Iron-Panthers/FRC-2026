@@ -9,25 +9,19 @@ public class ShooterOmniwheel extends GenericRollers<ShooterOmniwheel.ShooterOmn
     IDLE(0),
     SHOOT(50);
 
-        private double velocity;
-        private double supplyCurrentLimit;
-        
+    private double velocity;
+    private double supplyCurrentLimit;
 
-        private ShooterOmniwheelTarget(double velocity) {
-            this.velocity = velocity;
-        }
-
-        public double getVelocity() {
-            return velocity;
-        }
-        
-        public double getSupplyCurrentLimit(){
-            return supplyCurrentLimit;
-        }
+    private ShooterOmniwheelTarget(double velocity) {
+      this.velocity = velocity;
     }
 
     public double getVelocity() {
       return velocity;
+    }
+
+    public double getSupplyCurrentLimit() {
+      return supplyCurrentLimit;
     }
   }
 
