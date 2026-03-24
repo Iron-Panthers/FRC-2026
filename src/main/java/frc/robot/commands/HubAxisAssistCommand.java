@@ -14,7 +14,7 @@ public class HubAxisAssistCommand extends AxisAssistCommand {
     super(swerve, () -> getAxisPosition(), () -> getTargetHeading(), () -> true);
   }
 
-  private static double TRANS_OFFSET = 4;
+  private static double TRANS_OFFSET = 12;
   private static double ROTATION_OFFSET = Math.toRadians(20);
 
   private static boolean closerToBlueHub() {
