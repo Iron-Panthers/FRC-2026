@@ -19,6 +19,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Smart zero"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Align and auto shoot full hopper"
           }
         },
@@ -37,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1xTB 3 I Right"
+            "pathName": "1xTB I 3 Right"
           }
         }
       ]

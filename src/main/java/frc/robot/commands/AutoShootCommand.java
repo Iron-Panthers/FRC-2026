@@ -24,7 +24,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
         // new AlignToShootCommand(swerve, shooterController).alongWith(
         new InstantCommand(() -> shooterController.setTargetState(ShooterState.SHOOT))
             .alongWith(
-                new WaitCommand(1)
+                new WaitCommand(0.2)
                     .andThen(
                         intakeActive
                             ? new AgitateIntakeCommand(intakeController, 4)

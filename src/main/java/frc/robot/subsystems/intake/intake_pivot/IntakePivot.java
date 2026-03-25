@@ -12,7 +12,7 @@ import org.littletonrobotics.junction.Logger;
 public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget>
     implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(-5),
+    INTAKE(-10.4),
     MED_STOW(60),
     HIGH_MED_STOW(20),
     STOW(78.8);

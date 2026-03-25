@@ -29,11 +29,9 @@ public class VisionConstants {
             new Transform3d[] {
               // new Transform3d(new Translation3d(), new Rotation3d())
               // arducam-7 (front in rollers)
-                new Transform3d(
-                    new Translation3d(-0.3742394074228319, 0.2958554867169158,
-              0.46319638351625225),
-                    new Rotation3d(0.048833313512474996, -0.6159735526187061,
-              3.0981605781693538)),
+              new Transform3d(
+                  new Translation3d(-0.3742394074228319, 0.2958554867169158, 0.46319638351625225),
+                  new Rotation3d(0.048833313512474996, -0.6159735526187061, 3.0981605781693538)),
               // // arducam-6 (front)
               // new Transform3d(new Translation3d(0.22860929920064077, 0.2077131830328219,
               // 0.4409522926695345), new Rotation3d(0.022664911373188813, -0.47667215401543667,
