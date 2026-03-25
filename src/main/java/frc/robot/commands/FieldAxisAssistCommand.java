@@ -9,8 +9,8 @@ import frc.robot.RobotState;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 
-public class WallAxisAssistCommand extends AxisAssistCommand {
-  public WallAxisAssistCommand(Drive swerve) {
+public class FieldAxisAssistCommand extends AxisAssistCommand {
+  public FieldAxisAssistCommand(Drive swerve) {
     // Init our Axis Assist Command with the target position of the nearest wall/hub and the target
     // heading of the nearest 180 degree rotation.
     // When horizontal (closer to top/bottom wall), PID controls Y axis, driver controls X →
@@ -20,8 +20,20 @@ public class WallAxisAssistCommand extends AxisAssistCommand {
     super(swerve, () -> getAxisPosition(), () -> getTargetHeading(), () -> !isHorizontal());
   }
 
-  private static final double FIELD_WIDTH = 8.21;
+  private static double TRANS_OFFSET = 12;
+  private static double ROTATION_OFFSET = Math.toRadians(20);
 
+  private static final double FIELD_WIDTH = 8.21;
+  private static boolean closerToBlueHub() {
+    return RobotState.getInstance()
+            .getEstimatedPose()
+            .getTranslation()
+            .getDistance(DriveConstants.BLUE_HUB_ORIGIN.toTranslation2d())
+        < RobotState.getInstance()
+            .getEstimatedPose()
+            .getTranslation()
+            .getDistance(DriveConstants.RED_HUB_ORIGIN.toTranslation2d());
+  }
   /**
    * Checks if the robot is closer to a horizontal wall (top/bottom, Y=0 or Y=FIELD_WIDTH) than to
    * the nearest hub X position.
@@ -61,7 +73,24 @@ public class WallAxisAssistCommand extends AxisAssistCommand {
       fieldTarget = (poseRadians > 0) ? Math.PI / 2 : -Math.PI / 2;
     } else {
       // For vertical hub alignment, snap to 0 or PI
-      fieldTarget = (poseRadians > -Math.PI / 2 && poseRadians < Math.PI / 2) ? Math.PI : 0;
+      if(RobotState.isAllianceRed()){
+        fieldTarget = (poseRadians > -Math.PI / 2 && poseRadians < Math.PI / 2) ? Math.PI : 0;
+      }else{
+        fieldTarget = (poseRadians > -Math.PI / 2 && poseRadians < Math.PI / 2) ? 0 : Math.PI;
+      }
+      double offset = ROTATION_OFFSET;
+      
+      if (fieldTarget == 0) {
+        offset *= -1;
+      }
+      if (closerToBlueHub()) {
+        offset *= -1;
+      }
+      if(!RobotState.isAllianceRed()){
+        offset *= -1;
+      }
+      fieldTarget += offset;
+      return new Rotation2d(fieldTarget);
     }
 
     // The heading controller operates on fieldRelativeYaw (driver-relative).
@@ -87,26 +116,19 @@ public class WallAxisAssistCommand extends AxisAssistCommand {
       }
     } else {
       // Align to the nearest hub X position
-      if (RobotState.getInstance()
-              .getEstimatedPose()
-              .getTranslation()
-              .getDistance(DriveConstants.BLUE_HUB_ORIGIN.toTranslation2d())
-          < RobotState.getInstance()
-              .getEstimatedPose()
-              .getTranslation()
-              .getDistance(DriveConstants.RED_HUB_ORIGIN.toTranslation2d())) {
-        return Meters.of(
-            DriveConstants.BLUE_HUB_ORIGIN.getX()
-                + DriveConstants.DRIVE_CONFIG.bumperWidthX() / 2
-                + DriveConstants.HUB_WIDTH
-                + Units.inchesToMeters(3));
-      } else {
-        return Meters.of(
-            DriveConstants.RED_HUB_ORIGIN.getX()
-                - DriveConstants.DRIVE_CONFIG.bumperWidthX() / 2
-                - DriveConstants.HUB_WIDTH
-                - Units.inchesToMeters(3));
-      }
+      if (closerToBlueHub()) {
+      return Meters.of(
+          DriveConstants.BLUE_HUB_ORIGIN.getX()
+              + DriveConstants.DRIVE_CONFIG.bumperWidthX() / 2
+              + DriveConstants.HUB_WIDTH
+              + Units.inchesToMeters(TRANS_OFFSET));
+    } else {
+      return Meters.of(
+          DriveConstants.RED_HUB_ORIGIN.getX()
+              - DriveConstants.DRIVE_CONFIG.bumperWidthX() / 2
+              - DriveConstants.HUB_WIDTH
+              - Units.inchesToMeters(TRANS_OFFSET));
+    }
     }
   }
 }

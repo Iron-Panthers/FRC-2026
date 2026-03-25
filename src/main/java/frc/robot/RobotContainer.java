@@ -31,6 +31,7 @@ import frc.robot.commands.AgitateIntakeCommand;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.FieldAxisAssistCommand;
 import frc.robot.commands.HubAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommandFactory;
@@ -38,8 +39,8 @@ import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
-import frc.robot.subsystems.can_watchdog.CANWatchdogIO;
 import frc.robot.subsystems.can_watchdog.CANWatchdog;
+import frc.robot.subsystems.can_watchdog.CANWatchdogIO;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
@@ -324,30 +325,17 @@ public class RobotContainer {
 
     NamedCommands.registerCommand(
         "Auto shoot full serializer",
-        new AutoShootCommand(
-            swerve,
-            shooterController,
-            intakeController,
-            matchTimerUpdater,
-            true));
+        new AutoShootCommand(swerve, shooterController, intakeController, matchTimerUpdater, true));
     NamedCommands.registerCommand(
         "Align and auto shoot full serializer",
         new AlignToShootCommand(swerve, shooterController)
             .withDeadline(
                 new AutoShootCommand(
-                    swerve,
-                    shooterController,
-                    intakeController,
-                    matchTimerUpdater,
-                    false)));
+                    swerve, shooterController, intakeController, matchTimerUpdater, false)));
     NamedCommands.registerCommand(
         "Auto shoot full serializer (no intake)",
         new AutoShootCommand(
-            swerve,
-            shooterController,
-            intakeController,
-            matchTimerUpdater,
-            false));
+            swerve, shooterController, intakeController, matchTimerUpdater, false));
     NamedCommands.registerCommand(
         "Shoot preloaded serializer",
         new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
@@ -390,13 +378,14 @@ public class RobotContainer {
     new Trigger(() -> (int) matchTimerUpdater.getTimeUntilOurHubShifts() == 7)
         .onTrue(new VibrateHIDCommand(driverB.getHID(), 1, 0.4));
 
-    new Trigger(() -> vision.getMultiTags()).whileTrue(new RunCommand(()-> swerve.smartZeroGyro()));
+    new Trigger(() -> vision.getMultiTags())
+        .whileTrue(new RunCommand(() -> swerve.smartZeroGyro()));
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
   }
 
   private void configureDriverAButtons() {
-    driverA.rightStick().whileTrue(new HubAxisAssistCommand(swerve));
+    driverA.rightStick().whileTrue(new FieldAxisAssistCommand(swerve));
 
     driverA
         .povLeft()
@@ -410,11 +399,7 @@ public class RobotContainer {
     // SMART ZERO GYRO
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     // INTAKE
-    driverA
-        .b()
-        .onTrue(
-            new IntakeCommand(
-                intakeController, shooterController));
+    driverA.b().onTrue(new IntakeCommand(intakeController, shooterController));
     // STOW ROBOT
     driverA.y().onTrue(new StowCommand(intakeController, shooterController));
 
@@ -462,17 +447,9 @@ public class RobotContainer {
             shooterController
                 .setStoppedCommand(true)
                 .alongWith(intakeController.setStoppedCommand(true)));
-    driverB
-        .a()
-        .onTrue(
-            intakeController
-                .setTargetStateCommand(IntakeState.STOW));
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW));
 
-    driverB
-        .rightBumper()
-        .onTrue(
-            intakeController
-                .setTargetStateCommand(IntakeState.INTAKE));
+    driverB.rightBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.INTAKE));
 
     driverB.povLeft().onTrue(intakeController.zeroCommand());
     driverB.povLeft().onFalse(intakeController.stopZeroingCommand());
