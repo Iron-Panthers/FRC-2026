@@ -10,21 +10,26 @@ import org.littletonrobotics.junction.AutoLogOutput;
 
 public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywheelTarget> {
   public enum ShooterFlywheelTarget implements GenericRollers.VelocityTarget {
-    // TODO: need to change; from sprint 2025 -- ive taken away a few states
-    IDLE(0),
-    SHOOT(RobotBase.isReal() ? 8.6 : 8.6),
-    SPEEDY_SHOOT(9); // TODO: make this uniform
+    IDLE(0, ShooterFlywheelConstants.CURRENT_LIMIT_AMPS),
+    SHOOT(RobotBase.isReal() ? 8.6 : 8.6, ShooterFlywheelConstants.CURRENT_LIMIT_AMPS),
+    SPEEDY_SHOOT(9, ShooterFlywheelConstants.CURRENT_LIMIT_AMPS); // TODO: make this uniform
 
     private double velocity;
+    private double supplyCurrentLimit;
 
     /** Input velocity in meters per second */
-    private ShooterFlywheelTarget(double velocity) {
+    private ShooterFlywheelTarget(double velocity, double supplyCurrentLimit) {
       this.velocity = velocity / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters();
+      this.supplyCurrentLimit = supplyCurrentLimit;
     }
 
     /** Velocity in rotations per second */
     public double getVelocity() {
       return velocity;
+    }
+
+    public double getSupplyCurrentLimit() {
+      return supplyCurrentLimit;
     }
   }
 
@@ -32,7 +37,7 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
     super("Shooter/Shooter Flywheels", io);
   }
 
-  @AutoLogOutput(key = "Shooter/Shooter Flywheels/CurrentVelocity")
+  @AutoLogOutput(key = "Shooter/Shooter Flywheels/Current Velocity")
   public LinearVelocity getCurrentVelocity() {
     return MetersPerSecond.of(
         Units.radiansToRotations(inputs.velocityRadsPerSec)
@@ -40,11 +45,12 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
   }
 
   /** Set flywheel to an arbitrary surface speed (m/s) from the LUT, bypassing the enum targets. */
-  public void setVelocityManual(LinearVelocity velocity) {
+  public void setVelocityManual(LinearVelocity velocity, double supplyCurrentAmps) {
     setVelocityTargetManual(
         ShooterFlywheelConstants.VELOCITY_ADJUSTMENT
             + velocity.in(MetersPerSecond)
-                / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters());
+                / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters(),
+        supplyCurrentAmps);
   }
 
   public boolean reachedVelocityTargetManual() {

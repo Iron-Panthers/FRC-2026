@@ -18,7 +18,7 @@ public class SerializerConstants {
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
-  public static final int CURRENT_LIMIT_AMPS = 20;
+  public static final int CURRENT_LIMIT_AMPS = 30;
   public static final double UPPER_VOLT_LIMIT = 10;
   public static final double LOWER_VOLT_LIMIT = -10;
 
