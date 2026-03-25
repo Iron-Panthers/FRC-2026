@@ -145,8 +145,8 @@ public class Vision extends SubsystemBase {
 
   public boolean getMultiTags() {
     boolean isUsingMultiTagsForEstimate = false;
-    for(VisionIOInputsAutoLogged ioInputsAutoLogged : inputs){
-      if(ioInputsAutoLogged.tagIDs.length > 1){
+    for (VisionIOInputsAutoLogged ioInputsAutoLogged : inputs) {
+      if (ioInputsAutoLogged.tagIDs.length > 1) {
         isUsingMultiTagsForEstimate = true;
       }
     }
