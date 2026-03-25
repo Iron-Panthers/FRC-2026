@@ -7,15 +7,16 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 public class ShooterAccelerator
     extends GenericRollers<ShooterAccelerator.ShooterAcceleratorTarget> {
   public enum ShooterAcceleratorTarget implements GenericRollers.VelocityTarget {
-    IDLE(0),
-    SHOOT(51.66),
-    WARMUP_ACCELERATOR(75);
+    IDLE(0, 0),
+    SHOOT(51.66, 30),
+    WARMUP_ACCELERATOR(75, 30);
 
     private double velocity;
     private double supplyCurrentLimit;
 
-    private ShooterAcceleratorTarget(double velocity) {
+    private ShooterAcceleratorTarget(double velocity, double supplyCurrentLimit) {
       this.velocity = velocity;
+      this.supplyCurrentLimit = supplyCurrentLimit;
     }
 
     public double getVelocity() {

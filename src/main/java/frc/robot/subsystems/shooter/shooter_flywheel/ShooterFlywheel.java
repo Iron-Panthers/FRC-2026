@@ -1,10 +1,8 @@
 package frc.robot.subsystems.shooter.shooter_flywheel;
 
-import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.lib.generic_subsystems.rollers.*;
@@ -12,16 +10,17 @@ import org.littletonrobotics.junction.AutoLogOutput;
 
 public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywheelTarget> {
   public enum ShooterFlywheelTarget implements GenericRollers.VelocityTarget {
-    IDLE(0),
-    SHOOT(RobotBase.isReal() ? 8.6 : 8.6),
-    SPEEDY_SHOOT(9); // TODO: make this uniform
+    IDLE(0, 0),
+    SHOOT(RobotBase.isReal() ? 8.6 : 8.6, 40),
+    SPEEDY_SHOOT(9, 40); // TODO: make this uniform
 
     private double velocity;
     private double supplyCurrentLimit;
 
     /** Input velocity in meters per second */
-    private ShooterFlywheelTarget(double velocity) {
+    private ShooterFlywheelTarget(double velocity, double supplyCurrentLimit) {
       this.velocity = velocity / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters();
+      this.supplyCurrentLimit = supplyCurrentLimit;
     }
 
     /** Velocity in rotations per second */
@@ -52,15 +51,6 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
             + velocity.in(MetersPerSecond)
                 / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters(),
         supplyCurrentAmps);
-  }
-
-  /** Set flywheel to an arbitrary surface speed (m/s) from the LUT, bypassing the enum targets. */
-  public void setVelocityManual(LinearVelocity velocity, Current currentLimit) {
-    setVelocityTargetManual(
-        ShooterFlywheelConstants.VELOCITY_ADJUSTMENT
-            + velocity.in(MetersPerSecond)
-                / ShooterFlywheelConstants.PHYSICAL_CONSTANTS.circumferenceMeters(),
-        currentLimit.in(Amps));
   }
 
   public boolean reachedVelocityTargetManual() {
