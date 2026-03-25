@@ -38,26 +38,26 @@ public class ShooterController extends SubsystemBase {
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.SHOOT,
-        SerializerTarget.INTAKE),
+        SerializerTarget.SHOOT),
     /** default_shoot: default shooting position */
     DEFAULT_SHOOT(
         ShooterHoodTarget.DEFAULT_SHOOT,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.SHOOT,
-        SerializerTarget.INTAKE),
+        SerializerTarget.SHOOT),
     TOTAL_SPIN_UP(
         ShooterHoodTarget.SHOOT_TEMP,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.IDLE,
-        SerializerTarget.INTAKE),
+        SerializerTarget.SPIN_UP),
     COMPACT_SPIN_UP(
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.IDLE,
-        SerializerTarget.INTAKE),
+        SerializerTarget.SPIN_UP),
     ZEROING(
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.IDLE,
@@ -69,7 +69,7 @@ public class ShooterController extends SubsystemBase {
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.SHOOT,
-        SerializerTarget.INTAKE);
+        SerializerTarget.SHOOT);
 
     public final ShooterHoodTarget hoodTarget;
     public final ShooterFlywheelTarget flywheelTarget;
@@ -138,17 +138,27 @@ public class ShooterController extends SubsystemBase {
     } else if ((targetState == ShooterState.SHOOT
         || targetState == ShooterState.TOTAL_SPIN_UP
         || targetState == ShooterState.DEFAULT_SHOOT)) {
+
       TargetShootingState shotState = RobotState.getInstance().calculateTargetShootingState();
+
       // If shooting, update the hood target based on the calculated shooter angle
+      // Hood
       if (targetState == ShooterState.DEFAULT_SHOOT) {
         shooterHood.setPositionTarget(targetState.hoodTarget);
       } else {
         shooterHood.setPositionTargetManual(
             Units.Rotations.of(.25).minus(shotState.shooterAngle()).in(Units.Rotations));
       }
-      // shooterHood.setPositionTargetManual(shooterTemp.get()/360);
 
-      // set our omniwheels
+      // Flywheels
+      if (targetState == ShooterState.DEFAULT_SHOOT) {
+        shooterFlywheel.setVelocityTarget(ShooterFlywheelTarget.SHOOT);
+      } else {
+        shooterFlywheel.setVelocityManual(
+            shotState.shooterSpeed(), targetState.flywheelTarget.getSupplyCurrentLimit());
+      }
+
+      // Omniwheels
       if (targetState == ShooterState.SHOOT) {
         if (shooterFlywheel.reachedVelocityTargetManual()) {
           shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
@@ -159,17 +169,14 @@ public class ShooterController extends SubsystemBase {
         shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
       }
 
-      if (targetState == ShooterState.DEFAULT_SHOOT) {
-        shooterFlywheel.setVelocityTarget(ShooterFlywheelTarget.SHOOT);
-      } else {
-        shooterFlywheel.setVelocityManual(shotState.shooterSpeed());
-      }
-
+      // Acclerator
       if (shooterOmniwheel.getCurrentVelocity().in(Units.RadiansPerSecond) < 350) {
         shooterAccelerator.setVelocityTarget(ShooterAcceleratorTarget.WARMUP_ACCELERATOR);
       } else {
         shooterAccelerator.setVelocityTarget(targetState.acceleratorTarget);
       }
+
+      // Serializer
       serializer.setVelocityTarget(targetState.serializerTarget);
     } else {
       shooterHood.setPositionTarget(targetState.hoodTarget);
