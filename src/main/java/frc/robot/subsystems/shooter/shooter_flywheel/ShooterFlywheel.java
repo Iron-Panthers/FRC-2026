@@ -37,7 +37,7 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
     super("Shooter/Shooter Flywheels", io);
   }
 
-  @AutoLogOutput(key = "Shooter/Shooter Flywheels/Currentvelocity")
+  @AutoLogOutput(key = "Shooter/Shooter Flywheels/Current Velocity")
   public LinearVelocity getCurrentVelocity() {
     return MetersPerSecond.of(
         Units.radiansToRotations(inputs.velocityRadsPerSec)

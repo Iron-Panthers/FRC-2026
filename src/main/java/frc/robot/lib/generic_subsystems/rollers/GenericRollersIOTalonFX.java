@@ -108,10 +108,10 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
 
     talon.getConfigurator().apply(gainsConfig);
   }
-  
+
   @Override
   public void setSupplyCurrentLimit(double amps) {
-    if (config.CurrentLimits.SupplyCurrentLimit != amps){
+    if (config.CurrentLimits.SupplyCurrentLimit != amps) {
       config.CurrentLimits.SupplyCurrentLimitEnable = true;
       config.CurrentLimits.SupplyCurrentLimit = amps;
       talon.getConfigurator().apply(config);

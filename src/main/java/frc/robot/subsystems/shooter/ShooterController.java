@@ -138,7 +138,7 @@ public class ShooterController extends SubsystemBase {
     } else if ((targetState == ShooterState.SHOOT
         || targetState == ShooterState.TOTAL_SPIN_UP
         || targetState == ShooterState.DEFAULT_SHOOT)) {
-          
+
       TargetShootingState shotState = RobotState.getInstance().calculateTargetShootingState();
 
       // If shooting, update the hood target based on the calculated shooter angle
@@ -157,7 +157,7 @@ public class ShooterController extends SubsystemBase {
         shooterFlywheel.setVelocityManual(
             shotState.shooterSpeed(), targetState.flywheelTarget.getSupplyCurrentLimit());
       }
-      
+
       // Omniwheels
       if (targetState == ShooterState.SHOOT) {
         if (shooterFlywheel.reachedVelocityTargetManual()) {
