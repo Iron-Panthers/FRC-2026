@@ -19,6 +19,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   protected final TalonFX talon;
   protected final ArrayList<TalonFX> followerMotors;
   protected final TalonFXConfiguration config;
+  protected Slot0Configs gainsConfig;
 
   private final StatusSignal<Angle> position;
   private final StatusSignal<AngularVelocity> velocity;
@@ -98,7 +99,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
    */
   @Override
   public void setSlot0(double kP, double kI, double kD, double kS, double kV, double kA) {
-    Slot0Configs gainsConfig = new Slot0Configs();
+    gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
     gainsConfig.kD = kD;
@@ -114,6 +115,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     if (config.CurrentLimits.SupplyCurrentLimit != amps) {
       config.CurrentLimits.SupplyCurrentLimitEnable = true;
       config.CurrentLimits.SupplyCurrentLimit = amps;
+      config.withSlot0(gainsConfig);
       talon.getConfigurator().apply(config);
     }
   }

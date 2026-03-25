@@ -38,26 +38,26 @@ public class ShooterController extends SubsystemBase {
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.SHOOT,
-        SerializerTarget.INTAKE),
+        SerializerTarget.SHOOT),
     /** default_shoot: default shooting position */
     DEFAULT_SHOOT(
         ShooterHoodTarget.DEFAULT_SHOOT,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.SHOOT,
-        SerializerTarget.INTAKE),
+        SerializerTarget.SHOOT),
     TOTAL_SPIN_UP(
         ShooterHoodTarget.SHOOT_TEMP,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.IDLE,
-        SerializerTarget.INTAKE),
+        SerializerTarget.SPIN_UP),
     COMPACT_SPIN_UP(
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.IDLE,
-        SerializerTarget.INTAKE),
+        SerializerTarget.SPIN_UP),
     ZEROING(
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.IDLE,
@@ -69,7 +69,7 @@ public class ShooterController extends SubsystemBase {
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.SHOOT,
-        SerializerTarget.INTAKE);
+        SerializerTarget.SHOOT);
 
     public final ShooterHoodTarget hoodTarget;
     public final ShooterFlywheelTarget flywheelTarget;
