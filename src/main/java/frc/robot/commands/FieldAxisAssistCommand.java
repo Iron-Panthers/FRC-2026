@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Meters;
+import static frc.robot.subsystems.swerve.DriveConstants.CENTER_OF_FIELD;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -24,6 +25,7 @@ public class FieldAxisAssistCommand extends AxisAssistCommand {
   private static double ROTATION_OFFSET = Math.toRadians(20);
 
   private static final double FIELD_WIDTH = 8.21;
+
   private static boolean closerToBlueHub() {
     return RobotState.getInstance()
             .getEstimatedPose()
@@ -34,6 +36,7 @@ public class FieldAxisAssistCommand extends AxisAssistCommand {
             .getTranslation()
             .getDistance(DriveConstants.RED_HUB_ORIGIN.toTranslation2d());
   }
+
   /**
    * Checks if the robot is closer to a horizontal wall (top/bottom, Y=0 or Y=FIELD_WIDTH) than to
    * the nearest hub X position.
@@ -71,22 +74,30 @@ public class FieldAxisAssistCommand extends AxisAssistCommand {
     if (isHorizontal()) {
       // For horizontal wall alignment, snap to PI/2 or 3PI/2 so the intake faces toward the wall
       fieldTarget = (poseRadians > 0) ? Math.PI / 2 : -Math.PI / 2;
+      double offset = ROTATION_OFFSET;
+      if (RobotState.getInstance().getEstimatedPose().getY() > CENTER_OF_FIELD.getY()) {
+        offset *= -1;
+      }
+      if (fieldTarget == Math.PI / 2) {
+        offset *= -1;
+      }
+      fieldTarget += offset;
     } else {
       // For vertical hub alignment, snap to 0 or PI
-      if(RobotState.isAllianceRed()){
+      if (RobotState.isAllianceRed()) {
         fieldTarget = (poseRadians > -Math.PI / 2 && poseRadians < Math.PI / 2) ? Math.PI : 0;
-      }else{
+      } else {
         fieldTarget = (poseRadians > -Math.PI / 2 && poseRadians < Math.PI / 2) ? 0 : Math.PI;
       }
       double offset = ROTATION_OFFSET;
-      
+
       if (fieldTarget == 0) {
         offset *= -1;
       }
       if (closerToBlueHub()) {
         offset *= -1;
       }
-      if(!RobotState.isAllianceRed()){
+      if (!RobotState.isAllianceRed()) {
         offset *= -1;
       }
       fieldTarget += offset;
@@ -117,18 +128,18 @@ public class FieldAxisAssistCommand extends AxisAssistCommand {
     } else {
       // Align to the nearest hub X position
       if (closerToBlueHub()) {
-      return Meters.of(
-          DriveConstants.BLUE_HUB_ORIGIN.getX()
-              + DriveConstants.DRIVE_CONFIG.bumperWidthX() / 2
-              + DriveConstants.HUB_WIDTH
-              + Units.inchesToMeters(TRANS_OFFSET));
-    } else {
-      return Meters.of(
-          DriveConstants.RED_HUB_ORIGIN.getX()
-              - DriveConstants.DRIVE_CONFIG.bumperWidthX() / 2
-              - DriveConstants.HUB_WIDTH
-              - Units.inchesToMeters(TRANS_OFFSET));
-    }
+        return Meters.of(
+            DriveConstants.BLUE_HUB_ORIGIN.getX()
+                + DriveConstants.DRIVE_CONFIG.bumperWidthX() / 2
+                + DriveConstants.HUB_WIDTH
+                + Units.inchesToMeters(TRANS_OFFSET));
+      } else {
+        return Meters.of(
+            DriveConstants.RED_HUB_ORIGIN.getX()
+                - DriveConstants.DRIVE_CONFIG.bumperWidthX() / 2
+                - DriveConstants.HUB_WIDTH
+                - Units.inchesToMeters(TRANS_OFFSET));
+      }
     }
   }
 }

@@ -389,6 +389,7 @@ public class DriveConstants {
               FlippingUtil.flipFieldPosition(new Translation2d(4.039, 1.337)),
               FlippingUtil.flipFieldPosition(new Translation2d(5.216, 0))));
 
+  public static final Translation2d CENTER_OF_FIELD = new Translation2d(8.2677, 4.034536);
   public static final Translation3d BLUE_HUB_ORIGIN = new Translation3d(4.5974, 4.034536, 1.5748);
   public static final Translation3d RED_HUB_ORIGIN = new Translation3d(11.938, 4.034536, 1.5748);
   public static final double HUB_WIDTH = Units.inchesToMeters(24);
