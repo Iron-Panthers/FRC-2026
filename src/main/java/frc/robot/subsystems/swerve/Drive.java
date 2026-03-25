@@ -292,8 +292,6 @@ public class Drive extends SubsystemBase {
               () -> fieldRelativeYaw,
               targetPosition.in(Units.Meters),
               controlY);
-    } else {
-      // axisAssistController.setTargetPosition(targetPosition);
     }
     if (headingController == null) {
       headingController =

@@ -416,7 +416,7 @@ public class RobotContainer {
 
     driverA
         .rightBumper()
-        .onTrue(
+        .whileTrue(
             new StartEndCommand(
                 () -> {
                   shooterController.setTargetState(ShooterState.DEFAULT_SHOOT);

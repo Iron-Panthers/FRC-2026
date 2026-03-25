@@ -470,8 +470,6 @@ public class RobotState {
       return alliance.get() == DriverStation.Alliance.Red;
     }
     return false;
-    // return DriverStationSim.getAllianceStationId().name().contains("Red")
-    //     || DriverStationSim.getAllianceStationId().name().contains("Unknown");
   }
 
   public boolean isUnderTrench() {
