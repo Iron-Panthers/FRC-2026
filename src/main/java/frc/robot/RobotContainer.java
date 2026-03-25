@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -30,6 +31,7 @@ import frc.robot.commands.AgitateIntakeCommand;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.FieldAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.ShuttleCommand;
@@ -382,6 +384,8 @@ public class RobotContainer {
   }
 
   private void configureDriverAButtons() {
+    driverA.rightStick().whileTrue(new FieldAxisAssistCommand(swerve));
+    // driverA.rightStick().onTrue(new HappyBirthdayCommand());
     driverA
         .povLeft()
         .onTrue(
@@ -412,10 +416,13 @@ public class RobotContainer {
 
     driverA
         .rightBumper()
-        .onTrue(
-            shooterController
-                .setTargetStateCommand(ShooterState.DEFAULT_SHOOT)
-                .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE)));
+        .whileTrue(
+            new StartEndCommand(
+                () -> {
+                  shooterController.setTargetState(ShooterState.DEFAULT_SHOOT);
+                  intakeController.setTargetState(IntakeState.IDLE);
+                },
+                () -> shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP)));
 
     // ARC ALIGN
     // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () ->

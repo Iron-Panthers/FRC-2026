@@ -14,14 +14,12 @@ public class ShooterHoodConstants {
   public static final ShooterHoodConfig SHOOTER_HOOD_CONFIG =
       // TODO update the id's and info
       switch (Constants.getRobotType()) {
-        case COMP ->
-            new ShooterHoodConfig(
-                // reduction between sensor and mechanism
-                CAN.at(1, "Shooter Hood"), 45);
-        case SIM ->
-            new ShooterHoodConfig(
-                // Reduction between motor and mechanism
-                CAN.at(8, "Shooter Hood"), 12 * 0.3750);
+        case COMP -> new ShooterHoodConfig(
+            // reduction between sensor and mechanism
+            CAN.at(1, "Shooter Hood"), 45);
+        case SIM -> new ShooterHoodConfig(
+            // Reduction between motor and mechanism
+            CAN.at(8, "Shooter Hood"), 12 * 0.3750);
         default -> new ShooterHoodConfig(0, 1);
       };
 
@@ -72,17 +70,16 @@ public class ShooterHoodConstants {
   // PHYSICAL CONSTANTS
   public static final Transform3d BASE_TO_SHOOTER_HOOD_TRANSFORM =
       switch (Constants.getRobotType()) {
-        default ->
-            new Pose3d()
-                .plus(
-                    new Transform3d(
-                        new Translation3d(
-                            Units.inchesToMeters(2.469),
-                            Units.inchesToMeters(12),
-                            Units.inchesToMeters(20.5)),
-                        new Rotation3d(0, 0, Math.toRadians(0))))
-                .rotateBy(new Rotation3d(0, 0, Math.toRadians(90)))
-                .minus(new Pose3d());
+        default -> new Pose3d()
+            .plus(
+                new Transform3d(
+                    new Translation3d(
+                        Units.inchesToMeters(2.469),
+                        Units.inchesToMeters(12),
+                        Units.inchesToMeters(20.5)),
+                    new Rotation3d(0, 0, Math.toRadians(0))))
+            .rotateBy(new Rotation3d(0, 0, Math.toRadians(90)))
+            .minus(new Pose3d());
       };
 
   public static record ShooterHoodPhysicalConstants(
@@ -95,13 +92,12 @@ public class ShooterHoodConstants {
   // TODO Add in phhysical constants
   public static final ShooterHoodPhysicalConstants PHYSICAL_CONSTANTS =
       switch (Constants.getRobotType()) {
-        case SIM ->
-            new ShooterHoodPhysicalConstants(
-                0.001,
-                Units.inchesToMeters(SHOOTER_HOOD_LENGTH),
-                Units.degreesToRadians(0),
-                Units.degreesToRadians(360),
-                false);
+        case SIM -> new ShooterHoodPhysicalConstants(
+            0.001,
+            Units.inchesToMeters(SHOOTER_HOOD_LENGTH),
+            Units.degreesToRadians(0),
+            Units.degreesToRadians(360),
+            false);
         case COMP -> new ShooterHoodPhysicalConstants(0.1, 0, 0, 0, false);
         default -> new ShooterHoodPhysicalConstants(0.1, 0, 0, 0, false);
       };
