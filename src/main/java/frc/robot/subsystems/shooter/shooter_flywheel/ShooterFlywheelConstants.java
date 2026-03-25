@@ -6,22 +6,20 @@ import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 public class ShooterFlywheelConstants {
   public static final ShooterFlywheelConfig SHOOTER_FLYWHEEL_CONFIG =
       switch (Constants.getRobotType()) {
-        case SIM ->
-            new ShooterFlywheelConfig(
-                CAN.at(36, "Shooter Flywheel 1"),
-                CAN.at(37, "Shooter Flywheel 2"),
-                1,
-                false,
-                false,
-                true);
-        default ->
-            new ShooterFlywheelConfig(
-                CAN.at(2, "Shooter Flywheel 1"),
-                CAN.at(12, "Shooter Flywheel 2"),
-                1,
-                true,
-                false,
-                false);
+        case SIM -> new ShooterFlywheelConfig(
+            CAN.at(36, "Shooter Flywheel 1"),
+            CAN.at(37, "Shooter Flywheel 2"),
+            1,
+            false,
+            false,
+            true);
+        default -> new ShooterFlywheelConfig(
+            CAN.at(2, "Shooter Flywheel 1"),
+            CAN.at(12, "Shooter Flywheel 2"),
+            1,
+            true,
+            false,
+            false);
       };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG

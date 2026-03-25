@@ -15,6 +15,7 @@ plugins {
 // ---------------------------------------------------------------------------
 spotless {
     java {
+        lineEndings 'UNIX'
         // Which files to format (defaults to java sourcesets, so usually fine)
         target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
         targetExclude '**/BuildConstants.java', '**/generated/**'
@@ -32,7 +33,7 @@ spotless {
         //   .reflowLongStrings() → break long string literals
         //   .formatJavadoc(false)→ leave Javadoc untouched
         //   .reorderImports(false)→ let importOrder() handle imports instead
-        googleJavaFormat()
+        googleJavaFormat('1.17.0')
             .reflowLongStrings()
             .reorderImports(false)
 
