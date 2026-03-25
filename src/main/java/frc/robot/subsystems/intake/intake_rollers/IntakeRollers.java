@@ -5,13 +5,13 @@ import frc.robot.lib.generic_subsystems.rollers.GenericRollers;
 public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTarget> {
 
   public enum IntakeRollersTarget implements GenericRollers.VelocityTarget {
-    INTAKE(150, 30), // TODO: CHANGE maxCurrentAmps
-    INTAKE_SLOW(20, 30), // TODO: CHANGE maxCurrentAmps
-    INTAKE_REALLY_SLOW(1, 30), // TODO: CHANGE maxCurrentAmps
-    IDLE(0.0, 0), // TODO: CHANGE maxCurrentAmps
-    INTAKE_DOWN(-1, 30), // TODO: CHANGE maxCurrentAmps
-    EJECT(-3.0, 30), // TODO: CHANGE maxCurrentAmps
-    HOLD(1.0, 30); // TODO: CHANGE maxCurrentAmps
+    INTAKE(150, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
+    INTAKE_SLOW(20, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
+    INTAKE_REALLY_SLOW(1, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
+    IDLE(0.0, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
+    INTAKE_DOWN(-1, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
+    EJECT(-3.0, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
+    HOLD(1.0, IntakeRollersConstants.CURRENT_LIMIT_AMPS); // TODO: CHANGE maxCurrentAmps
 
     private double velocity;
     private double supplyCurrentLimit;
@@ -20,6 +20,15 @@ public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTar
       this.velocity = velocity;
       this.supplyCurrentLimit = supplyCurrentLimit;
     }
+
+    public double getVelocity() {
+      return velocity;
+    }
+
+    public double getSupplyCurrentLimit() {
+      return supplyCurrentLimit;
+    }
+  }
 
   public IntakeRollers(IntakeRollersIO intakeRollersIO) {
     super("Intake/Intake Rollers", intakeRollersIO);

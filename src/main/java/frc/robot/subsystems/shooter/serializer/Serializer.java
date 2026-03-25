@@ -5,9 +5,9 @@ import frc.robot.lib.generic_subsystems.rollers.GenericRollersIO;
 
 public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
   public enum SerializerTarget implements GenericRollers.VelocityTarget {
-    IDLE(0, 0),
-    SLOW(0, 20),
-    INTAKE(20, 20);
+    IDLE(0, SerializerConstants.CURRENT_LIMIT_AMPS),
+    SLOW(0, SerializerConstants.CURRENT_LIMIT_AMPS),
+    INTAKE(20, SerializerConstants.CURRENT_LIMIT_AMPS);
 
     private double velocity;
     private double supplyCurrentLimit;
