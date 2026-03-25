@@ -7,15 +7,12 @@ public class IntakeRollersConstants {
   // MOTOR AND SENSOR CONFIGURATION
   public static final IntakeRollerConfig INTAKE_ROLLER_CONFIG =
       switch (Constants.getRobotType()) {
-        case SIM ->
-            new IntakeRollerConfig(
-                CAN.at(64, "Intake Roller"), CAN.at(65, "Intake Roller 2"), 2, false, true);
-        case COMP ->
-            new IntakeRollerConfig(
-                CAN.at(43, "Intake Roller"), CAN.at(10, "Intake Roller 2"), 2, true, false);
-        default ->
-            new IntakeRollerConfig(
-                CAN.at(0, "Intake Roller"), CAN.at(0, "Intake Roller 2"), 2, false, true);
+        case SIM -> new IntakeRollerConfig(
+            CAN.at(64, "Intake Roller"), CAN.at(65, "Intake Roller 2"), 2, false, true);
+        case COMP -> new IntakeRollerConfig(
+            CAN.at(43, "Intake Roller"), CAN.at(10, "Intake Roller 2"), 2, true, false);
+        default -> new IntakeRollerConfig(
+            CAN.at(0, "Intake Roller"), CAN.at(0, "Intake Roller 2"), 2, false, true);
       };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG

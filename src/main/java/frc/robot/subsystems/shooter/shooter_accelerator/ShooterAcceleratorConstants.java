@@ -6,22 +6,20 @@ import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 public class ShooterAcceleratorConstants {
   public static final ShooterAcceleratorConfig SHOOTER_ACCELERATOR_CONFIG =
       switch (Constants.getRobotType()) {
-        case SIM ->
-            new ShooterAcceleratorConfig(
-                CAN.at(38, "Shooter Accelerator 1"),
-                CAN.at(39, "Shooter Accelerator 2"),
-                1,
-                false,
-                true,
-                true);
-        default ->
-            new ShooterAcceleratorConfig(
-                CAN.at(33, "Shooter Accelerator 1"),
-                CAN.at(34, "Shooter Accelerator 2"),
-                1,
-                true,
-                true,
-                true);
+        case SIM -> new ShooterAcceleratorConfig(
+            CAN.at(38, "Shooter Accelerator 1"),
+            CAN.at(39, "Shooter Accelerator 2"),
+            1,
+            false,
+            true,
+            true);
+        default -> new ShooterAcceleratorConfig(
+            CAN.at(33, "Shooter Accelerator 1"),
+            CAN.at(34, "Shooter Accelerator 2"),
+            1,
+            true,
+            true,
+            true);
       };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG
