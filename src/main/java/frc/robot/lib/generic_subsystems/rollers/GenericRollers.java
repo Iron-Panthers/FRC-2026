@@ -76,7 +76,6 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
   }
 
   public void setVelocityTarget(G velocityTarget) {
-    rollerIO.setSupplyCurrentLimit(filteredCurrent);
     setControlMode(ControlMode.VELOCITY);
     this.velocityTarget = velocityTarget;
     this.useManualVelocity = false;
@@ -85,8 +84,7 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
   public void setVelocityTargetManual(double velocityRPS, double supplyCurrentAmps) {
     // Run setamps and put that as parameter and where you call the method(intakerollers), get the
     // number of amps from the enum
-    rollerIO.setSupplyCurrentLimit(supplyCurrentAmps);
-    setControlMode(ControlMode.VELOCITY);
+   setControlMode(ControlMode.VELOCITY);
     this.manualVelocityRPS = velocityRPS;
     this.manualSupplyCurrentAmps = supplyCurrentAmps;
     this.useManualVelocity = true;
