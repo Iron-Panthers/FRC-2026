@@ -21,15 +21,6 @@ public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTar
       this.supplyCurrentLimit = supplyCurrentLimit;
     }
 
-    public double getVelocity() {
-      return velocity;
-    }
-
-    public double getSupplyCurrentLimit() {
-      return supplyCurrentLimit;
-    }
-  }
-
   public IntakeRollers(IntakeRollersIO intakeRollersIO) {
     super("Intake/Intake Rollers", intakeRollersIO);
     setVelocityTarget(IntakeRollersTarget.IDLE);
