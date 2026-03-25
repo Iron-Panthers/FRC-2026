@@ -46,8 +46,8 @@ public class DriveConstants {
                 Units.inchesToMeters(1.97),
                 Units.inchesToMeters(19.75),
                 Units.inchesToMeters(23.75),
-                Units.inchesToMeters(34),
-                Units.inchesToMeters(34),
+                Units.inchesToMeters(33),
+                Units.inchesToMeters(37),
                 3.75,
                 10,
                 6);
@@ -318,7 +318,7 @@ public class DriveConstants {
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.01);
-        case SIM -> new HeadingControllerConstants(1, 0, 5, 20, 0.01);
+        case SIM -> new HeadingControllerConstants(6, 0, 5, 200, 0.01);
         case VISION -> new HeadingControllerConstants(3, 0, 5, 15, 0.007);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
         default -> new HeadingControllerConstants(0, 0, 0, 0, 0);
@@ -389,8 +389,10 @@ public class DriveConstants {
               FlippingUtil.flipFieldPosition(new Translation2d(4.039, 1.337)),
               FlippingUtil.flipFieldPosition(new Translation2d(5.216, 0))));
 
+  public static final Translation2d CENTER_OF_FIELD = new Translation2d(8.27, 4.035);
   public static final Translation3d BLUE_HUB_ORIGIN = new Translation3d(4.5974, 4.034536, 1.5748);
   public static final Translation3d RED_HUB_ORIGIN = new Translation3d(11.938, 4.034536, 1.5748);
+  public static final double HUB_WIDTH = Units.inchesToMeters(24);
 
   public record DrivebaseConfig(
       double wheelRadius,
