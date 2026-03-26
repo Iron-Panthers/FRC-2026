@@ -29,10 +29,10 @@ public class AutoShootCommand extends SequentialCommandGroup {
                         intakeActive
                             ? new AgitateIntakeCommand(intakeController, 4)
                             : new InstantCommand()))
-            .withDeadline(new WaitCommand(4)),
+            .withDeadline(new WaitCommand(5)),
         (intakeActive
             ? new IntakeCommand(intakeController, shooterController)
             : new InstantCommand()),
-        shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
+        shooterController.setTargetStateCommand(ShooterState.IDLE));
   }
 }

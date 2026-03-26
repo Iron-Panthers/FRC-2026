@@ -50,7 +50,7 @@ public class IntakePivotConstants {
   // CURRENT LIMITS
   public static final double UPPER_VOLT_LIMIT = 12;
   public static final double LOWER_VOLT_LIMIT = -12;
-  public static final double SUPPLY_CURRENT_LIMIT = 30;
+  public static final double SUPPLY_CURRENT_LIMIT = 25;
 
   // ZEROING CONSTANTS
   public static final double ZEROING_VOLTS = 3;

@@ -41,47 +41,43 @@ public class DriveConstants {
   // measures in meters (per sec) and radians (per sec)
   public static final DrivebaseConfig DRIVE_CONFIG =
       switch (getRobotType()) {
-        case COMP ->
-            new DrivebaseConfig(
-                Units.inchesToMeters(1.97),
-                Units.inchesToMeters(19.75),
-                Units.inchesToMeters(23.75),
+        case COMP -> new DrivebaseConfig(
+            Units.inchesToMeters(1.97),
+            Units.inchesToMeters(19.75),
+            Units.inchesToMeters(23.75),
             Units.inchesToMeters(33),
             Units.inchesToMeters(37),
-                4,
-                10,
-                10);
-        case VISION ->
-            new DrivebaseConfig(
-                Units.inchesToMeters(1.99),
-                Units.inchesToMeters(19.75),
-                Units.inchesToMeters(23.75),
-                Units.inchesToMeters(34),
-                Units.inchesToMeters(34),
-                4,
-                10,
-                10);
-        case ALPHA ->
-            new DrivebaseConfig(
-                Units.inchesToMeters(1.925),
-                Units.inchesToMeters(19.75),
-                Units.inchesToMeters(23.75),
-                Units.inchesToMeters(34),
-                Units.inchesToMeters(34),
-                4.5,
-                10,
-                6);
-        case SIM ->
-            new DrivebaseConfig(
-                Units.inchesToMeters(1.925),
-                Units.inchesToMeters(22.5),
-                Units.inchesToMeters(22.5),
-                Units.inchesToMeters(34),
-                Units.inchesToMeters(34),
-                3.75, // 3.75,
-                10,
-                // TODO: make it actually max acceleration in m/s^2
-                6); // (multiply by max velocity to get m/s^2)
+            4,
+            10,
+            8);
+        case VISION -> new DrivebaseConfig(
+            Units.inchesToMeters(1.99),
+            Units.inchesToMeters(19.75),
+            Units.inchesToMeters(23.75),
+            Units.inchesToMeters(34),
+            Units.inchesToMeters(34),
+            4,
+            10,
+            10);
+        case ALPHA -> new DrivebaseConfig(
+            Units.inchesToMeters(1.925),
+            Units.inchesToMeters(19.75),
+            Units.inchesToMeters(23.75),
+            Units.inchesToMeters(34),
+            Units.inchesToMeters(34),
+            4.5,
+            10,
+            6);
+        case SIM -> new DrivebaseConfig(
+            Units.inchesToMeters(1.925),
+            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(22.5),
+            Units.inchesToMeters(34),
+            Units.inchesToMeters(34),
+            3.75, // 3.75,
+            10,
+            // TODO: make it actually max acceleration in m/s^2
+            6); // (multiply by max velocity to get m/s^2)
       };
 
   // max velocity of the robot for shooting while moving

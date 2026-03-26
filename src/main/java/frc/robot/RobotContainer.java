@@ -278,6 +278,8 @@ public class RobotContainer {
                 }));
     new EventTrigger("Intake mid")
         .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
+    new EventTrigger("Intake off")
+        .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.IDLE)));
 
     NamedCommands.registerCommand("Smart zero", new InstantCommand(() -> swerve.smartZeroGyro()));
     NamedCommands.registerCommand(
@@ -329,8 +331,14 @@ public class RobotContainer {
         "Align and auto shoot full hopper",
         new AlignToShootCommand(swerve, shooterController)
             .withDeadline(
-                new AutoShootCommand(
-                    swerve, shooterController, intakeController, matchTimerUpdater, true)));
+                new WaitCommand(0.2)
+                    .andThen(
+                        new AutoShootCommand(
+                            swerve,
+                            shooterController,
+                            intakeController,
+                            matchTimerUpdater,
+                            true))));
     NamedCommands.registerCommand(
         "Auto shoot full hopper (no intake)",
         new AutoShootCommand(

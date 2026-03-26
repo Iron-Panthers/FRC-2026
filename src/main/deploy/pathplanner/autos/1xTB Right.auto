@@ -35,15 +35,15 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Align and auto shoot full hopper"
+            "pathName": "2xB 2 I Right"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "1xTB I 3 Right"
+            "name": "Align and auto shoot full hopper"
           }
         }
       ]
