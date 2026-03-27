@@ -38,4 +38,8 @@ public interface GenericSuperstructureIO {
   default void stop() {}
 
   default void setOffset() {}
+
+  default void setSupplyCurrentLimits(double maxCurrentAmps) {}
+
+  default void setSupplyCurrentLimit(double amps) {}
 }

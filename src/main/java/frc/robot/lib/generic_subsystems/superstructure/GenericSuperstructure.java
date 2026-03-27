@@ -14,6 +14,8 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
      * @return The tolerance value as a double.
      */
     double getEpsilon();
+
+    double getSupplyCurrentLimit();
   }
 
   public enum ControlMode {
@@ -29,8 +31,10 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
   protected final GenericSuperstructureIO superstructureIO;
 
   protected Optional<Double> positionTargetManual = Optional.empty();
+  protected double manualSupplyCurrentAmps = 0;
 
   private final LinearFilter linearFilter = LinearFilter.movingAverage(15);
+  private double filteredCurrent;
 
   protected GenericSuperstructureIOInputsAutoLogged inputs =
       new GenericSuperstructureIOInputsAutoLogged();
@@ -70,6 +74,8 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
     Logger.recordOutput(name + "/ReachedTarget", reachedTarget());
     Logger.recordOutput(name + "/TargetPosition", positionTarget.getPosition());
     Logger.recordOutput(name + "/TargetPositionManual", positionTargetManual.orElse(0.0));
+    filteredCurrent = this.linearFilter.calculate(inputs.supplyCurrentAmps);
+    Logger.recordOutput(name + "/FilteredCurrent", filteredCurrent);
   }
 
   public G getPositionTarget() {
@@ -84,6 +90,11 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
   public void setPositionTargetManual(double position) {
     setControlMode(ControlMode.POSITION_MANUAL);
     positionTargetManual = Optional.of(position);
+  }
+
+  public void setPositionTargetManual(double position, double supplyCurrentAmps) {
+    setControlMode(ControlMode.POSITION_MANUAL);
+    this.manualSupplyCurrentAmps = supplyCurrentAmps;
   }
 
   public ControlMode getControlMode() {

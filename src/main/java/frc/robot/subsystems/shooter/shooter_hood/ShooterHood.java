@@ -12,21 +12,23 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTarget>
     implements LoggableMechanism3d {
   public enum ShooterHoodTarget implements GenericSuperstructure.PositionTarget {
-    STOW(0), // need to update
-    HALF(45), // need to update
-    TOP(45), // need to update
-    SHOOT_TEMP(12), // need to update
-    SHUTTLE(15),
-    DEFAULT_SHOOT(14); // might need to update?
+    STOW(0, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
+    HALF(45, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
+    TOP(45, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
+    SHOOT_TEMP(12, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
+    SHUTTLE(15, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT),
+    DEFAULT_SHOOT(14, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT); // might need to update?
 
     private double position; // in rotations
+    private double supplyCurrentLimit;
     private static final double EPSILON = ShooterHoodConstants.POSITION_TARGET_EPSILON;
 
     /**
      * @param positionDeg in degrees
      */
-    private ShooterHoodTarget(double positionDeg) {
+    private ShooterHoodTarget(double positionDeg, double supplyCurrentLimit) {
       this.position = positionDeg / 360d;
+      this.supplyCurrentLimit = supplyCurrentLimit;
     }
 
     public double getPosition() {
@@ -36,6 +38,10 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     @Override
     public double getEpsilon() {
       return EPSILON;
+    }
+
+    public double getSupplyCurrentLimit() {
+      return supplyCurrentLimit;
     }
   } // close enum
 
