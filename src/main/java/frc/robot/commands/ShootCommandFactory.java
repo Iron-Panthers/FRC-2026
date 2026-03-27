@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.intake.IntakeController;
+import frc.robot.subsystems.intake.IntakeController.IntakeState;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 
@@ -44,7 +45,7 @@ public class ShootCommandFactory {
                       : ShooterState.TOTAL_SPIN_UP);
             })
         .repeatedly()
-        // .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE))
+        .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE))
         .alongWith(new WaitCommand(1).andThen(new AgitateIntakeCommand(intakeController, 30)));
   }
 

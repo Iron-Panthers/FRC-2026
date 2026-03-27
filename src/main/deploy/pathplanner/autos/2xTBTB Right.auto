@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2xT 1 I Right"
+            "pathName": "2xTB 1 I Right"
           }
         },
         {
@@ -25,13 +25,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto shoot full serializer"
+            "name": "Auto shoot full hopper"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2xT 2 I Right"
+            "pathName": "2xTB 2 I Right"
           }
         },
         {
@@ -43,13 +43,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto shoot full serializer"
+            "name": "Auto shoot full hopper"
           }
         }
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Right Autos (make these)",
   "choreoAuto": false
 }

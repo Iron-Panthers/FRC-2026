@@ -138,8 +138,8 @@ public class RobotContainer {
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           vision =
               new Vision(
-                  new VisionIOPhotonvision("arducam-6", 0),
-                  new VisionIOPhotonvision("arducam-8", 1));
+                  new VisionIOPhotonvision("arducam-3", 0),
+                  new VisionIOPhotonvision("arducam-2", 1));
           // rgb = new RGB(new RGBIOAddressableLED());
           // rgb = new RGB(new RGBIOCANdle());
           // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
@@ -278,6 +278,8 @@ public class RobotContainer {
                 }));
     new EventTrigger("Intake mid")
         .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
+    new EventTrigger("Intake off")
+        .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.IDLE)));
 
     NamedCommands.registerCommand("Smart zero", new InstantCommand(() -> swerve.smartZeroGyro()));
     NamedCommands.registerCommand(
@@ -300,7 +302,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Align to shoot", new AlignToShootCommand(swerve, shooterController));
     NamedCommands.registerCommand(
-        "Shoot full serializer",
+        "Shoot full hopper",
         new InstantCommand(
                 () ->
                     swerve.setTargetHeading(
@@ -323,20 +325,26 @@ public class RobotContainer {
                     () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
 
     NamedCommands.registerCommand(
-        "Auto shoot full serializer",
+        "Auto shoot full hopper",
         new AutoShootCommand(swerve, shooterController, intakeController, matchTimerUpdater, true));
     NamedCommands.registerCommand(
-        "Align and auto shoot full serializer",
+        "Align and auto shoot full hopper",
         new AlignToShootCommand(swerve, shooterController)
             .withDeadline(
-                new AutoShootCommand(
-                    swerve, shooterController, intakeController, matchTimerUpdater, false)));
+                new WaitCommand(0.2)
+                    .andThen(
+                        new AutoShootCommand(
+                            swerve,
+                            shooterController,
+                            intakeController,
+                            matchTimerUpdater,
+                            true))));
     NamedCommands.registerCommand(
-        "Auto shoot full serializer (no intake)",
+        "Auto shoot full hopper (no intake)",
         new AutoShootCommand(
             swerve, shooterController, intakeController, matchTimerUpdater, false));
     NamedCommands.registerCommand(
-        "Shoot preloaded serializer",
+        "Shoot preloaded hopper",
         new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true, true)
             .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
             .andThen(new WaitCommand(0.6))

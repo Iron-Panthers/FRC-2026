@@ -68,7 +68,7 @@
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : null
+    "linkedName" : "Trench Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.0817051509769038,

@@ -12,10 +12,11 @@ import org.littletonrobotics.junction.Logger;
 public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget>
     implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(-5, IntakePivotConstants.SUPPLY_CURRENT_LIMIT),
+    INTAKE(-10.4, IntakePivotConstants.SUPPLY_CURRENT_LIMIT),
     MED_STOW(60, 20),
     HIGH_MED_STOW(20, 20),
-    STOW(83, IntakePivotConstants.SUPPLY_CURRENT_LIMIT);
+    STOW(78.8, IntakePivotConstants.SUPPLY_CURRENT_LIMIT);
+
 
     private double position;
     private double supplyCurrentLimit;

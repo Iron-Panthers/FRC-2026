@@ -6,9 +6,9 @@ import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 public class SerializerConstants {
   public static final SerializerConfig SERIALIZER_CONFIG =
       switch (Constants.getRobotType()) {
-        case SIM -> new SerializerConfig(CAN.at(32, "Serializer"), 5, true, true);
-        case COMP -> new SerializerConfig(CAN.at(25, "Serializer"), 2, false, true);
-        default -> new SerializerConfig(CAN.at(40, "Serializer"), 5, true, true);
+        case SIM -> new SerializerConfig(CAN.at(32, "Serializer"), 5, true, false);
+        case COMP -> new SerializerConfig(CAN.at(25, "Serializer"), 2, false, false);
+        default -> new SerializerConfig(CAN.at(40, "Serializer"), 5, true, false);
       };
 
   public static final PIDGains GAINS =
