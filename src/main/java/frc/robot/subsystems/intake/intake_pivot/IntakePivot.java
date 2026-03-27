@@ -13,8 +13,8 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
     implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
     INTAKE(-5, IntakePivotConstants.SUPPLY_CURRENT_LIMIT),
-    MED_STOW(60, IntakePivotConstants.SUPPLY_CURRENT_LIMIT),
-    HIGH_MED_STOW(20, IntakePivotConstants.SUPPLY_CURRENT_LIMIT),
+    MED_STOW(60, 20),
+    HIGH_MED_STOW(20, 20),
     STOW(83, IntakePivotConstants.SUPPLY_CURRENT_LIMIT);
 
     private double position;

@@ -50,14 +50,15 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
     // Process inputs
     superstructureIO.updateInputs(inputs);
     Logger.processInputs(name, inputs);
-
     // Process control mode
     switch (controlMode) {
       case POSITION -> {
+        superstructureIO.setSupplyCurrentLimit(positionTarget.getSupplyCurrentLimit());
         superstructureIO.runPosition(positionTarget.getPosition());
       }
       case POSITION_MANUAL -> {
         if (positionTargetManual.isPresent()) {
+          superstructureIO.setSupplyCurrentLimit(manualSupplyCurrentAmps);
           superstructureIO.runPosition(positionTargetManual.get());
         }
       }
@@ -87,13 +88,9 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
     this.positionTarget = positionTarget;
   }
 
-  public void setPositionTargetManual(double position) {
-    setControlMode(ControlMode.POSITION_MANUAL);
-    positionTargetManual = Optional.of(position);
-  }
-
   public void setPositionTargetManual(double position, double supplyCurrentAmps) {
     setControlMode(ControlMode.POSITION_MANUAL);
+    positionTargetManual = Optional.of(position);
     this.manualSupplyCurrentAmps = supplyCurrentAmps;
   }
 
