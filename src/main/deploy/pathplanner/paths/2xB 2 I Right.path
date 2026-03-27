@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 6.9143416370106765,
-        "y": 3.9543060498220637
+        "x": 6.279549228944247,
+        "y": 4.0403795966785285
       },
       "prevControl": {
-        "x": 7.16088914440132,
-        "y": 4.0139964989797985
+        "x": 6.39003810197817,
+        "y": 4.268723267615302
       },
       "nextControl": {
-        "x": 5.892218268090155,
-        "y": 3.7068446026097277
+        "x": 5.63399762752076,
+        "y": 2.7062396204033212
       },
       "isLocked": false,
       "linkedName": null
@@ -53,7 +53,7 @@
       },
       "prevControl": {
         "x": 7.1295255041518395,
-        "y": 2.394223013048635
+        "y": 1.6625978647686828
       },
       "nextControl": null,
       "isLocked": false,
@@ -74,7 +74,7 @@
       "rotationDegrees": -136.52359714559333
     },
     {
-      "waypointRelativePos": 2.3941958887545267,
+      "waypointRelativePos": 2.074015748031502,
       "rotationDegrees": -45.060364653308035
     }
   ],
@@ -109,8 +109,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake mid",
-      "waypointRelativePos": 2.443194600674908,
+      "name": "Intake off",
+      "waypointRelativePos": 2.404646660212958,
       "endWaypointRelativePos": null,
       "command": null
     },

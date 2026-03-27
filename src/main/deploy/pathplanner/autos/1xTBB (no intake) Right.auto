@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1xTB 1 I Right"
+            "pathName": "1xTB Long 1 I Right"
           }
         },
         {
@@ -27,31 +27,24 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Auto shoot full serializer (no intake)"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "1xTB I 2 Right"
-                      }
-                    }
-                  ]
+                  "name": "Auto shoot full hopper (no intake)"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Agitate Intake (10 seconds)"
+                  "name": "Align to shoot"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1xTB I 2 Right"
           }
         },
         {
@@ -61,19 +54,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Auto shoot full serializer (no intake)"
+                  "name": "Auto shoot full hopper (no intake)"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Align to shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Agitate Intake (10 seconds)"
                 }
               }
             ]
@@ -82,7 +69,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1xTB I 3 Right"
+            "pathName": "1xTB 3 I Right"
           }
         }
       ]

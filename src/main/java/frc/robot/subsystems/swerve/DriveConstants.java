@@ -47,9 +47,9 @@ public class DriveConstants {
             Units.inchesToMeters(23.75),
             Units.inchesToMeters(33),
             Units.inchesToMeters(37),
-            3.75,
+            4,
             10,
-            6);
+            8);
         case VISION -> new DrivebaseConfig(
             Units.inchesToMeters(1.99),
             Units.inchesToMeters(19.75),

@@ -2,16 +2,16 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 3.038,
-      "y" : 5.363890865954924
+      "x" : 3.944804270462635,
+      "y" : 7.483451957295375
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 1.7996888888888891,
-      "y" : 8.443066666666668
+      "x" : 5.223410256410257,
+      "y" : 7.454153846153847
     },
     "isLocked" : false,
-    "linkedName" : null
+    "linkedName" : "Trench Shooting Pose Left"
   }, {
     "anchor" : {
       "x" : 7.481469298245615,
@@ -59,16 +59,16 @@
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 3.9340450771055764,
-      "y" : 7.375860023724794
+      "x" : 3.944804270462635,
+      "y" : 7.483451957295375
     },
     "prevControl" : {
-      "x" : 4.676429418742587,
-      "y" : 7.440415183867143
+      "x" : 4.6871886120996455,
+      "y" : 7.548007117437724
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : null
+    "linkedName" : "Trench Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 0.4955595026642977,
@@ -110,13 +110,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 135.0
+    "rotation" : 102.09475707701199
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 315.0
+    "rotation" : 282.094757077012
   },
   "useDefaultConstraints" : true
 }
