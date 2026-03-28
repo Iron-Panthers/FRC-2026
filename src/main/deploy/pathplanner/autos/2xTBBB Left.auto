@@ -38,6 +38,11 @@
         "data" : {
           "name" : "Align and auto shoot full hopper"
         }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Align and auto shoot full hopper"
+        }
       } ]
     }
   },
