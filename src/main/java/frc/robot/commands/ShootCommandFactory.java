@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -20,14 +22,17 @@ public class ShootCommandFactory {
   private final ShooterController shooterController;
   private final IntakeController intakeController;
   private final ElasticUpdater matchTimerUpdater;
+  private final BooleanSupplier lowPowerModeSupplier;
 
   public ShootCommandFactory(
       ShooterController shooterController,
       IntakeController intakeController,
-      ElasticUpdater matchTimerUpdater) {
+      ElasticUpdater matchTimerUpdater,
+      BooleanSupplier lowPowerModeSupplier) {
     this.shooterController = shooterController;
     this.intakeController = intakeController;
     this.matchTimerUpdater = matchTimerUpdater;
+    this.lowPowerModeSupplier = lowPowerModeSupplier;
   }
 
   /** Command to bind to whileTrue – repeats while the button is held. */
@@ -41,8 +46,8 @@ public class ShootCommandFactory {
                           && (matchTimerUpdater.isOurHubActive()
                               || matchTimerUpdater.getTimeUntilOurHubShifts() < 2
                               || matchTimerUpdater.getTimeUntilOurHubShifts() > 24) // time correct
-                      ? ShooterState.SHOOT
-                      : ShooterState.TOTAL_SPIN_UP);
+                      ? (lowPowerModeSupplier.getAsBoolean() ? ShooterState.LOW_AMP_SHOOT : ShooterState.SHOOT)
+                      : (lowPowerModeSupplier.getAsBoolean() ? ShooterState.LOW_AMP_SPIN_UP : ShooterState.TOTAL_SPIN_UP));
             })
         .repeatedly()
         .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE))
@@ -54,7 +59,7 @@ public class ShootCommandFactory {
     return new InstantCommand(
         () -> {
           if (shooterController.getTargetState() == ShooterState.SHOOT) {
-            shooterController.setTargetState(ShooterState.COMPACT_SPIN_UP);
+            shooterController.setTargetState(lowPowerModeSupplier.getAsBoolean() ? ShooterState.LOW_AMP_SPIN_UP : ShooterState.COMPACT_SPIN_UP);
           }
         });
   }

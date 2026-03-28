@@ -16,7 +16,9 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -101,6 +103,8 @@ public class RobotContainer {
   private ElasticSetpoints elasticSetpoints = ElasticSetpoints.getInstance();
 
   private ElasticUpdater matchTimerUpdater = new ElasticUpdater();
+
+  private boolean lowPowerMode = false;
 
   // private SendableChooser<Command> autoChooser;
   private LoggedDashboardChooser<Command> autoChooser;
@@ -387,6 +391,8 @@ public class RobotContainer {
 
     new Trigger(() -> vision.getMultiTags())
         .whileTrue(new RunCommand(() -> swerve.smartZeroGyro()));
+
+    new Trigger(() -> RobotController.isBrownedOut()).onTrue(new InstantCommand(()-> lowPowerMode = true));
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
   }
