@@ -100,6 +100,8 @@ public class RobotContainer {
 
   private ElasticSetpoints elasticSetpoints = ElasticSetpoints.getInstance();
 
+  private boolean defaultZeroing = false;
+
   private ElasticUpdater matchTimerUpdater = new ElasticUpdater();
 
   // private SendableChooser<Command> autoChooser;
@@ -385,7 +387,7 @@ public class RobotContainer {
     new Trigger(() -> (int) matchTimerUpdater.getTimeUntilOurHubShifts() == 7)
         .onTrue(new VibrateHIDCommand(driverB.getHID(), 1, 0.4));
 
-    new Trigger(() -> vision.getMultiTags())
+    new Trigger(() -> vision.getMultiTags() && !defaultZeroing)
         .whileTrue(new RunCommand(() -> swerve.smartZeroGyro()));
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
@@ -402,7 +404,10 @@ public class RobotContainer {
                     intakeController.setIntakePivotActive(
                         !intakeController.getIntakePivotActive())));
     // ZERO GYRO
-    driverA.start().onTrue(swerve.zeroGyroCommand());
+    driverA
+        .start()
+        .onTrue(
+            swerve.zeroGyroCommand().alongWith(new InstantCommand(() -> defaultZeroing = true)));
     // SMART ZERO GYRO
     driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     // INTAKE
