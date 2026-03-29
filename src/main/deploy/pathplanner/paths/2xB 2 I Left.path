@@ -2,82 +2,94 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 3.038,
-      "y" : 5.354000000000001
+      "x" : 2.685978647686834,
+      "y" : 5.008837485172005
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 6.6130842230130495,
-      "y" : 5.837295373665481
+      "x" : 3.5036773428232504,
+      "y" : 5.912609727164889
     },
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Left"
+    "linkedName" : "Shooting Pose 2 Left"
   }, {
     "anchor" : {
-      "x" : 6.623843416370107,
-      "y" : 6.773345195729539
+      "x" : 5.730830367734282,
+      "y" : 5.6543890865954936
     },
     "prevControl" : {
-      "x" : 6.163264529079278,
-      "y" : 7.0344117033343085
+      "x" : 5.504887307236062,
+      "y" : 5.8157769869513665
     },
     "nextControl" : {
-      "x" : 7.849418412442101,
-      "y" : 6.078661629328437
+      "x" : 6.090749758385268,
+      "y" : 5.397303807559074
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 6.354863582443654,
-      "y" : 4.29873072360617
+      "x" : 6.107402135231317,
+      "y" : 4.0297508896797165
     },
     "prevControl" : {
-      "x" : 6.385773983605995,
-      "y" : 3.7030029921137757
+      "x" : 5.838422301304865,
+      "y" : 3.6531791221826815
     },
     "nextControl" : {
-      "x" : 6.236512455516015,
-      "y" : 6.5796797153024915
+      "x" : 6.258010070154326,
+      "y" : 4.240601998571932
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 3.038,
-      "y" : 5.354000000000001
+      "x" : 5.601720047449585,
+      "y" : 5.6543890865954936
     },
     "prevControl" : {
-      "x" : 1.2334875444839863,
-      "y" : 5.396168446026099
+      "x" : 6.214994068801898,
+      "y" : 5.514519572953738
+    },
+    "nextControl" : {
+      "x" : 4.725653616865751,
+      "y" : 5.854193711114615
+    },
+    "isLocked" : false,
+    "linkedName" : null
+  }, {
+    "anchor" : {
+      "x" : 2.685978647686834,
+      "y" : 5.008837485172005
+    },
+    "prevControl" : {
+      "x" : 1.8252431791221837,
+      "y" : 5.493001186239622
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Left"
+    "linkedName" : "Shooting Pose 2 Left"
   } ],
   "rotationTargets" : [ {
-    "waypointRelativePos" : 0.45825932504440625,
-    "rotationDegrees" : 124.21097538981041
+    "waypointRelativePos" : 0.42204724409448785,
+    "rotationDegrees" : 43.97713850939169
   }, {
     "waypointRelativePos" : 1.145648312611008,
     "rotationDegrees" : 358.83299999999997
   }, {
     "waypointRelativePos" : 1.801065719360589,
-    "rotationDegrees" : 316.5235971455934
+    "rotationDegrees" : 350.8912376434798
   }, {
-    "waypointRelativePos" : 2.074015748031502,
-    "rotationDegrees" : 225.06036465330806
+    "waypointRelativePos" : 2.45,
+    "rotationDegrees" : 45.0
   }, {
-    "waypointRelativePos" : 2.23464566929133,
-    "rotationDegrees" : 230.0
-  }, {
-    "waypointRelativePos" : 2.555905511811019,
-    "rotationDegrees" : 230.0
+    "waypointRelativePos" : 3.4267716535433066,
+    "rotationDegrees" : 45.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
     "minWaypointRelativePos" : 1.3275401069518729,
-    "maxWaypointRelativePos" : 2.0895721925133692,
+    "maxWaypointRelativePos" : 2.2,
     "constraints" : {
       "maxVelocity" : 2.0,
       "maxAcceleration" : 4.0,
@@ -102,12 +114,12 @@
   "pointTowardsZones" : [ ],
   "eventMarkers" : [ {
     "name" : "Intake off",
-    "waypointRelativePos" : 2.404646660212958,
+    "waypointRelativePos" : 2.8,
     "endWaypointRelativePos" : null,
     "command" : null
   }, {
     "name" : "Spin up shooter",
-    "waypointRelativePos" : 2.4971878515185626,
+    "waypointRelativePos" : 3.0,
     "endWaypointRelativePos" : null,
     "command" : null
   } ],
@@ -121,13 +133,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 135.0
+    "rotation" : 158.70000000000005
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 315.0
+    "rotation" : 338.70000000000005
   },
   "useDefaultConstraints" : true
 }
