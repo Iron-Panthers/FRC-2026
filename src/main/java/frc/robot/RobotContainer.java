@@ -437,6 +437,16 @@ public class RobotContainer {
                 },
                 () -> shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP)));
 
+    driverA
+        .povDown()
+        .whileTrue(
+            new StartEndCommand(
+                () -> {
+                  shooterController.setTargetState(ShooterState.TRENCH_SHOOT);
+                  intakeController.setTargetState(IntakeState.IDLE);
+                },
+                () -> shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP)));
+
     // ARC ALIGN
     // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () ->
     // RobotState.getInstance().getShootingPose(), true)

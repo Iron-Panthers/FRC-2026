@@ -37,6 +37,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotState.ShootingAnglePredictor.HoodParams;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.vision.VisionConstants;
 import java.util.HashMap;
@@ -215,6 +216,11 @@ public class RobotState {
     return targetShootingState;
   }
 
+  /** Gets interpolated stationary hood params from specified distance (meters) */
+  public HoodParams getStationaryHoodParams(double distance) {
+    return shootingAnglePredictor.getHoodParamsFromDistance(distance);
+  }
+
   // shooting predictor
   public class ShootingAnglePredictor {
 
@@ -288,6 +294,14 @@ public class RobotState {
       double tof = getLutNTEntry(prefix + "timeOfFlight", defaults.timeOfFlight).get();
       HoodParams params = new HoodParams(angle, speed, tof);
       shooterTable.put(distance, params);
+    }
+
+    /**
+     * @param distance in meters
+     * @return the Hood params for shooting stationary from that distance
+     */
+    public HoodParams getHoodParamsFromDistance(double distance) {
+      return shooterTable.get(distance);
     }
 
     public TargetShootingState calculateTargetShootingState() {
