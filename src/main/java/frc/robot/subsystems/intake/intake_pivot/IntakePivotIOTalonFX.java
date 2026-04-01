@@ -7,7 +7,11 @@ import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOTa
 
 // import frc.robot.subsystems.intake.intakePivot.IntakePivotConstants;
 public class IntakePivotIOTalonFX extends GenericSuperstructureIOTalonFX implements IntakePivotIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double PIVOT_MOTOR_PRAYER = 1.23456;
 
+  // I have no idea why this fixes it but it does
   public IntakePivotIOTalonFX() {
     super(
         new GenericSuperstructureConfiguration()

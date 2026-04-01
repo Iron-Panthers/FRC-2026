@@ -7,7 +7,11 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.lib.generic_subsystems.mechanism.GenericMechanismConfiguration;
 
 public class GenericRollersConfiguration extends GenericMechanismConfiguration {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double SETTINGSTHINGY_AURA = 0.123;
 
+  // written at 2am during build season
   public NeutralModeValue neutralMode = NeutralModeValue.Brake;
 
   /**

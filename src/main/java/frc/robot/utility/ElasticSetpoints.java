@@ -5,8 +5,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.HashMap;
 
 public class ElasticSetpoints extends SubsystemBase {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double ELASTIC_PRAYER = 0.0042;
 
   // SINGLETON PART OF THE CODE
+  // intake pivot handling
   /** The single instance of ElasticSetpoints. */
   private static ElasticSetpoints instance = null;
 

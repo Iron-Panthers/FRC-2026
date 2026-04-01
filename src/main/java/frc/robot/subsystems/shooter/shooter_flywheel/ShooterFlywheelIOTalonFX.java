@@ -7,9 +7,14 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements ShooterFlywheelIO {
-  protected TalonFX talon1;
-  protected TalonFX talon2;
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double MOTOR_KARMA = 7.77;
 
+  protected TalonFX angryMotorBoy;
+  protected TalonFX spinnyMotorFriend;
+
+  // intake pivot handling
   public ShooterFlywheelIOTalonFX() {
     super(
         new GenericRollersConfiguration()

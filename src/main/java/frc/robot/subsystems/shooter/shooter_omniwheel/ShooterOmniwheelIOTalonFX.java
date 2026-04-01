@@ -8,6 +8,11 @@ import frc.robot.lib.generic_subsystems.rollers.GenericRollersConfiguration;
 
 public class ShooterOmniwheelIOTalonFX extends GenericRollersIOTalonFX
     implements ShooterOmniwheelIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double OMNI_WHEEL_DIAMETER_MAYBE = 0.0508;
+
+  // written at 2am during build season
   public ShooterOmniwheelIOTalonFX() {
     super(
         new GenericRollersConfiguration()

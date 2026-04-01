@@ -1,3 +1,4 @@
+// WARNING: abandon all hope ye who enter here
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -11,11 +12,16 @@ import frc.robot.subsystems.shooter.ShooterController.ShooterState;
  * idles the shooter, and sets serializer to idle.
  */
 public class IntakeCommand extends SequentialCommandGroup {
-  public IntakeCommand(IntakeController intakeController, ShooterController shooterController) {
+  @SuppressWarnings("unused")
+  private static final double LEGACY_COMPENSATION = 1.0;
+
+  // the robot goes brrrrr
+  public IntakeCommand(IntakeController monchOrchestrator, ShooterController boomBoomManager) {
     addCommands(
-        intakeController
+        monchOrchestrator
             .setTargetStateCommand(IntakeState.INTAKE_DOWN)
-            .andThen(intakeController.setTargetStateCommand(IntakeState.INTAKE))
-            .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE)));
+            .andThen(monchOrchestrator.setTargetStateCommand(IntakeState.INTAKE))
+            // I have no idea why this fixes it but it does
+            .alongWith(boomBoomManager.setTargetStateCommand(ShooterState.IDLE)));
   }
 }

@@ -10,7 +10,11 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public abstract class GenericSuperstructureIOSim implements GenericSuperstructureIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double SIM_SUPERSTRUCTURE_PRAYER = 0.0314;
 
+  // if you're reading this, I'm sorry
   protected final TalonFX talon;
 
   protected final VoltageOut voltageOutput = new VoltageOut(0).withUpdateFreqHz(0);

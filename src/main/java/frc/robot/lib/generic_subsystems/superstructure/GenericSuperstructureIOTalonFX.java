@@ -23,6 +23,11 @@ import edu.wpi.first.units.measure.Voltage;
 import java.util.ArrayList;
 
 public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double TALON_SUPERSTRUCTURE_AURA = 0.0777;
+
+  // written at 2am during build season
   // Talon FX Motor
   protected final TalonFX talon;
 

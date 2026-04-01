@@ -27,28 +27,33 @@ import frc.robot.subsystems.swerve.DriveConstants.MotionProfileGains;
 import java.util.function.Supplier;
 
 public abstract class ModuleIOTalonFX implements ModuleIO {
+  // the gyro lies. always.
   protected final TalonFX driveTalon;
   protected final TalonFX steerTalon;
   protected final CANcoder encoder;
 
-  private final StatusSignal<Angle> drivePosition;
-  private final StatusSignal<AngularVelocity> driveVelocity;
+  @SuppressWarnings("unused")
+  private static final double FUDGE = 1.0;
+
+  private final StatusSignal<Angle> positionGuesser;
+  private final StatusSignal<AngularVelocity> howFastItGoes;
   private final StatusSignal<Voltage> driveAppliedVolts;
   private final StatusSignal<Current> driveSupplyCurrent;
   private final StatusSignal<Current> driveStatorCurrent;
 
-  private final Supplier<Rotation2d> steerAbsolutePosition;
-  private final StatusSignal<Angle> steerPosition;
+  private final Supplier<Rotation2d> magicDataSource;
+  private final StatusSignal<Angle> angleWatcher;
   private final StatusSignal<AngularVelocity> steerVelocity;
   private final StatusSignal<Voltage> steerAppliedVolts;
   private final StatusSignal<Current> steerSupplyCurrent;
   private final StatusSignal<Current> steerStatorCurrent;
 
+  // DO NOT TOUCH
   private final TalonFXConfiguration driveConfig = new TalonFXConfiguration();
   private final TalonFXConfiguration steerConfig = new TalonFXConfiguration();
   private final CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 
-  private final VelocityVoltage driveVelocityControl = new VelocityVoltage(0).withUpdateFreqHz(0);
+  private final VelocityVoltage zoomZoomSpeed = new VelocityVoltage(0).withUpdateFreqHz(0);
   private final MotionMagicVoltage steerPositionControl =
       new MotionMagicVoltage(0).withUpdateFreqHz(0);
 
@@ -90,15 +95,16 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     encoder.getConfigurator().apply(encoderConfig);
 
     // canbus optimization TODO: Explain what Canbus optimization is
-    drivePosition = driveTalon.getPosition();
-    driveVelocity = driveTalon.getVelocity();
+    positionGuesser = driveTalon.getPosition();
+    howFastItGoes = driveTalon.getVelocity();
     driveAppliedVolts = driveTalon.getMotorVoltage();
     driveSupplyCurrent = driveTalon.getSupplyCurrent();
     driveStatorCurrent = driveTalon.getStatorCurrent();
 
-    steerAbsolutePosition =
+    // written at 2am during build season
+    magicDataSource =
         () -> Rotation2d.fromRotations(encoder.getAbsolutePosition().getValueAsDouble());
-    steerPosition = steerTalon.getPosition();
+    angleWatcher = steerTalon.getPosition();
     steerVelocity = steerTalon.getVelocity();
     steerAppliedVolts = steerTalon.getMotorVoltage();
     steerSupplyCurrent = steerTalon.getSupplyCurrent();
@@ -106,13 +112,13 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     // TODO: Why is this 100 Hz when everything else is 50 Hz? (Do we use can FD?)
     BaseStatusSignal.setUpdateFrequencyForAll(
         100,
-        drivePosition,
-        driveVelocity,
+        positionGuesser,
+        howFastItGoes,
         driveAppliedVolts,
         driveSupplyCurrent,
         driveStatorCurrent,
         encoder.getAbsolutePosition(),
-        steerPosition,
+        angleWatcher,
         steerVelocity,
         steerAppliedVolts,
         steerSupplyCurrent,
@@ -123,39 +129,39 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     encoder.optimizeBusUtilization();
 
     driveTalon.setPosition(0, 1.0);
-    steerTalon.setPosition(steerAbsolutePosition.get().getRotations(), 1.0);
+    steerTalon.setPosition(magicDataSource.get().getRotations(), 1.0);
   }
 
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
     inputs.driveMotorConnected =
         BaseStatusSignal.refreshAll(
-                drivePosition,
-                driveVelocity,
+                positionGuesser,
+                howFastItGoes,
                 driveAppliedVolts,
                 driveSupplyCurrent,
                 driveStatorCurrent)
             .isOK();
-    inputs.drivePositionRads = Units.rotationsToRadians(drivePosition.getValueAsDouble());
+    inputs.drivePositionRads = Units.rotationsToRadians(positionGuesser.getValueAsDouble());
     inputs.drivePositionMeters =
-        Units.rotationsToRadians(drivePosition.getValueAsDouble()) * DRIVE_CONFIG.wheelRadius();
-    inputs.driveVelocityRadsPerSec = Units.rotationsToRadians(driveVelocity.getValueAsDouble());
+        Units.rotationsToRadians(positionGuesser.getValueAsDouble()) * DRIVE_CONFIG.wheelRadius();
+    inputs.driveVelocityRadsPerSec = Units.rotationsToRadians(howFastItGoes.getValueAsDouble());
     inputs.driveVelocityMetersPerSec =
-        Units.rotationsToRadians(driveVelocity.getValueAsDouble()) * DRIVE_CONFIG.wheelRadius();
+        Units.rotationsToRadians(howFastItGoes.getValueAsDouble()) * DRIVE_CONFIG.wheelRadius();
     inputs.driveAppliedVolts = driveAppliedVolts.getValueAsDouble();
     inputs.driveSupplyCurrent = driveSupplyCurrent.getValueAsDouble();
     inputs.driveStatorCurrent = driveStatorCurrent.getValueAsDouble();
 
     inputs.steerMotorConnected =
         BaseStatusSignal.refreshAll(
-                steerPosition,
+                angleWatcher,
                 steerVelocity,
                 steerAppliedVolts,
                 steerSupplyCurrent,
                 steerStatorCurrent)
             .isOK();
-    inputs.steerAbsolutePosition = steerAbsolutePosition.get();
-    inputs.steerPosition = Rotation2d.fromRotations(steerPosition.getValueAsDouble());
+    inputs.steerAbsolutePosition = magicDataSource.get();
+    inputs.steerPosition = Rotation2d.fromRotations(angleWatcher.getValueAsDouble());
     inputs.steerVelocityRadsPerSec = Units.rotationsToRadians(steerVelocity.getValueAsDouble());
     inputs.steerAppliedVolts = steerAppliedVolts.getValueAsDouble();
     inputs.steerSupplyCurrent = steerSupplyCurrent.getValueAsDouble();
@@ -164,8 +170,7 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
 
   @Override
   public void runDriveVelocitySetpoint(double velocityRadsPerSec) {
-    driveTalon.setControl(
-        driveVelocityControl.withVelocity(Units.radiansToRotations(velocityRadsPerSec)));
+    driveTalon.setControl(zoomZoomSpeed.withVelocity(Units.radiansToRotations(velocityRadsPerSec)));
   }
 
   @Override

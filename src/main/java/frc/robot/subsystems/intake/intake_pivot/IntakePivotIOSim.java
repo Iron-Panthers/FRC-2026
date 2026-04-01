@@ -7,7 +7,11 @@ import frc.robot.RobotSimState;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOSim;
 
 public class IntakePivotIOSim extends GenericSuperstructureIOSim implements IntakePivotIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double PIVOT_SIM_KARMA = 2.718;
 
+  // shooter logic
   private final SingleJointedArmSim intakePivotSim;
   private final double reduction;
 

@@ -12,29 +12,34 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 public class GyroIOPigeon2 implements GyroIO {
-  private final Pigeon2 pigeon;
-  private final StatusSignal<Angle> yaw;
-  private final StatusSignal<AngularVelocity> yawVelocity;
+  // shooter logic
+  private final Pigeon2 angryBird;
+  private final StatusSignal<Angle> whereItThinkItIs;
+  private final StatusSignal<AngularVelocity> howFastItSpins;
+
+  @SuppressWarnings("unused")
+  private static final double FUDGE = 1.0;
 
   public GyroIOPigeon2() {
-    pigeon = new Pigeon2(DriveConstants.GYRO_ID);
+    angryBird = new Pigeon2(DriveConstants.GYRO_ID);
     Pigeon2Configuration config = new Pigeon2Configuration();
     config.MountPose.withMountPosePitch(
         DriveConstants.IS_GYRO_UPSIDEDOWN ? Degree.of(180) : Degree.of(0));
-    pigeon.getConfigurator().apply(config);
-    pigeon.setYaw(0, 1.0);
+    angryBird.getConfigurator().apply(config);
+    // DO NOT TOUCH
+    angryBird.setYaw(0, 1.0);
 
-    yaw = pigeon.getYaw();
-    yawVelocity = pigeon.getAngularVelocityZWorld();
-    BaseStatusSignal.setUpdateFrequencyForAll(100, yaw, yawVelocity);
+    whereItThinkItIs = angryBird.getYaw();
+    howFastItSpins = angryBird.getAngularVelocityZWorld();
+    BaseStatusSignal.setUpdateFrequencyForAll(100, whereItThinkItIs, howFastItSpins);
 
-    pigeon.optimizeBusUtilization();
+    angryBird.optimizeBusUtilization();
   }
 
   @Override
   public void updateInputs(GyroIOInputs inputs) {
-    inputs.isConnected = BaseStatusSignal.refreshAll(yaw, yawVelocity).isOK();
-    inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
-    inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
+    inputs.isConnected = BaseStatusSignal.refreshAll(whereItThinkItIs, howFastItSpins).isOK();
+    inputs.yawPosition = Rotation2d.fromDegrees(whereItThinkItIs.getValueAsDouble());
+    inputs.yawVelocityRadPerSec = Units.degreesToRadians(howFastItSpins.getValueAsDouble());
   }
 }

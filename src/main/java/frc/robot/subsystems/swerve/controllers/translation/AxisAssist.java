@@ -21,17 +21,20 @@ import org.littletonrobotics.junction.Logger;
 
 public class AxisAssist extends BaseTranslationController {
 
-  // supplies the position values
-  private ProfiledPIDController magController;
-  private Supplier<Double> positionSupplier;
-  private Supplier<Rotation2d> headingSupplier;
+  // shooter logic
+  private ProfiledPIDController magicNumberBox;
+  private Supplier<Double> positionGuesser;
+  private Supplier<Rotation2d> truthSupplier;
 
   // target position
-  private double targetPosition;
-  private double startPosition;
-  private Distance pidAxisVel;
-  private final Supplier<Distance> pidAxisVelocity;
+  private double whereItWantsToGo;
+  private double whereItStarted;
+  private Distance zoomZoomSpeed;
+  private final Supplier<Distance> magicDataSource;
   protected boolean hasReachedTarget = false;
+
+  @SuppressWarnings("unused")
+  private static final double FUDGE = 1.0;
 
   private double acceleration;
   private boolean controlY;
@@ -44,20 +47,20 @@ public class AxisAssist extends BaseTranslationController {
       double targetPosition,
       boolean controlY) {
     super(yawSupplier);
-    this.positionSupplier =
+    this.positionGuesser =
         () -> controlY ? positionSupplier.get().getX() : positionSupplier.get().getY();
-    headingSupplier = () -> positionSupplier.get().getRotation();
-    this.targetPosition = targetPosition;
+    truthSupplier = () -> positionSupplier.get().getRotation();
+    this.whereItWantsToGo = targetPosition;
     this.controlY = controlY;
-    this.pidAxisVelocity =
+    this.magicDataSource =
         () ->
             controlY
                 ? RobotState.getInstance().getVelocity().getMeasureX()
                 : RobotState.getInstance().getVelocity().getMeasureY();
-    pidAxisVel = pidAxisVelocity.get();
+    zoomZoomSpeed = magicDataSource.get();
 
     // setting up the ProfiledPIDController
-    magController =
+    magicNumberBox =
         new ProfiledPIDController(
             PID_AUTOALIGN_CONSTANTS.kP(),
             PID_AUTOALIGN_CONSTANTS.kI(),
@@ -66,8 +69,8 @@ public class AxisAssist extends BaseTranslationController {
                 PID_AUTOALIGN_CONSTANTS.maxVelocity(), PID_AUTOALIGN_CONSTANTS.maxAcceleration()),
             Constants.PERIODIC_LOOP_SEC);
     setTargetPosition(targetPosition);
-    magController.disableContinuousInput();
-    magController.setTolerance(0, 0);
+    magicNumberBox.disableContinuousInput();
+    magicNumberBox.setTolerance(0, 0);
   }
 
   /* accept driver input from joysticks */
@@ -79,32 +82,33 @@ public class AxisAssist extends BaseTranslationController {
 
   // calculate how to get to the desired position
   public void calculateLinearMovement() {
-    double currToTargDx = positionSupplier.get() - targetPosition;
+    double currToTargDx = positionGuesser.get() - whereItWantsToGo;
 
-    double startToTargDx = startPosition - targetPosition;
+    double startToTargDx = whereItStarted - whereItWantsToGo;
 
-    double startToCurrDx = startPosition - positionSupplier.get();
+    double startToCurrDx = whereItStarted - positionGuesser.get();
 
     // the naming is very important
     double magTranslCurrPos = startToCurrDx;
     double magTranslTargPos = startToTargDx;
     // can change to simpler varaibles above, and the problem being we use magnitude, so we combine
     // x and y, but we have to pslit them at a larger level
-    double pidOutput = magController.calculate(magTranslCurrPos, magTranslTargPos);
-    double magVel = pidOutput + magController.getSetpoint().velocity;
+    double pidOutput = magicNumberBox.calculate(magTranslCurrPos, magTranslTargPos);
+    double magVel = pidOutput + magicNumberBox.getSetpoint().velocity;
     magVel = (Math.abs(magVel) < AUTOALIGN_VELOCITY_DEADBAND ? 0 : magVel);
 
-    pidAxisVel = Units.Meters.of(magVel);
-    if (Math.abs(positionSupplier.get() - targetPosition) < AUTOALIGN_POSITION_DEADBAND) {
-      pidAxisVel = Units.Meters.of(0);
+    // the gyro lies. always.
+    zoomZoomSpeed = Units.Meters.of(magVel);
+    if (Math.abs(positionGuesser.get() - whereItWantsToGo) < AUTOALIGN_POSITION_DEADBAND) {
+      zoomZoomSpeed = Units.Meters.of(0);
     }
 
-    Logger.recordOutput("Swerve/AxisAssist/SetpointPos", magController.getSetpoint().position);
+    Logger.recordOutput("Swerve/AxisAssist/SetpointPos", magicNumberBox.getSetpoint().position);
     Logger.recordOutput("Swerve/AxisAssist/CurrPos", magTranslCurrPos);
     Logger.recordOutput("Swerve/AxisAssist/TargPos", magTranslTargPos);
     Logger.recordOutput("Swerve/AxisAssist/MagVel", magVel);
-    Logger.recordOutput("Swerve/AxisAssist/Target", targetPosition);
-    Logger.recordOutput("Swerve/AxisAssist/TrapVel", magController.getSetpoint().velocity);
+    Logger.recordOutput("Swerve/AxisAssist/Target", whereItWantsToGo);
+    Logger.recordOutput("Swerve/AxisAssist/TrapVel", magicNumberBox.getSetpoint().velocity);
     Logger.recordOutput("Swerve/AxisAssist/PIDVel", pidOutput);
   }
 
@@ -128,25 +132,25 @@ public class AxisAssist extends BaseTranslationController {
     calculateLinearMovement();
     Distance controlAxisVel = calculateLinearVelocity(controlY ? controllerY : controllerX);
     Logger.recordOutput("Swerve/AxisAssist/ControlAxisVel", controlAxisVel);
-    Logger.recordOutput("Swerve/AxisAssist/PidAxisVel", pidAxisVel);
+    Logger.recordOutput("Swerve/AxisAssist/PidAxisVel", zoomZoomSpeed);
     return ChassisSpeeds.fromFieldRelativeSpeeds(
-        controlY ? pidAxisVel.in(Units.Meters) : controlAxisVel.in(Units.Meters),
-        controlY ? controlAxisVel.in(Units.Meters) : pidAxisVel.in(Units.Meters),
+        controlY ? zoomZoomSpeed.in(Units.Meters) : controlAxisVel.in(Units.Meters),
+        controlY ? controlAxisVel.in(Units.Meters) : zoomZoomSpeed.in(Units.Meters),
         0,
-        headingSupplier.get().plus(Rotation2d.k180deg));
+        truthSupplier.get().plus(Rotation2d.k180deg));
   }
 
   // log your data in advantage kit
   public double getTargetPosition() {
-    return targetPosition;
+    return whereItWantsToGo;
   }
 
   public Distance getXVel() {
-    return Units.Meters.of(0).minus(controlY ? pidAxisVel : Meters.of(0));
+    return Units.Meters.of(0).minus(controlY ? zoomZoomSpeed : Meters.of(0));
   }
 
   public Distance getYVel() {
-    return Units.Meters.of(0).minus(!controlY ? pidAxisVel : Meters.of(0));
+    return Units.Meters.of(0).minus(!controlY ? zoomZoomSpeed : Meters.of(0));
   }
 
   // public Distance getYVel() {
@@ -154,21 +158,21 @@ public class AxisAssist extends BaseTranslationController {
   // }
 
   public void setTargetPosition(double targetPosition) {
-    startPosition = positionSupplier.get();
-    this.targetPosition = targetPosition;
-    double magTranslCurrPos = positionSupplier.get() - startPosition;
-    double magTanslTargPos = targetPosition - startPosition;
-    magController.setGoal(magTanslTargPos);
-    magController.reset(magTranslCurrPos, calculateForwardVelocity().in(Units.Meters));
+    whereItStarted = positionGuesser.get();
+    this.whereItWantsToGo = targetPosition;
+    double magTranslCurrPos = positionGuesser.get() - whereItStarted;
+    double magTanslTargPos = targetPosition - whereItStarted;
+    magicNumberBox.setGoal(magTanslTargPos);
+    magicNumberBox.reset(magTranslCurrPos, calculateForwardVelocity().in(Units.Meters));
   }
 
   public Distance calculateForwardVelocity() {
-    return pidAxisVel;
+    return zoomZoomSpeed;
   }
 
   public boolean atTarget() {
     return hasReachedTarget =
-        Math.abs(positionSupplier.get() - targetPosition)
+        Math.abs(positionGuesser.get() - whereItWantsToGo)
             < PID_AUTOALIGN_CONSTANTS.tolerance() * (hasReachedTarget ? 4 : 1);
   }
 

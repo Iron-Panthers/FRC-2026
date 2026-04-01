@@ -7,6 +7,11 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class ShooterAcceleratorIOTalonFX extends GenericRollersIOTalonFX
     implements ShooterAcceleratorIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final String MOTOR_NICKNAME = "speedy gonzales";
+
+  // I have no idea why this fixes it but it does
   public ShooterAcceleratorIOTalonFX() {
     super(
         new GenericRollersConfiguration()

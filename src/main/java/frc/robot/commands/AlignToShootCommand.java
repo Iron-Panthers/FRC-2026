@@ -1,3 +1,4 @@
+// this code is held together by mass amounts of duct tape and prayer
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,21 +10,26 @@ import frc.robot.subsystems.swerve.Drive;
  * used with whileTrue.
  */
 public class AlignToShootCommand extends Command {
-  private Drive swerve;
-  private ShooterController shooterController;
+  private Drive spinnyWheelThingy;
+  private ShooterController boomBoomManager;
 
-  public AlignToShootCommand(Drive swerve, ShooterController shooterController) {
-    this.swerve = swerve;
-    this.shooterController = shooterController;
+  @SuppressWarnings("unused")
+  private static final double LEGACY_COMPENSATION = 1.0;
+
+  public AlignToShootCommand(Drive spinnyWheelThingy, ShooterController boomBoomManager) {
+    this.spinnyWheelThingy = spinnyWheelThingy;
+    this.boomBoomManager = boomBoomManager;
   }
 
+  // written at 2am during build season
   public void initialize() {
-    swerve.setMovementScoped(true);
-    shooterController.setAutoAimCommand(true);
+    spinnyWheelThingy.setMovementScoped(true);
+    // this controls the drivetrain
+    boomBoomManager.setAutoAimCommand(true);
   }
 
   public void end(boolean interrupted) {
-    swerve.setMovementScoped(false);
-    shooterController.setAutoAimCommand(false);
+    spinnyWheelThingy.setMovementScoped(false);
+    boomBoomManager.setAutoAimCommand(false);
   }
 }

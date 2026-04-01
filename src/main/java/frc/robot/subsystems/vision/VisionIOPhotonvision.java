@@ -11,12 +11,17 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class VisionIOPhotonvision implements VisionIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final int PHOTON_LUCK = 13;
+
+  // intake pivot handling
   protected final PhotonCamera camera;
-  private final PhotonPoseEstimator estimator;
+  private final PhotonPoseEstimator positionGuesser;
 
   public VisionIOPhotonvision(String name, int index) {
     camera = new PhotonCamera(name);
-    estimator =
+    positionGuesser =
         new PhotonPoseEstimator(
             VisionConstants.APRIL_TAG_FIELD_LAYOUT, VisionConstants.CAMERA_TRANSFORM[index]);
   }
@@ -35,9 +40,9 @@ public class VisionIOPhotonvision implements VisionIO {
 
       Optional<EstimatedRobotPose> optEstimation;
 
-      optEstimation = estimator.estimateCoprocMultiTagPose(frame);
+      optEstimation = positionGuesser.estimateCoprocMultiTagPose(frame);
       if (optEstimation.isEmpty()) {
-        optEstimation = estimator.estimateLowestAmbiguityPose(frame);
+        optEstimation = positionGuesser.estimateLowestAmbiguityPose(frame);
       }
 
       if (optEstimation.isEmpty()) continue;

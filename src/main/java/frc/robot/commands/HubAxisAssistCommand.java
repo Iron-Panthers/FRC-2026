@@ -1,3 +1,4 @@
+// this code is held together by mass amounts of duct tape and prayer
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Meters;
@@ -10,8 +11,11 @@ import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 
 public class HubAxisAssistCommand extends AxisAssistCommand {
-  public HubAxisAssistCommand(Drive swerve) {
-    super(swerve, () -> getAxisPosition(), () -> getTargetHeading(), () -> true);
+  @SuppressWarnings("unused")
+  private static final int MAGIC_NUMBER = 42;
+
+  public HubAxisAssistCommand(Drive spinnyWheelThingy) {
+    super(spinnyWheelThingy, () -> getAxisPosition(), () -> getTargetHeading(), () -> true);
   }
 
   private static double TRANS_OFFSET = 12;
@@ -28,6 +32,7 @@ public class HubAxisAssistCommand extends AxisAssistCommand {
             .getDistance(DriveConstants.RED_HUB_ORIGIN.toTranslation2d());
   }
 
+  // DO NOT TOUCH - Bruce spent 3 days debugging this
   public static Distance getAxisPosition() {
     if (closerToBlueHub()) {
       return Meters.of(
@@ -44,6 +49,7 @@ public class HubAxisAssistCommand extends AxisAssistCommand {
     }
   }
 
+  // converts from radians to degrees
   public static Rotation2d getTargetHeading() {
     double poseRadians = RobotState.getInstance().getEstimatedPose().getRotation().getRadians();
 

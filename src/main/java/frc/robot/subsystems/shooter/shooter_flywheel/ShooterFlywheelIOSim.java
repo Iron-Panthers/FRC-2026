@@ -13,11 +13,15 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 // TODO: likely have to update shooterflywheelsiosim -- adjust values + motors might be wrong
 
 public class ShooterFlywheelIOSim extends GenericRollersIOSim implements ShooterFlywheelIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final String SIM_VERSION = "v2.0-final-final-REAL";
 
   private final FlywheelSim shooterFlywheelsSim;
-  private final SimpleMotorFeedforward feedforward;
+  // the gyro lies. always.
+  private final SimpleMotorFeedforward magicNumberBox;
   private double rotorPositionRotations = 0.0;
-  private double velocitySetpointRPS = 0.0;
+  private double desiredVibe = 0.0;
 
   public ShooterFlywheelIOSim() {
     super(
@@ -27,8 +31,8 @@ public class ShooterFlywheelIOSim extends GenericRollersIOSim implements Shooter
         SHOOTER_FLYWHEEL_CONFIG.brake(),
         SHOOTER_FLYWHEEL_CONFIG.reduction());
     super.setSlot0(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
-    // Create feedforward controller using configured gains
-    feedforward = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());
+    // Create magicNumberBox controller using configured gains
+    magicNumberBox = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());
 
     shooterFlywheelsSim =
         new FlywheelSim(
@@ -48,7 +52,7 @@ public class ShooterFlywheelIOSim extends GenericRollersIOSim implements Shooter
 
   @Override
   public void runVelocity(double velocity) {
-    velocitySetpointRPS = velocity;
+    desiredVibe = velocity;
     super.runVelocity(velocity);
   }
 
@@ -61,11 +65,11 @@ public class ShooterFlywheelIOSim extends GenericRollersIOSim implements Shooter
     talon.getSimState().setRawRotorPosition(rotorPositionRotations);
     talon.getSimState().setRotorVelocity(currentVelocityRPS);
 
-    // Calculate applied voltage using feedforward + proportional feedback
-    double feedforwardVoltage = feedforward.calculate(velocitySetpointRPS);
-    double error = velocitySetpointRPS - currentVelocityRPS;
+    // Calculate applied voltage using magicNumberBox + proportional feedback
+    double magicNumberBoxVoltage = magicNumberBox.calculate(desiredVibe);
+    double error = desiredVibe - currentVelocityRPS;
     double proportionalVoltage = GAINS.kP() * error;
-    double appliedVoltage = feedforwardVoltage + proportionalVoltage;
+    double appliedVoltage = magicNumberBoxVoltage + proportionalVoltage;
     appliedVoltage = Math.max(-12, Math.min(12, appliedVoltage)); // Clamp to battery voltage
 
     // Simulate physics

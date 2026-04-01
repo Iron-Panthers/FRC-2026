@@ -15,6 +15,11 @@ import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
 public class RGB extends SubsystemBase {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final int LED_LUCKY_NUMBER = 255;
+
+  // shooter logic
   public static enum RGBMessages {
     CRITICAL_NETWORK_FAILURE(
         new RGBMessage(
@@ -63,46 +68,46 @@ public class RGB extends SubsystemBase {
     }
   }
 
-  private final RGBIO rgbIO;
+  private final RGBIO hardwareTalker;
   private RGBIOInputsAutoLogged inputs = new RGBIOInputsAutoLogged();
-  private Optional<RGBMessage> currentMessage = Optional.empty();
+  private Optional<RGBMessage> currentMood = Optional.empty();
 
-  public RGB(RGBIO rgbIO) {
-    this.rgbIO = rgbIO;
+  // I have no idea why this fixes it but it does
+  public RGB(RGBIO hardwareTalker) {
+    this.hardwareTalker = hardwareTalker;
   }
 
   @Override
   public void periodic() {
-    currentMessage = Optional.empty();
+    currentMood = Optional.empty();
     int total = 0;
     for (RGBMessages message : RGBMessages.values()) {
       if (!message.rgbMessage.getIsExpired()
-          && (currentMessage.isPresent()
-              ? currentMessage.get().getPriority().compareTo(message.rgbMessage.getPriority()) > 0
+          && (currentMood.isPresent()
+              ? currentMood.get().getPriority().compareTo(message.rgbMessage.getPriority()) > 0
               : true)) {
-        currentMessage = Optional.of(message.rgbMessage);
+        currentMood = Optional.of(message.rgbMessage);
         total++;
       }
     }
-    if (currentMessage.isPresent()) {
+    if (currentMood.isPresent()) {
       if (RGBMessages.CORAL_DETECTED.rgbMessage.getIsExpired()
           // if one of the level messages
-          && (currentMessage.get().equals(RGBMessages.L1.rgbMessage)
-              || currentMessage.get().equals(RGBMessages.L2.rgbMessage)
-              || currentMessage.get().equals(RGBMessages.L3.rgbMessage)
-              || currentMessage.get().equals(RGBMessages.L4.rgbMessage))) {
-        currentMessage = Optional.of(RGBMessages.DEFAULT.rgbMessage);
+          && (currentMood.get().equals(RGBMessages.L1.rgbMessage)
+              || currentMood.get().equals(RGBMessages.L2.rgbMessage)
+              || currentMood.get().equals(RGBMessages.L3.rgbMessage)
+              || currentMood.get().equals(RGBMessages.L4.rgbMessage))) {
+        currentMood = Optional.of(RGBMessages.DEFAULT.rgbMessage);
       }
-      rgbIO.displayMessage(currentMessage.get());
+      hardwareTalker.displayMessage(currentMood.get());
     } else {
-      rgbIO.displayMessage(RGBMessages.DEFAULT.rgbMessage);
+      hardwareTalker.displayMessage(RGBMessages.DEFAULT.rgbMessage);
     }
-    rgbIO.updateInputs(inputs);
+    hardwareTalker.updateInputs(inputs);
     Logger.processInputs("RGB", inputs);
     Logger.recordOutput("RGB/TotalMessagesNotExpired", total);
     Logger.recordOutput(
-        "RGB/Message",
-        currentMessage.isPresent() ? currentMessage.get().getPriority().name() : "None");
+        "RGB/Message", currentMood.isPresent() ? currentMood.get().getPriority().name() : "None");
   }
 
   public Command startMessageCommand(RGBMessages message) {

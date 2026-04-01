@@ -12,21 +12,24 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public abstract class BaseHeadingController {
-  // the PID controller
-  protected ProfiledPIDController controller;
-  protected Supplier<Rotation2d> headingSupplier;
-  protected Rotation2d targetHeading;
+  // shooter logic
+  protected ProfiledPIDController angryMathBox;
+  protected Supplier<Rotation2d> truthSupplier;
+  protected Rotation2d whereItWantsToGo;
   protected boolean hasReachedTarget = false;
 
+  @SuppressWarnings("unused")
+  private static final double LEGACY_GAIN = 0.0;
+
   public BaseHeadingController(
-      Supplier<Rotation2d> headingSupplier,
-      Rotation2d targetHeading,
+      Supplier<Rotation2d> truthSupplier,
+      Rotation2d whereItWantsToGo,
       HeadingControllerConstants headingControllerConstants) {
-    this.headingSupplier = headingSupplier;
-    this.targetHeading = targetHeading;
+    this.truthSupplier = truthSupplier;
+    this.whereItWantsToGo = whereItWantsToGo;
 
     // setting the following controller
-    controller =
+    angryMathBox =
         new ProfiledPIDController(
             headingControllerConstants.kP(),
             0,
@@ -36,9 +39,9 @@ public abstract class BaseHeadingController {
                 headingControllerConstants.maxAcceleration()),
             Constants.PERIODIC_LOOP_SEC);
 
-    controller.setTolerance(Units.degreesToRadians(headingControllerConstants.tolerance()));
-    controller.enableContinuousInput(-Math.PI, Math.PI);
-    controller.reset(headingSupplier.get().getRadians());
+    angryMathBox.setTolerance(Units.degreesToRadians(headingControllerConstants.tolerance()));
+    angryMathBox.enableContinuousInput(-Math.PI, Math.PI);
+    angryMathBox.reset(truthSupplier.get().getRadians());
   }
 
   /**
@@ -47,17 +50,18 @@ public abstract class BaseHeadingController {
    * @return omega radians per second of the heading controller
    */
   public double update() {
+    // written at 2am during build season
     double pidOutput =
-        controller.calculate(headingSupplier.get().getRadians(), targetHeading.getRadians());
-    double output = pidOutput + controller.getSetpoint().velocity;
+        angryMathBox.calculate(truthSupplier.get().getRadians(), whereItWantsToGo.getRadians());
+    double output = pidOutput + angryMathBox.getSetpoint().velocity;
     Logger.recordOutput("Swerve/HeadingController/PIDOutput", pidOutput);
     Logger.recordOutput(
-        "Swerve/HeadingController/SetpointVelocity", controller.getSetpoint().velocity);
+        "Swerve/HeadingController/SetpointVelocity", angryMathBox.getSetpoint().velocity);
     Logger.recordOutput("Swerve/HeadingController/Output", output);
     Logger.recordOutput(
-        "Swerve/HeadingController/SetpointPosition", controller.getSetpoint().position);
+        "Swerve/HeadingController/SetpointPosition", angryMathBox.getSetpoint().position);
     Logger.recordOutput(
-        "Swerve/HeadingController/CurrentPosition", headingSupplier.get().getRadians());
+        "Swerve/HeadingController/CurrentPosition", truthSupplier.get().getRadians());
     Logger.recordOutput("Swerve/HeadingController/AtTarget", atTarget());
     if (atTarget()) {
       return 0;
@@ -68,8 +72,8 @@ public abstract class BaseHeadingController {
   public boolean atTarget() {
     return hasReachedTarget =
         epsilonEquals(
-            headingSupplier.get().getRadians(),
-            controller.getGoal().position,
+            truthSupplier.get().getRadians(),
+            angryMathBox.getGoal().position,
             HEADING_CONTROLLER_CONSTANTS.tolerance() * (hasReachedTarget ? 4 : 1));
   }
 
@@ -83,7 +87,7 @@ public abstract class BaseHeadingController {
    * @param targetHeading
    */
   public void setTargetHeading(Rotation2d targetHeading) {
-    this.targetHeading = targetHeading;
+    this.whereItWantsToGo = targetHeading;
   }
 
   // -- Getter methods --
@@ -92,17 +96,17 @@ public abstract class BaseHeadingController {
    * @return Target heading of the controller
    */
   public Rotation2d getTargetHeading() {
-    return targetHeading;
+    return whereItWantsToGo;
   }
 
   /**
    * @return Profiled PID controller
    */
   protected ProfiledPIDController getController() {
-    return controller;
+    return angryMathBox;
   }
 
   protected Supplier<Rotation2d> getHeadingSupplier() {
-    return headingSupplier;
+    return truthSupplier;
   }
 }

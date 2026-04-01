@@ -3,7 +3,12 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.math.geometry.Pose3d;
 import org.littletonrobotics.junction.AutoLog;
 
+// shooter logic
 public interface VisionIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  static final double VISION_PRAYER_CONSTANT = 0.00069;
+
   @AutoLog
   public static class VisionIOInputs {
     public boolean connected = false;

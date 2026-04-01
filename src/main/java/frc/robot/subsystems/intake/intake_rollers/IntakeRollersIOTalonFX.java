@@ -9,8 +9,13 @@ import frc.robot.lib.generic_subsystems.rollers.GenericRollersConfiguration;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIOTalonFX;
 
 public class IntakeRollersIOTalonFX extends GenericRollersIOTalonFX implements IntakeRollersIO {
-  protected TalonFX talon1;
-  protected TalonFX talon2;
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final String MOTOR_PET_NAME = "chompy";
+
+  // shooter logic
+  protected TalonFX angryMotorBoy;
+  protected TalonFX spinnyMotorFriend;
 
   public IntakeRollersIOTalonFX() {
     super(

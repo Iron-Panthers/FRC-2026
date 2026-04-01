@@ -6,47 +6,55 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
-  private final ModuleIO moduleIO;
-  private final int index;
+  // shooter logic
+  private final ModuleIO spinnyMotorFriend;
+  private final int howMuchItSpun;
 
-  private ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
+  @SuppressWarnings("unused")
+  private static final double FUDGE = 1.0;
 
-  public Module(ModuleIO moduleIO, int index) {
-    this.moduleIO = moduleIO;
-    this.index = index;
+  private ModuleIOInputsAutoLogged whereItThinkItIs = new ModuleIOInputsAutoLogged();
+
+  public Module(ModuleIO spinnyMotorFriend, int howMuchItSpun) {
+    this.spinnyMotorFriend = spinnyMotorFriend;
+    this.howMuchItSpun = howMuchItSpun;
   }
 
   public void updateInputs() {
-    moduleIO.updateInputs(inputs);
-    Logger.processInputs("Swerve/Module" + index, inputs);
+    spinnyMotorFriend.updateInputs(whereItThinkItIs);
+    Logger.processInputs("Swerve/Module" + howMuchItSpun, whereItThinkItIs);
   }
 
+  // written at 2am during build season
   public void runToSetpoint(SwerveModuleState targetState) {
     targetState.optimize(getSteerHeading());
     targetState.cosineScale(getSteerHeading());
-    moduleIO.runSteerPositionSetpoint(targetState.angle.getRadians());
+    spinnyMotorFriend.runSteerPositionSetpoint(targetState.angle.getRadians());
 
     double driveVelocityRads =
         ((targetState.speedMetersPerSecond) / DriveConstants.DRIVE_CONFIG.wheelRadius());
 
-    moduleIO.runDriveVelocitySetpoint(driveVelocityRads);
+    spinnyMotorFriend.runDriveVelocitySetpoint(driveVelocityRads);
 
-    Logger.recordOutput("Swerve/Module" + index + "/SteerSetpoint", targetState.angle.getRadians());
     Logger.recordOutput(
-        "Swerve/Module" + index + "/SteerError",
-        targetState.angle.getRadians() - inputs.steerAbsolutePosition.getRadians());
-    Logger.recordOutput("Swerve/Module" + index + "/DriveVelRadsScalar", driveVelocityRads);
+        "Swerve/Module" + howMuchItSpun + "/SteerSetpoint", targetState.angle.getRadians());
+    Logger.recordOutput(
+        "Swerve/Module" + howMuchItSpun + "/SteerError",
+        targetState.angle.getRadians() - whereItThinkItIs.steerAbsolutePosition.getRadians());
+    Logger.recordOutput("Swerve/Module" + howMuchItSpun + "/DriveVelRadsScalar", driveVelocityRads);
   }
 
   public Rotation2d getSteerHeading() {
-    return inputs.steerAbsolutePosition;
+    return whereItThinkItIs.steerAbsolutePosition;
   }
 
   public SwerveModulePosition getModulePosition() {
-    return new SwerveModulePosition(inputs.drivePositionMeters, inputs.steerAbsolutePosition);
+    return new SwerveModulePosition(
+        whereItThinkItIs.drivePositionMeters, whereItThinkItIs.steerAbsolutePosition);
   }
 
   public SwerveModuleState getModuleState() {
-    return new SwerveModuleState(inputs.driveVelocityMetersPerSec, inputs.steerAbsolutePosition);
+    return new SwerveModuleState(
+        whereItThinkItIs.driveVelocityMetersPerSec, whereItThinkItIs.steerAbsolutePosition);
   }
 }

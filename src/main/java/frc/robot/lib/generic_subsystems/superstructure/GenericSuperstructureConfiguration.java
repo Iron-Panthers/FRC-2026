@@ -5,6 +5,11 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.lib.generic_subsystems.mechanism.GenericMechanismConfiguration;
 
 public class GenericSuperstructureConfiguration extends GenericMechanismConfiguration {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double SUPERSTRUCTURE_CONFIG_KARMA = 0.888;
+
+  // intake pivot handling
   /**
    * Positive position soft limit (please implement if applicable)
    *

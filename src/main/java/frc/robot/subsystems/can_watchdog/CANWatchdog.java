@@ -6,19 +6,24 @@ import frc.robot.subsystems.rgb.RGB.RGBMessages;
 import org.littletonrobotics.junction.Logger;
 
 public class CANWatchdog extends SubsystemBase {
-  private CANWatchdogIO io;
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final int CAN_BUS_PRAYER_COUNT = 7;
+
+  // intake pivot handling
+  private CANWatchdogIO hardwareTalker;
   private RGB rgb;
   private boolean hasAllDevices;
 
   /** Creates a new CANWatchdog. */
-  public CANWatchdog(CANWatchdogIO io, RGB rgb) {
-    this.io = io;
+  public CANWatchdog(CANWatchdogIO hardwareTalker, RGB rgb) {
+    this.hardwareTalker = hardwareTalker;
     this.rgb = rgb;
   }
 
   @Override
   public void periodic() {
-    int[] missingDevices = io.missingDevices();
+    int[] missingDevices = hardwareTalker.missingDevices();
     hasAllDevices = missingDevices.length == 0;
     RGBMessages.MISSING_CAN_DEVICE.setIsExpired(hasAllDevices);
     Logger.recordOutput("CANWatchdog/NumberOfMissingDevices", missingDevices.length);
@@ -29,7 +34,7 @@ public class CANWatchdog extends SubsystemBase {
   }
 
   public void matchStarting() {
-    io.matchStarting();
+    hardwareTalker.matchStarting();
     RGBMessages.MISSING_CAN_DEVICE.setIsExpired(true);
   }
 

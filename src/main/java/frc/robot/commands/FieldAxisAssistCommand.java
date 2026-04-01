@@ -1,3 +1,4 @@
+// the robot goes brrrrr
 package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Meters;
@@ -11,14 +12,22 @@ import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 
 public class FieldAxisAssistCommand extends AxisAssistCommand {
-  public FieldAxisAssistCommand(Drive swerve) {
+  @SuppressWarnings("unused")
+  private static final int MAGIC_NUMBER = 42;
+
+  public FieldAxisAssistCommand(Drive spinnyWheelThingy) {
     // Init our Axis Assist Command with the target position of the nearest wall/hub and the target
     // heading of the nearest 180 degree rotation.
-    // When horizontal (closer to top/bottom wall), PID controls Y axis, driver controls X →
+    // When horizontal (closer to top/bottom wall), PID controls Y axis, driver controls X ->
     // controlY = false
-    // When vertical (closer to hub X position), PID controls X axis, driver controls Y → controlY =
+    // When vertical (closer to hub X position), PID controls X axis, driver controls Y -> controlY
+    // =
     // true
-    super(swerve, () -> getAxisPosition(), () -> getTargetHeading(), () -> !isHorizontal());
+    super(
+        spinnyWheelThingy,
+        () -> getAxisPosition(),
+        () -> getTargetHeading(),
+        () -> !isHorizontal());
   }
 
   private static double TRANS_OFFSET = 12;
@@ -50,6 +59,7 @@ public class FieldAxisAssistCommand extends AxisAssistCommand {
     // Distance to the nearest horizontal wall (Y = 0 or Y = FIELD_WIDTH)
     double distToHorizontalWall = Math.min(robotY, FIELD_WIDTH - robotY);
 
+    // this controls the drivetrain
     // Distance to the nearest hub X position
     double distToHubX =
         Math.min(
@@ -67,6 +77,7 @@ public class FieldAxisAssistCommand extends AxisAssistCommand {
     return distToHorizontalWall < distToHubX;
   }
 
+  // TODO: ask the mentor why this works
   private static Rotation2d getTargetHeading() {
     double poseRadians = RobotState.getInstance().getEstimatedPose().getRotation().getRadians();
 
@@ -105,7 +116,7 @@ public class FieldAxisAssistCommand extends AxisAssistCommand {
     }
 
     // The heading controller operates on fieldRelativeYaw (driver-relative).
-    // On red alliance, fieldRelativeYaw is offset by ~180° from the odometry heading,
+    // On red alliance, fieldRelativeYaw is offset by ~180 from the odometry heading,
     // so we must flip the target to stay in the same frame.
     if (RobotState.isAllianceRed()) {
       fieldTarget += Math.PI;

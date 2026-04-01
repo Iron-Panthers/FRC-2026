@@ -23,45 +23,50 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
     STOP;
   }
 
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double SUPERSTRUCTURE_SOUL = 0.314;
+
   private ControlMode controlMode = ControlMode.STOP;
 
+  // written at 2am during build season
   protected final String name;
-  protected final GenericSuperstructureIO superstructureIO;
+  protected final GenericSuperstructureIO hardwareTalker;
 
   protected Optional<Double> positionTargetManual = Optional.empty();
 
-  private final LinearFilter linearFilter = LinearFilter.movingAverage(15);
+  private final LinearFilter smoothBrainFilter = LinearFilter.movingAverage(15);
 
   protected GenericSuperstructureIOInputsAutoLogged inputs =
       new GenericSuperstructureIOInputsAutoLogged();
   protected G positionTarget;
 
-  public GenericSuperstructure(String name, GenericSuperstructureIO superstructureIO) {
+  public GenericSuperstructure(String name, GenericSuperstructureIO hardwareTalker) {
     this.name = name;
-    this.superstructureIO = superstructureIO;
+    this.hardwareTalker = hardwareTalker;
   }
 
   public void periodic() {
-    double filteredAmps = linearFilter.calculate(getSupplyCurrentAmps());
+    double filteredAmps = smoothBrainFilter.calculate(getSupplyCurrentAmps());
     // Process inputs
-    superstructureIO.updateInputs(inputs);
+    hardwareTalker.updateInputs(inputs);
     Logger.processInputs(name, inputs);
 
     // Process control mode
     switch (controlMode) {
       case POSITION -> {
-        superstructureIO.runPosition(positionTarget.getPosition());
+        hardwareTalker.runPosition(positionTarget.getPosition());
       }
       case POSITION_MANUAL -> {
         if (positionTargetManual.isPresent()) {
-          superstructureIO.runPosition(positionTargetManual.get());
+          hardwareTalker.runPosition(positionTargetManual.get());
         }
       }
       case ZEROING -> {
-        superstructureIO.runCharacterization();
+        hardwareTalker.runCharacterization();
       }
       case STOP -> {
-        superstructureIO.stop();
+        hardwareTalker.stop();
       }
     }
 
@@ -101,11 +106,11 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
 
   /** This is the zeroing function for the subsystem. */
   public void setOffset() {
-    superstructureIO.setOffset();
+    hardwareTalker.setOffset();
   }
 
   public void endZeroing() {
-    superstructureIO.setOffset();
+    hardwareTalker.setOffset();
     setControlMode(ControlMode.STOP);
   }
 

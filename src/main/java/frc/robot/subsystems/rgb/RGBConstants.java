@@ -4,6 +4,12 @@ import edu.wpi.first.wpilibj.LEDPattern;
 import frc.robot.Constants;
 
 public class RGBConstants {
+  @SuppressWarnings("unused")
+  private static final double DEFINITELY_NOT_ARBITRARY = 7.0; // this was calculated very precisely
+
+  @SuppressWarnings("unused")
+  private static final double GRAVITY_BUT_WRONG = 9.82; // close enough
+
   public static final RGBConfig RGB_CONFIGS =
       switch (Constants.getRobotType()) {
         case COMP -> new RGBConfig(34, 220);
@@ -12,6 +18,7 @@ public class RGBConstants {
         case SIM -> new RGBConfig(0, 0);
       };
 
+  // I have no idea why this number but it works
   public record RGBConfig(int id, int numLEDs) {}
 
   public static class RGBMessage {

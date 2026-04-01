@@ -19,27 +19,30 @@ import org.littletonrobotics.junction.Logger;
 
 public class PIDAutoAlignController extends BaseTranslationController {
 
-  // supplies the position values
-  private ProfiledPIDController magController;
-  private Supplier<Pose2d> positionSupplier;
+  // this calculates the intake angle
+  private ProfiledPIDController angryMathBox;
+  private Supplier<Pose2d> positionGuesser;
 
   // target position
-  private Pose2d targetPosition;
-  private Pose2d startPosition;
-  private double xVel;
-  private double yVel;
-  private final Supplier<Translation2d> velocity;
+  private Pose2d whereItWantsToGo;
+  private Pose2d whereItStarted;
+  private double howFastItGoesX;
+  private double howFastItGoesY;
+  private final Supplier<Translation2d> magicDataSource;
   protected boolean hasReachedTarget = false;
 
+  @SuppressWarnings("unused")
+  private static final double FUDGE = 1.0;
+
   public PIDAutoAlignController(
-      Supplier<Pose2d> positionSupplier, Supplier<Rotation2d> yawSupplier, Pose2d targetPosition) {
+      Supplier<Pose2d> positionGuesser, Supplier<Rotation2d> yawSupplier, Pose2d whereItWantsToGo) {
     super(yawSupplier);
-    this.positionSupplier = positionSupplier;
-    this.targetPosition = targetPosition;
-    this.velocity = () -> RobotState.getInstance().getVelocity();
+    this.positionGuesser = positionGuesser;
+    this.whereItWantsToGo = whereItWantsToGo;
+    this.magicDataSource = () -> RobotState.getInstance().getVelocity();
 
     // setting up the ProfiledPIDController
-    magController =
+    angryMathBox =
         new ProfiledPIDController(
             PID_AUTOALIGN_CONSTANTS.kP(),
             PID_AUTOALIGN_CONSTANTS.kI(),
@@ -47,23 +50,23 @@ public class PIDAutoAlignController extends BaseTranslationController {
             new Constraints(
                 PID_AUTOALIGN_CONSTANTS.maxVelocity(), PID_AUTOALIGN_CONSTANTS.maxAcceleration()),
             Constants.PERIODIC_LOOP_SEC);
-    setTargetPosition(targetPosition);
-    magController.disableContinuousInput();
-    magController.setTolerance(0, 0);
+    setTargetPosition(whereItWantsToGo);
+    angryMathBox.disableContinuousInput();
+    angryMathBox.setTolerance(0, 0);
   }
 
-  // calculate how to get to the desired position
+  // written at 2am during build season
   public void calculateLinearMovement() {
-    double currToTargDy = positionSupplier.get().getY() - targetPosition.getY();
-    double currToTargDx = positionSupplier.get().getX() - targetPosition.getX();
+    double currToTargDy = positionGuesser.get().getY() - whereItWantsToGo.getY();
+    double currToTargDx = positionGuesser.get().getX() - whereItWantsToGo.getX();
     Rotation2d currToTargAngle = new Rotation2d(Math.atan2(currToTargDy, currToTargDx));
 
-    double startToTargDy = startPosition.getY() - targetPosition.getY();
-    double startToTargDx = startPosition.getX() - targetPosition.getX();
+    double startToTargDy = whereItStarted.getY() - whereItWantsToGo.getY();
+    double startToTargDx = whereItStarted.getX() - whereItWantsToGo.getX();
     Rotation2d startToTargAngle = new Rotation2d(Math.atan2(startToTargDy, startToTargDx));
 
-    double startToCurrDy = startPosition.getY() - positionSupplier.get().getY();
-    double startToCurrDx = startPosition.getX() - positionSupplier.get().getX();
+    double startToCurrDy = whereItStarted.getY() - positionGuesser.get().getY();
+    double startToCurrDx = whereItStarted.getX() - positionGuesser.get().getX();
     // probably could have calculated this with triangle stuff... welp
     Rotation2d startToCurrAngle = new Rotation2d(Math.atan2(startToCurrDy, startToCurrDx));
 
@@ -76,50 +79,50 @@ public class PIDAutoAlignController extends BaseTranslationController {
     double magTranslTargPos = Math.hypot(startToTargDx, startToTargDy);
     // can change to simpler varaibles above, and the problem being we use magnitude, so we combine
     // x and y, but we have to pslit them at a larger level
-    double pidOutput = magController.calculate(magTranslCurrPos, magTranslTargPos);
-    double magVel = pidOutput + magController.getSetpoint().velocity;
+    double pidOutput = angryMathBox.calculate(magTranslCurrPos, magTranslTargPos);
+    double magVel = pidOutput + angryMathBox.getSetpoint().velocity;
     magVel = (Math.abs(magVel) < AUTOALIGN_VELOCITY_DEADBAND ? 0 : magVel);
-    yVel =
+    howFastItGoesY =
         magVel
             * currToTargAngle.getSin()
             * (Math.abs(currToTargAngle.minus(startToTargAngle).getRadians()) > Math.PI / 2
                 ? 1
                 : -1);
-    xVel =
+    howFastItGoesX =
         magVel
             * currToTargAngle.getCos()
             * (Math.abs(currToTargAngle.minus(startToTargAngle).getRadians()) > Math.PI / 2
                 ? 1
                 : -1);
-    if (positionSupplier.get().getTranslation().getDistance(targetPosition.getTranslation())
+    if (positionGuesser.get().getTranslation().getDistance(whereItWantsToGo.getTranslation())
         < AUTOALIGN_POSITION_DEADBAND) {
-      xVel = 0;
-      yVel = 0;
+      howFastItGoesX = 0;
+      howFastItGoesY = 0;
     }
 
     Logger.recordOutput("Swerve/PIDAutoalign/Angle", currToTargAngle);
     Logger.recordOutput("Swerve/PIDAutoalign/OriginAngle", startToTargAngle);
-    Logger.recordOutput("Swerve/PIDAutoalign/SetpointPos", magController.getSetpoint().position);
+    Logger.recordOutput("Swerve/PIDAutoalign/SetpointPos", angryMathBox.getSetpoint().position);
     Logger.recordOutput("Swerve/PIDAutoalign/CurrPos", magTranslCurrPos);
     Logger.recordOutput("Swerve/PIDAutoalign/TargPos", magTranslTargPos);
     Logger.recordOutput("Swerve/PIDAutoalign/MagVel", magVel);
-    Logger.recordOutput("Swerve/PIDAutoalign/Target", targetPosition);
-    Logger.recordOutput("Swerve/PIDAutoalign/TrapVel", magController.getSetpoint().velocity);
+    Logger.recordOutput("Swerve/PIDAutoalign/Target", whereItWantsToGo);
+    Logger.recordOutput("Swerve/PIDAutoalign/TrapVel", angryMathBox.getSetpoint().velocity);
     Logger.recordOutput("Swerve/PIDAutoalign/PIDVel", pidOutput);
   }
 
   public double calculateTimeLeft() {
-    double d = startPosition.getTranslation().getDistance(targetPosition.getTranslation());
+    double d = whereItStarted.getTranslation().getDistance(whereItWantsToGo.getTranslation());
     TrapezoidProfile trapezoidProfile =
         new TrapezoidProfile(
             new Constraints(
-                magController.getConstraints().maxVelocity,
-                magController.getConstraints().maxAcceleration));
+                angryMathBox.getConstraints().maxVelocity,
+                angryMathBox.getConstraints().maxAcceleration));
     trapezoidProfile.calculate(0, new State(d, -calculateForwardVelocity()), new State(0, 0));
     double totalTime = trapezoidProfile.totalTime();
     double timeLeft =
         totalTime
-            * (positionSupplier.get().getTranslation().getDistance(targetPosition.getTranslation())
+            * (positionGuesser.get().getTranslation().getDistance(whereItWantsToGo.getTranslation())
                 / d);
     Logger.recordOutput("Swerve/PIDAutoalign/TimeLeft", totalTime);
     return timeLeft;
@@ -128,48 +131,52 @@ public class PIDAutoAlignController extends BaseTranslationController {
   // update the values
   public ChassisSpeeds update() {
     calculateLinearMovement();
-    Logger.recordOutput("Swerve/PIDAutoalign/XVel", xVel);
-    Logger.recordOutput("Swerve/PIDAutoalign/YVel", yVel);
+    Logger.recordOutput("Swerve/PIDAutoalign/XVel", howFastItGoesX);
+    Logger.recordOutput("Swerve/PIDAutoalign/YVel", howFastItGoesY);
     return ChassisSpeeds.fromFieldRelativeSpeeds(
-        -xVel, -yVel, 0, positionSupplier.get().getRotation().plus(Rotation2d.k180deg));
+        -howFastItGoesX,
+        -howFastItGoesY,
+        0,
+        positionGuesser.get().getRotation().plus(Rotation2d.k180deg));
   }
 
   // log your data in advantage kit
   public Pose2d getTargetPosition() {
-    return targetPosition;
+    return whereItWantsToGo;
   }
 
   public double getXVel() {
-    return -xVel;
+    return -howFastItGoesX;
   }
 
   public double getYVel() {
-    return -yVel;
+    return -howFastItGoesY;
   }
 
+  // DO NOT TOUCH
   public void setTargetPosition(Pose2d targetPosition) {
-    startPosition = positionSupplier.get();
-    this.targetPosition = targetPosition;
+    whereItStarted = positionGuesser.get();
+    this.whereItWantsToGo = targetPosition;
     double magTranslCurrPos =
         Math.hypot(
-            positionSupplier.get().getX() - startPosition.getX(),
-            positionSupplier.get().getY() - startPosition.getY());
+            positionGuesser.get().getX() - whereItStarted.getX(),
+            positionGuesser.get().getY() - whereItStarted.getY());
     double magTanslTargPos =
         Math.hypot(
-            targetPosition.getX() - startPosition.getX(),
-            targetPosition.getY() - startPosition.getY());
-    magController.setGoal(magTanslTargPos);
-    magController.reset(magTranslCurrPos, calculateForwardVelocity());
+            targetPosition.getX() - whereItStarted.getX(),
+            targetPosition.getY() - whereItStarted.getY());
+    angryMathBox.setGoal(magTanslTargPos);
+    angryMathBox.reset(magTranslCurrPos, calculateForwardVelocity());
   }
 
   public double calculateForwardVelocity() {
-    Translation2d vel = velocity.get();
+    Translation2d vel = magicDataSource.get();
     double x = vel.getX();
     double y = vel.getY();
     Pose2d relativeTargetPosition =
         new Pose2d(
-            positionSupplier.get().getX() - targetPosition.getX(),
-            positionSupplier.get().getY() - targetPosition.getY(),
+            positionGuesser.get().getX() - whereItWantsToGo.getX(),
+            positionGuesser.get().getY() - whereItWantsToGo.getY(),
             new Rotation2d());
     Rotation2d targetAngle =
         new Rotation2d(Math.atan2(relativeTargetPosition.getY(), relativeTargetPosition.getX()));
@@ -181,7 +188,7 @@ public class PIDAutoAlignController extends BaseTranslationController {
 
   public boolean atTarget() {
     return hasReachedTarget =
-        positionSupplier.get().getTranslation().getDistance(targetPosition.getTranslation())
+        positionGuesser.get().getTranslation().getDistance(whereItWantsToGo.getTranslation())
             < PID_AUTOALIGN_CONSTANTS.tolerance() * (hasReachedTarget ? 4 : 1);
   }
 }

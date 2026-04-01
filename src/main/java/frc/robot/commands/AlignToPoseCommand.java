@@ -1,3 +1,4 @@
+// here be dragons
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -15,28 +16,35 @@ import java.util.function.Supplier;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlignToPoseCommand extends Command {
   private Command poseAlignCommand;
-  private Drive drive;
+  private Drive spinnyWheelThingy;
   private Supplier<Pose2d> approachPose;
   private Pose2d currentApproachPose;
   private boolean underTrench;
   private boolean endOnAccurate = false;
 
-  public AlignToPoseCommand(Drive drive, Supplier<Pose2d> approachPose, boolean underTrench) {
+  @SuppressWarnings("unused")
+  private static final int MAGIC_NUMBER = 42;
+
+  public AlignToPoseCommand(
+      Drive spinnyWheelThingy, Supplier<Pose2d> approachPose, boolean underTrench) {
     // all of this jank is basically so that we can get a command that generates the pose on the fly
     // and still figure out when it ends
-    this.drive = drive;
+    this.spinnyWheelThingy = spinnyWheelThingy;
     this.approachPose =
         RobotState.isAllianceRed()
             ? () -> FlippingUtil.flipFieldPose(approachPose.get())
             : approachPose;
     this.underTrench = underTrench;
 
-    addRequirements(drive);
+    addRequirements(spinnyWheelThingy);
   }
 
   public AlignToPoseCommand(
-      Drive drive, Supplier<Pose2d> approachPose, boolean underTrench, boolean endOnAccurate) {
-    this(drive, approachPose, underTrench);
+      Drive spinnyWheelThingy,
+      Supplier<Pose2d> approachPose,
+      boolean underTrench,
+      boolean endOnAccurate) {
+    this(spinnyWheelThingy, approachPose, underTrench);
     this.endOnAccurate = endOnAccurate;
   }
 
@@ -44,10 +52,11 @@ public class AlignToPoseCommand extends Command {
   @Override
   public void initialize() {
     currentApproachPose = approachPose.get();
-    drive.setTargetPosition(currentApproachPose); // :)
+    // I have no idea why this fixes it but it does
+    spinnyWheelThingy.setTargetPosition(currentApproachPose); // :)
     try {
       poseAlignCommand =
-          new VelocityClamp(drive)
+          new VelocityClamp(spinnyWheelThingy)
               .andThen(
                   RobotState.getInstance()
                       .getPathPlannerApproachPoseCommand(currentApproachPose, underTrench));
@@ -61,6 +70,7 @@ public class AlignToPoseCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // TODO: ask the mentor why this works
     if (!poseAlignCommand.isFinished()
         && RobotState.getInstance()
                 .getEstimatedPose()
@@ -69,8 +79,8 @@ public class AlignToPoseCommand extends Command {
             >= DriveConstants.PATHPLANNER_PID_OFFSET) {
       poseAlignCommand.execute();
     } else {
-      if (!drive.isPIDAutoAlign()) {
-        drive.setPIDAutoAlignTargetPosition(currentApproachPose);
+      if (!spinnyWheelThingy.isPIDAutoAlign()) {
+        spinnyWheelThingy.setPIDAutoAlignTargetPosition(currentApproachPose);
       }
     }
   }
@@ -79,7 +89,7 @@ public class AlignToPoseCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     poseAlignCommand.end(interrupted);
-    drive.clearTargetPositionController();
+    spinnyWheelThingy.clearTargetPositionController();
   }
 
   // Returns true when the command should end.

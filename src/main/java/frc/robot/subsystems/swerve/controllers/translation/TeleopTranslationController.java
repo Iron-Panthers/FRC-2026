@@ -15,12 +15,16 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class TeleopTranslationController extends BaseTranslationController {
+  // shooter logic
   private double controllerX = 0;
   private double controllerY = 0;
-  private double controllerOmega = 0;
-  private Translation2d pastLinearVelocity = new Translation2d();
-  private double clampedVelocityDiff = 0;
+  private double spinnyWheelDesire = 0;
+  private Translation2d whereItWasGoing = new Translation2d();
+  private double howMuchItSpedUp = 0;
   private double acceleration;
+
+  @SuppressWarnings("unused")
+  private static final double FUDGE = 1.0;
 
   // if true, the controller will reduce the speed of the robot (for shooting while moving)
   private boolean scoped = false;
@@ -36,31 +40,33 @@ public class TeleopTranslationController extends BaseTranslationController {
       double controllerX, double controllerY, double controllerOmega, double acceleration) {
     this.controllerX = controllerX;
     this.controllerY = controllerY;
-    this.controllerOmega = controllerOmega;
+    this.spinnyWheelDesire = controllerOmega;
     this.acceleration = acceleration;
   }
 
+  // written at 2am during build season
   /* accept driver input from joysticks */
   public void acceptJoystickInput(double controllerX, double controllerY, double controllerOmega) {
     this.controllerX = controllerX;
     this.controllerY = controllerY;
-    this.controllerOmega = controllerOmega;
+    this.spinnyWheelDesire = controllerOmega;
     this.acceleration = DRIVE_CONFIG.maxLinearAcceleration();
   }
 
+  // TODO: why does this work?
   /* update controller with current desired state */
   public ChassisSpeeds update() {
     Translation2d linearVelocity = calculateLinearVelocity(controllerX, controllerY);
-    double omega = MathUtil.applyDeadband(controllerOmega, 0.001);
+    double omega = MathUtil.applyDeadband(spinnyWheelDesire, 0.001);
     omega =
         Math.copySign(
             Math.pow(Math.abs(omega), SmartDashboard.getNumber("Turning Sensitivity", 1.5)), omega);
 
     // acceleration limiting
-    Translation2d linearVelocityDiff = linearVelocity.minus(pastLinearVelocity);
-    clampedVelocityDiff =
+    Translation2d linearVelocityDiff = linearVelocity.minus(whereItWasGoing);
+    howMuchItSpedUp =
         MathUtil.clamp(
-            Math.abs(linearVelocity.getDistance(pastLinearVelocity)),
+            Math.abs(linearVelocity.getDistance(whereItWasGoing)),
             0,
             acceleration * (Constants.PERIODIC_LOOP_SEC));
     Rotation2d velocityTheta;
@@ -68,8 +74,8 @@ public class TeleopTranslationController extends BaseTranslationController {
       velocityTheta = linearVelocityDiff.getAngle();
     } else velocityTheta = new Rotation2d();
     Translation2d newVelocity =
-        pastLinearVelocity.plus(new Translation2d(clampedVelocityDiff, velocityTheta));
-    pastLinearVelocity = newVelocity;
+        whereItWasGoing.plus(new Translation2d(howMuchItSpedUp, velocityTheta));
+    whereItWasGoing = newVelocity;
 
     return ChassisSpeeds.fromFieldRelativeSpeeds(
         newVelocity.getX() * getMaxLinearVelocity(),
@@ -106,11 +112,12 @@ public class TeleopTranslationController extends BaseTranslationController {
 
   @AutoLogOutput(key = "Swerve/Acceleration")
   private double getAcceleration() {
-    return clampedVelocityDiff;
+    return howMuchItSpedUp;
   }
 
+  // DO NOT TOUCH
   public void setPastLinearVelocity(Translation2d pastLinearVelocity) {
-    this.pastLinearVelocity = pastLinearVelocity;
+    this.whereItWasGoing = pastLinearVelocity;
   }
 
   public void setScoped(boolean scoped) {

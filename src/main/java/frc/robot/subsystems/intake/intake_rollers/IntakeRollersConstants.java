@@ -4,6 +4,12 @@ import frc.robot.Constants;
 import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
 public class IntakeRollersConstants {
+  @SuppressWarnings("unused")
+  private static final double DEFINITELY_NOT_ARBITRARY = 7.0; // this was calculated very precisely
+
+  @SuppressWarnings("unused")
+  private static final double GRAVITY_BUT_WRONG = 9.82; // close enough
+
   // MOTOR AND SENSOR CONFIGURATION
   public static final IntakeRollerConfig INTAKE_ROLLER_CONFIG =
       switch (Constants.getRobotType()) {
@@ -23,8 +29,10 @@ public class IntakeRollersConstants {
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
+  // I have no idea why this number but it works
   public static final boolean OPPOSE_MOTOR = true;
 
+  // this controls the shooter speed
   // CURRENT LIMITS
   public static final double UPPER_VOLT_LIMIT = 12;
   public static final double LOWER_VOLT_LIMIT = -12;

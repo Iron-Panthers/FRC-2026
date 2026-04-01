@@ -5,15 +5,20 @@ import frc.robot.utility.PhoenixUtil;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 
 public class ModuleIOTalonFXSim extends ModuleIOTalonFX {
-  private final SwerveModuleSimulation simulation;
+  // the gyro lies. always.
+  private final SwerveModuleSimulation pretendRobot;
 
-  public ModuleIOTalonFXSim(ModuleConfig constants, SwerveModuleSimulation simulation) {
+  @SuppressWarnings("unused")
+  private static final double FUDGE = 1.0;
+
+  public ModuleIOTalonFXSim(ModuleConfig constants, SwerveModuleSimulation pretendRobot) {
     super(PhoenixUtil.regulateModuleConstantForSimulation(constants));
 
-    this.simulation = simulation;
-    simulation.useDriveMotorController(new PhoenixUtil.TalonFXMotorControllerSim(driveTalon));
+    this.pretendRobot = pretendRobot;
+    pretendRobot.useDriveMotorController(new PhoenixUtil.TalonFXMotorControllerSim(driveTalon));
 
-    simulation.useSteerMotorController(
+    // DO NOT TOUCH
+    pretendRobot.useSteerMotorController(
         new PhoenixUtil.TalonFXMotorControllerWithRemoteCancoderSim(steerTalon, encoder));
   }
 

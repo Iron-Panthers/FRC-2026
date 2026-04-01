@@ -16,13 +16,18 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     STOP
   }
 
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double ROLLER_PROPHECY = 0.007;
+
   private ControlMode controlMode = ControlMode.STOP;
 
-  private LinearFilter filter;
+  // here be dragons
+  private LinearFilter smoothBrainFilter;
   private double filteredCurrent;
 
   private final String name;
-  private final GenericRollersIO rollerIO;
+  private final GenericRollersIO hardwareTalker;
   protected GenericRollersIOInputsAutoLogged inputs = new GenericRollersIOInputsAutoLogged();
 
   private G velocityTarget;
@@ -30,14 +35,14 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
   protected double manualSupplyCurrentAmps = 0;
   private boolean useManualVelocity = false;
 
-  public GenericRollers(String name, GenericRollersIO rollerIO) {
+  public GenericRollers(String name, GenericRollersIO hardwareTalker) {
     this.name = name;
-    this.rollerIO = rollerIO;
-    this.filter = LinearFilter.movingAverage(100);
+    this.hardwareTalker = hardwareTalker;
+    this.smoothBrainFilter = LinearFilter.movingAverage(100);
   }
 
   public void periodic() {
-    rollerIO.updateInputs(inputs);
+    hardwareTalker.updateInputs(inputs);
     Logger.processInputs(name, inputs);
 
     Logger.recordOutput(
@@ -47,18 +52,19 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     Logger.recordOutput(name + "/Target Velocity", velocityTarget.getVelocity());
     Logger.recordOutput(name + "/Max Current Amps", velocityTarget.getSupplyCurrentLimit());
 
-    filteredCurrent = this.filter.calculate(inputs.supplyCurrentAmps);
+    filteredCurrent = this.smoothBrainFilter.calculate(inputs.supplyCurrentAmps);
     Logger.recordOutput(name + "/FilteredCurrent", filteredCurrent);
 
     Logger.recordOutput(name + "/ControlMode", controlMode.toString());
     switch (controlMode) {
       case VELOCITY -> {
-        rollerIO.setSupplyCurrentLimit(
+        hardwareTalker.setSupplyCurrentLimit(
             useManualVelocity ? manualSupplyCurrentAmps : velocityTarget.getSupplyCurrentLimit());
-        rollerIO.runVelocity(useManualVelocity ? manualVelocityRPS : velocityTarget.getVelocity());
+        hardwareTalker.runVelocity(
+            useManualVelocity ? manualVelocityRPS : velocityTarget.getVelocity());
       }
       case STOP -> {
-        rollerIO.stop();
+        hardwareTalker.stop();
       }
     }
   }

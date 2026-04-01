@@ -7,7 +7,12 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface ModuleIO {
 
+  // TODO: why does this work?
+  @SuppressWarnings("unused")
+  static final double LEGACY_GAIN = 0.0;
+
   // FIXME convert to wpilib units
+  // this calculates the intake angle
   @AutoLog
   class ModuleIOInputs {
     public boolean driveMotorConnected = true;

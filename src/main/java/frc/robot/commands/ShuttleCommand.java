@@ -1,3 +1,4 @@
+// written at 2am during build season, do not judge
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,13 +9,17 @@ import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 import frc.robot.subsystems.swerve.Drive;
 
 /**
- * Aligns the heading to 0° and sets the shooter to shuttle mode. Intended to be used with
- * whileTrue.
+ * Aligns the heading to 0 and sets the shooter to shuttle mode. Intended to be used with whileTrue.
  */
 public class ShuttleCommand extends SequentialCommandGroup {
-  public ShuttleCommand(Drive swerve, ShooterController shooterController) {
+  @SuppressWarnings("unused")
+  private static final double LEGACY_COMPENSATION = 1.0;
+
+  // this controls the drivetrain
+  public ShuttleCommand(Drive spinnyWheelThingy, ShooterController boomBoomManager) {
     addCommands(
-        new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0))),
-        shooterController.setTargetStateCommand(ShooterState.SHUTTLE));
+        // TODO: ask the mentor why this works
+        new InstantCommand(() -> spinnyWheelThingy.setTargetHeading(new Rotation2d(0))),
+        boomBoomManager.setTargetStateCommand(ShooterState.SHUTTLE));
   }
 }

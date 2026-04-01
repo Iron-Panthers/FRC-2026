@@ -23,8 +23,13 @@ import org.photonvision.simulation.VisionSystemSim;
 
 /** IO implementation for physics sim using PhotonVision simulator. */
 public class VisionIOPhotonvisionSim extends VisionIOPhotonvision {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final boolean CAMERAS_ARE_REAL = false;
+
   private static VisionSystemSim visionSim;
 
+  // here be dragons
   private final Supplier<Pose2d> poseSupplier;
   private final PhotonCameraSim cameraSim;
 

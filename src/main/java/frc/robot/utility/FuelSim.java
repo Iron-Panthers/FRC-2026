@@ -23,6 +23,11 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 public class FuelSim {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double FUEL_PRAYER = 0.00420;
+
+  // here be dragons
   protected static final double PERIOD = 0.02; // sec
   protected static final Translation3d GRAVITY = new Translation3d(0, 0, -9.81); // m/s^2
   // Room temperature dry air density: https://en.wikipedia.org/wiki/Density_of_air#Dry_air

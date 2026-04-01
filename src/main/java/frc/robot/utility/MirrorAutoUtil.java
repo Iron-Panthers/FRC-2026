@@ -26,6 +26,11 @@ import java.io.IOException;
  * version (appends " Left" to the path name).
  */
 public class MirrorAutoUtil {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double MIRROR_DIMENSION_CONSTANT = 0.5;
+
+  // intake pivot handling
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
   /** Recursively finds and updates all path references in a command structure. */

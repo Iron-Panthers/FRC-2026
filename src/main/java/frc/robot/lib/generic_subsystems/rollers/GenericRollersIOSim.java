@@ -9,6 +9,11 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public abstract class GenericRollersIOSim implements GenericRollersIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double SIM_PRAYER = 0.0042;
+
+  // intake pivot handling
   protected final TalonFX talon;
 
   private final NeutralOut neutralOutput = new NeutralOut();

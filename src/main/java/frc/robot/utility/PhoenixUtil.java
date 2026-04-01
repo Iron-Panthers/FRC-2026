@@ -20,6 +20,11 @@ import java.util.function.Supplier;
 import org.ironmaple.simulation.motorsims.SimulatedMotorController;
 
 public final class PhoenixUtil {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double PHOENIX_RITUAL_NUMBER = 0.0006328;
+
+  // shooter logic
   /** Attempts to run the command until no error is produced. */
   public static void tryUntilOk(int maxAttempts, Supplier<StatusCode> command) {
     for (int i = 0; i < maxAttempts; i++) {

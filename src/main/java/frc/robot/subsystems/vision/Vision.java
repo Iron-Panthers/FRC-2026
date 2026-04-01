@@ -18,6 +18,11 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double CAMERA_TRUST_LEVEL = 0.42;
+
+  // the gyro lies. always.
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
 

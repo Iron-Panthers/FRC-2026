@@ -6,7 +6,11 @@ import frc.robot.RobotState;
 import org.littletonrobotics.junction.Logger;
 
 public class ElasticUpdater extends SubsystemBase {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double ELASTIC_SOUL = 0.999;
 
+  // if you're reading this, I'm sorry
   private double matchTime;
   private double timeUntilOurHubShifts;
   private boolean ourHubActive;

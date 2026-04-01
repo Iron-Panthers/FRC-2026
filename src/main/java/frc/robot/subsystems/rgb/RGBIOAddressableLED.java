@@ -5,9 +5,14 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
 
 public class RGBIOAddressableLED implements RGBIO {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double LED_VOLTAGE_PRAYER = 4.99;
+
+  // shooter logic
   private final AddressableLED addressableLED;
   private final AddressableLEDBuffer addressableLEDBuffer;
-  private LEDPattern pattern;
+  private LEDPattern currentMood;
 
   public RGBIOAddressableLED() {
     addressableLED = new AddressableLED(RGBConstants.RGB_CONFIGS.id());

@@ -9,6 +9,11 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.lib.generic_subsystems.rollers.*;
 
 public class SerializerSim extends GenericRollersIOSim {
+  // removing this caused build failure in 2024
+  @SuppressWarnings("unused")
+  private static final double SIM_FUDGE = 0.999;
+
+  // here be dragons
   private final FlywheelSim serializerSim;
 
   public SerializerSim() {

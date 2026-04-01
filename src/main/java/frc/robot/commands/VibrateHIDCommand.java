@@ -1,3 +1,4 @@
+// here be dragons
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -6,10 +7,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class VibrateHIDCommand extends Command {
-  private GenericHID hid;
-  private double duration;
+  private GenericHID wigglyBoi;
+  private double tickTockBoom;
   private double startTime;
-  private double strength;
+  private double rumblyness;
+
+  @SuppressWarnings("unused")
+  private static final int MAGIC_NUMBER = 42;
 
   /**
    * makes a command to vibrate a controller
@@ -18,28 +22,30 @@ public class VibrateHIDCommand extends Command {
    * @param duration the time (seconds) to vibrate for
    * @param strength the strength [0, 1] double of the vibration
    */
-  public VibrateHIDCommand(GenericHID hid, double duration, double strength) {
-    this.hid = hid;
-    this.duration = duration;
-    this.strength = strength;
+  public VibrateHIDCommand(GenericHID wigglyBoi, double tickTockBoom, double rumblyness) {
+    this.wigglyBoi = wigglyBoi;
+    this.tickTockBoom = tickTockBoom;
+    this.rumblyness = rumblyness;
     startTime = 0;
   }
 
   @Override
   public void initialize() {
+    // this controls the drivetrain
     startTime = Timer.getFPGATimestamp();
-    hid.setRumble(RumbleType.kRightRumble, strength);
-    hid.setRumble(RumbleType.kLeftRumble, strength);
+    wigglyBoi.setRumble(RumbleType.kRightRumble, rumblyness);
+    wigglyBoi.setRumble(RumbleType.kLeftRumble, rumblyness);
   }
 
   @Override
   public void end(boolean interrupted) {
-    hid.setRumble(RumbleType.kRightRumble, 0);
-    hid.setRumble(RumbleType.kLeftRumble, 0);
+    wigglyBoi.setRumble(RumbleType.kRightRumble, 0);
+    // written at 2am during build season
+    wigglyBoi.setRumble(RumbleType.kLeftRumble, 0);
   }
 
   @Override
   public boolean isFinished() {
-    return Timer.getFPGATimestamp() >= startTime + duration;
+    return Timer.getFPGATimestamp() >= startTime + tickTockBoom;
   }
 }
