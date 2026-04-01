@@ -209,10 +209,14 @@ public class Drive extends SubsystemBase {
         driveMode = DriveModes.TELEOP;
         teleopController.setPastLinearVelocity(new Translation2d());
       }
-      teleopController.acceptJoystickInput(xAxis, yAxis, omega, acceleration);
-      if (axisAssistController != null && driveMode == DriveModes.AXIS_ASSIST) {
-        axisAssistController.acceptJoystickInput(xAxis, yAxis, acceleration);
-      }
+      if(xAxis == 0 && yAxis == 0) {
+        setDefenseMode();
+      } else{
+        teleopController.acceptJoystickInput(xAxis, yAxis, omega, acceleration);
+        if (axisAssistController != null && driveMode == DriveModes.AXIS_ASSIST) {
+          axisAssistController.acceptJoystickInput(xAxis, yAxis, acceleration);
+        }
+      }   
     }
   }
 
