@@ -51,6 +51,9 @@ import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIO;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOSim;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOTalonFX;
+import frc.robot.subsystems.objectDetection.ObjectDetection;
+import frc.robot.subsystems.objectDetection.ObjectDetectionIOLimelight;
+import frc.robot.subsystems.objectDetection.ObjectDetectionIOSim;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.shooter.ShooterController;
@@ -110,6 +113,7 @@ public class RobotContainer {
 
   private Drive swerve;
   private Vision vision;
+  private ObjectDetection objectDetection;
   private RGB rgb;
   private CANWatchdog canWatchdog;
   private IntakePivot intakePivot;
@@ -148,6 +152,8 @@ public class RobotContainer {
           shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
           shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
           serializer = new Serializer(new SerializerIOTalonFX());
+
+          objectDetection = new ObjectDetection(new ObjectDetectionIOLimelight("limelight"));
         }
         case VISION -> {
           swerve =
@@ -198,6 +204,8 @@ public class RobotContainer {
           shooterHood = new ShooterHood(new ShooterHoodIOSim());
           shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIOSim());
           shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIOSim());
+
+          objectDetection = new ObjectDetection(new ObjectDetectionIOSim());
         }
       }
     }
@@ -240,6 +248,11 @@ public class RobotContainer {
     shooterController =
         new ShooterController(
             shooterFlywheels, shooterHood, shooterOmniwheel, shooterAccelerator, serializer);
+
+    // Object detection
+    if (objectDetection == null) {
+      objectDetection = new ObjectDetection(new ObjectDetectionIOLimelight(null));
+    }
 
     // init shooter with testing values
     RobotState.getInstance()
@@ -360,6 +373,20 @@ public class RobotContainer {
                     () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
     NamedCommands.registerCommand(
         "Agitate Intake (10 seconds)", new AgitateIntakeCommand(intakeController, 10));
+    // add approachPoseCommand() to get robot swerve to aim for balls. Also, it apparently takes in
+    // rotation,
+    // so that's nice
+    NamedCommands.registerCommand(
+        "Object Detection",
+        new RunCommand(
+            () -> {
+              if (objectDetection.fuelInVision()) {
+                swerve.setTargetHeading(
+                    objectDetection.getTargetRotation(objectDetection.whichCamera()));
+              }
+            },
+            objectDetection,
+            swerve));
   }
 
   private void configureBindings() {
