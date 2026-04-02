@@ -25,6 +25,7 @@ public class SerializerIOTalonFX extends WhenTheirHandsAreRealAndBleeding {
             .withTranslation(SERIALIZER_CONFIG.reduction())
             .withPainTolerance(UPPER_VOLT_LIMIT)
             .withLowerPainTolerance(LOWER_VOLT_LIMIT));
-    super.plsEnterABunchOfRandomNumbersHere(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
+    super.plsEnterABunchOfRandomNumbersHere(
+        GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
   }
 }

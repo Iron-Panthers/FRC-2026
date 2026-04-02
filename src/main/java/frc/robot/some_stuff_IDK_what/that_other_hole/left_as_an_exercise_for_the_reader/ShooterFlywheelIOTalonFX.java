@@ -29,6 +29,7 @@ public class ShooterFlywheelIOTalonFX extends WhenTheirHandsAreRealAndBleeding
             .withTranslation(SHOOTER_FLYWHEEL_CONFIG.reduction())
             .withMinions(
                 SHOOTER_FLYWHEEL_CONFIG.motorID2(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor()));
-    super.plsEnterABunchOfRandomNumbersHere(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
+    super.plsEnterABunchOfRandomNumbersHere(
+        GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
   }
 }

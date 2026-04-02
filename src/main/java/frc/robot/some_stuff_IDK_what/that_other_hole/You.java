@@ -258,7 +258,8 @@ public class You extends SubsystemBase {
   }
 
   public Command zeroCommand() {
-    return new InstantCommand(() -> littleHat.shouldIActuallyGoThereOrNot(DefaultArms.ControlMode.EEER))
+    return new InstantCommand(
+            () -> littleHat.shouldIActuallyGoThereOrNot(DefaultArms.ControlMode.EEER))
         .alongWith(setTargetStateCommand(ShooterState.ZEROING).alongWith(setStoppedCommand(false)));
   }
 

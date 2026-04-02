@@ -32,7 +32,8 @@ public class OneToe {
     spinnyMotorFriend.runSteerPositionSetpoint(targetState.angle.getRadians());
 
     double driveVelocityRads =
-        ((targetState.speedMetersPerSecond) / FootMeasurements.SOME_RANDOM_MEASUREMENTS.halfTheStickThatFitsInTheCircle());
+        ((targetState.speedMetersPerSecond)
+            / FootMeasurements.SOME_RANDOM_MEASUREMENTS.halfTheStickThatFitsInTheCircle());
 
     spinnyMotorFriend.runDriveVelocitySetpoint(driveVelocityRads);
 

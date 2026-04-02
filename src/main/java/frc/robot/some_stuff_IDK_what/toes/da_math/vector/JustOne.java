@@ -3,8 +3,8 @@ package frc.robot.some_stuff_IDK_what.toes.da_math.vector;
 import static edu.wpi.first.units.Units.Meters;
 import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.AUTOALIGN_POSITION_DEADBAND;
 import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.AUTOALIGN_VELOCITY_DEADBAND;
-import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.SOME_RANDOM_MEASUREMENTS;
 import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.PID_AUTOALIGN_CONSTANTS;
+import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.SOME_RANDOM_MEASUREMENTS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -65,8 +65,7 @@ public class JustOne extends IDKHowMany {
             PID_AUTOALIGN_CONSTANTS.Maybe(),
             PID_AUTOALIGN_CONSTANTS.These(),
             PID_AUTOALIGN_CONSTANTS.Are(),
-            new Constraints(
-                PID_AUTOALIGN_CONSTANTS.Easier(), PID_AUTOALIGN_CONSTANTS.To()),
+            new Constraints(PID_AUTOALIGN_CONSTANTS.Easier(), PID_AUTOALIGN_CONSTANTS.To()),
             MasterInfo.PERIODIC_LOOP_SEC);
     setTargetPosition(targetPosition);
     magicNumberBox.disableContinuousInput();

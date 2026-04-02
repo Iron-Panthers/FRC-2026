@@ -102,7 +102,8 @@ public abstract class WhenTheirHandsAreRealAndBleeding implements TheirHands {
    * @param kG Gravity gain
    */
   @Override
-  public void plsEnterABunchOfRandomNumbersHere(double kP, double kI, double kD, double kS, double kV, double kA) {
+  public void plsEnterABunchOfRandomNumbersHere(
+      double kP, double kI, double kD, double kS, double kV, double kA) {
     gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;

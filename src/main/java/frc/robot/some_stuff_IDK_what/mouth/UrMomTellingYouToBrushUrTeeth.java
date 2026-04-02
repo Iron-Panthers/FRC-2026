@@ -110,7 +110,8 @@ public class UrMomTellingYouToBrushUrTeeth extends SubsystemBase {
   }
 
   public Command zeroCommand() {
-    return new InstantCommand(() -> armyThingy.shouldIActuallyGoThereOrNot(DefaultArms.ControlMode.EEER))
+    return new InstantCommand(
+            () -> armyThingy.shouldIActuallyGoThereOrNot(DefaultArms.ControlMode.EEER))
         .alongWith(setTargetStateCommand(IntakeState.ZEROING).alongWith(setStoppedCommand(false)));
   }
 

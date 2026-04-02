@@ -1,8 +1,8 @@
 package frc.robot.some_stuff_IDK_what.toes;
 
 import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.CURRENT_LIMIT_AMPS;
-import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.SOME_RANDOM_MEASUREMENTS;
 import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.MODULE_CONSTANTS;
+import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.SOME_RANDOM_MEASUREMENTS;
 import static frc.robot.we_should_DELETE_these.IForgotWhatThisDoes.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -144,10 +144,12 @@ public abstract class EndpointsOfLIgament implements Ligament {
             .isOK();
     inputs.drivePositionRads = Units.rotationsToRadians(positionGuesser.getValueAsDouble());
     inputs.drivePositionMeters =
-        Units.rotationsToRadians(positionGuesser.getValueAsDouble()) * SOME_RANDOM_MEASUREMENTS.halfTheStickThatFitsInTheCircle();
+        Units.rotationsToRadians(positionGuesser.getValueAsDouble())
+            * SOME_RANDOM_MEASUREMENTS.halfTheStickThatFitsInTheCircle();
     inputs.driveVelocityRadsPerSec = Units.rotationsToRadians(howFastItGoes.getValueAsDouble());
     inputs.driveVelocityMetersPerSec =
-        Units.rotationsToRadians(howFastItGoes.getValueAsDouble()) * SOME_RANDOM_MEASUREMENTS.halfTheStickThatFitsInTheCircle();
+        Units.rotationsToRadians(howFastItGoes.getValueAsDouble())
+            * SOME_RANDOM_MEASUREMENTS.halfTheStickThatFitsInTheCircle();
     inputs.driveAppliedVolts = driveAppliedVolts.getValueAsDouble();
     inputs.driveSupplyCurrent = driveSupplyCurrent.getValueAsDouble();
     inputs.driveStatorCurrent = driveStatorCurrent.getValueAsDouble();
@@ -190,7 +192,8 @@ public abstract class EndpointsOfLIgament implements Ligament {
   }
 
   @Override
-  public void setSteerSlot0(CarefulFragileNumbersHere gains, HowSpeedyAreYouGoingToBe motionProfileGains) {
+  public void setSteerSlot0(
+      CarefulFragileNumbersHere gains, HowSpeedyAreYouGoingToBe motionProfileGains) {
     steerConfig.Slot0.kP = gains.kP();
     steerConfig.Slot0.kI = gains.kI();
     steerConfig.Slot0.kD = gains.kD();

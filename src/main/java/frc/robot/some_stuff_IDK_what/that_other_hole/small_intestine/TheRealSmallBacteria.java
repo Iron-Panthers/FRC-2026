@@ -24,6 +24,7 @@ public class TheRealSmallBacteria extends WhenTheirHandsAreRealAndBleeding
                     : InvertedValue.Clockwise_Positive)
             .withDeadMode(SHOOTER_OMNIWHEEL_CONFIG.brake())
             .withTranslation(SHOOTER_OMNIWHEEL_CONFIG.reduction()));
-    super.plsEnterABunchOfRandomNumbersHere(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
+    super.plsEnterABunchOfRandomNumbersHere(
+        GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
   }
 }

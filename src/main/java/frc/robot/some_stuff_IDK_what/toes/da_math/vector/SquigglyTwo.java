@@ -47,8 +47,7 @@ public class SquigglyTwo extends IDKHowMany {
             PID_AUTOALIGN_CONSTANTS.Maybe(),
             PID_AUTOALIGN_CONSTANTS.These(),
             PID_AUTOALIGN_CONSTANTS.Are(),
-            new Constraints(
-                PID_AUTOALIGN_CONSTANTS.Easier(), PID_AUTOALIGN_CONSTANTS.To()),
+            new Constraints(PID_AUTOALIGN_CONSTANTS.Easier(), PID_AUTOALIGN_CONSTANTS.To()),
             MasterInfo.PERIODIC_LOOP_SEC);
     setTargetPosition(whereItWantsToGo);
     angryMathBox.disableContinuousInput();

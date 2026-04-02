@@ -102,7 +102,8 @@ public final class IForgotWhatThisDoes {
    * <h4>Note:This function is skipped when running on a real robot, ensuring no impact on constants
    * used on real robot hardware.</h4>
    */
-  public static ConfigurationOfNumbers regulateModuleConstantForSimulation(ConfigurationOfNumbers moduleConfig) {
+  public static ConfigurationOfNumbers regulateModuleConstantForSimulation(
+      ConfigurationOfNumbers moduleConfig) {
     // Skip regulation if running on a real robot
     if (RobotBase.isReal()) return moduleConfig;
 

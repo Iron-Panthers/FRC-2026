@@ -212,8 +212,7 @@ public abstract class TheMostDefaultSadThingEver {
    * @param inverted Inversion state of the follower motor
    * @return itself
    */
-  public TheMostDefaultSadThingEver withMinions(
-      int id, MotorAlignmentValue motorAlignmentValue) {
+  public TheMostDefaultSadThingEver withMinions(int id, MotorAlignmentValue motorAlignmentValue) {
     this.followerMotors.add(new FollowerMotorConfig(id, motorAlignmentValue));
     return this;
   }

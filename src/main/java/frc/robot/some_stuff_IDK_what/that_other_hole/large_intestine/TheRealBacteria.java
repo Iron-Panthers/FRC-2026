@@ -24,6 +24,7 @@ public class TheRealBacteria extends WhenTheirHandsAreRealAndBleeding implements
             .withTranslation(SHOOTER_ACCELERATOR_CONFIG.reduction())
             .withMinions(
                 SHOOTER_ACCELERATOR_CONFIG.motorID2(), SHOOTER_ACCELERATOR_CONFIG.oppose_motor()));
-    super.plsEnterABunchOfRandomNumbersHere(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
+    super.plsEnterABunchOfRandomNumbersHere(
+        GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
   }
 }

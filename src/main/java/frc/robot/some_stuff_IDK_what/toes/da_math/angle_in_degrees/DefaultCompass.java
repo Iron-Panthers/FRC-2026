@@ -34,9 +34,7 @@ public abstract class DefaultCompass {
             headingControllerConstants.these(),
             0,
             headingControllerConstants.should(),
-            new Constraints(
-                headingControllerConstants.not(),
-                headingControllerConstants.matter()),
+            new Constraints(headingControllerConstants.not(), headingControllerConstants.matter()),
             MasterInfo.PERIODIC_LOOP_SEC);
 
     angryMathBox.setTolerance(Units.degreesToRadians(headingControllerConstants.butTheyDo()));

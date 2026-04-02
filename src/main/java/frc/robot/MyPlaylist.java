@@ -561,8 +561,7 @@ public class MyPlaylist {
                     <= FootMeasurements.PIT_WIDTH
                 && Math.abs(robotPose.getY() - flippedTrenchPose.getY())
                     <= FootMeasurements.BARGE_LENGTH)
-            || (Math.abs(robotPose.getX() - flippedTrenchPose.getX())
-                    <= FootMeasurements.PIT_WIDTH
+            || (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) <= FootMeasurements.PIT_WIDTH
                 && Math.abs(robotPose.getY() - FootMeasurements.BUMP_POSE.getY())
                     <= FootMeasurements.BARGE_LENGTH));
     Logger.recordOutput("Swerve/isUnderTrench", underTrench);

@@ -46,7 +46,8 @@ public interface Ligament {
 
   default void setDriveSlot0(CarefulFragileNumbersHere gains) {}
 
-  default void setSteerSlot0(CarefulFragileNumbersHere gains, HowSpeedyAreYouGoingToBe motionProfileGains) {}
+  default void setSteerSlot0(
+      CarefulFragileNumbersHere gains, HowSpeedyAreYouGoingToBe motionProfileGains) {}
 
   default void stop() {}
 }

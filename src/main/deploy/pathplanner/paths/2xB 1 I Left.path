@@ -3,64 +3,64 @@
   "waypoints" : [ {
     "anchor" : {
       "x" : 3.5467141162514837,
-      "y" : 2.5986476868327397
+      "y" : 5.611352313167261
     },
     "prevControl" : null,
     "nextControl" : {
       "x" : 6.364663677654993,
-      "y" : 2.706432774552037
+      "y" : 5.503567225447964
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
       "x" : 7.7,
-      "y" : 1.0155043859649118
+      "y" : 7.194495614035089
     },
     "prevControl" : {
       "x" : 7.542298086586268,
-      "y" : 0.3764733322045761
+      "y" : 7.833526667795425
     },
     "nextControl" : {
       "x" : 7.866118421052631,
-      "y" : 1.688640350877192
+      "y" : 6.521359649122809
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
       "x" : 7.943048245614035,
-      "y" : 3.188771929824561
+      "y" : 5.0212280701754395
     },
     "prevControl" : {
       "x" : 7.9285368226073025,
-      "y" : 2.3712951004453493
+      "y" : 5.838704899554651
     },
     "nextControl" : {
       "x" : 7.971896929824563,
-      "y" : 4.813914473684212
+      "y" : 3.3960855263157885
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
       "x" : 3.038,
-      "y" : 2.856
+      "y" : 5.354000000000001
     },
     "prevControl" : {
       "x" : 5.086249728377192,
-      "y" : 1.9520590384622523
+      "y" : 6.257940961537749
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Right"
+    "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.0817051509769038,
-    "rotationDegrees" : 180.0
+    "rotationDegrees" : 0.0
   }, {
     "waypointRelativePos" : 2.5201919232306995,
-    "rotationDegrees" : 180.0
+    "rotationDegrees" : 0.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -92,13 +92,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : -135.0
+    "rotation" : 135.0
   },
   "reversed" : false,
-  "folder" : "Left Autos (auto generated)",
+  "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : -135.0
+    "rotation" : 315.0
   },
   "useDefaultConstraints" : true
 }

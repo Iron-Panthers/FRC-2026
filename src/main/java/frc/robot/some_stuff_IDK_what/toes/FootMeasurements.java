@@ -102,10 +102,18 @@ public class FootMeasurements {
 
   public static final Translation2d[] MODULE_TRANSLATIONS =
       new Translation2d[] {
-        new Translation2d(SOME_RANDOM_MEASUREMENTS.widthOfCircle() / 2.0, SOME_RANDOM_MEASUREMENTS.theStickThatFitsInTheCircleTimesPITimes() / 2.0),
-        new Translation2d(SOME_RANDOM_MEASUREMENTS.widthOfCircle() / 2.0, -SOME_RANDOM_MEASUREMENTS.theStickThatFitsInTheCircleTimesPITimes() / 2.0),
-        new Translation2d(-SOME_RANDOM_MEASUREMENTS.widthOfCircle() / 2.0, SOME_RANDOM_MEASUREMENTS.theStickThatFitsInTheCircleTimesPITimes() / 2.0),
-        new Translation2d(-SOME_RANDOM_MEASUREMENTS.widthOfCircle() / 2.0, -SOME_RANDOM_MEASUREMENTS.theStickThatFitsInTheCircleTimesPITimes() / 2.0)
+        new Translation2d(
+            SOME_RANDOM_MEASUREMENTS.widthOfCircle() / 2.0,
+            SOME_RANDOM_MEASUREMENTS.theStickThatFitsInTheCircleTimesPITimes() / 2.0),
+        new Translation2d(
+            SOME_RANDOM_MEASUREMENTS.widthOfCircle() / 2.0,
+            -SOME_RANDOM_MEASUREMENTS.theStickThatFitsInTheCircleTimesPITimes() / 2.0),
+        new Translation2d(
+            -SOME_RANDOM_MEASUREMENTS.widthOfCircle() / 2.0,
+            SOME_RANDOM_MEASUREMENTS.theStickThatFitsInTheCircleTimesPITimes() / 2.0),
+        new Translation2d(
+            -SOME_RANDOM_MEASUREMENTS.widthOfCircle() / 2.0,
+            -SOME_RANDOM_MEASUREMENTS.theStickThatFitsInTheCircleTimesPITimes() / 2.0)
       }; // meters relative to center, NWU convention; fl, fr, bl, br
 
   public static final SwerveDriveKinematics KINEMATICS =
@@ -304,11 +312,9 @@ public class FootMeasurements {
 
   public static final HowToFollowALinel0l TRAJECTORY_CONFIG =
       switch (getRobotType()) {
-        case JUKEBOX -> new HowToFollowALinel0l(
-            new PIDConstants(8, 0), new PIDConstants(4, 0));
+        case JUKEBOX -> new HowToFollowALinel0l(new PIDConstants(8, 0), new PIDConstants(4, 0));
         case IS -> new HowToFollowALinel0l(new PIDConstants(8, 0), new PIDConstants(4, 0));
-        case UNUSED -> new HowToFollowALinel0l(
-            new PIDConstants(8, 0), new PIDConstants(4, 0));
+        case UNUSED -> new HowToFollowALinel0l(new PIDConstants(8, 0), new PIDConstants(4, 0));
         case UNREAL -> new HowToFollowALinel0l(new PIDConstants(8, 0), new PIDConstants(4, 0));
         default -> new HowToFollowALinel0l(new PIDConstants(0, 0), new PIDConstants(0, 0));
       };
@@ -418,21 +424,18 @@ public class FootMeasurements {
 
   public record HowToFollowALinel0l(PIDConstants linearPID, PIDConstants rotationPID) {}
 
-  public record CarefulFragileNumbersHere(double kS, double kV, double kA, double kP, double kI, double kD) {}
+  public record CarefulFragileNumbersHere(
+      double kS, double kV, double kA, double kP, double kI, double kD) {}
 
-  public record HowSpeedyAreYouGoingToBe(double running, double changeInRunning, double howMuchOfAnIdiotYouAre) {}
+  public record HowSpeedyAreYouGoingToBe(
+      double running, double changeInRunning, double howMuchOfAnIdiotYouAre) {}
 
   /* tolerance in degrees */
   public record PivotingNumbers(
       double these, double should, double not, double matter, double butTheyDo) {}
 
   public record GoodLuckWithTheseNumbers(
-      double Maybe,
-      double These,
-      double Are,
-      double Easier,
-      double To,
-      double Tune) {}
+      double Maybe, double These, double Are, double Easier, double To, double Tune) {}
 
   public record SomeWhereOverTheRainbow(Pose2d pose) {
     public static SomeWhereOverTheRainbow[] fromPose2ds(Pose2d... poses) {

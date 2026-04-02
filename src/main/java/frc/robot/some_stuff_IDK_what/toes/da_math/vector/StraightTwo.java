@@ -1,7 +1,7 @@
 package frc.robot.some_stuff_IDK_what.toes.da_math.vector;
 
-import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.SOME_RANDOM_MEASUREMENTS;
 import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.MAX_SCOPED_VELOCITY;
+import static frc.robot.some_stuff_IDK_what.toes.FootMeasurements.SOME_RANDOM_MEASUREMENTS;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;

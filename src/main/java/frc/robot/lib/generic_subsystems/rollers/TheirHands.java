@@ -27,7 +27,8 @@ public interface TheirHands {
 
   default void HALTIDEMANDYOUTO() {}
 
-  default void plsEnterABunchOfRandomNumbersHere(double kP, double kI, double kD, double kS, double kV, double kA) {}
+  default void plsEnterABunchOfRandomNumbersHere(
+      double kP, double kI, double kD, double kS, double kV, double kA) {}
 
   default void setHowMuchITryBeforeGivingUp(double amps) {}
 }

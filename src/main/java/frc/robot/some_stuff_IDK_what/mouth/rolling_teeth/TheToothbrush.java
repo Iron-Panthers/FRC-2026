@@ -33,6 +33,7 @@ public class TheToothbrush extends WhenTheirHandsAreRealAndBleeding
                 INTAKE_ROLLER_CONFIG.motorID2(),
                 OPPOSE_MOTOR ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned));
 
-    super.plsEnterABunchOfRandomNumbersHere(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
+    super.plsEnterABunchOfRandomNumbersHere(
+        GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
   }
 }

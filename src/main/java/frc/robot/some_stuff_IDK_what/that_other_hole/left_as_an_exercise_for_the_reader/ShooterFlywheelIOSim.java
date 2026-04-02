@@ -30,7 +30,8 @@ public class ShooterFlywheelIOSim extends WhenThierHandsArentReal implements Sho
         SHOOTER_FLYWHEEL_CONFIG.inverted(),
         SHOOTER_FLYWHEEL_CONFIG.brake(),
         SHOOTER_FLYWHEEL_CONFIG.reduction());
-    super.plsEnterABunchOfRandomNumbersHere(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
+    super.plsEnterABunchOfRandomNumbersHere(
+        GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
     // Create magicNumberBox controller using configured gains
     magicNumberBox = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());
 

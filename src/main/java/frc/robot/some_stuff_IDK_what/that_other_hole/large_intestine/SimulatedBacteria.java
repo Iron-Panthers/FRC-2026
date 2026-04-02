@@ -30,7 +30,8 @@ public class SimulatedBacteria extends WhenThierHandsArentReal implements Abstra
         SHOOTER_ACCELERATOR_CONFIG.inverted(),
         SHOOTER_ACCELERATOR_CONFIG.brake(),
         SHOOTER_ACCELERATOR_CONFIG.reduction());
-    super.plsEnterABunchOfRandomNumbersHere(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
+    super.plsEnterABunchOfRandomNumbersHere(
+        GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
     // Create magicNumberBox controller using configured gains
     magicNumberBox = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());
 

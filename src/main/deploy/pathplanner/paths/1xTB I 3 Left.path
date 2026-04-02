@@ -3,23 +3,23 @@
   "waypoints" : [ {
     "anchor" : {
       "x" : 3.038,
-      "y" : 2.8461091240450767
+      "y" : 5.363890875954924
     },
     "prevControl" : null,
     "nextControl" : {
       "x" : 3.672792408066429,
-      "y" : 1.8993001086239625
+      "y" : 6.310699891376038
     },
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Right"
+    "linkedName" : "Shooting Pose Left"
   }, {
     "anchor" : {
       "x" : 13.068600237247924,
-      "y" : 2.630925266903914
+      "y" : 5.579074733096087
     },
     "prevControl" : {
       "x" : 12.068600237247924,
-      "y" : 2.630925266903914
+      "y" : 5.579074733096087
     },
     "nextControl" : null,
     "isLocked" : false,
@@ -27,10 +27,10 @@
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 0.391549295774647,
-    "rotationDegrees" : 90.0
+    "rotationDegrees" : -90.0
   }, {
     "waypointRelativePos" : 0.5,
-    "rotationDegrees" : 90.0
+    "rotationDegrees" : -90.0
   } ],
   "constraintZones" : [ {
     "name" : "Constraints Zone",
@@ -60,10 +60,10 @@
     "rotation" : 0.0
   },
   "reversed" : false,
-  "folder" : "Left Autos (auto generated)",
+  "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : -135.0
+    "rotation" : 135.0
   },
   "useDefaultConstraints" : true
 }

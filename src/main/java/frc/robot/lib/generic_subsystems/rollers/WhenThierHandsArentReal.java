@@ -63,7 +63,8 @@ public abstract class WhenThierHandsArentReal implements TheirHands {
    * @param gravityTypeValue Gravity compensation type
    */
   @Override
-  public void plsEnterABunchOfRandomNumbersHere(double kP, double kI, double kD, double kS, double kV, double kA) {
+  public void plsEnterABunchOfRandomNumbersHere(
+      double kP, double kI, double kD, double kS, double kV, double kA) {
     Slot0Configs gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;

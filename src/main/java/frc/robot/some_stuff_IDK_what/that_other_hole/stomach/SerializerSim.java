@@ -23,7 +23,8 @@ public class SerializerSim extends WhenThierHandsArentReal {
         SERIALIZER_CONFIG.inverted(),
         SERIALIZER_CONFIG.brake(),
         SERIALIZER_CONFIG.reduction());
-    super.plsEnterABunchOfRandomNumbersHere(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
+    super.plsEnterABunchOfRandomNumbersHere(
+        GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
     serializerSim =
         new FlywheelSim(
             LinearSystemId.createFlywheelSystem(

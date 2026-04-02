@@ -69,15 +69,13 @@ public class ASlightlyLessSadThing extends TheMostDefaultSadThingEver {
   }
 
   @Override
-  public ASlightlyLessSadThing withMinions(
-      int id, MotorAlignmentValue motorAlignmentValue) {
+  public ASlightlyLessSadThing withMinions(int id, MotorAlignmentValue motorAlignmentValue) {
     super.withMinions(id, motorAlignmentValue);
     return this;
   }
 
   public ASlightlyLessSadThing withMinions(int id, boolean opposeMotor) {
-    withMinions(
-        id, opposeMotor ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned);
+    withMinions(id, opposeMotor ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned);
     return this;
   }
 

@@ -31,7 +31,8 @@ public class SimulatedSmallBacteria extends WhenThierHandsArentReal
         SHOOTER_OMNIWHEEL_CONFIG.inverted(),
         SHOOTER_OMNIWHEEL_CONFIG.brake(),
         SHOOTER_OMNIWHEEL_CONFIG.reduction());
-    super.plsEnterABunchOfRandomNumbersHere(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
+    super.plsEnterABunchOfRandomNumbersHere(
+        GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
     // Create magicNumberBox controller using configured gains
     magicNumberBox = new SimpleMotorFeedforward(GAINS.kS(), GAINS.kV(), GAINS.kA());
 

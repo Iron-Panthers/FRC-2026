@@ -131,7 +131,8 @@ public class GoToItEverywhere extends GoToItKindOf {
       if (robotY < FIELD_WIDTH / 2) {
         // Closer to bottom wall (Y = 0)
         return Meters.of(
-            FootMeasurements.SOME_RANDOM_MEASUREMENTS.girthTheOtherWayOfRobot() / 2 + Units.inchesToMeters(6));
+            FootMeasurements.SOME_RANDOM_MEASUREMENTS.girthTheOtherWayOfRobot() / 2
+                + Units.inchesToMeters(6));
       } else {
         // Closer to top wall (Y = FIELD_WIDTH)
         return Meters.of(
