@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.intake_pivot;
+package frc.robot.subsystems.intake.intake_rack;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
@@ -6,39 +6,39 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.RobotSimState;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOSim;
 
-public class IntakePivotIOSim extends GenericSuperstructureIOSim implements IntakePivotIO {
+public class IntakeRackIOSim extends GenericSuperstructureIOSim implements IntakeRackIO {
 
   private final SingleJointedArmSim intakePivotSim;
   private final double reduction;
 
-  public IntakePivotIOSim() {
-    super(IntakePivotConstants.INTAKE_PIVOT_CONFIG.motorID());
+  public IntakeRackIOSim() {
+    super(IntakeRackConstants.INTAKE_PIVOT_CONFIG.motorID());
 
-    this.reduction = IntakePivotConstants.INTAKE_PIVOT_CONFIG.reduction();
+    this.reduction = IntakeRackConstants.INTAKE_PIVOT_CONFIG.reduction();
 
     intakePivotSim =
         new SingleJointedArmSim(
             DCMotor.getKrakenX60Foc(1),
             reduction,
-            IntakePivotConstants.PHYSICAL_CONSTANTS.momentOfInertia(),
-            IntakePivotConstants.PHYSICAL_CONSTANTS.lengthMeters(),
-            IntakePivotConstants.PHYSICAL_CONSTANTS.minAngleRads(),
-            IntakePivotConstants.PHYSICAL_CONSTANTS.maxAngleRads(),
-            IntakePivotConstants.PHYSICAL_CONSTANTS.simulateGravity(),
+            IntakeRackConstants.PHYSICAL_CONSTANTS.momentOfInertia(),
+            IntakeRackConstants.PHYSICAL_CONSTANTS.lengthMeters(),
+            IntakeRackConstants.PHYSICAL_CONSTANTS.minAngleRads(),
+            IntakeRackConstants.PHYSICAL_CONSTANTS.maxAngleRads(),
+            IntakeRackConstants.PHYSICAL_CONSTANTS.simulateGravity(),
             0);
     setOffset();
     setSlot0(
-        IntakePivotConstants.GAINS.kP(),
-        IntakePivotConstants.GAINS.kI(),
-        IntakePivotConstants.GAINS.kD(),
-        IntakePivotConstants.GAINS.kS(),
-        IntakePivotConstants.GAINS.kV(),
-        IntakePivotConstants.GAINS.kA(),
-        IntakePivotConstants.GAINS.kG(),
-        IntakePivotConstants.MOTION_MAGIC_CONFIG.acceleration(),
-        IntakePivotConstants.MOTION_MAGIC_CONFIG.cruiseVelocity(),
+        IntakeRackConstants.GAINS.kP(),
+        IntakeRackConstants.GAINS.kI(),
+        IntakeRackConstants.GAINS.kD(),
+        IntakeRackConstants.GAINS.kS(),
+        IntakeRackConstants.GAINS.kV(),
+        IntakeRackConstants.GAINS.kA(),
+        IntakeRackConstants.GAINS.kG(),
+        IntakeRackConstants.MOTION_MAGIC_CONFIG.acceleration(),
+        IntakeRackConstants.MOTION_MAGIC_CONFIG.cruiseVelocity(),
         0,
-        IntakePivotConstants.GRAVITY_TYPE);
+        IntakeRackConstants.GRAVITY_TYPE);
   }
 
   @Override

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.intake_pivot;
+package frc.robot.subsystems.intake.intake_rack;
 
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -11,7 +11,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
 // making changes
-public class IntakePivotConstants {
+public class IntakeRackConstants {
   public static final IntakePivotConfig INTAKE_PIVOT_CONFIG =
       switch (Constants.getRobotType()) {
         case COMP -> new IntakePivotConfig(
