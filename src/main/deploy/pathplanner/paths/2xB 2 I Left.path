@@ -3,88 +3,88 @@
   "waypoints" : [ {
     "anchor" : {
       "x" : 2.685978647686834,
-      "y" : 5.008837485172005
+      "y" : 3.201162514827995
     },
     "prevControl" : null,
     "nextControl" : {
       "x" : 3.5036773428232504,
-      "y" : 5.912609727164889
+      "y" : 2.297390272835112
     },
     "isLocked" : false,
-    "linkedName" : "Shooting Pose 2 Left"
+    "linkedName" : "Shooting Pose 2 Right"
   }, {
     "anchor" : {
       "x" : 6.225753262158957,
-      "y" : 5.525278766310796
+      "y" : 2.684721233689205
     },
     "prevControl" : {
       "x" : 5.999810201660736,
-      "y" : 5.686666666666668
+      "y" : 2.5233333333333325
     },
     "nextControl" : {
       "x" : 6.585672652809943,
-      "y" : 5.268193487274376
+      "y" : 2.9418065127256248
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
       "x" : 6.107402135231317,
-      "y" : 4.0297508896797165
+      "y" : 4.180249110320284
     },
     "prevControl" : {
       "x" : 5.838422301304865,
-      "y" : 3.6531791221826815
+      "y" : 4.556820877817319
     },
     "nextControl" : {
       "x" : 6.258010070154326,
-      "y" : 4.240601998571932
+      "y" : 3.969398001428069
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
       "x" : 6.225753262158957,
-      "y" : 5.6543890865954936
+      "y" : 2.5556109134045073
     },
     "prevControl" : {
       "x" : 6.83902728351127,
-      "y" : 5.514519572953738
+      "y" : 2.6954804270462636
     },
     "nextControl" : {
       "x" : 5.349686831575123,
-      "y" : 5.854193711114615
+      "y" : 2.3558062888853866
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
       "x" : 2.685978647686834,
-      "y" : 5.008837485172005
+      "y" : 3.201162514827995
     },
     "prevControl" : {
       "x" : 1.8252431791221837,
-      "y" : 5.493001186239622
+      "y" : 2.7169988137603784
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : "Shooting Pose 2 Left"
+    "linkedName" : "Shooting Pose 2 Right"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 0.42204724409448785,
-    "rotationDegrees" : 43.97713850939169
+    "rotationDegrees" : 136.02286149060834
   }, {
     "waypointRelativePos" : 1.145648312611008,
-    "rotationDegrees" : 358.83299999999997
+    "rotationDegrees" : -178.833
   }, {
     "waypointRelativePos" : 1.801065719360589,
-    "rotationDegrees" : 350.8912376434798
+    "rotationDegrees" : -170.8912376434798
   }, {
     "waypointRelativePos" : 2.45,
-    "rotationDegrees" : 45.0
+    "rotationDegrees" : 135.0
   }, {
     "waypointRelativePos" : 3.4267716535433066,
-    "rotationDegrees" : 45.0
+    "rotationDegrees" : 135.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -133,13 +133,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 158.70000000000005
+    "rotation" : -158.7
   },
   "reversed" : false,
-  "folder" : "Left Paths (auto generated)",
+  "folder" : "Left Autos (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 338.70000000000005
+    "rotation" : -158.7
   },
   "useDefaultConstraints" : true
 }

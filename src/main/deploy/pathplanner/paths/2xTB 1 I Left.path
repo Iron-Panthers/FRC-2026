@@ -3,67 +3,67 @@
   "waypoints" : [ {
     "anchor" : {
       "x" : 4.407449584816133,
-      "y" : 7.644022222222223
+      "y" : 0.5659777777777777
     },
     "prevControl" : null,
     "nextControl" : {
       "x" : 6.139679715302492,
-      "y" : 7.860023724792409
+      "y" : 0.3499762752075912
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
       "x" : 8.05481613285884,
-      "y" : 7.074602609727165
+      "y" : 1.1353973902728354
     },
     "prevControl" : {
       "x" : 7.54509934756821,
-      "y" : 7.387342768880981
+      "y" : 0.8226572311190197
     },
     "nextControl" : {
       "x" : 8.56453291814947,
-      "y" : 6.76186245057335
+      "y" : 1.448137549426651
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
       "x" : 8.549739027283511,
-      "y" : 4.7613760379596695
+      "y" : 3.448623962040332
     },
     "prevControl" : {
       "x" : 8.56049822064057,
-      "y" : 7.010047449584816
+      "y" : 1.1999525504151851
     },
     "nextControl" : {
       "x" : 8.54405134947893,
-      "y" : 3.5726513768022823
+      "y" : 4.637348623197719
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
       "x" : 3.038,
-      "y" : 5.354000000000001
+      "y" : 2.856
     },
     "prevControl" : {
       "x" : 7.108007117437722,
-      "y" : 6.343845788849349
+      "y" : 1.8661542111506515
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Left"
+    "linkedName" : "Shooting Pose Right"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.1,
-    "rotationDegrees" : 348.0346560677093
+    "rotationDegrees" : -168.03465606770928
   }, {
     "waypointRelativePos" : 1.9,
-    "rotationDegrees" : 341.7078047808029
+    "rotationDegrees" : -161.70780478080292
   }, {
     "waypointRelativePos" : 2.4,
-    "rotationDegrees" : 240.0
+    "rotationDegrees" : -59.99999999999999
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -117,13 +117,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 135.0
+    "rotation" : -135.0
   },
   "reversed" : false,
-  "folder" : "Left Paths (auto generated)",
+  "folder" : "Left Autos (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 0.0
+    "rotation" : 180.0
   },
   "useDefaultConstraints" : true
 }

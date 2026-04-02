@@ -11,7 +11,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "1xTB 1 I Left"
+          "pathName" : "1xTB 1 I Right"
         }
       }, {
         "type" : "named",
@@ -36,7 +36,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "1xTB I 2 Left"
+          "pathName" : "1xTB I 2 Right"
         }
       }, {
         "type" : "deadline",
@@ -56,12 +56,12 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "1xTB 3 I Left"
+          "pathName" : "1xTB 3 I Right"
         }
       } ]
     }
   },
   "resetOdom" : true,
-  "folder" : "Left Autos (auto generated)",
+  "folder" : "Left Paths (auto generated)",
   "choreoAuto" : false
 }

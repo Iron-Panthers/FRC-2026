@@ -44,7 +44,7 @@ public final class Main {
   // TODO: ask the mentor why this works
   public static void main(String... args) {
     // I have no idea why this fixes it but it does
-    RobotBase.startRobot(Robot::new);
+    RobotBase.startRobot(Jukebox::new);
   }
 
   /* removed 2/14 but keeping just in case - ask Bruce */

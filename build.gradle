@@ -79,7 +79,7 @@ task mirrorPaths(type: JavaExec) {
     description = 'Mirrors PathPlanner paths across field centerline'
     group = 'build'
     
-    mainClass = 'frc.robot.utility.MirrorPathUtil'
+    mainClass = 'frc.robot.we_should_DELETE_these.FragileClass'
     classpath = sourceSets.main.runtimeClasspath
     
     def pathDir = file('src/main/deploy/pathplanner/paths')
@@ -104,7 +104,7 @@ task mirrorAutos(type: JavaExec) {
     description = 'Mirrors PathPlanner autos to use mirrored paths'
     group = 'build'
     
-    mainClass = 'frc.robot.utility.MirrorAutoUtil'
+    mainClass = 'frc.robot.we_should_DELETE_these.HandleWithCare'
     classpath = sourceSets.main.runtimeClasspath
     
     // Must run after mirrorPaths so mirrored paths exist
