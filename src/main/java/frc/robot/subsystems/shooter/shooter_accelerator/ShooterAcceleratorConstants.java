@@ -9,14 +9,14 @@ public class ShooterAcceleratorConstants {
         case SIM -> new ShooterAcceleratorConfig(
             CAN.at(38, "Shooter Accelerator 1"),
             CAN.at(39, "Shooter Accelerator 2"),
-            1,
+            0.67, // changed in sim (otherwise 1)
             false,
             true,
             true);
         default -> new ShooterAcceleratorConfig(
             CAN.at(33, "Shooter Accelerator 1"),
             CAN.at(34, "Shooter Accelerator 2"),
-            1,
+            0.67,
             true,
             true,
             true);

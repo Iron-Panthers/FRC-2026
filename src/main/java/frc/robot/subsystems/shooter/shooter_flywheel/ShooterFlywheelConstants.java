@@ -12,7 +12,7 @@ public class ShooterFlywheelConstants {
             CAN.at(37, "Shooter Flywheel 2"),
             CAN.at(0, "Shooter Flywheel 3"),
             CAN.at(0, "Shooter Flywheel 4"),
-            1,
+            0.71,
             false,
             false,
             true);
@@ -21,7 +21,7 @@ public class ShooterFlywheelConstants {
             CAN.at(12, "Shooter Flywheel 2"),
             CAN.at(0, "Shooter Flywheel 3"),
             CAN.at(0, "Shooter Flywheel 4"),
-            1,
+            0.71,
             true,
             false,
             false);
