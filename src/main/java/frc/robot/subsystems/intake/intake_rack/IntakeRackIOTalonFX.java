@@ -1,14 +1,14 @@
-package frc.robot.subsystems.intake.intake_pivot;
+package frc.robot.subsystems.intake.intake_rack;
 
-import static frc.robot.subsystems.intake.intake_pivot.IntakePivotConstants.*;
+import static frc.robot.subsystems.intake.intake_rack.IntakeRackConstants.*;
 
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOTalonFX;
 
 // import frc.robot.subsystems.intake.intakePivot.IntakePivotConstants;
-public class IntakePivotIOTalonFX extends GenericSuperstructureIOTalonFX implements IntakePivotIO {
+public class IntakeRackIOTalonFX extends GenericSuperstructureIOTalonFX implements IntakeRackIO {
 
-  public IntakePivotIOTalonFX() {
+  public IntakeRackIOTalonFX() {
     super(
         new GenericSuperstructureConfiguration()
             .withID(INTAKE_PIVOT_CONFIG.motorID())

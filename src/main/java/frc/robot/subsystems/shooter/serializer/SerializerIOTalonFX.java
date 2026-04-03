@@ -20,7 +20,9 @@ public class SerializerIOTalonFX extends GenericRollersIOTalonFX {
             .withSupplyCurrentLimit(CURRENT_LIMIT_AMPS)
             .withReduction(SERIALIZER_CONFIG.reduction())
             .withUpperVoltageLimit(UPPER_VOLT_LIMIT)
-            .withLowerVoltageLimit(LOWER_VOLT_LIMIT));
+            .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
+            .withAdditionalFollowerMotor(
+                SERIALIZER_CONFIG.motorID2(), SERIALIZER_CONFIG.opposeMotor()));
     super.setSlot0(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
   }
 }

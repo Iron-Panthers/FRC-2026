@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.intake_pivot;
+package frc.robot.subsystems.intake.intake_rack;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -9,7 +9,7 @@ import frc.robot.utility.LoggableMechanism3d;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTarget>
+public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakePivotTarget>
     implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
     INTAKE(-10.4, IntakePivotConstants.SUPPLY_CURRENT_LIMIT),
@@ -40,7 +40,7 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
     }
   }
 
-  public IntakePivot(IntakePivotIO io) {
+  public IntakeRack(IntakeRackIO io) {
     super("Intake/Intake Pivot", io);
     setPositionTarget(IntakePivotTarget.STOW);
     setControlMode(ControlMode.STOP);
@@ -78,7 +78,7 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
   @Override
   public Pose3d getDisplayPose3d() {
     return getParentPosition()
-        .plus(IntakePivotConstants.BASE_TO_INTAKE_PIVOT_TRANSFORM)
+        .plus(IntakeRackConstants.BASE_TO_INTAKE_PIVOT_TRANSFORM)
         .plus(
             new Transform3d(
                 Translation3d.kZero, new Rotation3d(0, Math.toRadians(getPosition() * 360), 0)));
