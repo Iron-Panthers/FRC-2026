@@ -12,16 +12,18 @@ import org.littletonrobotics.junction.Logger;
 public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakePivotTarget>
     implements LoggableMechanism3d {
   public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(-10.4),
-    MED_STOW(60),
-    HIGH_MED_STOW(20),
-    STOW(78.8);
+    INTAKE(-10.4, IntakePivotConstants.SUPPLY_CURRENT_LIMIT),
+    MED_STOW(60, 20),
+    HIGH_MED_STOW(20, 20),
+    STOW(78.8, IntakePivotConstants.SUPPLY_CURRENT_LIMIT);
 
     private double position;
-    private static final double EPSILON = IntakeRackConstants.POSITION_TARGET_EPSILON;
+    private double supplyCurrentLimit;
+    private static final double EPSILON = IntakePivotConstants.POSITION_TARGET_EPSILON;
 
-    private IntakePivotTarget(double positionDeg) {
+    private IntakePivotTarget(double positionDeg, double supplyCurrentLimit) {
       this.position = positionDeg / 360d;
+      this.supplyCurrentLimit = supplyCurrentLimit;
     }
 
     public double getPosition() {
@@ -31,6 +33,10 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakePivotTarg
     @Override
     public double getEpsilon() {
       return EPSILON;
+    }
+
+    public double getSupplyCurrentLimit() {
+      return supplyCurrentLimit;
     }
   }
 
