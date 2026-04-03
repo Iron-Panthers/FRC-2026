@@ -113,6 +113,14 @@ public class Drive extends SubsystemBase {
           targetSpeeds.omegaRadiansPerSecond =
               Math.abs(rotationVelocity) > 0.0001 ? rotationVelocity : 0.0001;
         }
+
+        double speedMagnitude =
+            Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond);
+        if (speedMagnitude < 0.01
+            && Math.abs(targetSpeeds.omegaRadiansPerSecond) < 0.01
+            && isScoped) {
+          driveMode = DriveModes.DEFENSE;
+        }
       }
       case TRAJECTORY -> {
         Logger.recordOutput(
@@ -146,6 +154,19 @@ public class Drive extends SubsystemBase {
         }
       }
       case DEFENSE -> {
+        targetSpeeds = teleopController.update();
+        if (headingController != null) {
+          // 0.d0001 to make the wheels stop in a diamond shape instead of straight so they do not
+          // vibrate
+          double rotationVelocity = headingController.update();
+          targetSpeeds.omegaRadiansPerSecond =
+              Math.abs(rotationVelocity) > 0.0001 ? rotationVelocity : 0.0001;
+        }
+        double speedMagnitude =
+            Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond);
+        if (speedMagnitude >= 0.015 || Math.abs(targetSpeeds.omegaRadiansPerSecond) >= 0.015) {
+          driveMode = DriveModes.TELEOP;
+        }
         modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
         modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(135))));
         modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-225))));
@@ -171,7 +192,7 @@ public class Drive extends SubsystemBase {
 
       Logger.recordOutput("Swerve/ModuleTargetStates", moduleTargetStates);
     }
-
+    Logger.recordOutput("Swerve/IsScoped", isScoped);
     Logger.recordOutput("Swerve/TargetSpeeds", targetSpeeds);
     Logger.recordOutput("Swerve/DriveMode", driveMode);
     Logger.recordOutput(
@@ -205,7 +226,9 @@ public class Drive extends SubsystemBase {
 
   public void driveTeleopController(double xAxis, double yAxis, double omega, double acceleration) {
     if (DriverStation.isTeleopEnabled()) {
-      if (driveMode != DriveModes.TELEOP && driveMode != DriveModes.AXIS_ASSIST) {
+      if (driveMode != DriveModes.TELEOP
+          && driveMode != DriveModes.AXIS_ASSIST
+          && driveMode != DriveModes.DEFENSE) {
         driveMode = DriveModes.TELEOP;
         teleopController.setPastLinearVelocity(new Translation2d());
       }

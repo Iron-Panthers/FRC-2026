@@ -14,6 +14,7 @@ import frc.robot.subsystems.vision.VisionIO.PoseObservation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
@@ -143,6 +144,7 @@ public class Vision extends SubsystemBase {
     return results;
   }
 
+  @AutoLogOutput(key = "Vision/GetMultiTags")
   public boolean getMultiTags() {
     boolean isUsingMultiTagsForEstimate = false;
     for (VisionIOInputsAutoLogged ioInputsAutoLogged : inputs) {
