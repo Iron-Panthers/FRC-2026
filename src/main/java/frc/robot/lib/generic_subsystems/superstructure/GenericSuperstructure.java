@@ -28,6 +28,9 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
   private ControlMode controlMode = ControlMode.STOP;
 
   protected final String name;
+
+  private double totalAmps = 0;
+
   protected final GenericSuperstructureIO superstructureIO;
 
   protected Optional<Double> positionTargetManual = Optional.empty();
@@ -47,6 +50,9 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
 
   public void periodic() {
     double filteredAmps = linearFilter.calculate(getSupplyCurrentAmps());
+
+    totalAmps += (getSupplyCurrentAmps() / 50);
+
     // Process inputs
     superstructureIO.updateInputs(inputs);
     Logger.processInputs(name, inputs);
@@ -77,6 +83,7 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
     Logger.recordOutput(name + "/TargetPositionManual", positionTargetManual.orElse(0.0));
     filteredCurrent = this.linearFilter.calculate(inputs.supplyCurrentAmps);
     Logger.recordOutput(name + "/FilteredCurrent", filteredCurrent);
+    Logger.recordOutput(name + "/TotalAmpSeconds", totalAmps);
   }
 
   public G getPositionTarget() {
