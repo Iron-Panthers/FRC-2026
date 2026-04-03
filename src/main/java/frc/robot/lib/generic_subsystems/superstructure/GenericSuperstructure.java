@@ -2,6 +2,8 @@ package frc.robot.lib.generic_subsystems.superstructure;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import java.util.Optional;
+
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public abstract class GenericSuperstructure<G extends GenericSuperstructure.PositionTarget> {
@@ -25,7 +27,11 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
 
   private ControlMode controlMode = ControlMode.STOP;
 
+  
   protected final String name;
+
+  private double totalAmps = 0;
+  
   protected final GenericSuperstructureIO superstructureIO;
 
   protected Optional<Double> positionTargetManual = Optional.empty();
@@ -43,6 +49,9 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
 
   public void periodic() {
     double filteredAmps = linearFilter.calculate(getSupplyCurrentAmps());
+
+    totalAmps += (getSupplyCurrentAmps()/50);
+
     // Process inputs
     superstructureIO.updateInputs(inputs);
     Logger.processInputs(name, inputs);
@@ -70,6 +79,7 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
     Logger.recordOutput(name + "/ReachedTarget", reachedTarget());
     Logger.recordOutput(name + "/TargetPosition", positionTarget.getPosition());
     Logger.recordOutput(name + "/TargetPositionManual", positionTargetManual.orElse(0.0));
+    Logger.recordOutput(name + "/TotalAmpSeconds", totalAmps);
   }
 
   public G getPositionTarget() {
