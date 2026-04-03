@@ -156,10 +156,12 @@ public class ShooterController extends SubsystemBase {
         shooterHood.setPositionTargetManual(
             Units.Degrees.of(
                     90 - RobotState.getInstance().getStationaryHoodParams(3.4).shooterAngle())
-                .in(Units.Rotation));
+                .in(Units.Rotation),
+            targetState.hoodTarget.getSupplyCurrentLimit());
       } else {
         shooterHood.setPositionTargetManual(
-            Units.Rotations.of(.25).minus(shotState.shooterAngle()).in(Units.Rotations));
+            Units.Rotations.of(.25).minus(shotState.shooterAngle()).in(Units.Rotations),
+            targetState.hoodTarget.getSupplyCurrentLimit());
       }
 
       // Flywheels

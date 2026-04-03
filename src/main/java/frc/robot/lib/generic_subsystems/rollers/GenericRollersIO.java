@@ -17,9 +17,6 @@ public interface GenericRollersIO {
 
   default void runVelocity(double velocity) {}
 
-  default void setSuppplyCurrentLimits(double maxCurrentAmps) {}
-  ;
-
   default void stop() {}
 
   default void setSlot0(double kP, double kI, double kD, double kS, double kV, double kA) {}

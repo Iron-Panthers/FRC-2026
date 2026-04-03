@@ -40,6 +40,8 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
   private final StatusSignal<Current> statorCurrent;
   private final StatusSignal<Temperature> temp;
 
+  protected Slot0Configs gainsConfig;
+
   // zeroing stuff
   private final double zeroingVolts;
   protected final double zeroingOffset;
@@ -184,7 +186,7 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
       double motionMagicCruiseVelocity,
       double motionMagicJerk,
       GravityTypeValue gravityTypeValue) {
-    Slot0Configs gainsConfig = new Slot0Configs();
+    gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
     gainsConfig.kD = kD;
@@ -201,5 +203,15 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
 
     talon.getConfigurator().apply(gainsConfig);
     talon.getConfigurator().apply(motionMagicConfig);
+  }
+
+  @Override
+  public void setSupplyCurrentLimit(double amps) {
+    if (Math.abs(config.CurrentLimits.SupplyCurrentLimit - amps) > 0.01) {
+      config.CurrentLimits.SupplyCurrentLimitEnable = true;
+      config.CurrentLimits.SupplyCurrentLimit = amps;
+      config.withSlot0(gainsConfig);
+      talon.getConfigurator().apply(config);
+    }
   }
 }

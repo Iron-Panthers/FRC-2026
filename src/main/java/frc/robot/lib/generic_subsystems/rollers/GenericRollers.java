@@ -20,6 +20,7 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
 
   private LinearFilter filter;
   private double filteredCurrent;
+  private double totalAmps = 0;
 
   private final String name;
   private final GenericRollersIO rollerIO;
@@ -49,6 +50,9 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
 
     filteredCurrent = this.filter.calculate(inputs.supplyCurrentAmps);
     Logger.recordOutput(name + "/FilteredCurrent", filteredCurrent);
+
+    totalAmps += (getSupplyCurrentAmps() / 50);
+    Logger.recordOutput(name + "/TotalAmpSeconds", totalAmps);
 
     Logger.recordOutput(name + "/ControlMode", controlMode.toString());
     switch (controlMode) {
