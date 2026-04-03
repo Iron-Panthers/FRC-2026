@@ -29,7 +29,9 @@ public abstract class GenericSuperstructureIOSim implements GenericSuperstructur
 
     talon = new TalonFX(id);
     talon.setNeutralMode(NeutralModeValue.Brake);
-    config = new TalonFXConfiguration().withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake));
+    config =
+        new TalonFXConfiguration()
+            .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake));
   }
 
   @Override

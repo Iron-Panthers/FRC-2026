@@ -17,7 +17,6 @@ public class IntakePivot extends GenericSuperstructure<IntakePivot.IntakePivotTa
     HIGH_MED_STOW(20, 20),
     STOW(78.8, IntakePivotConstants.SUPPLY_CURRENT_LIMIT);
 
-
     private double position;
     private double supplyCurrentLimit;
     private static final double EPSILON = IntakePivotConstants.POSITION_TARGET_EPSILON;
