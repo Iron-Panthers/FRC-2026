@@ -29,7 +29,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
                         intakeActive
                             ? new AgitateIntakeCommand(intakeController, 4)
                             : new InstantCommand()))
-            .withDeadline(new WaitCommand(5)),
+            .withDeadline(new WaitCommand(4.3)),
         (intakeActive
             ? new IntakeCommand(intakeController, shooterController)
             : new InstantCommand()),

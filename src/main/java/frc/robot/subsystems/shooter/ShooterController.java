@@ -46,6 +46,12 @@ public class ShooterController extends SubsystemBase {
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.SHOOT,
         SerializerTarget.SHOOT),
+    TRENCH_SHOOT(
+        ShooterHoodTarget.DEFAULT_SHOOT,
+        ShooterFlywheelTarget.SHOOT,
+        ShooterAcceleratorTarget.SHOOT,
+        ShooterOmniwheelTarget.SHOOT,
+        SerializerTarget.SHOOT),
     TOTAL_SPIN_UP(
         ShooterHoodTarget.SHOOT_TEMP,
         ShooterFlywheelTarget.SHOOT,
@@ -137,7 +143,8 @@ public class ShooterController extends SubsystemBase {
       // TODO:should we set the state of serializer to target?
     } else if ((targetState == ShooterState.SHOOT
         || targetState == ShooterState.TOTAL_SPIN_UP
-        || targetState == ShooterState.DEFAULT_SHOOT)) {
+        || targetState == ShooterState.DEFAULT_SHOOT
+        || targetState == ShooterState.TRENCH_SHOOT)) {
 
       TargetShootingState shotState = RobotState.getInstance().calculateTargetShootingState();
 
@@ -145,6 +152,11 @@ public class ShooterController extends SubsystemBase {
       // Hood
       if (targetState == ShooterState.DEFAULT_SHOOT) {
         shooterHood.setPositionTarget(targetState.hoodTarget);
+      } else if (targetState == ShooterState.TRENCH_SHOOT) {
+        shooterHood.setPositionTargetManual(
+            Units.Degrees.of(
+                    90 - RobotState.getInstance().getStationaryHoodParams(3.4).shooterAngle())
+                .in(Units.Rotation));
       } else {
         shooterHood.setPositionTargetManual(
             Units.Rotations.of(.25).minus(shotState.shooterAngle()).in(Units.Rotations), targetState.hoodTarget.getSupplyCurrentLimit());

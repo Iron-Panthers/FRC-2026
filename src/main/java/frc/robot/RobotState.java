@@ -37,6 +37,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotState.ShootingAnglePredictor.HoodParams;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.vision.VisionConstants;
 import java.util.HashMap;
@@ -215,6 +216,11 @@ public class RobotState {
     return targetShootingState;
   }
 
+  /** Gets interpolated stationary hood params from specified distance (meters) */
+  public HoodParams getStationaryHoodParams(double distance) {
+    return shootingAnglePredictor.getHoodParamsFromDistance(distance);
+  }
+
   // shooting predictor
   public class ShootingAnglePredictor {
 
@@ -290,6 +296,14 @@ public class RobotState {
       shooterTable.put(distance, params);
     }
 
+    /**
+     * @param distance in meters
+     * @return the Hood params for shooting stationary from that distance
+     */
+    public HoodParams getHoodParamsFromDistance(double distance) {
+      return shooterTable.get(distance);
+    }
+
     public TargetShootingState calculateTargetShootingState() {
 
       initializeShooterTable();
@@ -347,7 +361,7 @@ public class RobotState {
               .plus(isAllianceRed() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180));
       // modify the above line for a shooter offset
       double shooterOffsetY =
-          -0.08255; // meters, tune this later based on where the shooter is // TODO: make this an
+          0.08255; // meters, tune this later based on where the shooter is // TODO: make this an
       // actual constant
       Rotation2d shooterAngleOffset = Rotation2d.fromRadians(Math.atan2(shooterOffsetY, distance));
       turretAngle = turretAngle.plus(shooterAngleOffset);

@@ -15,7 +15,6 @@ plugins {
 // ---------------------------------------------------------------------------
 spotless {
     java {
-        lineEndings 'UNIX'
         // Which files to format (defaults to java sourcesets, so usually fine)
         target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
         targetExclude '**/BuildConstants.java', '**/generated/**'

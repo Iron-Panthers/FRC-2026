@@ -31,13 +31,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1xTB I 2 Right"
+            "pathName": "2xB 2 I Right"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "2xB 2 I Right"
+            "name": "Align and auto shoot full hopper"
           }
         },
         {
