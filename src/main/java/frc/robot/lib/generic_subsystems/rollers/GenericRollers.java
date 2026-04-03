@@ -51,7 +51,7 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     filteredCurrent = this.filter.calculate(inputs.supplyCurrentAmps);
     Logger.recordOutput(name + "/FilteredCurrent", filteredCurrent);
 
-    totalAmps += (getSupplyCurrentAmps()/50);
+    totalAmps += (getSupplyCurrentAmps() / 50);
     Logger.recordOutput(name + "/TotalAmpSeconds", totalAmps);
 
     Logger.recordOutput(name + "/ControlMode", controlMode.toString());
