@@ -182,6 +182,7 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     driveConfig.Slot0.kV = gains.kV();
     driveConfig.Slot0.kA = gains.kA();
     driveTalon.getConfigurator().apply(driveConfig);
+    driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
   }
 
   @Override
@@ -196,5 +197,14 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     steerConfig.MotionMagic.MotionMagicAcceleration = motionProfileGains.acceleration();
     steerConfig.MotionMagic.MotionMagicJerk = motionProfileGains.jerk();
     steerTalon.getConfigurator().apply(steerConfig);
+  }
+
+  @Override
+  public void setSupplyCurrentLimit(double amps) {
+    if (Math.abs(driveConfig.CurrentLimits.SupplyCurrentLimit - amps) > 0.01) {
+      driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+      driveConfig.CurrentLimits.SupplyCurrentLimit = amps;
+      driveTalon.getConfigurator().apply(driveConfig);
+    }
   }
 }

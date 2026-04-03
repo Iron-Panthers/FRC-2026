@@ -49,4 +49,8 @@ public class Module {
   public SwerveModuleState getModuleState() {
     return new SwerveModuleState(inputs.driveVelocityMetersPerSec, inputs.steerAbsolutePosition);
   }
+
+  public void setSupplyCurrentLimit(double currentLimitAmps) {
+    moduleIO.setSupplyCurrentLimit(currentLimitAmps);
+  }
 }
