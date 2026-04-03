@@ -1,7 +1,9 @@
 package frc.robot.lib.generic_subsystems.superstructure;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -12,6 +14,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public abstract class GenericSuperstructureIOSim implements GenericSuperstructureIO {
 
   protected final TalonFX talon;
+
+  protected final TalonFXConfiguration config;
+  protected Slot0Configs gainsConfig = new Slot0Configs();
 
   protected final VoltageOut voltageOutput = new VoltageOut(0).withUpdateFreqHz(0);
 
@@ -24,6 +29,9 @@ public abstract class GenericSuperstructureIOSim implements GenericSuperstructur
 
     talon = new TalonFX(id);
     talon.setNeutralMode(NeutralModeValue.Brake);
+    config =
+        new TalonFXConfiguration()
+            .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake));
   }
 
   @Override
@@ -57,7 +65,7 @@ public abstract class GenericSuperstructureIOSim implements GenericSuperstructur
       double motionMagicCruiseVelocity,
       double motionMagicJerk,
       GravityTypeValue gravityTypeValue) {
-    Slot0Configs gainsConfig = new Slot0Configs();
+    gainsConfig = new Slot0Configs();
     gainsConfig.kP = kP;
     gainsConfig.kI = kI;
     gainsConfig.kD = kD;
@@ -74,5 +82,15 @@ public abstract class GenericSuperstructureIOSim implements GenericSuperstructur
 
     talon.getConfigurator().apply(gainsConfig);
     talon.getConfigurator().apply(motionMagicConfig);
+  }
+
+  public void setSupplyCurrentLimit(double amps) {
+    if (config.CurrentLimits.SupplyCurrentLimit != amps) {
+      config.CurrentLimits.SupplyCurrentLimitEnable = true;
+      config.CurrentLimits.SupplyCurrentLimit = amps;
+      config.withSlot0(gainsConfig);
+      talon.getConfigurator().apply(config);
+      System.out.println("Amps: " + amps);
+    }
   }
 }
