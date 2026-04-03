@@ -399,6 +399,51 @@ public class RobotState {
           turretAngle, Degrees.of(adjustedHoodAngle), MetersPerSecond.of(adjustedShooterSpeed));
     }
 
+    //public boolean isAbleToShoot -> check if robot pose is in front of bump (in alliance zone)
+    // add 50cm from top off bump to bottom
+    // not within 4 degrees
+    public boolean canShoot() {
+      final double shootingTheshold = 4; // degrees, tune later  ? arbitrary value
+      final double bumpDistanceFromCenter = 0.50; // meters, arbitrary value, nora approved
+
+      // Get alliance
+      boolean isRedAlliance = isAllianceRed();
+
+      // Get the robot pose
+      Pose3d robotPose3d = new Pose3d(getEstimatedPose());
+      Translation3d robotPos = robotPose3d.getTranslation();
+      double robotPosX = robotPos.getMeasureX();
+      Rotation2d currentYaw = Rotation2d.fromRadians(robotPose3d.getRotation().toRotation2d());
+
+      // Get target rotation
+      TargetShootingState targetState = calculateTargetShootingState();
+      Rotation2d targetYaw = Rotation2d.fromRadians(targetState.drivebaseYaw);
+
+      // Check if robot yaw is within threshold 
+      double trueAngleDifference = Math.abs((currentYaw + 360) % 360 - (targetYaw + 360) % 360);
+      if (trueAngleDifference > shootingTheshold) return false; // Shouldnt shoot if outside of range
+
+      // Check if the robot is across trench or bump
+      // see if distance between robot and center line is greater than (half of hub width) + length of trench 
+      if (Math.abs(robotPos.getMeasureY() - DriveConstants.CENTER_OF_FIELD.getMeasureY()) > DriveConstants.TRENCH_LENGTH + DriveConstants.HUB_WIDTH * 0.5) {
+        // This means the robot is outside of bump, aka it's on trench
+
+        // Check if robot is over trench (assuming that the hub origin has same x as center of trench)
+        if (isRedAlliance && robotPosX < DriveConstants.RED_HUB_ORIGIN) return false;
+        else if (!isRedAlliance && robotPosX > DriveConstants.BLUE_HUB_ORIGIN) return false;
+      }
+      else {
+        // This means the robot is inside the bump
+
+        // Check if robot is fully across bump
+        // If the robot is not all the way across the bump, return false
+        if (isRedAlliance && robotPosX < DriveConstants.RED_HUB_ORIGIN + bumpDistanceFromCenter) return false;
+        else if (!isRedAlliance && robotPosX > DriveConstants.BLUE_HUB_ORIGIN - bumpDistanceFromCenter) return false;
+      }
+      
+      return true;
+    }
+
     // Simple data class for the LUT
     // shooterAngle in degrees, shooterSpeed in m/s (surface speed), timeOfFlight in seconds
     public record HoodParams(double shooterAngle, double shooterSpeed, double timeOfFlight)
