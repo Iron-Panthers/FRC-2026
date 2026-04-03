@@ -27,8 +27,6 @@ public interface ModuleIO {
     public double steerAppliedVolts = 0;
     public double steerSupplyCurrent = 0;
     public double steerStatorCurrent = 0;
-
-    public double supplyCurrentAmps = 0;
   }
 
   default void updateInputs(ModuleIOInputs inputs) {}

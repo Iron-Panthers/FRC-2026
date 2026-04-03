@@ -10,7 +10,6 @@ public class Module {
   private final int index;
   private double totalAmps = 0;
 
-
   private ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
 
   public Module(ModuleIO moduleIO, int index) {
@@ -21,7 +20,7 @@ public class Module {
   public void updateInputs() {
     moduleIO.updateInputs(inputs);
     Logger.processInputs("Swerve/Module" + index, inputs);
-    totalAmps += (inputs.supplyCurrentAmps / 50);
+    totalAmps += (inputs.driveSupplyCurrent / 50);
     Logger.recordOutput("Swerve/Module" + index + "/TotalAmpSeconds", totalAmps);
   }
 
