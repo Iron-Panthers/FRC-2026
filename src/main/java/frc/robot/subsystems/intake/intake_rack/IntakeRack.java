@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.utility.LoggableMechanism3d;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -81,6 +82,6 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
         .plus(IntakeRackConstants.BASE_TO_INTAKE_RACK_TRANSFORM)
         .plus(
             new Transform3d(
-                new Translation3d(0,-getPosition(),0), Rotation3d.kZero));
+                new Translation3d(0,-Units.inchesToMeters(getPosition()),0), Rotation3d.kZero));
   }
 }

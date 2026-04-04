@@ -19,7 +19,7 @@ public class IntakeRackConstants {
             CAN.at(19, "Intake Rack"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
         case SIM -> new IntakeRackConfig(
             // Reduction between motor and mechansim
-            CAN.at(9, "Intake Rack"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
+            CAN.at(19, "Intake Rack"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
         default -> new IntakeRackConfig(0, 1, InvertedValue.CounterClockwise_Positive);
       };
 
@@ -75,15 +75,15 @@ public class IntakeRackConstants {
       };
 
   public static record IntakeRackPhysicalConstants(
-      double momentOfInertia,
-      double lengthMeters,
-      double minAngleRads,
-      double maxAngleRads,
+      double massInKilograms,
+      double drumRadiusMeters,
+      double minExtensionMeters,
+      double maxExtensionMeters,
       boolean simulateGravity) {}
 
   public static final IntakeRackPhysicalConstants PHYSICAL_CONSTANTS =
       switch (Constants.getRobotType()) {
-        case SIM -> new IntakeRackPhysicalConstants(0.02, 0.706747, -1000.0, 1000, true);
+        case SIM -> new IntakeRackPhysicalConstants(0.1, 0.1, -15, 15, false);
         case COMP -> new IntakeRackPhysicalConstants(0.1, 0, 0, 0, false);
         default -> new IntakeRackPhysicalConstants(0.1, 0, 0, 0, false);
       };
