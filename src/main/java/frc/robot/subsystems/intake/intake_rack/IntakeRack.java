@@ -9,19 +9,19 @@ import frc.robot.utility.LoggableMechanism3d;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakePivotTarget>
+public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarget>
     implements LoggableMechanism3d {
-  public enum IntakePivotTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(-10.4, IntakePivotConstants.SUPPLY_CURRENT_LIMIT),
+  public enum IntakeRackTarget implements GenericSuperstructure.PositionTarget {
+    INTAKE(-10.4, IntakeRackConstants.SUPPLY_CURRENT_LIMIT),
     MED_STOW(60, 20),
     HIGH_MED_STOW(20, 20),
-    STOW(78.8, IntakePivotConstants.SUPPLY_CURRENT_LIMIT);
+    STOW(78.8, IntakeRackConstants.SUPPLY_CURRENT_LIMIT);
 
     private double position;
     private double supplyCurrentLimit;
-    private static final double EPSILON = IntakePivotConstants.POSITION_TARGET_EPSILON;
+    private static final double EPSILON = IntakeRackConstants.POSITION_TARGET_EPSILON;
 
-    private IntakePivotTarget(double positionDeg, double supplyCurrentLimit) {
+    private IntakeRackTarget(double positionDeg, double supplyCurrentLimit) {
       this.position = positionDeg / 360d;
       this.supplyCurrentLimit = supplyCurrentLimit;
     }
@@ -41,8 +41,8 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakePivotTarg
   }
 
   public IntakeRack(IntakeRackIO io) {
-    super("Intake/Intake Pivot", io);
-    setPositionTarget(IntakePivotTarget.STOW);
+    super("Intake/Intake Rack", io);
+    setPositionTarget(IntakeRackTarget.STOW);
     setControlMode(ControlMode.STOP);
   }
 
@@ -52,7 +52,7 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakePivotTarg
   public void periodic() {
     super.periodic();
     Logger.recordOutput(
-        "Intake/IntakePivot/PositionTargetRotations", getPositionTarget().getPosition());
+        "Intake/Intake Rack/PositionTargetRotations", getPositionTarget().getPosition());
   }
 
   @Override
@@ -74,11 +74,11 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakePivotTarg
     this.loggableMechanism3dParent = parent;
   }
 
-  @AutoLogOutput(key = "Intake/IntakePivot/DisplayPose3d")
+  @AutoLogOutput(key = "Intake/Intake Rack/DisplayPose3d")
   @Override
   public Pose3d getDisplayPose3d() {
     return getParentPosition()
-        .plus(IntakeRackConstants.BASE_TO_INTAKE_PIVOT_TRANSFORM)
+        .plus(IntakeRackConstants.BASE_TO_INTAKE_RACK_TRANSFORM)
         .plus(
             new Transform3d(
                 Translation3d.kZero, new Rotation3d(0, Math.toRadians(getPosition() * 360), 0)));

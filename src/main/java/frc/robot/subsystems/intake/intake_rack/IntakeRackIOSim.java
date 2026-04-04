@@ -8,15 +8,15 @@ import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOSi
 
 public class IntakeRackIOSim extends GenericSuperstructureIOSim implements IntakeRackIO {
 
-  private final SingleJointedArmSim intakePivotSim;
+  private final SingleJointedArmSim intakeRackSim;
   private final double reduction;
 
   public IntakeRackIOSim() {
-    super(IntakeRackConstants.INTAKE_PIVOT_CONFIG.motorID());
+    super(IntakeRackConstants.INTAKE_RACK_CONFIG.motorID());
 
-    this.reduction = IntakeRackConstants.INTAKE_PIVOT_CONFIG.reduction();
+    this.reduction = IntakeRackConstants.INTAKE_RACK_CONFIG.reduction();
 
-    intakePivotSim =
+    intakeRackSim =
         new SingleJointedArmSim(
             DCMotor.getKrakenX60Foc(1),
             reduction,
@@ -49,12 +49,12 @@ public class IntakeRackIOSim extends GenericSuperstructureIOSim implements Intak
     double appliedVoltage = talon.getSimState().getMotorVoltage();
 
     // Simulate physics
-    intakePivotSim.setInputVoltage(appliedVoltage);
-    intakePivotSim.update(0.02);
+    intakeRackSim.setInputVoltage(appliedVoltage);
+    intakeRackSim.update(0.02);
 
     // Convert position and velocity from meters to rotations for the TalonFX sensor
-    double rotations = intakePivotSim.getAngleRads() / (2 * Math.PI * reduction);
-    double velocityRPS = intakePivotSim.getVelocityRadPerSec() / (2 * Math.PI * reduction);
+    double rotations = intakeRackSim.getAngleRads() / (2 * Math.PI * reduction);
+    double velocityRPS = intakeRackSim.getVelocityRadPerSec() / (2 * Math.PI * reduction);
 
     talon.getSimState().setRawRotorPosition(rotations);
     talon.getSimState().setRotorVelocity(velocityRPS);
@@ -75,6 +75,6 @@ public class IntakeRackIOSim extends GenericSuperstructureIOSim implements Intak
 
   @Override
   public void setOffset() {
-    intakePivotSim.setState(0, 0);
+    intakeRackSim.setState(0, 0);
   }
 }

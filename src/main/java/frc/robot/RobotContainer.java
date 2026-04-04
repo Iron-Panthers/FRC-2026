@@ -114,7 +114,7 @@ public class RobotContainer {
   private Vision vision;
   private RGB rgb;
   private CANWatchdog canWatchdog;
-  private IntakeRack intakePivot;
+  private IntakeRack intakeRack;
   private IntakeRollers intakeRollers;
   private IntakeController intakeController;
   private Serializer serializer;
@@ -136,7 +136,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          intakePivot = new IntakeRack(new IntakeRackIOTalonFX());
+          intakeRack = new IntakeRack(new IntakeRackIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           vision =
               new Vision(
@@ -191,7 +191,7 @@ public class RobotContainer {
           new VisionIOPhotonvisionSim("arducam-4", 4, driveSimulation::getSimulatedDriveTrainPose);
 
           // INTAKE
-          intakePivot = new IntakeRack(new IntakeRackIOSim());
+          intakeRack = new IntakeRack(new IntakeRackIOSim());
           intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
 
           serializer = new Serializer(new SerializerSim());
@@ -224,9 +224,9 @@ public class RobotContainer {
     if (rgb == null) rgb = new RGB(new RGBIO() {});
 
     // INTAKE
-    if (intakePivot == null) intakePivot = new IntakeRack(new IntakeRackIO() {});
+    if (intakeRack == null) intakeRack = new IntakeRack(new IntakeRackIO() {});
     if (intakeRollers == null) intakeRollers = new IntakeRollers(new IntakeRollersIO() {});
-    intakeController = new IntakeController(intakePivot, intakeRollers);
+    intakeController = new IntakeController(intakeRack, intakeRollers);
 
     // SERIALIZER
     if (serializer == null) serializer = new Serializer(new SerializerIO() {});
@@ -401,8 +401,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () ->
-                    intakeController.setIntakePivotActive(
-                        !intakeController.getIntakePivotActive())));
+                    intakeController.setIntakeRackActive(!intakeController.getIntakeRackActive())));
     // ZERO GYRO
     driverA
         .start()
