@@ -27,7 +27,8 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   private final StatusSignal<Current> supplyCurrent;
 
   private final NeutralOut neutralOutput = new NeutralOut();
-  private final VelocityVoltage velocityControl = new VelocityVoltage(0).withUpdateFreqHz(0);
+  private final VelocityVoltage velocityControl =
+      new VelocityVoltage(0).withUpdateFreqHz(0).withEnableFOC(true);
 
   private final double mechanismReduction;
 

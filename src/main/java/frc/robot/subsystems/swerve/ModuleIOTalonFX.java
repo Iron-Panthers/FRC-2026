@@ -48,9 +48,10 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
   private final TalonFXConfiguration steerConfig = new TalonFXConfiguration();
   private final CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
 
-  private final VelocityVoltage driveVelocityControl = new VelocityVoltage(0).withUpdateFreqHz(0);
+  private final VelocityVoltage driveVelocityControl =
+      new VelocityVoltage(0).withUpdateFreqHz(0).withEnableFOC(true);
   private final MotionMagicVoltage steerPositionControl =
-      new MotionMagicVoltage(0).withUpdateFreqHz(0);
+      new MotionMagicVoltage(0).withUpdateFreqHz(0).withEnableFOC(true);
 
   public ModuleIOTalonFX(ModuleConfig config) {
     driveTalon = new TalonFX(config.driveID());

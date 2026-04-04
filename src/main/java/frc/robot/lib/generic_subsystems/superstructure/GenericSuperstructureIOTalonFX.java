@@ -46,9 +46,11 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
   private final double zeroingVolts;
   protected final double zeroingOffset;
 
-  protected final VoltageOut voltageOutput = new VoltageOut(0).withUpdateFreqHz(0);
+  protected final VoltageOut voltageOutput =
+      new VoltageOut(0).withUpdateFreqHz(0).withEnableFOC(true);
   private final NeutralOut neutralOutput = new NeutralOut();
-  private final MotionMagicVoltage positionControl = new MotionMagicVoltage(0).withUpdateFreqHz(0);
+  private final MotionMagicVoltage positionControl =
+      new MotionMagicVoltage(0).withUpdateFreqHz(0).withEnableFOC(true);
 
   /** Constructs a new GenericSuperstructureIOTalonFX. */
   public GenericSuperstructureIOTalonFX(GenericSuperstructureConfiguration superstructureConfig) {
