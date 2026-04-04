@@ -11,6 +11,7 @@ import frc.robot.subsystems.intake.intake_pivot.IntakePivot;
 import frc.robot.subsystems.intake.intake_pivot.IntakePivot.IntakePivotTarget;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollers.IntakeRollersTarget;
+import org.littletonrobotics.junction.Logger;
 
 public class IntakeController extends SubsystemBase {
   public enum IntakeState {
@@ -77,6 +78,8 @@ public class IntakeController extends SubsystemBase {
     }
     intakePivot.periodic();
     intakeRollers.periodic();
+
+    Logger.recordOutput("Intake/Active", intakePivotActive);
   }
 
   // GETTTERS AND SETTERS
