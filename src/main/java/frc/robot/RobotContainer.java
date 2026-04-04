@@ -376,6 +376,7 @@ public class RobotContainer {
                   }
                 })
             .withName("Drive Teleop"));
+    // adjust this for x swerve
 
     configureDriverAButtons();
     configureDriverBButtons();
@@ -396,8 +397,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () ->
-                    intakeController.setIntakePivotActive(
-                        !intakeController.getIntakePivotActive())));
+                    intakeController.setIntakeRackActive(!intakeController.getIntakeRackActive())));
     // ZERO GYRO
     driverA
         .start()

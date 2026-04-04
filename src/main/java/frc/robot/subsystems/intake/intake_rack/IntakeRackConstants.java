@@ -12,15 +12,15 @@ import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
 // making changes
 public class IntakeRackConstants {
-  public static final IntakePivotConfig INTAKE_PIVOT_CONFIG =
+  public static final IntakeRackConfig INTAKE_RACK_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new IntakePivotConfig(
+        case COMP -> new IntakeRackConfig(
             // Reduction between sensor and mechansim
             CAN.at(19, "Intake Pivot"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
-        case SIM -> new IntakePivotConfig(
+        case SIM -> new IntakeRackConfig(
             // Reduction between motor and mechansim
-            CAN.at(9, "Intake Pivot"), 12 * 0.3750, InvertedValue.Clockwise_Positive);
-        default -> new IntakePivotConfig(0, 1, InvertedValue.CounterClockwise_Positive);
+            CAN.at(9, "Intake Rack"), 12 * 0.3750, InvertedValue.Clockwise_Positive);
+        default -> new IntakeRackConfig(0, 1, InvertedValue.CounterClockwise_Positive);
       };
 
   public static final PIDGains GAINS =
@@ -37,7 +37,7 @@ public class IntakeRackConstants {
         default -> new MotionMagicConfig(0, 0);
       };
 
-  public record IntakePivotConfig(int motorID, double reduction, InvertedValue motorDirection) {}
+  public record IntakeRackConfig(int motorID, double reduction, InvertedValue motorDirection) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}
@@ -57,7 +57,7 @@ public class IntakeRackConstants {
   public static final double ZEROING_VOLTS = -3;
   public static final double ZEROING_OFFSET = 0; // offset in rotations
 
-  public static final Transform3d BASE_TO_INTAKE_PIVOT_TRANSFORM =
+  public static final Transform3d BASE_TO_INTAKE_RACK_TRANSFORM =
       switch (Constants.getRobotType()) {
         default -> new Pose3d()
             .plus(
@@ -71,17 +71,17 @@ public class IntakeRackConstants {
             .minus(new Pose3d());
       };
 
-  public static record IntakePivotPhysicalConstants(
+  public static record IntakeRackPhysicalConstants(
       double momentOfInertia,
       double lengthMeters,
       double minAngleRads,
       double maxAngleRads,
       boolean simulateGravity) {}
 
-  public static final IntakePivotPhysicalConstants PHYSICAL_CONSTANTS =
+  public static final IntakeRackPhysicalConstants PHYSICAL_CONSTANTS =
       switch (Constants.getRobotType()) {
-        case SIM -> new IntakePivotPhysicalConstants(0.02, 0.706747, -1000.0, 1000, true);
-        case COMP -> new IntakePivotPhysicalConstants(0.1, 0, 0, 0, false);
-        default -> new IntakePivotPhysicalConstants(0.1, 0, 0, 0, false);
+        case SIM -> new IntakeRackPhysicalConstants(0.02, 0.706747, -1000.0, 1000, true);
+        case COMP -> new IntakeRackPhysicalConstants(0.1, 0, 0, 0, false);
+        default -> new IntakeRackPhysicalConstants(0.1, 0, 0, 0, false);
       };
 }
