@@ -16,11 +16,11 @@ public class IntakeRackConstants {
       switch (Constants.getRobotType()) {
         case COMP -> new IntakeRackConfig(
             // Reduction between sensor and mechansim
-            CAN.at(19, "Intake Pivot"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
-        case SIM -> new IntakePivotConfig(
+            CAN.at(19, "Intake Rack"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
+        case SIM -> new IntakeRackConfig(
             // Reduction between motor and mechansim
-            CAN.at(9, "Intake Pivot"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
-        default -> new IntakePivotConfig(0, 1, InvertedValue.CounterClockwise_Positive);
+            CAN.at(9, "Intake Rack"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
+        default -> new IntakeRackConfig(0, 1, InvertedValue.CounterClockwise_Positive);
       };
 
   public static final PIDGains GAINS =
