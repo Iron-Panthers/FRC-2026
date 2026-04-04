@@ -6,9 +6,12 @@ import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 public class SerializerConstants {
   public static final SerializerConfig SERIALIZER_CONFIG =
       switch (Constants.getRobotType()) {
-        case SIM -> new SerializerConfig(CAN.at(32, "Serializer"), 5, true, false);
-        case COMP -> new SerializerConfig(CAN.at(25, "Serializer"), 2, false, false);
-        default -> new SerializerConfig(CAN.at(40, "Serializer"), 5, true, false);
+        case SIM -> new SerializerConfig(
+            CAN.at(32, "Serializer"), CAN.at(0, "Serializer 2"), 5, true, false, true);
+        case COMP -> new SerializerConfig(
+            CAN.at(25, "Serializer"), CAN.at(0, "Serializer 2"), 2, false, false, true);
+        default -> new SerializerConfig(
+            CAN.at(40, "Serializer"), CAN.at(0, "Serializer 2"), 5, true, false, true);
       };
 
   public static final PIDGains GAINS =
@@ -29,7 +32,13 @@ public class SerializerConstants {
       };
 
   // RECORDS
-  public record SerializerConfig(int motorID, double reduction, boolean inverted, boolean brake) {}
+  public record SerializerConfig(
+      int motorID,
+      int motorID2,
+      double reduction,
+      boolean inverted,
+      boolean brake,
+      boolean opposeMotor) {}
 
   public record PIDGains(
       double kP, double kI, double kD, double kS, double kV, double kA, double kG) {}

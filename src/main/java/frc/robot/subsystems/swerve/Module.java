@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.Logger;
 public class Module {
   private final ModuleIO moduleIO;
   private final int index;
+  private double totalAmps = 0;
 
   private ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
 
@@ -19,6 +20,8 @@ public class Module {
   public void updateInputs() {
     moduleIO.updateInputs(inputs);
     Logger.processInputs("Swerve/Module" + index, inputs);
+    totalAmps += (inputs.driveSupplyCurrent / 50);
+    Logger.recordOutput("Swerve/Module" + index + "/TotalAmpSeconds", totalAmps);
   }
 
   public void runToSetpoint(SwerveModuleState targetState) {
