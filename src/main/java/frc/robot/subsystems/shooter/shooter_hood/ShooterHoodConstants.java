@@ -19,7 +19,7 @@ public class ShooterHoodConstants {
             CAN.at(1, "Shooter Hood"), 45);
         case SIM -> new ShooterHoodConfig(
             // Reduction between motor and mechanism
-            CAN.at(8, "Shooter Hood"), 12 * 0.3750);
+            CAN.at(9, "Shooter Hood"), 12 * 0.3750);
         default -> new ShooterHoodConfig(0, 1);
       };
 
@@ -74,9 +74,12 @@ public class ShooterHoodConstants {
             .plus(
                 new Transform3d(
                     new Translation3d(
-                        Units.inchesToMeters(2.469),
-                        Units.inchesToMeters(12),
-                        Units.inchesToMeters(20.5)),
+                        Units.inchesToMeters(0),
+                        Units.inchesToMeters(9.5),
+                        Units.inchesToMeters(20.234)),
+                        // Units.inchesToMeters(0),
+                        // Units.inchesToMeters(0),
+                        // Units.inchesToMeters(0)),
                     new Rotation3d(0, 0, Math.toRadians(0))))
             .rotateBy(new Rotation3d(0, 0, Math.toRadians(90)))
             .minus(new Pose3d());
