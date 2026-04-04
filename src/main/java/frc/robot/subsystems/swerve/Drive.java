@@ -117,7 +117,7 @@ public class Drive extends SubsystemBase {
         double speedMagnitude =
             Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond);
         if (speedMagnitude < 0.01
-            && Math.abs(targetSpeeds.omegaRadiansPerSecond) < 0.01
+            && Math.abs(targetSpeeds.omegaRadiansPerSecond) < 0.1
             && isScoped) {
           driveMode = DriveModes.DEFENSE;
         }
@@ -164,7 +164,9 @@ public class Drive extends SubsystemBase {
         }
         double speedMagnitude =
             Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond);
-        if (speedMagnitude >= 0.015 || Math.abs(targetSpeeds.omegaRadiansPerSecond) >= 0.015) {
+        Logger.recordOutput("Swerve/speedMagnitude", speedMagnitude);
+        Logger.recordOutput("Swerve/angularVelocity", targetSpeeds.omegaRadiansPerSecond);
+        if (speedMagnitude > 0.015 || Math.abs(targetSpeeds.omegaRadiansPerSecond) > 0.4) {
           driveMode = DriveModes.TELEOP;
         }
         modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
