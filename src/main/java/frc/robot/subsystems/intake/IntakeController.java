@@ -7,34 +7,34 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
 import frc.robot.lib.generic_subsystems.superstructure.*;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivot;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivot.IntakePivotTarget;
+import frc.robot.subsystems.intake.intake_rack.IntakeRack;
+import frc.robot.subsystems.intake.intake_rack.IntakeRack.IntakeRackTarget;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollers.IntakeRollersTarget;
 import org.littletonrobotics.junction.Logger;
 
 public class IntakeController extends SubsystemBase {
   public enum IntakeState {
-    STOW(IntakePivotTarget.STOW, IntakeRollersTarget.IDLE),
-    MIDDLE_STOW(IntakePivotTarget.MED_STOW, IntakeRollersTarget.INTAKE_REALLY_SLOW),
-    HIGH_MIDDLE_STOW(IntakePivotTarget.HIGH_MED_STOW, IntakeRollersTarget.INTAKE_REALLY_SLOW),
-    IDLE(IntakePivotTarget.INTAKE, IntakeRollersTarget.IDLE),
-    INTAKE(IntakePivotTarget.INTAKE, IntakeRollersTarget.INTAKE),
-    INTAKE_DOWN(IntakePivotTarget.INTAKE, IntakeRollersTarget.INTAKE_DOWN),
-    REVERSE(IntakePivotTarget.INTAKE, IntakeRollersTarget.EJECT),
-    ZEROING(IntakePivotTarget.STOW, IntakeRollersTarget.IDLE);
+    STOW(IntakeRackTarget.STOW, IntakeRollersTarget.IDLE),
+    MIDDLE_STOW(IntakeRackTarget.MED_STOW, IntakeRollersTarget.INTAKE_REALLY_SLOW),
+    HIGH_MIDDLE_STOW(IntakeRackTarget.HIGH_MED_STOW, IntakeRollersTarget.INTAKE_REALLY_SLOW),
+    IDLE(IntakeRackTarget.INTAKE, IntakeRollersTarget.IDLE),
+    INTAKE(IntakeRackTarget.INTAKE, IntakeRollersTarget.INTAKE),
+    INTAKE_DOWN(IntakeRackTarget.INTAKE, IntakeRollersTarget.INTAKE_DOWN),
+    REVERSE(IntakeRackTarget.INTAKE, IntakeRollersTarget.EJECT),
+    ZEROING(IntakeRackTarget.STOW, IntakeRollersTarget.IDLE);
 
-    private IntakePivotTarget intakePivotTarget;
+    private IntakeRackTarget intakeRackTarget;
     private IntakeRollersTarget intakeRollersTarget;
 
     private IntakeState(
-        IntakePivotTarget intakePivotTarget, IntakeRollersTarget intakeRollersTarget) {
-      this.intakePivotTarget = intakePivotTarget;
+        IntakeRackTarget intakeRackTarget, IntakeRollersTarget intakeRollersTarget) {
+      this.intakeRackTarget = intakeRackTarget;
       this.intakeRollersTarget = intakeRollersTarget;
     }
 
-    public IntakePivotTarget getIntakePivotTarget() {
-      return intakePivotTarget;
+    public IntakeRackTarget getIntakeRackTarget() {
+      return intakeRackTarget;
     }
 
     public IntakeRollersTarget getIntakeRollersTarget() {
@@ -45,13 +45,13 @@ public class IntakeController extends SubsystemBase {
   private IntakeState targetState = IntakeState.STOW;
   private boolean stopped = false;
 
-  private boolean intakePivotActive = true;
+  private boolean intakeRackActive = true;
 
-  private final IntakePivot intakePivot;
+  private final IntakeRack intakeRack;
   private final IntakeRollers intakeRollers;
 
-  public IntakeController(IntakePivot intakePivot, IntakeRollers intakeRollers) {
-    this.intakePivot = intakePivot;
+  public IntakeController(IntakeRack intakeRack, IntakeRollers intakeRollers) {
+    this.intakeRack = intakeRack;
     this.intakeRollers = intakeRollers;
   }
 
@@ -59,27 +59,27 @@ public class IntakeController extends SubsystemBase {
   public void periodic() {
     if (stopped) {
       intakeRollers.setControlMode(ControlMode.STOP);
-      intakePivot.setControlMode(GenericSuperstructure.ControlMode.STOP);
+      intakeRack.setControlMode(GenericSuperstructure.ControlMode.STOP);
       // if else set control mode to zero
-    } else if (intakePivot.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
+    } else if (intakeRack.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
       intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
-    } else if ((intakePivot.getPositionTarget() == IntakePivotTarget.STOW
-            || intakePivot.getPositionTarget() == IntakePivotTarget.MED_STOW)
-        && !intakePivot.reachedTarget()) {
-      intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
+    } else if ((intakeRack.getPositionTarget() == IntakeRackTarget.STOW
+            || intakeRack.getPositionTarget() == IntakeRackTarget.MED_STOW)
+        && !intakeRack.reachedTarget()) {
+      intakeRack.setPositionTarget(targetState.getIntakeRackTarget());
       intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE_SLOW);
     } else {
       // set target states to those in the current controller state
-      intakePivot.setPositionTarget(targetState.getIntakePivotTarget());
+      intakeRack.setPositionTarget(targetState.getIntakeRackTarget());
       intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
     }
-    if (!intakePivotActive) {
-      intakePivot.setPositionTarget(IntakePivotTarget.INTAKE);
+    if (!intakeRackActive) {
+      intakeRack.setPositionTarget(IntakeRackTarget.INTAKE);
     }
-    intakePivot.periodic();
+    intakeRack.periodic();
     intakeRollers.periodic();
 
-    Logger.recordOutput("Intake/Active", intakePivotActive);
+    Logger.recordOutput("Intake/Active", intakeRackActive);
   }
 
   // GETTTERS AND SETTERS
@@ -95,7 +95,7 @@ public class IntakeController extends SubsystemBase {
   public Command setTargetStateCommand(IntakeState targetState) {
     return new InstantCommand(() -> setTargetState(targetState), this)
         .andThen(
-            new WaitCommand(0.2).andThen(new WaitUntilCommand(() -> intakePivot.reachedTarget())));
+            new WaitCommand(0.2).andThen(new WaitUntilCommand(() -> intakeRack.reachedTarget())));
   }
 
   public void setStopped(boolean stopped) {
@@ -108,19 +108,19 @@ public class IntakeController extends SubsystemBase {
 
   public Command zeroCommand() {
     return new InstantCommand(
-            () -> intakePivot.setControlMode(GenericSuperstructure.ControlMode.ZEROING))
+            () -> intakeRack.setControlMode(GenericSuperstructure.ControlMode.ZEROING))
         .alongWith(setTargetStateCommand(IntakeState.ZEROING).alongWith(setStoppedCommand(false)));
   }
 
   public Command stopZeroingCommand() {
-    return new InstantCommand(() -> intakePivot.endZeroing());
+    return new InstantCommand(() -> intakeRack.endZeroing());
   }
 
-  public void setIntakePivotActive(boolean isActive) {
-    intakePivotActive = isActive;
+  public void setIntakeRackActive(boolean isActive) {
+    intakeRackActive = isActive;
   }
 
-  public boolean getIntakePivotActive() {
-    return intakePivotActive;
+  public boolean getIntakeRackActive() {
+    return intakeRackActive;
   }
 }

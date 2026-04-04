@@ -9,6 +9,8 @@ import frc.robot.lib.generic_subsystems.rollers.*;
 public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements ShooterFlywheelIO {
   protected TalonFX talon1;
   protected TalonFX talon2;
+  protected TalonFX talon3;
+  protected TalonFX talon4;
 
   public ShooterFlywheelIOTalonFX() {
     super(
@@ -22,7 +24,11 @@ public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements
             .withNeutralMode(SHOOTER_FLYWHEEL_CONFIG.brake())
             .withReduction(SHOOTER_FLYWHEEL_CONFIG.reduction())
             .withAdditionalFollowerMotor(
-                SHOOTER_FLYWHEEL_CONFIG.motorID2(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor()));
+                SHOOTER_FLYWHEEL_CONFIG.motorID2(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor())
+            .withAdditionalFollowerMotor(
+                SHOOTER_FLYWHEEL_CONFIG.motorID3(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor())
+            .withAdditionalFollowerMotor(
+                SHOOTER_FLYWHEEL_CONFIG.motorID4(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor()));
     super.setSlot0(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
   }
 }

@@ -8,7 +8,6 @@ import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOSi
 
 public class ShooterHoodIOSim extends GenericSuperstructureIOSim implements ShooterHoodIO {
 
-  // TODO decide whether if it should be an arm (if hood rotates around fixed pivot point)
   private final SingleJointedArmSim shooterHoodSim;
   private final double reduction;
 

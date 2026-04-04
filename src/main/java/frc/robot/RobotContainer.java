@@ -43,9 +43,10 @@ import frc.robot.subsystems.can_watchdog.CANWatchdogIO;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivot;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivotIO;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivotIOSim;
+import frc.robot.subsystems.intake.intake_rack.IntakeRack;
+import frc.robot.subsystems.intake.intake_rack.IntakeRackIO;
+import frc.robot.subsystems.intake.intake_rack.IntakeRackIOSim;
+import frc.robot.subsystems.intake.intake_rack.IntakeRackIOTalonFX;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIO;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOSim;
@@ -112,7 +113,7 @@ public class RobotContainer {
   private Vision vision;
   private RGB rgb;
   private CANWatchdog canWatchdog;
-  private IntakePivot intakePivot;
+  private IntakeRack intakeRack;
   private IntakeRollers intakeRollers;
   private IntakeController intakeController;
   private Serializer serializer;
@@ -134,8 +135,8 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          //   intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          //   intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          intakeRack = new IntakeRack(new IntakeRackIOTalonFX());
+          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           vision =
               new Vision(
                   new VisionIOPhotonvision("arducam-1", 0),
@@ -189,7 +190,7 @@ public class RobotContainer {
           new VisionIOPhotonvisionSim("arducam-4", 4, driveSimulation::getSimulatedDriveTrainPose);
 
           // INTAKE
-          intakePivot = new IntakePivot(new IntakePivotIOSim());
+          intakeRack = new IntakeRack(new IntakeRackIOSim());
           intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
 
           serializer = new Serializer(new SerializerSim());
@@ -222,9 +223,9 @@ public class RobotContainer {
     if (rgb == null) rgb = new RGB(new RGBIO() {});
 
     // INTAKE
-    if (intakePivot == null) intakePivot = new IntakePivot(new IntakePivotIO() {});
+    if (intakeRack == null) intakeRack = new IntakeRack(new IntakeRackIO() {});
     if (intakeRollers == null) intakeRollers = new IntakeRollers(new IntakeRollersIO() {});
-    intakeController = new IntakeController(intakePivot, intakeRollers);
+    intakeController = new IntakeController(intakeRack, intakeRollers);
 
     // SERIALIZER
     if (serializer == null) serializer = new Serializer(new SerializerIO() {});
@@ -400,8 +401,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () ->
-                    intakeController.setIntakePivotActive(
-                        !intakeController.getIntakePivotActive())));
+                    intakeController.setIntakeRackActive(!intakeController.getIntakeRackActive())));
     // ZERO GYRO
     driverA
         .start()
