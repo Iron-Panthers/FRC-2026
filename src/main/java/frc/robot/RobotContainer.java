@@ -43,32 +43,28 @@ import frc.robot.subsystems.can_watchdog.CANWatchdogIO;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivot;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivotIO;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivotIOSim;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.intake_rack.IntakeRack;
+import frc.robot.subsystems.intake.intake_rack.IntakeRackIO;
+import frc.robot.subsystems.intake.intake_rack.IntakeRackIOSim;
+import frc.robot.subsystems.intake.intake_rack.IntakeRackIOTalonFX;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIO;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOSim;
-import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 import frc.robot.subsystems.shooter.serializer.Serializer;
 import frc.robot.subsystems.shooter.serializer.SerializerIO;
-import frc.robot.subsystems.shooter.serializer.SerializerIOTalonFX;
 import frc.robot.subsystems.shooter.serializer.SerializerSim;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIO;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOSim;
-import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOTalonFX;
 import frc.robot.subsystems.shooter.shooter_flywheel.*;
 import frc.robot.subsystems.shooter.shooter_hood.*;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIO;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOSim;
-import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOTalonFX;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.GyroIO;
@@ -79,7 +75,6 @@ import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
 import org.ironmaple.simulation.SimulatedArena;
@@ -114,7 +109,7 @@ public class RobotContainer {
   private Vision vision;
   private RGB rgb;
   private CANWatchdog canWatchdog;
-  private IntakePivot intakePivot;
+  private IntakeRack intakeRack;
   private IntakeRollers intakeRollers;
   private IntakeController intakeController;
   private Serializer serializer;
@@ -136,20 +131,20 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          intakePivot = new IntakePivot(new IntakePivotIOTalonFX());
-          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
-          vision =
-              new Vision(
-                  new VisionIOPhotonvision("arducam-1", 0),
-                  new VisionIOPhotonvision("arducam-3", 1));
-          // rgb = new RGB(new RGBIOAddressableLED());
-          // rgb = new RGB(new RGBIOCANdle());
-          // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
-          shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
-          shooterHood = new ShooterHood(new ShooterHoodIOTalonFX());
-          shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
-          shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
-          serializer = new Serializer(new SerializerIOTalonFX());
+          intakeRack = new IntakeRack(new IntakeRackIOTalonFX());
+          // intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          // vision =
+          //     new Vision(
+          //         new VisionIOPhotonvision("arducam-1", 0),
+          //         new VisionIOPhotonvision("arducam-3", 1));
+          // // rgb = new RGB(new RGBIOAddressableLED());
+          // // rgb = new RGB(new RGBIOCANdle());
+          // // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
+          // shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          // shooterHood = new ShooterHood(new ShooterHoodIOTalonFX());
+          // shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
+          // shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
+          // serializer = new Serializer(new SerializerIOTalonFX());
         }
         case VISION -> {
           swerve =
@@ -191,7 +186,7 @@ public class RobotContainer {
           new VisionIOPhotonvisionSim("arducam-4", 4, driveSimulation::getSimulatedDriveTrainPose);
 
           // INTAKE
-          intakePivot = new IntakePivot(new IntakePivotIOSim());
+          intakeRack = new IntakeRack(new IntakeRackIOSim());
           intakeRollers = new IntakeRollers(new IntakeRollersIOSim());
 
           serializer = new Serializer(new SerializerSim());
@@ -224,9 +219,9 @@ public class RobotContainer {
     if (rgb == null) rgb = new RGB(new RGBIO() {});
 
     // INTAKE
-    if (intakePivot == null) intakePivot = new IntakePivot(new IntakePivotIO() {});
+    if (intakeRack == null) intakeRack = new IntakeRack(new IntakeRackIO() {});
     if (intakeRollers == null) intakeRollers = new IntakeRollers(new IntakeRollersIO() {});
-    intakeController = new IntakeController(intakePivot, intakeRollers);
+    intakeController = new IntakeController(intakeRack, intakeRollers);
 
     // SERIALIZER
     if (serializer == null) serializer = new Serializer(new SerializerIO() {});

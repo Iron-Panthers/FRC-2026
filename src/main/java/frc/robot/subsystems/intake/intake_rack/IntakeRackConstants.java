@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.intake_pivot;
+package frc.robot.subsystems.intake.intake_rack;
 
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -10,12 +10,13 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.subsystems.can_watchdog.CANWatchdogConstants.CAN;
 
-public class IntakePivotConstants {
+// making changes
+public class IntakeRackConstants {
   public static final IntakePivotConfig INTAKE_PIVOT_CONFIG =
       switch (Constants.getRobotType()) {
         case COMP -> new IntakePivotConfig(
             // Reduction between sensor and mechansim
-            CAN.at(19, "Intake Pivot"), 28.125, InvertedValue.CounterClockwise_Positive);
+            CAN.at(19, "Intake Pivot"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
         case SIM -> new IntakePivotConfig(
             // Reduction between motor and mechansim
             CAN.at(9, "Intake Pivot"), 12 * 0.3750, InvertedValue.Clockwise_Positive);
@@ -24,14 +25,14 @@ public class IntakePivotConstants {
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(200, 0, 0, 0, 3.33, 0.6, 0.75);
+        case COMP -> new PIDGains(7, 0, 0, 0.55, 0.24, 0, 0);
         case SIM -> new PIDGains(40, 0, 0, 0, 3.6144, 0.1807, 0.53);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(9, 2);
+        case COMP -> new MotionMagicConfig(400, 80);
         case SIM -> new MotionMagicConfig(7.5, 10);
         default -> new MotionMagicConfig(0, 0);
       };
@@ -53,8 +54,8 @@ public class IntakePivotConstants {
   public static final double SUPPLY_CURRENT_LIMIT = 25;
 
   // ZEROING CONSTANTS
-  public static final double ZEROING_VOLTS = 3;
-  public static final double ZEROING_OFFSET = 82.7 / 360.0; // offset in rotations
+  public static final double ZEROING_VOLTS = -3;
+  public static final double ZEROING_OFFSET = 0; // offset in rotations
 
   public static final Transform3d BASE_TO_INTAKE_PIVOT_TRANSFORM =
       switch (Constants.getRobotType()) {

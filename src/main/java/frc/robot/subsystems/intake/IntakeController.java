@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers.ControlMode;
 import frc.robot.lib.generic_subsystems.superstructure.*;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivot;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivot.IntakePivotTarget;
+import frc.robot.subsystems.intake.intake_rack.IntakeRack;
+import frc.robot.subsystems.intake.intake_rack.IntakeRack.IntakePivotTarget;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollers.IntakeRollersTarget;
 import org.littletonrobotics.junction.Logger;
@@ -47,10 +47,10 @@ public class IntakeController extends SubsystemBase {
 
   private boolean intakePivotActive = true;
 
-  private final IntakePivot intakePivot;
+  private final IntakeRack intakePivot;
   private final IntakeRollers intakeRollers;
 
-  public IntakeController(IntakePivot intakePivot, IntakeRollers intakeRollers) {
+  public IntakeController(IntakeRack intakePivot, IntakeRollers intakeRollers) {
     this.intakePivot = intakePivot;
     this.intakeRollers = intakeRollers;
   }

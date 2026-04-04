@@ -44,7 +44,7 @@ public class DriveConstants {
         case COMP -> new DrivebaseConfig(
             Units.inchesToMeters(1.97),
             Units.inchesToMeters(19.75),
-            Units.inchesToMeters(23.75),
+            Units.inchesToMeters(24.25),
             Units.inchesToMeters(33),
             Units.inchesToMeters(37),
             4,
@@ -104,8 +104,14 @@ public class DriveConstants {
 
   public static final boolean IS_GYRO_UPSIDEDOWN =
       switch (getRobotType()) {
-        case COMP -> true;
+        case COMP -> false;
         default -> false;
+      };
+
+  public static final Rotation2d GYRO_ROTATION_OFFSET =
+      switch (getRobotType()) {
+        case COMP -> Rotation2d.kCW_90deg;
+        default -> Rotation2d.kZero;
       };
 
   // fl, fr, bl, br; negate offsets
@@ -114,31 +120,31 @@ public class DriveConstants {
           // TODO: Check that InvertedValue.(Counter)Clockwise_Positive is for true or false
         case COMP -> new ModuleConfig[] {
           new ModuleConfig(
-              CAN.at(18, "FR Drive"),
-              CAN.at(46, "FR Steer"),
-              12,
-              new Rotation2d(-2.600097),
+              CAN.at(11, "FL Drive"),
+              CAN.at(62, "FL Steer"),
+              3,
+              new Rotation2d(2.216602),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(17, "FL Drive"),
-              CAN.at(45, "FL Steer"),
-              6,
-              new Rotation2d(-0.075165),
+              CAN.at(35, "FR Drive"),
+              CAN.at(6, "FR Steer"),
+              9,
+              new Rotation2d(-0.503146),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
-              CAN.at(8, "BR Drive"),
-              CAN.at(20, "BR Steer"),
-              25,
-              new Rotation2d(-0.190214),
+              CAN.at(3, "BL Drive"),
+              CAN.at(4, "BL Steer"),
+              6,
+              new Rotation2d(2.767301),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
-              CAN.at(44, "BL Drive"),
-              CAN.at(4, "BL Steer"),
-              3,
-              new Rotation2d(1.937418),
+              CAN.at(2, "BR Drive"),
+              CAN.at(1, "BR Steer"),
+              12,
+              new Rotation2d(-0.770058),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive)
         };
