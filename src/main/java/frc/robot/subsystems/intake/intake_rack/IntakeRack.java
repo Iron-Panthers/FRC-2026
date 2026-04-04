@@ -21,8 +21,8 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
     private double supplyCurrentLimit;
     private static final double EPSILON = IntakeRackConstants.POSITION_TARGET_EPSILON;
 
+    private IntakeRackTarget(double position, double supplyCurrentLimit) {
       this.position = position;
-    private IntakePivotTarget(double position, double supplyCurrentLimit) {
       this.supplyCurrentLimit = supplyCurrentLimit;
     }
 
