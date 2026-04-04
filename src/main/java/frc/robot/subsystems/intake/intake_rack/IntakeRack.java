@@ -81,6 +81,6 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakePivotTarg
         .plus(IntakeRackConstants.BASE_TO_INTAKE_PIVOT_TRANSFORM)
         .plus(
             new Transform3d(
-                Translation3d.kZero, new Rotation3d(0, Math.toRadians(getPosition() * 360), 0)));
+                new Translation3d(0,-getPosition(),0), Rotation3d.kZero));
   }
 }
