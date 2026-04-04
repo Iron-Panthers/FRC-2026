@@ -182,7 +182,6 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     driveConfig.Slot0.kV = gains.kV();
     driveConfig.Slot0.kA = gains.kA();
     driveTalon.getConfigurator().apply(driveConfig);
-    driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
   }
 
   @Override
