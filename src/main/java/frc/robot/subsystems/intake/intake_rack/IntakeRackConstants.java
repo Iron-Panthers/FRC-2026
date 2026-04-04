@@ -16,23 +16,23 @@ public class IntakeRackConstants {
       switch (Constants.getRobotType()) {
         case COMP -> new IntakeRackConfig(
             // Reduction between sensor and mechansim
-            CAN.at(19, "Intake Rack"), 28.125, InvertedValue.CounterClockwise_Positive);
-        case SIM -> new IntakeRackConfig(
+            CAN.at(19, "Intake Pivot"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
+        case SIM -> new IntakePivotConfig(
             // Reduction between motor and mechansim
-            CAN.at(9, "Intake Rack"), 12 * 0.3750, InvertedValue.Clockwise_Positive);
-        default -> new IntakeRackConfig(0, 1, InvertedValue.CounterClockwise_Positive);
+            CAN.at(9, "Intake Pivot"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
+        default -> new IntakePivotConfig(0, 1, InvertedValue.CounterClockwise_Positive);
       };
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(200, 0, 0, 0, 3.33, 0.6, 0.75);
-        case SIM -> new PIDGains(40, 0, 0, 0, 3.6144, 0.1807, 0.53);
+        case COMP -> new PIDGains(7, 0, 0, 0.55, 0.24, 0, 0);
+        case SIM -> new PIDGains(7, 0, 0, 0.55, 0.24, 0, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(9, 2);
+        case COMP -> new MotionMagicConfig(400, 80);
         case SIM -> new MotionMagicConfig(7.5, 10);
         default -> new MotionMagicConfig(0, 0);
       };
@@ -54,8 +54,8 @@ public class IntakeRackConstants {
   public static final double SUPPLY_CURRENT_LIMIT = 25;
 
   // ZEROING CONSTANTS
-  public static final double ZEROING_VOLTS = 3;
-  public static final double ZEROING_OFFSET = 82.7 / 360.0; // offset in rotations
+  public static final double ZEROING_VOLTS = -3;
+  public static final double ZEROING_OFFSET = 0; // offset in rotations
 
   public static final Transform3d BASE_TO_INTAKE_RACK_TRANSFORM =
       switch (Constants.getRobotType()) {
@@ -63,9 +63,12 @@ public class IntakeRackConstants {
             .plus(
                 new Transform3d(
                     new Translation3d(
-                        Units.inchesToMeters(-10.940786),
-                        Units.inchesToMeters(-0.1875),
-                        Units.inchesToMeters(7.191913)),
+                        // Units.inchesToMeters(-10.940786),
+                        // Units.inchesToMeters(-0.1875),
+                        // Units.inchesToMeters(7.191913)),
+                        Units.inchesToMeters(0),
+                        Units.inchesToMeters(9.990),
+                        Units.inchesToMeters(7.709)),
                     new Rotation3d(0, 0, 0)))
             .rotateBy(new Rotation3d(0, 0, Math.toRadians(90)))
             .minus(new Pose3d());
