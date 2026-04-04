@@ -44,4 +44,6 @@ public interface ModuleIO {
   default void setSteerSlot0(Gains gains, MotionProfileGains motionProfileGains) {}
 
   default void stop() {}
+
+  default void setSupplyCurrentLimit(double amps) {}
 }

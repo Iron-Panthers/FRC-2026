@@ -19,14 +19,14 @@ public class IntakeRackConstants {
             CAN.at(19, "Intake Pivot"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
         case SIM -> new IntakeRackConfig(
             // Reduction between motor and mechansim
-            CAN.at(9, "Intake Rack"), 12 * 0.3750, InvertedValue.Clockwise_Positive);
-        default -> new IntakeRackConfig(0, 1, InvertedValue.CounterClockwise_Positive);
+            CAN.at(9, "Intake Pivot"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
+        default -> new IntakePivotConfig(0, 1, InvertedValue.CounterClockwise_Positive);
       };
 
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case COMP -> new PIDGains(7, 0, 0, 0.55, 0.24, 0, 0);
-        case SIM -> new PIDGains(40, 0, 0, 0, 3.6144, 0.1807, 0.53);
+        case SIM -> new PIDGains(7, 0, 0, 0.55, 0.24, 0, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
@@ -63,9 +63,12 @@ public class IntakeRackConstants {
             .plus(
                 new Transform3d(
                     new Translation3d(
-                        Units.inchesToMeters(-10.940786),
-                        Units.inchesToMeters(-0.1875),
-                        Units.inchesToMeters(7.191913)),
+                        // Units.inchesToMeters(-10.940786),
+                        // Units.inchesToMeters(-0.1875),
+                        // Units.inchesToMeters(7.191913)),
+                        Units.inchesToMeters(0),
+                        Units.inchesToMeters(9.990),
+                        Units.inchesToMeters(7.709)),
                     new Rotation3d(0, 0, 0)))
             .rotateBy(new Rotation3d(0, 0, Math.toRadians(90)))
             .minus(new Pose3d());

@@ -197,4 +197,13 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     steerConfig.MotionMagic.MotionMagicJerk = motionProfileGains.jerk();
     steerTalon.getConfigurator().apply(steerConfig);
   }
+
+  @Override
+  public void setSupplyCurrentLimit(double amps) {
+    if (Math.abs(driveConfig.CurrentLimits.SupplyCurrentLimit - amps) > 0.01) {
+      driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+      driveConfig.CurrentLimits.SupplyCurrentLimit = amps;
+      driveTalon.getConfigurator().apply(driveConfig);
+    }
+  }
 }
