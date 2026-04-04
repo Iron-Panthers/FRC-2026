@@ -390,4 +390,10 @@ public class Drive extends SubsystemBase {
   public boolean isHeadingCorrect() {
     return headingController == null || headingController.atTarget();
   }
+
+  public void setDriveAmpLimits() {
+    for (Module module : modules) {
+      module.setSupplyCurrentLimit(DriveConstants.CURRENT_LIMIT_AMPS);
+    }
+  }
 }
