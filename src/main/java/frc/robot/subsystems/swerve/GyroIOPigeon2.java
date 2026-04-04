@@ -21,6 +21,7 @@ public class GyroIOPigeon2 implements GyroIO {
     Pigeon2Configuration config = new Pigeon2Configuration();
     config.MountPose.withMountPosePitch(
         DriveConstants.IS_GYRO_UPSIDEDOWN ? Degree.of(180) : Degree.of(0));
+    config.MountPose.withMountPoseYaw(DriveConstants.GYRO_ROTATION_OFFSET.getDegrees());
     pigeon.getConfigurator().apply(config);
     pigeon.setYaw(0, 1.0);
 
