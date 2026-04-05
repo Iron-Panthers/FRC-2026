@@ -358,7 +358,7 @@ public class RobotState {
       Rotation2d turretAngle =
           shotVelocity
               .getAngle()
-              .plus(isAllianceRed() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180));
+              .plus(isAllianceRed() ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0));
 
       // modify the above line for a shooter offset
       double shooterOffsetY =

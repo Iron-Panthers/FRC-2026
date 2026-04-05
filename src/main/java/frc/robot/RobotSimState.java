@@ -53,15 +53,15 @@ public class RobotSimState {
         driveSimulation::getSimulatedDriveTrainPose, // Supplier<Pose2d> of robot pose
         driveSimulation::getDriveTrainSimulatedChassisSpeedsFieldRelative);
 
-    // Register intake on the right side of the robot
+    // Register intake on the back of the robot
     double halfLength = DriveConstants.mapleSimConfig.bumperLengthX.in(Meters) / 2.0;
     double halfWidth = DriveConstants.mapleSimConfig.bumperWidthY.in(Meters) / 2.0;
     double intakeReach = 0.1; // meters beyond bumper
     fuelSim.registerIntake(
+        -halfLength - intakeReach,
         -halfLength,
-        halfLength,
-        -halfWidth - intakeReach,
         -halfWidth,
+        halfWidth,
         () -> intakeActive && fuelCount < 60,
         () -> fuelCount++);
 

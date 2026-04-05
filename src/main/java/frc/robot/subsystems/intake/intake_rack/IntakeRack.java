@@ -82,6 +82,6 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
         .plus(IntakeRackConstants.BASE_TO_INTAKE_RACK_TRANSFORM)
         .plus(
             new Transform3d(
-                new Translation3d(0,-Units.inchesToMeters(getPosition()),0), Rotation3d.kZero));
+                new Translation3d(0,Units.inchesToMeters(getPosition()),0), Rotation3d.kZero));
   }
 }
