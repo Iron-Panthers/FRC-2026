@@ -7,7 +7,7 @@ public class ShooterOmniwheelConstants {
   public static final ShooterOmniwheelConfig SHOOTER_OMNIWHEEL_CONFIG =
       switch (Constants.getRobotType()) {
         case SIM -> new ShooterOmniwheelConfig(CAN.at(39, "Shooter Omniwheel"), 1, false, true);
-        default -> new ShooterOmniwheelConfig(CAN.at(29, "Shooter Omniwheel"), 1, true, true);
+        default -> new ShooterOmniwheelConfig(CAN.at(12, "Shooter Omniwheel"), 1, true, true);
       };
 
   // CONTROL LOOP GAINS AND MOTION MAGIC CONFIG

@@ -9,7 +9,7 @@ public class SerializerConstants {
         case SIM -> new SerializerConfig(
             CAN.at(32, "Serializer"), CAN.at(0, "Serializer 2"), 5, true, false, true);
         case COMP -> new SerializerConfig(
-            CAN.at(25, "Serializer"), CAN.at(0, "Serializer 2"), 2, false, false, true);
+            CAN.at(5, "Serializer"), CAN.at(39, "Serializer 2"), 2, false, false, true);
         default -> new SerializerConfig(
             CAN.at(40, "Serializer"), CAN.at(0, "Serializer 2"), 5, true, false, true);
       };
