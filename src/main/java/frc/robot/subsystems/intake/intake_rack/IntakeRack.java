@@ -13,17 +13,17 @@ import org.littletonrobotics.junction.Logger;
 public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarget>
     implements LoggableMechanism3d {
   public enum IntakeRackTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(11.9, IntakeRackConstants.SUPPLY_CURRENT_LIMIT),
-    MED_STOW(0, 20),
-    HIGH_MED_STOW(0, 20),
-    STOW(0, IntakeRackConstants.SUPPLY_CURRENT_LIMIT);
+    INTAKE(12.3, IntakeRackConstants.MOTION_MAGIC_CONFIG.cruiseVelocity(), IntakeRackConstants.SUPPLY_CURRENT_LIMIT),
+    STOW(0, 7.5, IntakeRackConstants.SUPPLY_CURRENT_LIMIT);
 
     private double position;
     private double supplyCurrentLimit;
+    private double maxCruiseVelocity;
     private static final double EPSILON = IntakeRackConstants.POSITION_TARGET_EPSILON;
 
-    private IntakeRackTarget(double position, double supplyCurrentLimit) {
+    private IntakeRackTarget(double position, double maxCruiseVelocity, double supplyCurrentLimit) {
       this.position = position;
+      this.maxCruiseVelocity = maxCruiseVelocity;
       this.supplyCurrentLimit = supplyCurrentLimit;
     }
 
@@ -39,6 +39,10 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
     public double getSupplyCurrentLimit() {
       return supplyCurrentLimit;
     }
+
+    public double getMaxCruiseVelocity() {
+      return maxCruiseVelocity;
+    }
   }
 
   public IntakeRack(IntakeRackIO io) {
@@ -52,6 +56,7 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
   @Override
   public void periodic() {
     super.periodic();
+    superstructureIO.setMaxCruiseVelocity(getPositionTarget().getMaxCruiseVelocity());
     Logger.recordOutput(
         "Intake/Intake Rack/PositionTargetRotations", getPositionTarget().getPosition());
   }

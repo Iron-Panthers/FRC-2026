@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
-import frc.robot.commands.AgitateIntakeCommand;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
@@ -275,8 +274,6 @@ public class RobotContainer {
                 () -> {
                   shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP);
                 }));
-    new EventTrigger("Intake mid")
-        .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
     new EventTrigger("Intake off")
         .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.IDLE)));
 
@@ -289,9 +286,6 @@ public class RobotContainer {
     // probably have to change this, come back later
     NamedCommands.registerCommand(
         "Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
-    NamedCommands.registerCommand(
-        "Intake mid",
-        new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)));
     NamedCommands.registerCommand(
         "Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
     NamedCommands.registerCommand(
@@ -311,11 +305,12 @@ public class RobotContainer {
                             .plus(new Rotation2d(Math.toRadians(RobotBase.isReal() ? 0 : 180)))))
             .alongWith(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))
             .alongWith(
-                new InstantCommand(() -> intakeController.setTargetState(IntakeState.MIDDLE_STOW)))
-            .alongWith(
                 new InstantCommand(
                     () -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
-            .alongWith(new WaitCommand(8))
+            .alongWith(new WaitCommand(1))
+            .alongWith(
+                new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
+            .alongWith(new WaitCommand(7))
             .andThen(
                 new InstantCommand(
                     () -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
@@ -357,8 +352,6 @@ public class RobotContainer {
             .andThen(
                 new InstantCommand(
                     () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
-    NamedCommands.registerCommand(
-        "Agitate Intake (10 seconds)", new AgitateIntakeCommand(intakeController, 10));
   }
 
   private void configureBindings() {
@@ -558,11 +551,12 @@ public class RobotContainer {
             shooterFlywheels.getCurrentVelocity().in(MetersPerSecond) > 1.0
                 && shooterAccelerator.getCurrentVelocity().in(RotationsPerSecond) > 1.0
                 && shooterOmniwheel.getCurrentVelocity().in(RotationsPerSecond) > 1.0,
-            5.0,
+            20.0,
             Units.Rotations.of(.25).minus(Units.Rotations.of(shooterHood.getPosition())),
             ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM.plus(
-                new Transform3d(new Translation3d(), new Rotation3d(0, 0, Math.PI / 2))),
-            shooterFlywheels.getCurrentVelocity());
+                new Transform3d(new Translation3d(), new Rotation3d(0, 0, -Math.PI / 2))),
+            shooterFlywheels.getCurrentVelocity(),
+            Units.Inches.of(26));
 
     // Handle automatic shooter firing
     RobotSimState.getInstance().periodicShooter();

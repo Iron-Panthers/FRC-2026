@@ -45,8 +45,7 @@ public class ShootCommandFactory {
                       : ShooterState.TOTAL_SPIN_UP);
             })
         .repeatedly()
-        .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE))
-        .alongWith(new WaitCommand(1).andThen(new AgitateIntakeCommand(intakeController, 30)));
+        .alongWith(new WaitCommand(1).andThen(intakeController.setTargetStateCommand(IntakeState.STOW)));
   }
 
   /** Command to bind to onFalse – runs when the button is released. */
