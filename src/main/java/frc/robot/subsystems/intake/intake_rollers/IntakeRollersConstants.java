@@ -10,7 +10,11 @@ public class IntakeRollersConstants {
         case SIM -> new IntakeRollerConfig(
             CAN.at(64, "Intake Roller"), CAN.at(65, "Intake Roller 2"), 2, false, true);
         case COMP -> new IntakeRollerConfig(
-            CAN.at(8, "Intake Roller Left"), CAN.at(9, "Intake Roller Right"), 36.0/15.0, true, false);
+            CAN.at(8, "Intake Roller Left"),
+            CAN.at(9, "Intake Roller Right"),
+            36.0 / 15.0,
+            false,
+            false);
         default -> new IntakeRollerConfig(
             CAN.at(0, "Intake Roller"), CAN.at(0, "Intake Roller 2"), 2, false, true);
       };
@@ -19,7 +23,7 @@ public class IntakeRollersConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, 1, 0, 0);
-        case COMP -> new PIDGains(0.2, 0, 0, 0.25, 0.241, 0.0821, 0);
+        case COMP -> new PIDGains(0.3, 0, 0, 0.1, 0.2739, 0, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 

@@ -46,7 +46,7 @@ public class IntakeRackConstants {
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-  public static final double POSITION_TARGET_EPSILON = 0.01;
+  public static final double POSITION_TARGET_EPSILON = 0.1;
 
   // CURRENT LIMITS
   public static final double UPPER_VOLT_LIMIT = 12;

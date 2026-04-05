@@ -3,7 +3,6 @@ package frc.robot.subsystems.intake.intake_rack;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.RobotSimState;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOSim;
 
@@ -44,38 +43,38 @@ public class IntakeRackIOSim extends GenericSuperstructureIOSim implements Intak
 
   @Override
   public void updateInputs(GenericSuperstructureIOInputs inputs) {
-      // Update TalonFX state
-      talon.getSimState().setSupplyVoltage(RobotController.getBatteryVoltage());
+    // Update TalonFX state
+    talon.getSimState().setSupplyVoltage(RobotController.getBatteryVoltage());
 
-      double appliedVoltage = talon.getSimState().getMotorVoltage();
+    double appliedVoltage = talon.getSimState().getMotorVoltage();
 
-      // Simulate physics
-      intakeRackSim.setInputVoltage(appliedVoltage);
-      intakeRackSim.update(0.02);
+    // Simulate physics
+    intakeRackSim.setInputVoltage(appliedVoltage);
+    intakeRackSim.update(0.02);
 
-      // Convert position and velocity from meters to rotations for the
-      // TalonFX sensor
-      // Correct unit conversion: meters to rotations
-      double rotations =
-          intakeRackSim.getPositionMeters()
-              / (2 * Math.PI * IntakeRackConstants.PHYSICAL_CONSTANTS.drumRadiusMeters())
-              * reduction;
+    // Convert position and velocity from meters to rotations for the
+    // TalonFX sensor
+    // Correct unit conversion: meters to rotations
+    double rotations =
+        intakeRackSim.getPositionMeters()
+            / (2 * Math.PI * IntakeRackConstants.PHYSICAL_CONSTANTS.drumRadiusMeters())
+            * reduction;
 
-      // Correct unit conversion: meters/s to rotations/s
-      double velocityRPS =
-          intakeRackSim.getVelocityMetersPerSecond()
-              / (2 * Math.PI * IntakeRackConstants.PHYSICAL_CONSTANTS.drumRadiusMeters())
-              * reduction;
+    // Correct unit conversion: meters/s to rotations/s
+    double velocityRPS =
+        intakeRackSim.getVelocityMetersPerSecond()
+            / (2 * Math.PI * IntakeRackConstants.PHYSICAL_CONSTANTS.drumRadiusMeters())
+            * reduction;
 
-      talon.getSimState().setRawRotorPosition(rotations);
-      talon.getSimState().setRotorVelocity(velocityRPS);
+    talon.getSimState().setRawRotorPosition(rotations);
+    talon.getSimState().setRotorVelocity(velocityRPS);
 
-      inputs.isConnected = true;
-      inputs.positionRotations = rotations;
-      inputs.velocityRotPerSec = velocityRPS;
-      inputs.appliedVolts = appliedVoltage;
-      inputs.supplyCurrentAmps = 1.0; // Not simulated
-      inputs.tempCelsius = 25.0; // Not simulated
+    inputs.isConnected = true;
+    inputs.positionRotations = rotations;
+    inputs.velocityRotPerSec = velocityRPS;
+    inputs.appliedVolts = appliedVoltage;
+    inputs.supplyCurrentAmps = 1.0; // Not simulated
+    inputs.tempCelsius = 25.0; // Not simulated
 
     // update the Sim State to match if it is up or down
     if (rotations < .1) {

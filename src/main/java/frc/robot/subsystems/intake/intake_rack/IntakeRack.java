@@ -13,7 +13,7 @@ import org.littletonrobotics.junction.Logger;
 public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarget>
     implements LoggableMechanism3d {
   public enum IntakeRackTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(12.3, IntakeRackConstants.SUPPLY_CURRENT_LIMIT),
+    INTAKE(11.9, IntakeRackConstants.SUPPLY_CURRENT_LIMIT),
     MED_STOW(0, 20),
     HIGH_MED_STOW(0, 20),
     STOW(0, IntakeRackConstants.SUPPLY_CURRENT_LIMIT);
@@ -82,6 +82,6 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
         .plus(IntakeRackConstants.BASE_TO_INTAKE_RACK_TRANSFORM)
         .plus(
             new Transform3d(
-                new Translation3d(0,Units.inchesToMeters(getPosition()),0), Rotation3d.kZero));
+                new Translation3d(0, Units.inchesToMeters(getPosition()), 0), Rotation3d.kZero));
   }
 }
