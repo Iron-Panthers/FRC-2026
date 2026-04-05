@@ -69,11 +69,11 @@
       },
       "prevControl": {
         "x": 8.047825948038591,
-        "y": 2.6551618676794577
+        "y": 2.655161867679458
       },
       "nextControl": {
         "x": 6.802866931299657,
-        "y": 1.5432245994294007
+        "y": 1.5432245994294012
       },
       "isLocked": false,
       "linkedName": null
@@ -95,11 +95,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.9236234458259289,
-      "rotationDegrees": 90.0
+      "rotationDegrees": 0.0
     },
     {
       "waypointRelativePos": 2.15,
-      "rotationDegrees": -178.833
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [
@@ -123,7 +123,7 @@
         "x": 7.0,
         "y": 2.7
       },
-      "rotationOffset": 180.0,
+      "rotationOffset": 90.0,
       "minWaypointRelativePos": 2.3397075365579214,
       "maxWaypointRelativePos": 4.566929133858248,
       "name": "Point Towards Zone"
