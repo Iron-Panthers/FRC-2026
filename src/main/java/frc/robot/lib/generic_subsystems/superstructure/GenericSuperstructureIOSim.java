@@ -82,15 +82,5 @@ public abstract class GenericSuperstructureIOSim implements GenericSuperstructur
 
     talon.getConfigurator().apply(gainsConfig);
     talon.getConfigurator().apply(motionMagicConfig);
-  }
-
-  public void setSupplyCurrentLimit(double amps) {
-    if (config.CurrentLimits.SupplyCurrentLimit != amps) {
-      config.CurrentLimits.SupplyCurrentLimitEnable = true;
-      config.CurrentLimits.SupplyCurrentLimit = amps;
-      config.withSlot0(gainsConfig);
-      talon.getConfigurator().apply(config);
-      System.out.println("Amps: " + amps);
-    }
-  }
+} 
 }

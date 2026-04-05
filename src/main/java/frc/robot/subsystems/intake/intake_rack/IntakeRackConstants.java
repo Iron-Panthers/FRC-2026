@@ -19,7 +19,7 @@ public class IntakeRackConstants {
             CAN.at(19, "Intake Rack"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
         case SIM -> new IntakeRackConfig(
             // Reduction between motor and mechansim
-            CAN.at(19, "Intake Rack"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
+            CAN.at(9, "Intake Rack"), 8 / Math.PI, InvertedValue.Clockwise_Positive);
         default -> new IntakeRackConfig(0, 1, InvertedValue.CounterClockwise_Positive);
       };
 
@@ -33,7 +33,7 @@ public class IntakeRackConstants {
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
         case COMP -> new MotionMagicConfig(400, 80);
-        case SIM -> new MotionMagicConfig(7.5, 10);
+        case SIM -> new MotionMagicConfig(400, 80);
         default -> new MotionMagicConfig(0, 0);
       };
 
@@ -67,7 +67,7 @@ public class IntakeRackConstants {
                         // Units.inchesToMeters(-0.1875),
                         // Units.inchesToMeters(7.191913)),
                         Units.inchesToMeters(0),
-                        Units.inchesToMeters(9.990),
+                        Units.inchesToMeters(-9.990),
                         Units.inchesToMeters(7.709)),
                     new Rotation3d(0, 0, 0)))
             .rotateBy(new Rotation3d(0, 0, Math.toRadians(90)))

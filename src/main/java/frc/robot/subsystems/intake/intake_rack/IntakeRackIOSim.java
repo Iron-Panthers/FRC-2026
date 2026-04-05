@@ -79,9 +79,9 @@ public class IntakeRackIOSim extends GenericSuperstructureIOSim implements Intak
 
     // update the Sim State to match if it is up or down
     if (rotations < .1) {
-      RobotSimState.getInstance().setIntakeState(true);
-    } else {
       RobotSimState.getInstance().setIntakeState(false);
+    } else {
+      RobotSimState.getInstance().setIntakeState(true);
     }
   }
 
