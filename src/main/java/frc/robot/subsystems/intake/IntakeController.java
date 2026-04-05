@@ -16,11 +16,8 @@ import org.littletonrobotics.junction.Logger;
 public class IntakeController extends SubsystemBase {
   public enum IntakeState {
     STOW(IntakeRackTarget.STOW, IntakeRollersTarget.IDLE),
-    MIDDLE_STOW(IntakeRackTarget.MED_STOW, IntakeRollersTarget.INTAKE_REALLY_SLOW),
-    HIGH_MIDDLE_STOW(IntakeRackTarget.HIGH_MED_STOW, IntakeRollersTarget.INTAKE_REALLY_SLOW),
     IDLE(IntakeRackTarget.INTAKE, IntakeRollersTarget.IDLE),
     INTAKE(IntakeRackTarget.INTAKE, IntakeRollersTarget.INTAKE),
-    INTAKE_DOWN(IntakeRackTarget.INTAKE, IntakeRollersTarget.INTAKE_DOWN),
     REVERSE(IntakeRackTarget.INTAKE, IntakeRollersTarget.EJECT),
     ZEROING(IntakeRackTarget.STOW, IntakeRollersTarget.IDLE);
 
@@ -63,11 +60,6 @@ public class IntakeController extends SubsystemBase {
       // if else set control mode to zero
     } else if (intakeRack.getControlMode() == GenericSuperstructure.ControlMode.ZEROING) {
       intakeRollers.setVelocityTarget(targetState.getIntakeRollersTarget());
-    } else if ((intakeRack.getPositionTarget() == IntakeRackTarget.STOW
-            || intakeRack.getPositionTarget() == IntakeRackTarget.MED_STOW)
-        && !intakeRack.reachedTarget()) {
-      intakeRack.setPositionTarget(targetState.getIntakeRackTarget());
-      intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE_SLOW);
     } else {
       // set target states to those in the current controller state
       intakeRack.setPositionTarget(targetState.getIntakeRackTarget());
