@@ -9,7 +9,6 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -49,7 +48,8 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
 
   protected final VoltageOut voltageOutput = new VoltageOut(0).withUpdateFreqHz(0);
   private final NeutralOut neutralOutput = new NeutralOut();
-  private final DynamicMotionMagicVoltage positionControl = new DynamicMotionMagicVoltage(0,0,0).withUpdateFreqHz(0);
+  private final DynamicMotionMagicVoltage positionControl =
+      new DynamicMotionMagicVoltage(0, 0, 0).withUpdateFreqHz(0);
 
   /** Constructs a new GenericSuperstructureIOTalonFX. */
   public GenericSuperstructureIOTalonFX(GenericSuperstructureConfiguration superstructureConfig) {
@@ -205,7 +205,6 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
     positionControl.withAcceleration(motionMagicAcceleration);
     positionControl.withVelocity(motionMagicCruiseVelocity);
     positionControl.withJerk(motionMagicJerk);
-
 
     talon.getConfigurator().apply(gainsConfig);
     talon.getConfigurator().apply(motionMagicConfig);

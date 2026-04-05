@@ -32,7 +32,7 @@ public class IntakeRackConstants {
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(400, 80);
+        case COMP -> new MotionMagicConfig(400, 40);
         case SIM -> new MotionMagicConfig(400, 80);
         default -> new MotionMagicConfig(0, 0);
       };
@@ -46,12 +46,12 @@ public class IntakeRackConstants {
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-  public static final double POSITION_TARGET_EPSILON = 0.1;
+  public static final double POSITION_TARGET_EPSILON = 3;
 
   // CURRENT LIMITS
   public static final double UPPER_VOLT_LIMIT = 12;
   public static final double LOWER_VOLT_LIMIT = -12;
-  public static final double SUPPLY_CURRENT_LIMIT = 25;
+  public static final double SUPPLY_CURRENT_LIMIT = 35;
 
   // ZEROING CONSTANTS
   public static final double ZEROING_VOLTS = -3;

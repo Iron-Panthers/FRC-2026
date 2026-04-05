@@ -308,8 +308,7 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
             .alongWith(new WaitCommand(1))
-            .alongWith(
-                new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
+            .alongWith(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
             .alongWith(new WaitCommand(7))
             .andThen(
                 new InstantCommand(

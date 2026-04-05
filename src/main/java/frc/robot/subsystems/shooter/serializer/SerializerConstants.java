@@ -22,7 +22,7 @@ public class SerializerConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, 1, 0, 0);
-        case COMP -> new PIDGains(0.7, 0, 0, 0.2, 0.17167, 0, 0);
+        case COMP -> new PIDGains(0.5, 0, 0, 0.2, 0.17167, 0, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 
