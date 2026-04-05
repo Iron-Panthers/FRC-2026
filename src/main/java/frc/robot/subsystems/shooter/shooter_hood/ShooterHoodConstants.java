@@ -16,10 +16,10 @@ public class ShooterHoodConstants {
       switch (Constants.getRobotType()) {
         case COMP -> new ShooterHoodConfig(
             // reduction between sensor and mechanism
-            CAN.at(1, "Shooter Hood"), 0.75);
+            CAN.at(30, "Shooter Hood"), 36 / 22.0 * 158 / 10);
         case SIM -> new ShooterHoodConfig(
             // Reduction between motor and mechanism
-            CAN.at(8, "Shooter Hood"), 0.75);
+            CAN.at(8, "Shooter Hood"), 12 * .375);
         default -> new ShooterHoodConfig(0, 1);
       };
 
@@ -75,11 +75,11 @@ public class ShooterHoodConstants {
                 new Transform3d(
                     new Translation3d(
                         Units.inchesToMeters(0),
-                        Units.inchesToMeters(9.5),
+                        Units.inchesToMeters(-9.5),
                         Units.inchesToMeters(20.234)),
-                        // Units.inchesToMeters(0),
-                        // Units.inchesToMeters(0),
-                        // Units.inchesToMeters(0)),
+                    // Units.inchesToMeters(0),
+                    // Units.inchesToMeters(0),
+                    // Units.inchesToMeters(0)),
                     new Rotation3d(0, 0, Math.toRadians(0))))
             .rotateBy(new Rotation3d(0, 0, Math.toRadians(90)))
             .minus(new Pose3d());

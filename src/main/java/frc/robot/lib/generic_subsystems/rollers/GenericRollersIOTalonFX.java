@@ -43,6 +43,8 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
     talon.getConfigurator().apply(config);
 
+    config.HardwareLimitSwitch.ForwardLimitEnable = false;
+    config.HardwareLimitSwitch.ReverseLimitEnable = false;
     // Initialize follower motors
     followerMotors = new ArrayList<>();
     for (GenericRollersConfiguration.FollowerMotorConfig followerConfig :

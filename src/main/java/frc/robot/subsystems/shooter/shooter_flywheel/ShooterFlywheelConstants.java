@@ -17,11 +17,11 @@ public class ShooterFlywheelConstants {
             false,
             true);
         default -> new ShooterFlywheelConfig(
-            CAN.at(2, "Shooter Flywheel 1"),
-            CAN.at(12, "Shooter Flywheel 2"),
-            CAN.at(0, "Shooter Flywheel 3"),
-            CAN.at(0, "Shooter Flywheel 4"),
-            0.71,
+            CAN.at(18, "Shooter Flywheel Left Bottom"),
+            CAN.at(10, "Shooter Flywheel Left Top"),
+            CAN.at(16, "Shooter Flywheel Right Bottom"),
+            CAN.at(15, "Shooter Flywheel Right Top"),
+            1.411,
             true,
             false,
             false);

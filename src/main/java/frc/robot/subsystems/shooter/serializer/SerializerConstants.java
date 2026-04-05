@@ -9,7 +9,12 @@ public class SerializerConstants {
         case SIM -> new SerializerConfig(
             CAN.at(32, "Serializer"), CAN.at(0, "Serializer 2"), 5, true, false, true);
         case COMP -> new SerializerConfig(
-            CAN.at(25, "Serializer"), CAN.at(0, "Serializer 2"), 2, false, false, true);
+            CAN.at(39, "Serializer Left"),
+            CAN.at(5, "Serializer Right"),
+            26 / 18.0,
+            false,
+            false,
+            true);
         default -> new SerializerConfig(
             CAN.at(40, "Serializer"), CAN.at(0, "Serializer 2"), 5, true, false, true);
       };
@@ -17,7 +22,7 @@ public class SerializerConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, 1, 0, 0);
-        case COMP -> new PIDGains(0.02, 0, 0, 0.5, 0.107, 0.035, 0);
+        case COMP -> new PIDGains(0.7, 0, 0, 0.2, 0.17167, 0, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
 

@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -22,8 +23,8 @@ public abstract class GenericSuperstructureIOSim implements GenericSuperstructur
 
   protected final NeutralOut neutralOutput = new NeutralOut();
 
-  protected final MotionMagicVoltage positionControl =
-      new MotionMagicVoltage(0).withUpdateFreqHz(0);
+  protected final DynamicMotionMagicVoltage positionControl =
+      new DynamicMotionMagicVoltage(0, 0, 0).withUpdateFreqHz(0);
 
   public GenericSuperstructureIOSim(int id) {
 
@@ -80,17 +81,17 @@ public abstract class GenericSuperstructureIOSim implements GenericSuperstructur
     motionMagicConfig.MotionMagicCruiseVelocity = motionMagicCruiseVelocity;
     motionMagicConfig.MotionMagicJerk = motionMagicJerk;
 
+    positionControl.withAcceleration(motionMagicAcceleration);
+    positionControl.withVelocity(motionMagicCruiseVelocity);
+    positionControl.withJerk(motionMagicJerk);
+
     talon.getConfigurator().apply(gainsConfig);
     talon.getConfigurator().apply(motionMagicConfig);
+} 
+
+  @Override
+  public void setMaxCruiseVelocity(double cruiseVelocity) {
+    positionControl.withVelocity(cruiseVelocity);
   }
 
-  public void setSupplyCurrentLimit(double amps) {
-    if (config.CurrentLimits.SupplyCurrentLimit != amps) {
-      config.CurrentLimits.SupplyCurrentLimitEnable = true;
-      config.CurrentLimits.SupplyCurrentLimit = amps;
-      config.withSlot0(gainsConfig);
-      talon.getConfigurator().apply(config);
-      System.out.println("Amps: " + amps);
-    }
-  }
 }
