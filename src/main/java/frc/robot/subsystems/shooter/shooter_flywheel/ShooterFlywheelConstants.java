@@ -21,7 +21,7 @@ public class ShooterFlywheelConstants {
             CAN.at(10, "Shooter Flywheel Left Top"),
             CAN.at(16, "Shooter Flywheel Right Bottom"),
             CAN.at(15, "Shooter Flywheel Right Top"),
-            0.71,
+            1.411,
             true,
             false,
             false);

@@ -16,7 +16,7 @@ public class ShooterAcceleratorConstants {
         default -> new ShooterAcceleratorConfig(
             CAN.at(33, "Shooter Accelerator 1"),
             CAN.at(34, "Shooter Accelerator 2"),
-            0.67,
+            1.5,
             true,
             true,
             true);

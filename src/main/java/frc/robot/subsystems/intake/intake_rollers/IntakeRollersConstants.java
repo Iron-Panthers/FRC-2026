@@ -10,7 +10,7 @@ public class IntakeRollersConstants {
         case SIM -> new IntakeRollerConfig(
             CAN.at(64, "Intake Roller"), CAN.at(65, "Intake Roller 2"), 2, false, true);
         case COMP -> new IntakeRollerConfig(
-            CAN.at(8, "Intake Roller Left"), CAN.at(9, "Intake Roller Right"), 2, true, false);
+            CAN.at(8, "Intake Roller Left"), CAN.at(9, "Intake Roller Right"), 36.0/15.0, true, false);
         default -> new IntakeRollerConfig(
             CAN.at(0, "Intake Roller"), CAN.at(0, "Intake Roller 2"), 2, false, true);
       };
