@@ -57,8 +57,8 @@ public class ElasticUpdater extends SubsystemBase {
       firstAllianceIsRed = !(DriverStation.getGameSpecificMessage().toUpperCase().charAt(0) == 'R');
     }
 
-    boolean redHubActive = !(timeframe == "Invalid Timeframe");
-    boolean blueHubActive = !(timeframe == "Invalid Timeframe");
+    boolean redHubActive = (timeframe == "Invalid Timeframe");
+    boolean blueHubActive = (timeframe == "Invalid Timeframe");
     if (timeframe.startsWith("Shift")) {
       redHubActive = firstAllianceIsRed ^ (timeframe == "Shift 2" || timeframe == "Shift 4");
       blueHubActive = !redHubActive;

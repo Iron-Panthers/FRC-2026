@@ -32,7 +32,7 @@ public class IntakeRackConstants {
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(400, 40);
+        case COMP -> new MotionMagicConfig(400, 4);
         case SIM -> new MotionMagicConfig(400, 80);
         default -> new MotionMagicConfig(0, 0);
       };

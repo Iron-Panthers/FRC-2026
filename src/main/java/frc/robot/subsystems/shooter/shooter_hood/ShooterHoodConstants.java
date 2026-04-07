@@ -48,7 +48,7 @@ public class ShooterHoodConstants {
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-  public static final InvertedValue MOTOR_DIRECTION = InvertedValue.Clockwise_Positive;
+  public static final InvertedValue MOTOR_DIRECTION = InvertedValue.CounterClockwise_Positive;
 
   public static final double POSITION_TARGET_EPSILON = 0.05;
 

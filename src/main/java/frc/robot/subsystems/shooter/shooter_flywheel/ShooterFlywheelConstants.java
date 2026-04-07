@@ -35,10 +35,10 @@ public class ShooterFlywheelConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(3, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(.6, 0, 0, 0.2, 0.1659751, 0, 0);
+        default -> new PIDGains(0.5, 0, 0, 0.2, 0.35, 0, 0);
       };
 
-  public static final double VELOCITY_ADJUSTMENT = 0.1;
+  public static final double VELOCITY_ADJUSTMENT = 0;
   public static final int CURRENT_LIMIT_AMPS =
       switch (Constants.getRobotType()) {
         case COMP -> 20;

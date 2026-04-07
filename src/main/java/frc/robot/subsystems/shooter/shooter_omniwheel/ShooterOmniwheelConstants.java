@@ -15,7 +15,7 @@ public class ShooterOmniwheelConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(0.55, 0, 0, 0.2, .137, 0, 0);
+        default -> new PIDGains(0.4, 0, 0, 0.2, .137, 0, 0);
       };
 
   public static final boolean OPPOSE_MOTOR = true;

@@ -14,8 +14,8 @@ public class ShooterAcceleratorConstants {
             false,
             true);
         default -> new ShooterAcceleratorConfig(
-            CAN.at(33, "Shooter Accelerator 1"),
-            CAN.at(34, "Shooter Accelerator 2"),
+            CAN.at(25, "Shooter Accelerator Left"),
+            CAN.at(13, "Shooter Accelerator Right"),
             1.5,
             true,
             true,
@@ -26,7 +26,7 @@ public class ShooterAcceleratorConstants {
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
         case SIM -> new PIDGains(1, 0, 0, 0, .1, 0, 0);
-        default -> new PIDGains(.7, 0, 0, 0.2, 0.17746, 0, 0);
+        default -> new PIDGains(.6, 0, 0, 0.2, 0.17746, 0, 0);
       };
 
   public static final int CURRENT_LIMIT_AMPS =

@@ -53,7 +53,7 @@ public class VisionTuningCommands {
   public static Transform3d heldTagTransform =
       new Transform3d(
           new Translation3d( //
-              Units.inchesToMeters((14.5 + 30)), // Distance forward
+              Units.inchesToMeters((29 + 12.75)), // Distance forward
               Units.inchesToMeters(0), // Distance left
               Units.inchesToMeters(44.25) // Distance up
               ),

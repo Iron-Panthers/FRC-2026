@@ -64,11 +64,13 @@ import frc.robot.subsystems.shooter.serializer.SerializerSim;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAccelerator;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIO;
 import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOSim;
+import frc.robot.subsystems.shooter.shooter_accelerator.ShooterAcceleratorIOTalonFX;
 import frc.robot.subsystems.shooter.shooter_flywheel.*;
 import frc.robot.subsystems.shooter.shooter_hood.*;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIO;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOSim;
+import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheelIOTalonFX;
 import frc.robot.subsystems.swerve.Drive;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.swerve.GyroIO;
@@ -79,6 +81,7 @@ import frc.robot.subsystems.swerve.ModuleIOTalonFXReal;
 import frc.robot.subsystems.swerve.ModuleIOTalonFXSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
 import org.ironmaple.simulation.SimulatedArena;
@@ -128,26 +131,24 @@ public class RobotContainer {
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
         case COMP -> {
-          // swerve =
-          //     new Drive(
-          //         new GyroIOPigeon2(),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
+          swerve =
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           intakeRack = new IntakeRack(new IntakeRackIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
-          // vision =
-          //     new Vision(
-          //         new VisionIOPhotonvision("arducam-1", 0),
+          vision = new Vision(new VisionIOPhotonvision("camD (1)", 0));
           //         new VisionIOPhotonvision("arducam-3", 1));
           // // rgb = new RGB(new RGBIOAddressableLED());
           // // rgb = new RGB(new RGBIOCANdle());
           // // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
-          // shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
-          // shooterHood = new ShooterHood(new ShooterHoodIOTalonFX());
-          // shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
-          // shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
+          shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          shooterHood = new ShooterHood(new ShooterHoodIOTalonFX());
+          shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
+          shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
           serializer = new Serializer(new SerializerIOTalonFX());
         }
         case VISION -> {
