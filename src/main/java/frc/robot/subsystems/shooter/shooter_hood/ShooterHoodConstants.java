@@ -26,7 +26,7 @@ public class ShooterHoodConstants {
   // TODO update all the PID information
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(500, 0, 0, .5, 4.1, 0, 0.45);
+        case COMP -> new PIDGains(1000, 0, 0, 0, 4.18, 0, 0.8);
         case SIM -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
@@ -34,7 +34,7 @@ public class ShooterHoodConstants {
   // TODO update Motion Magic
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(6, 10);
+        case COMP -> new MotionMagicConfig(6, 1);
         case SIM -> new MotionMagicConfig(7.5, 10);
         default -> new MotionMagicConfig(0, 0);
       };
@@ -48,7 +48,7 @@ public class ShooterHoodConstants {
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-  public static final InvertedValue MOTOR_DIRECTION = InvertedValue.Clockwise_Positive;
+  public static final InvertedValue MOTOR_DIRECTION = InvertedValue.CounterClockwise_Positive;
 
   public static final double POSITION_TARGET_EPSILON = 0.05;
 

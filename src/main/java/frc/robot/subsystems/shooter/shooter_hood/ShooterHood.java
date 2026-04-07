@@ -12,7 +12,7 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTarget>
     implements LoggableMechanism3d {
   public enum ShooterHoodTarget implements GenericSuperstructure.PositionTarget {
-    STOW(0, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
+    STOW(1, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
     HALF(45, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
     TOP(45, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
     SHOOT_TEMP(12, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update

@@ -24,11 +24,11 @@ public class ShooterFlywheelIOTalonFX extends GenericRollersIOTalonFX implements
             .withNeutralMode(SHOOTER_FLYWHEEL_CONFIG.brake())
             .withReduction(SHOOTER_FLYWHEEL_CONFIG.reduction())
             .withAdditionalFollowerMotor(
-                SHOOTER_FLYWHEEL_CONFIG.motorID2(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor())
+                SHOOTER_FLYWHEEL_CONFIG.motorID2(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor1())
             .withAdditionalFollowerMotor(
-                SHOOTER_FLYWHEEL_CONFIG.motorID3(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor())
+                SHOOTER_FLYWHEEL_CONFIG.motorID3(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor2())
             .withAdditionalFollowerMotor(
-                SHOOTER_FLYWHEEL_CONFIG.motorID4(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor()));
+                SHOOTER_FLYWHEEL_CONFIG.motorID4(), SHOOTER_FLYWHEEL_CONFIG.opposeMotor3()));
     super.setSlot0(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
   }
 }

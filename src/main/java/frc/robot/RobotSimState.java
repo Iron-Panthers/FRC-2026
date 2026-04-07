@@ -116,18 +116,25 @@ public class RobotSimState {
 
   // Shooting utilities
   public void shootFuel(
-      Angle launchAngle, Transform3d shooterTransform3d, LinearVelocity launchVelocity, Distance shooterWidth) {
+      Angle launchAngle,
+      Transform3d shooterTransform3d,
+      LinearVelocity launchVelocity,
+      Distance shooterWidth) {
     if (fuelCount <= 0) return; // no fuel to shoot
     fuelCount--;
 
     // Build a transform that includes the shooter's position and combines the hood pitch with the
     // shooter's yaw
-    Transform3d shooterOffset = new Transform3d(new Translation3d(0, (Math.random() * 2 - 1) * (shooterWidth.in(Units.Meters) * .5), 0), new Rotation3d());
+    Transform3d shooterOffset =
+        new Transform3d(
+            new Translation3d(0, (Math.random() * 2 - 1) * (shooterWidth.in(Units.Meters) * .5), 0),
+            new Rotation3d());
 
     Transform3d launchTransform =
         new Transform3d(
-            shooterTransform3d.getTranslation(),
-            new Rotation3d(0, 0, shooterTransform3d.getRotation().getZ())).plus(shooterOffset);
+                shooterTransform3d.getTranslation(),
+                new Rotation3d(0, 0, shooterTransform3d.getRotation().getZ()))
+            .plus(shooterOffset);
 
     fuelSim.launchFuel(launchVelocity, launchAngle, launchTransform);
   }
@@ -213,7 +220,8 @@ public class RobotSimState {
     double currentTime = Timer.getFPGATimestamp();
     if (currentTime - lastShootTime >= shootIntervalSeconds) {
       // Time to shoot another ball
-      shootFuel(currentShooterAngle, currentShooterTransform, currentLaunchVelocity, currentShooterWidth);
+      shootFuel(
+          currentShooterAngle, currentShooterTransform, currentLaunchVelocity, currentShooterWidth);
       lastShootTime = currentTime;
       Logger.recordOutput("RobotSimState/AutoShooterActive", true);
     }

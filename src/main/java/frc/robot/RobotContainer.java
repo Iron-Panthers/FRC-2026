@@ -9,6 +9,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -32,6 +34,7 @@ import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.PassToPoseCommand;
 import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
@@ -128,26 +131,24 @@ public class RobotContainer {
     if (Constants.getRobotMode() != Mode.REPLAY) {
       switch (Constants.getRobotType()) {
         case COMP -> {
-          // swerve =
-          //     new Drive(
-          //         new GyroIOPigeon2(),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
-          //         new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
+          swerve =
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[0]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
+                  new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           intakeRack = new IntakeRack(new IntakeRackIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
-          // vision =
-          //     new Vision(
-          //         new VisionIOPhotonvision("arducam-1", 0),
+          vision = new Vision(new VisionIOPhotonvision("camD (1)", 0));
           //         new VisionIOPhotonvision("arducam-3", 1));
           // // rgb = new RGB(new RGBIOAddressableLED());
           // // rgb = new RGB(new RGBIOCANdle());
           // // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
-          // shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
-          // shooterHood = new ShooterHood(new ShooterHoodIOTalonFX());
-          // shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
-          // shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
+          shooterFlywheels = new ShooterFlywheel(new ShooterFlywheelIOTalonFX());
+          shooterHood = new ShooterHood(new ShooterHoodIOTalonFX());
+          shooterOmniwheel = new ShooterOmniwheel(new ShooterOmniwheelIOTalonFX());
+          shooterAccelerator = new ShooterAccelerator(new ShooterAcceleratorIOTalonFX());
           serializer = new Serializer(new SerializerIOTalonFX());
         }
         case VISION -> {
@@ -311,8 +312,7 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
             .alongWith(new WaitCommand(1))
-            .alongWith(
-                new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
+            .alongWith(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
             .alongWith(new WaitCommand(7))
             .andThen(
                 new InstantCommand(
@@ -389,6 +389,8 @@ public class RobotContainer {
 
   private void configureDriverAButtons() {
     driverA.rightStick().whileTrue(new FieldAxisAssistCommand(swerve));
+
+    driverA.leftStick().whileTrue(new PassToPoseCommand(swerve));
     // driverA.rightStick().onTrue(new HappyBirthdayCommand());
     driverA
         .povLeft()

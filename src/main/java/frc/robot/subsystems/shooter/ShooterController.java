@@ -19,6 +19,7 @@ import frc.robot.subsystems.shooter.shooter_hood.ShooterHood;
 import frc.robot.subsystems.shooter.shooter_hood.ShooterHood.ShooterHoodTarget;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel;
 import frc.robot.subsystems.shooter.shooter_omniwheel.ShooterOmniwheel.ShooterOmniwheelTarget;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
@@ -32,6 +33,13 @@ public class ShooterController extends SubsystemBase {
         ShooterAcceleratorTarget.IDLE,
         ShooterOmniwheelTarget.IDLE,
         SerializerTarget.IDLE),
+    /** idle: no spin */
+    INTAKE(
+        ShooterHoodTarget.STOW,
+        ShooterFlywheelTarget.IDLE,
+        ShooterAcceleratorTarget.IDLE,
+        ShooterOmniwheelTarget.IDLE,
+        SerializerTarget.SLOW),
     /** shoot: spinning to shoot */
     SHOOT(
         ShooterHoodTarget.SHOOT_TEMP,
@@ -57,13 +65,13 @@ public class ShooterController extends SubsystemBase {
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.IDLE,
-        SerializerTarget.SPIN_UP),
+        SerializerTarget.IDLE),
     COMPACT_SPIN_UP(
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.IDLE,
-        SerializerTarget.SPIN_UP),
+        SerializerTarget.IDLE),
     ZEROING(
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.IDLE,
@@ -253,6 +261,7 @@ public class ShooterController extends SubsystemBase {
     return new InstantCommand(() -> shooterHood.endZeroing());
   }
 
+  @AutoLogOutput(key = "Shooter/Flywheels Up To Speed")
   public boolean flywheelsUpToSpeed() {
     return shooterFlywheel.reachedVelocityTargetManual();
   }

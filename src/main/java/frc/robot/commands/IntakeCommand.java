@@ -15,6 +15,6 @@ public class IntakeCommand extends SequentialCommandGroup {
     addCommands(
         intakeController
             .setTargetStateCommand(IntakeState.INTAKE)
-            .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE)));
+            .alongWith(shooterController.setTargetStateCommand(ShooterState.INTAKE)));
   }
 }

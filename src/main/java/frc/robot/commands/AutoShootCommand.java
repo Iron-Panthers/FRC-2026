@@ -28,7 +28,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
                 new WaitCommand(0.2)
                     .andThen(
                         intakeActive
-                            ? intakeController.setTargetStateCommand(IntakeState.STOW) 
+                            ? intakeController.setTargetStateCommand(IntakeState.STOW)
                             : new InstantCommand()))
             .withDeadline(new WaitCommand(4.3)),
         (intakeActive
