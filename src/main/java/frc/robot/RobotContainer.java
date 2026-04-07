@@ -9,6 +9,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -32,6 +34,7 @@ import frc.robot.commands.AlignToShootCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.PassToPoseCommand;
 import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
@@ -385,6 +388,8 @@ public class RobotContainer {
 
   private void configureDriverAButtons() {
     driverA.rightStick().whileTrue(new FieldAxisAssistCommand(swerve));
+
+    driverA.leftStick().whileTrue(new PassToPoseCommand(swerve));
     // driverA.rightStick().onTrue(new HappyBirthdayCommand());
     driverA
         .povLeft()
