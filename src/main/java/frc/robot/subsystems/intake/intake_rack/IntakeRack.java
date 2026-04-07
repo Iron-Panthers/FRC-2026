@@ -1,12 +1,17 @@
 package frc.robot.subsystems.intake.intake_rack;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.utility.LoggableMechanism3d;
+
+import java.util.Optional;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -15,16 +20,16 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
   public enum IntakeRackTarget implements GenericSuperstructure.PositionTarget {
     INTAKE(
         11.9,
-        IntakeRackConstants.MOTION_MAGIC_CONFIG.cruiseVelocity(),
-        IntakeRackConstants.SUPPLY_CURRENT_LIMIT),
-    STOW(0, 0.5, IntakeRackConstants.SUPPLY_CURRENT_LIMIT);
+        IntakeRackConstants.SUPPLY_CURRENT_LIMIT,
+        Optional.empty()),
+    STOW(0, IntakeRackConstants.SUPPLY_CURRENT_LIMIT, Optional.of(0.5));
 
     private double position;
     private double supplyCurrentLimit;
-    private double maxCruiseVelocity;
+    private Optional<Double> maxCruiseVelocity;
     private static final double EPSILON = IntakeRackConstants.POSITION_TARGET_EPSILON;
 
-    private IntakeRackTarget(double position, double maxCruiseVelocity, double supplyCurrentLimit) {
+    private IntakeRackTarget(double position, double supplyCurrentLimit, Optional<Double> maxCruiseVelocity) {
       this.position = position;
       this.maxCruiseVelocity = maxCruiseVelocity;
       this.supplyCurrentLimit = supplyCurrentLimit;
@@ -43,7 +48,7 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
       return supplyCurrentLimit;
     }
 
-    public double getMaxCruiseVelocity() {
+    public Optional<Double> getMaxCruiseVelocity() {
       return maxCruiseVelocity;
     }
   }
@@ -55,13 +60,38 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
   }
 
   public LoggableMechanism3d loggableMechanism3dParent = null;
+  public ProfiledPIDController pidController = new ProfiledPIDController(
+      IntakeRackConstants.GAINS.kP(),
+      IntakeRackConstants.GAINS.kI(),
+      IntakeRackConstants.GAINS.kD(),
+      new Constraints(
+          IntakeRackConstants.MOTION_MAGIC_CONFIG.cruiseVelocity(),
+          IntakeRackConstants.MOTION_MAGIC_CONFIG.acceleration()));
+
+  private IntakeRackTarget lastTarget = null;
+
+  @Override
+  public void setPositionTarget(IntakeRackTarget target) {
+    if (target != lastTarget && target.getMaxCruiseVelocity().isPresent()) {
+      pidController.reset(getPosition());
+    }
+    lastTarget = target;
+    super.setPositionTarget(target);
+  }
 
   @Override
   public void periodic() {
     super.periodic();
-    superstructureIO.setMaxCruiseVelocity(getPositionTarget().getMaxCruiseVelocity());
+    if (getPositionTarget().getMaxCruiseVelocity().isPresent()) {
+      pidController.setConstraints(new Constraints(getPositionTarget().getMaxCruiseVelocity().get(), IntakeRackConstants.MOTION_MAGIC_CONFIG.acceleration()));
+      pidController.setGoal(getPositionTarget().getPosition());
+      pidController.calculate(getPosition());
+      superstructureIO.runPosition(pidController.getSetpoint().position);
+    }
     Logger.recordOutput(
         "Intake/Intake Rack/PositionTargetRotations", getPositionTarget().getPosition());
+    Logger.recordOutput(
+        "Intake/Intake Rack/PositionTargetRotations Pid", pidController.getSetpoint().position);
   }
 
   @Override
