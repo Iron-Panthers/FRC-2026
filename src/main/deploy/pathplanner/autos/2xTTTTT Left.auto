@@ -11,7 +11,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "2xTB 1 I Left"
+          "pathName" : "2xTT 1 Left"
         }
       }, {
         "type" : "named",
@@ -21,12 +21,12 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Auto shoot full hopper"
+          "name" : "Align and auto shoot full hopper"
         }
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "2xTB 2 I Left"
+          "pathName" : "2xTT 2 Left"
         }
       }, {
         "type" : "named",
@@ -36,7 +36,12 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Auto shoot full hopper"
+          "name" : "Align and auto shoot full hopper"
+        }
+      }, {
+        "type" : "path",
+        "data" : {
+          "pathName" : "xT  Left"
         }
       } ]
     }

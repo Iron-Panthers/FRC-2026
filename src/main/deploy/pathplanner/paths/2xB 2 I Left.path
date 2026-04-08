@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.685978647686834,
-        "y": 5.008837485172005
+        "x": 3.374567022538553,
+        "y": 7.494211150652433
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5036773428232504,
-        "y": 5.912609727164889
+        "x": 4.192265717674969,
+        "y": 8.397983392645315
       },
       "isLocked": false,
       "linkedName": "Shooting Pose 2 Left"
@@ -64,12 +64,12 @@
     },
     {
       "anchor": {
-        "x": 2.685978647686834,
-        "y": 5.008837485172005
+        "x": 3.374567022538553,
+        "y": 7.494211150652433
       },
       "prevControl": {
-        "x": 1.8252431791221837,
-        "y": 5.493001186239622
+        "x": 2.513831553973903,
+        "y": 7.97837485172005
       },
       "nextControl": null,
       "isLocked": false,
@@ -151,13 +151,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 158.70000000000005
+    "rotation": -67.0
   },
   "reversed": false,
   "folder": "Left Paths (auto generated)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 158.70000000000005
+    "rotation": -67.0
   },
   "useDefaultConstraints": true
 }

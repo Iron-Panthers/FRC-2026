@@ -49,7 +49,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Left Autos (auto generated)",
   "choreoAuto": false
 }
