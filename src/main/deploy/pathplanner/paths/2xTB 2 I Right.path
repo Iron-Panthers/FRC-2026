@@ -85,7 +85,7 @@
       },
       "prevControl": {
         "x": 6.365622775800711,
-        "y": 2.5977793594306053
+        "y": 2.597779359430605
       },
       "nextControl": null,
       "isLocked": false,
@@ -95,11 +95,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.9236234458259289,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     },
     {
       "waypointRelativePos": 2.15,
-      "rotationDegrees": 90.0
+      "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [
@@ -123,7 +123,7 @@
         "x": 7.0,
         "y": 2.7
       },
-      "rotationOffset": 90.0,
+      "rotationOffset": -90.0,
       "minWaypointRelativePos": 2.3397075365579214,
       "maxWaypointRelativePos": 4.566929133858248,
       "name": "Point Towards Zone"
@@ -153,13 +153,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": 55.0
   },
   "reversed": false,
   "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": 55.0
   },
   "useDefaultConstraints": true
 }

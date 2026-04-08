@@ -498,7 +498,7 @@ public class RobotContainer {
         () -> RobotState.isAllianceRed(),
         swerve);
 
-    autoChooser =
+    autoChooser =  
         new LoggedDashboardChooser<Command>("Auto Chooser", AutoBuilder.buildAutoChooser());
     VisionTuningCommands.addTuningCommandsToAutoChooser(vision, autoChooser);
     SmartDashboard.putData("Auto Chooser", autoChooser.getSendableChooser());

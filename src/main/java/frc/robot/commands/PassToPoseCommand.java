@@ -42,7 +42,7 @@ public class PassToPoseCommand extends Command {
     Rotation2d angle = new Rotation2d(Math.atan2(differenceVector.getY(), differenceVector.getX()));
 
     if(RobotState.isAllianceRed()){
-      angle = angle.plus(new Rotation2d(Math.PI));
+      angle.plus(new Rotation2d(Math.PI));
     }
 
     swerve.setTargetHeading(estimatedPose.getRotation().plus(angle));
