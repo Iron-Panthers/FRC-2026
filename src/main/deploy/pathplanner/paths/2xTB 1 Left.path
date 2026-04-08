@@ -5,11 +5,11 @@
       "x" : 4.375172004744959,
       "y" : 7.613000000000001
     },
-    "prevControl" : null,
-    "nextControl" : {
+    "prevControl" : {
       "x" : 5.6662752075919345,
       "y" : 7.50540806642942
     },
+    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -18,12 +18,12 @@
       "y" : 6.494000000000001
     },
     "prevControl" : {
-      "x" : 8.53940290485555,
-      "y" : 7.5069399979402025
-    },
-    "nextControl" : {
       "x" : 8.56049822064057,
       "y" : 5.4395990510083045
+    },
+    "nextControl" : {
+      "x" : 8.53940290485555,
+      "y" : 7.5069399979402025
     },
     "isLocked" : false,
     "linkedName" : null
@@ -33,12 +33,12 @@
       "y" : 4.7613760379596695
     },
     "prevControl" : {
-      "x" : 8.56049822064057,
-      "y" : 5.449964412811388
-    },
-    "nextControl" : {
       "x" : 8.531167258769802,
       "y" : 3.5727828530823427
+    },
+    "nextControl" : {
+      "x" : 8.56049822064057,
+      "y" : 5.449964412811388
     },
     "isLocked" : false,
     "linkedName" : null
@@ -47,20 +47,20 @@
       "x" : 3.038,
       "y" : 5.354000000000001
     },
-    "prevControl" : {
+    "prevControl" : null,
+    "nextControl" : {
       "x" : 6.6199156626506035,
       "y" : 6.590024096385543
     },
-    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.0817051509769038,
-    "rotationDegrees" : 90.0
+    "rotationDegrees" : -90.0
   }, {
     "waypointRelativePos" : 1.918294849023086,
-    "rotationDegrees" : 90.0
+    "rotationDegrees" : -90.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -109,13 +109,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : -55.0
+    "rotation" : 125.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : -180.0
+    "rotation" : 0.0
   },
   "useDefaultConstraints" : true
 }

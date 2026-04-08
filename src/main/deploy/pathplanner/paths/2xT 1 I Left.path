@@ -5,11 +5,11 @@
       "x" : 4.407,
       "y" : 7.644022222222223
     },
-    "prevControl" : null,
-    "nextControl" : {
+    "prevControl" : {
       "x" : 6.641321499521215,
       "y" : 7.453313253012049
     },
+    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -18,12 +18,12 @@
       "y" : 7.194495614035089
     },
     "prevControl" : {
-      "x" : 7.613660942102205,
-      "y" : 7.429113531256518
-    },
-    "nextControl" : {
       "x" : 8.166211635270907,
       "y" : 5.927611245420164
+    },
+    "nextControl" : {
+      "x" : 7.613660942102205,
+      "y" : 7.429113531256518
     },
     "isLocked" : false,
     "linkedName" : null
@@ -33,12 +33,12 @@
       "y" : 5.0212280701754395
     },
     "prevControl" : {
-      "x" : 8.620679027107812,
-      "y" : 5.592943402039348
-    },
-    "nextControl" : {
       "x" : 6.57819092447958,
       "y" : 3.8697014902005105
+    },
+    "nextControl" : {
+      "x" : 8.620679027107812,
+      "y" : 5.592943402039348
     },
     "isLocked" : false,
     "linkedName" : null
@@ -48,12 +48,12 @@
       "y" : 7.483451957295375
     },
     "prevControl" : {
-      "x" : 6.211406363125382,
-      "y" : 7.060168868591164
-    },
-    "nextControl" : {
       "x" : 5.0900418894409984,
       "y" : 7.7121334382799835
+    },
+    "nextControl" : {
+      "x" : 6.211406363125382,
+      "y" : 7.060168868591164
     },
     "isLocked" : false,
     "linkedName" : null
@@ -62,17 +62,17 @@
       "x" : 3.2815,
       "y" : 7.483451957295375
     },
-    "prevControl" : {
+    "prevControl" : null,
+    "nextControl" : {
       "x" : 4.19272361028608,
       "y" : 7.603537837926083
     },
-    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Trench Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.0817051509769038,
-    "rotationDegrees" : 270.0
+    "rotationDegrees" : 90.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -104,13 +104,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : -78.0
+    "rotation" : 102.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 0.0
+    "rotation" : 180.0
   },
   "useDefaultConstraints" : true
 }
