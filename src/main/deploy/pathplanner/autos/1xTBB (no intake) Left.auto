@@ -11,7 +11,11 @@
       }, {
         "type" : "path",
         "data" : {
+<<<<<<< HEAD
           "pathName" : "1xTB Long 1 Left"
+=======
+          "pathName" : "1xTB Long 1 I Left"
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
         }
       }, {
         "type" : "named",
@@ -36,7 +40,11 @@
       }, {
         "type" : "path",
         "data" : {
+<<<<<<< HEAD
           "pathName" : "1xTB 2 Left"
+=======
+          "pathName" : "1xTB I 2 Left"
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
         }
       }, {
         "type" : "deadline",
@@ -56,7 +64,11 @@
       }, {
         "type" : "path",
         "data" : {
+<<<<<<< HEAD
           "pathName" : "1xTB 3 Left"
+=======
+          "pathName" : "1xTB 3 I Left"
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
         }
       } ]
     }
