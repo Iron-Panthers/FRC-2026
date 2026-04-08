@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.374567022538553,
-        "y": 0.7157888493475684
+        "x": 3.2815,
+        "y": 0.7265480427046258
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.47304480031633,
-        "y": 0.5746999604586813
+        "x": 4.379977777777777,
+        "y": 0.5854591538157385
       },
       "isLocked": false,
-      "linkedName": "Shooting Pose 2 Right"
+      "linkedName": "Trench Shooting Pose Right"
     },
     {
       "anchor": {
@@ -60,7 +60,7 @@
   "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 67.0
+    "rotation": 78.0
   },
   "useDefaultConstraints": true
 }

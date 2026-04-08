@@ -18,12 +18,12 @@
       "y" : 7.203712930011863
     },
     "prevControl" : {
-      "x" : 8.171650602409636,
-      "y" : 7.540734939759037
+      "x" : 8.334343660771333,
+      "y" : 7.6505203289279144
     },
     "nextControl" : {
-      "x" : 9.044858546353261,
-      "y" : 6.689719708114171
+      "x" : 8.78644128113879,
+      "y" : 6.547402135231318
     },
     "isLocked" : false,
     "linkedName" : null
@@ -33,12 +33,12 @@
       "y" : 5.191743772241995
     },
     "prevControl" : {
-      "x" : 8.946471867212988,
-      "y" : 6.049764612243299
+      "x" : 8.732645314353501,
+      "y" : 5.826536180308423
     },
     "nextControl" : {
-      "x" : 8.194685646500595,
-      "y" : 4.5461921708185065
+      "x" : 8.285751785255798,
+      "y" : 4.508200269470208
     },
     "isLocked" : false,
     "linkedName" : null
@@ -74,16 +74,16 @@
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 3.374567022538553,
-      "y" : 7.494211150652433
+      "x" : 3.2815,
+      "y" : 7.483451957295375
     },
     "prevControl" : {
-      "x" : 5.18856723048718,
-      "y" : 7.674569003804564
+      "x" : 5.095500207948627,
+      "y" : 7.663809810447506
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : "Shooting Pose 2 Left"
+    "linkedName" : "Trench Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 0.5,
@@ -92,11 +92,14 @@
     "waypointRelativePos" : 1.1,
     "rotationDegrees" : 65.0
   }, {
+    "waypointRelativePos" : 3.25196850393701,
+    "rotationDegrees" : -90.0
+  }, {
     "waypointRelativePos" : 4.456140350877177,
     "rotationDegrees" : 0.0
   }, {
     "waypointRelativePos" : 4.86,
-    "rotationDegrees" : -20.0
+    "rotationDegrees" : -3.1429185137888
   }, {
     "waypointRelativePos" : 5.0,
     "rotationDegrees" : 113.0
@@ -153,12 +156,7 @@
   "pointTowardsZones" : [ ],
   "eventMarkers" : [ {
     "name" : "Intake down",
-    "waypointRelativePos" : 0.21040974529347525,
-    "endWaypointRelativePos" : null,
-    "command" : null
-  }, {
-    "name" : "Intake stow",
-    "waypointRelativePos" : 2.890365448504964,
+    "waypointRelativePos" : 0.058083252662145785,
     "endWaypointRelativePos" : null,
     "command" : null
   }, {
@@ -177,7 +175,7 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : -67.0
+    "rotation" : -78.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",

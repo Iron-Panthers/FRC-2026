@@ -335,6 +335,18 @@ public class RobotContainer {
                             matchTimerUpdater,
                             true))));
     NamedCommands.registerCommand(
+        "Align and auto shoot full hopper (no intake)",
+        new AlignToShootCommand(swerve, shooterController)
+            .withDeadline(
+                new WaitCommand(0.2)
+                    .andThen(
+                        new AutoShootCommand(
+                            swerve,
+                            shooterController,
+                            intakeController,
+                            matchTimerUpdater,
+                            false))));
+    NamedCommands.registerCommand(
         "Auto shoot full hopper (no intake)",
         new AutoShootCommand(
             swerve, shooterController, intakeController, matchTimerUpdater, false));

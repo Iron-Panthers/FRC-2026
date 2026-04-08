@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8556986951364163,
-        "y": 1.9522277580071168
+        "x": 3.91252669039146,
+        "y": 2.254353499406881
       },
       "isLocked": false,
       "linkedName": "Shooting Pose Right"
@@ -64,12 +64,12 @@
     },
     {
       "anchor": {
-        "x": 3.374567022538553,
-        "y": 0.7157888493475684
+        "x": 2.686,
+        "y": 3.201
       },
       "prevControl": {
-        "x": 1.5807225780941088,
-        "y": 1.7437221826809022
+        "x": 1.1043772241992889,
+        "y": 2.792313167259786
       },
       "nextControl": null,
       "isLocked": false,
@@ -139,7 +139,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 67.0
+    "rotation": 27.08835109544119
   },
   "reversed": false,
   "folder": "Right Paths (make these)",
