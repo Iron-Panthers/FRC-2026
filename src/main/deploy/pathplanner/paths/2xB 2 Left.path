@@ -5,11 +5,11 @@
       "x" : 3.038,
       "y" : 5.354000000000001
     },
-    "prevControl" : {
+    "prevControl" : null,
+    "nextControl" : {
       "x" : 3.8556986951364163,
       "y" : 6.257772241992884
     },
-    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   }, {
@@ -18,12 +18,12 @@
       "y" : 5.525278766310796
     },
     "prevControl" : {
-      "x" : 6.585672652809943,
-      "y" : 5.268193487274376
-    },
-    "nextControl" : {
       "x" : 5.999810201660736,
       "y" : 5.686666666666668
+    },
+    "nextControl" : {
+      "x" : 6.585672652809943,
+      "y" : 5.268193487274376
     },
     "isLocked" : false,
     "linkedName" : null
@@ -33,12 +33,12 @@
       "y" : 4.0297508896797165
     },
     "prevControl" : {
-      "x" : 6.258010070154326,
-      "y" : 4.240601998571932
-    },
-    "nextControl" : {
       "x" : 5.838422301304865,
       "y" : 3.6531791221826815
+    },
+    "nextControl" : {
+      "x" : 6.258010070154326,
+      "y" : 4.240601998571932
     },
     "isLocked" : false,
     "linkedName" : null
@@ -48,12 +48,12 @@
       "y" : 5.6543890865954936
     },
     "prevControl" : {
-      "x" : 5.349686831575123,
-      "y" : 5.854193711114615
-    },
-    "nextControl" : {
       "x" : 6.83902728351127,
       "y" : 5.514519572953738
+    },
+    "nextControl" : {
+      "x" : 5.349686831575123,
+      "y" : 5.854193711114615
     },
     "isLocked" : false,
     "linkedName" : null
@@ -62,20 +62,20 @@
       "x" : 3.374567022538553,
       "y" : 7.494211150652433
     },
-    "prevControl" : null,
-    "nextControl" : {
+    "prevControl" : {
       "x" : 1.5807225780941088,
       "y" : 6.4662778173190985
     },
+    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose 2 Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 0.42204724409448785,
-    "rotationDegrees" : 0.0
+    "rotationDegrees" : -180.0
   }, {
     "waypointRelativePos" : 1.801065719360589,
-    "rotationDegrees" : -90.0
+    "rotationDegrees" : 90.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -124,13 +124,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 113.0
+    "rotation" : -67.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 125.0
+    "rotation" : -55.0
   },
   "useDefaultConstraints" : true
 }

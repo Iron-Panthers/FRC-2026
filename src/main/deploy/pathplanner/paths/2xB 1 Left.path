@@ -5,11 +5,11 @@
       "x" : 3.5467141162514837,
       "y" : 5.611352313167261
     },
-    "prevControl" : {
+    "prevControl" : null,
+    "nextControl" : {
       "x" : 6.364663677654993,
       "y" : 5.503567225447964
     },
-    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -18,12 +18,12 @@
       "y" : 7.194495614035089
     },
     "prevControl" : {
-      "x" : 7.866118421052631,
-      "y" : 6.521359649122808
-    },
-    "nextControl" : {
       "x" : 7.542298086586268,
       "y" : 7.833526667795424
+    },
+    "nextControl" : {
+      "x" : 7.866118421052631,
+      "y" : 6.521359649122808
     },
     "isLocked" : false,
     "linkedName" : null
@@ -33,12 +33,12 @@
       "y" : 5.0212280701754395
     },
     "prevControl" : {
-      "x" : 7.971896929824563,
-      "y" : 3.3960855263157885
-    },
-    "nextControl" : {
       "x" : 7.9285368226073025,
       "y" : 5.838704899554651
+    },
+    "nextControl" : {
+      "x" : 7.971896929824563,
+      "y" : 3.3960855263157885
     },
     "isLocked" : false,
     "linkedName" : null
@@ -47,20 +47,20 @@
       "x" : 3.038,
       "y" : 5.354000000000001
     },
-    "prevControl" : null,
-    "nextControl" : {
+    "prevControl" : {
       "x" : 5.086249728377192,
       "y" : 6.257940961537749
     },
+    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.0817051509769038,
-    "rotationDegrees" : -90.0
+    "rotationDegrees" : 90.0
   }, {
     "waypointRelativePos" : 2.5201919232306995,
-    "rotationDegrees" : 180.0
+    "rotationDegrees" : 0.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -92,13 +92,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 125.0
+    "rotation" : -55.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : -171.81595072750324
+    "rotation" : 8.184049272496736
   },
   "useDefaultConstraints" : true
 }

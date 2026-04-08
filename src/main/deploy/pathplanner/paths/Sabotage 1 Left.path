@@ -5,19 +5,11 @@
       "x" : 4.517788873038516,
       "y" : 7.545520684736091
     },
-<<<<<<< HEAD
-    "prevControl" : {
-      "x" : 9.345919335705814,
-      "y" : 7.687876631079479
-    },
-    "nextControl" : null,
-=======
     "prevControl" : null,
     "nextControl" : {
       "x" : 9.345919335705814,
       "y" : 7.687876631079479
     },
->>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -26,21 +18,12 @@
       "y" : 4.854279600570614
     },
     "prevControl" : {
-<<<<<<< HEAD
-      "x" : 8.69206427692688,
-      "y" : 4.595506419400856
-    },
-    "nextControl" : {
-      "x" : 8.330080036786185,
-      "y" : 5.253659583293017
-=======
       "x" : 8.330080036786185,
       "y" : 5.253659583293017
     },
     "nextControl" : {
       "x" : 8.69206427692688,
       "y" : 4.595506419400856
->>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     },
     "isLocked" : false,
     "linkedName" : null
@@ -50,15 +33,6 @@
       "y" : 4.384804270462634
     },
     "prevControl" : {
-<<<<<<< HEAD
-      "x" : 6.871304863582443,
-      "y" : 3.1905338078291834
-    },
-    "nextControl" : {
-      "x" : 7.864744047273424,
-      "y" : 4.9135298920432255
-    },
-=======
       "x" : 7.864744047273424,
       "y" : 4.9135298920432255
     },
@@ -66,7 +40,6 @@
       "x" : 6.871304863582443,
       "y" : 3.1905338078291834
     },
->>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -75,15 +48,6 @@
       "y" : 3.965195729537367
     },
     "prevControl" : {
-<<<<<<< HEAD
-      "x" : 4.98173879714287,
-      "y" : 3.848747798010976
-    },
-    "nextControl" : {
-      "x" : 6.706236554640736,
-      "y" : 4.027144117752135
-    },
-=======
       "x" : 6.706236554640736,
       "y" : 4.027144117752135
     },
@@ -91,7 +55,6 @@
       "x" : 4.98173879714287,
       "y" : 3.848747798010976
     },
->>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -100,15 +63,6 @@
       "y" : 5.90185053380783
     },
     "prevControl" : {
-<<<<<<< HEAD
-      "x" : 5.862131619771851,
-      "y" : 6.012393915598829
-    },
-    "nextControl" : {
-      "x" : 7.486789047336209,
-      "y" : 5.707770647930512
-    },
-=======
       "x" : 7.486789047336209,
       "y" : 5.707770647930512
     },
@@ -116,7 +70,6 @@
       "x" : 5.862131619771851,
       "y" : 6.012393915598829
     },
->>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -125,15 +78,6 @@
       "y" : 5.56590584879073
     },
     "prevControl" : {
-<<<<<<< HEAD
-      "x" : 4.300578530090412,
-      "y" : 5.472274884854743
-    },
-    "nextControl" : {
-      "x" : 5.630513552082993,
-      "y" : 5.7082310984373805
-    },
-=======
       "x" : 5.630513552082993,
       "y" : 5.7082310984373805
     },
@@ -141,7 +85,6 @@
       "x" : 4.300578530090412,
       "y" : 5.472274884854743
     },
->>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -149,35 +92,20 @@
       "x" : 3.366248216833095,
       "y" : 4.854279600570614
     },
-<<<<<<< HEAD
-    "prevControl" : null,
-    "nextControl" : {
-      "x" : 3.443880171191282,
-      "y" : 5.87643366619444
-    },
-=======
     "prevControl" : {
       "x" : 3.443880171191282,
       "y" : 5.87643366619444
     },
     "nextControl" : null,
->>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : null
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.0299212598425158,
-<<<<<<< HEAD
-    "rotationDegrees" : -90.0
-  }, {
-    "waypointRelativePos" : 1.6346456692913305,
-    "rotationDegrees" : -150.0
-=======
     "rotationDegrees" : 90.0
   }, {
     "waypointRelativePos" : 1.6346456692913305,
     "rotationDegrees" : 30.0
->>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
   } ],
   "constraintZones" : [ {
     "name" : "Constraints Zone",
@@ -209,21 +137,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-<<<<<<< HEAD
-    "rotation" : 140.0
-=======
     "rotation" : -40.0
->>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-<<<<<<< HEAD
-    "rotation" : 0.0
-=======
     "rotation" : -180.0
->>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
   },
   "useDefaultConstraints" : true
 }
