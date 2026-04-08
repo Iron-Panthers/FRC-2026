@@ -5,11 +5,11 @@
       "x" : 3.374567022538553,
       "y" : 7.494211150652433
     },
-    "prevControl" : null,
-    "nextControl" : {
+    "prevControl" : {
       "x" : 4.47304480031633,
       "y" : 7.6353000395413195
     },
+    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose 2 Left"
   }, {
@@ -17,17 +17,17 @@
       "x" : 7.977744444444443,
       "y" : 5.958766666666667
     },
-    "prevControl" : {
+    "prevControl" : null,
+    "nextControl" : {
       "x" : 7.957588888888889,
       "y" : 7.813077777777779
     },
-    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : null
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 0.5,
-    "rotationDegrees" : -67.0
+    "rotationDegrees" : 113.0
   } ],
   "constraintZones" : [ ],
   "pointTowardsZones" : [ ],
@@ -47,13 +47,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 90.0
+    "rotation" : -90.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : -67.0
+    "rotation" : 113.0
   },
   "useDefaultConstraints" : true
 }

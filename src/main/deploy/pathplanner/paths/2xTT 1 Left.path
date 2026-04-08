@@ -5,11 +5,11 @@
       "x" : 4.6656702253855284,
       "y" : 7.612562277580073
     },
-    "prevControl" : null,
-    "nextControl" : {
+    "prevControl" : {
       "x" : 6.365622775800712,
       "y" : 7.504970344009492
     },
+    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -18,12 +18,12 @@
       "y" : 7.203712930011863
     },
     "prevControl" : {
-      "x" : 8.171650602409636,
-      "y" : 7.540734939759037
-    },
-    "nextControl" : {
       "x" : 9.044858546353261,
       "y" : 6.689719708114171
+    },
+    "nextControl" : {
+      "x" : 8.171650602409636,
+      "y" : 7.540734939759037
     },
     "isLocked" : false,
     "linkedName" : null
@@ -33,12 +33,12 @@
       "y" : 5.191743772241995
     },
     "prevControl" : {
-      "x" : 8.946471867212988,
-      "y" : 6.049764612243299
-    },
-    "nextControl" : {
       "x" : 8.194685646500595,
       "y" : 4.5461921708185065
+    },
+    "nextControl" : {
+      "x" : 8.946471867212988,
+      "y" : 6.049764612243299
     },
     "isLocked" : false,
     "linkedName" : null
@@ -48,12 +48,12 @@
       "y" : 5.191743772241995
     },
     "prevControl" : {
-      "x" : 6.0827164532605575,
-      "y" : 4.14777623144705
-    },
-    "nextControl" : {
       "x" : 6.395533333333334,
       "y" : 6.271177777777779
+    },
+    "nextControl" : {
+      "x" : 6.0827164532605575,
+      "y" : 4.14777623144705
     },
     "isLocked" : false,
     "linkedName" : null
@@ -63,12 +63,12 @@
       "y" : 7.3293444444444455
     },
     "prevControl" : {
-      "x" : 6.3122526937524714,
-      "y" : 7.010639205219455
-    },
-    "nextControl" : {
       "x" : 5.833836195136419,
       "y" : 7.648049683669436
+    },
+    "nextControl" : {
+      "x" : 6.3122526937524714,
+      "y" : 7.010639205219455
     },
     "isLocked" : false,
     "linkedName" : null
@@ -77,29 +77,29 @@
       "x" : 3.374567022538553,
       "y" : 7.494211150652433
     },
-    "prevControl" : {
+    "prevControl" : null,
+    "nextControl" : {
       "x" : 5.18856723048718,
       "y" : 7.674569003804564
     },
-    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose 2 Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 0.5,
-    "rotationDegrees" : -180.0
+    "rotationDegrees" : -90.0
   }, {
     "waypointRelativePos" : 1.1,
-    "rotationDegrees" : 65.0
+    "rotationDegrees" : -115.0
   }, {
     "waypointRelativePos" : 4.456140350877177,
-    "rotationDegrees" : 0.0
+    "rotationDegrees" : 180.0
   }, {
     "waypointRelativePos" : 4.86,
-    "rotationDegrees" : -20.0
+    "rotationDegrees" : 160.0
   }, {
     "waypointRelativePos" : 5.0,
-    "rotationDegrees" : 113.0
+    "rotationDegrees" : -67.0
   } ],
   "constraintZones" : [ {
     "name" : "Constraints Zone",
@@ -177,13 +177,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : -67.0
+    "rotation" : 113.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : -179.8
+    "rotation" : -90.0
   },
   "useDefaultConstraints" : true
 }
