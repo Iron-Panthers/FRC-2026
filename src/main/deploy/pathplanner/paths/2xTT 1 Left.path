@@ -74,12 +74,12 @@
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 3.2815,
-      "y" : 7.483451957295375
+      "x" : 3.2454567022538554,
+      "y" : 7.3293444444444455
     },
     "prevControl" : {
-      "x" : 5.095500207948627,
-      "y" : 7.663809810447506
+      "x" : 4.7732621589561095,
+      "y" : 7.935338078291816
     },
     "nextControl" : null,
     "isLocked" : false,
@@ -175,7 +175,7 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : -78.0
+    "rotation" : -66.25345435489646
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",

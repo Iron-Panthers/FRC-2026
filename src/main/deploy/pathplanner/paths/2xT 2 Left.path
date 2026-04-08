@@ -2,13 +2,13 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 3.2815,
-      "y" : 7.483451957295375
+      "x" : 3.2454567022538554,
+      "y" : 7.3293444444444455
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 4.560105985947622,
-      "y" : 7.454153846153847
+      "x" : 4.524062688201478,
+      "y" : 7.300046333302918
     },
     "isLocked" : false,
     "linkedName" : "Trench Shooting Pose Left"
@@ -59,12 +59,12 @@
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 3.2815,
-      "y" : 7.483451957295375
+      "x" : 3.2454567022538554,
+      "y" : 7.3293444444444455
     },
     "prevControl" : {
-      "x" : 4.023884341637011,
-      "y" : 7.548007117437724
+      "x" : 3.9878410438908665,
+      "y" : 7.393899604586794
     },
     "nextControl" : null,
     "isLocked" : false,
@@ -110,13 +110,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : -78.0
+    "rotation" : -66.25345435489646
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : -78.0
+    "rotation" : -66.25345435489646
   },
   "useDefaultConstraints" : true
 }
