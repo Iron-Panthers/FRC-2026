@@ -9,27 +9,23 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructure;
 import frc.robot.utility.LoggableMechanism3d;
-
 import java.util.Optional;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarget>
     implements LoggableMechanism3d {
   public enum IntakeRackTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(
-        11.9,
-        IntakeRackConstants.SUPPLY_CURRENT_LIMIT,
-        Optional.empty()),
-    STOW(0, IntakeRackConstants.SUPPLY_CURRENT_LIMIT, Optional.of(0.5));
+    INTAKE(11.9, IntakeRackConstants.SUPPLY_CURRENT_LIMIT, Optional.empty()),
+    STOW(0, IntakeRackConstants.SUPPLY_CURRENT_LIMIT, Optional.of(12d));
 
     private double position;
     private double supplyCurrentLimit;
     private Optional<Double> maxCruiseVelocity;
     private static final double EPSILON = IntakeRackConstants.POSITION_TARGET_EPSILON;
 
-    private IntakeRackTarget(double position, double supplyCurrentLimit, Optional<Double> maxCruiseVelocity) {
+    private IntakeRackTarget(
+        double position, double supplyCurrentLimit, Optional<Double> maxCruiseVelocity) {
       this.position = position;
       this.maxCruiseVelocity = maxCruiseVelocity;
       this.supplyCurrentLimit = supplyCurrentLimit;
@@ -60,13 +56,14 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
   }
 
   public LoggableMechanism3d loggableMechanism3dParent = null;
-  public ProfiledPIDController pidController = new ProfiledPIDController(
-      IntakeRackConstants.GAINS.kP(),
-      IntakeRackConstants.GAINS.kI(),
-      IntakeRackConstants.GAINS.kD(),
-      new Constraints(
-          IntakeRackConstants.MOTION_MAGIC_CONFIG.cruiseVelocity(),
-          IntakeRackConstants.MOTION_MAGIC_CONFIG.acceleration()));
+  public ProfiledPIDController pidController =
+      new ProfiledPIDController(
+          IntakeRackConstants.GAINS.kP(),
+          IntakeRackConstants.GAINS.kI(),
+          IntakeRackConstants.GAINS.kD(),
+          new Constraints(
+              IntakeRackConstants.MOTION_MAGIC_CONFIG.cruiseVelocity(),
+              IntakeRackConstants.MOTION_MAGIC_CONFIG.acceleration()));
 
   private IntakeRackTarget lastTarget = null;
 
@@ -83,7 +80,10 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
   public void periodic() {
     super.periodic();
     if (getPositionTarget().getMaxCruiseVelocity().isPresent()) {
-      pidController.setConstraints(new Constraints(getPositionTarget().getMaxCruiseVelocity().get(), IntakeRackConstants.MOTION_MAGIC_CONFIG.acceleration()));
+      pidController.setConstraints(
+          new Constraints(
+              getPositionTarget().getMaxCruiseVelocity().get(),
+              IntakeRackConstants.MOTION_MAGIC_CONFIG.acceleration()));
       pidController.setGoal(getPositionTarget().getPosition());
       pidController.calculate(getPosition());
       superstructureIO.runPosition(pidController.getSetpoint().position);
