@@ -31,6 +31,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "1xTB I 2 Right"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "2xB 2 I Right"
           }
         },
