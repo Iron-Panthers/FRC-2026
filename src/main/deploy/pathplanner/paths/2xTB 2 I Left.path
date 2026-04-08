@@ -5,11 +5,19 @@
       "x" : 3.038,
       "y" : 5.354000000000001
     },
+<<<<<<< Updated upstream
     "prevControl" : {
       "x" : 3.675824436536181,
       "y" : 6.290049822064057
     },
     "nextControl" : null,
+=======
+    "prevControl" : null,
+    "nextControl" : {
+      "x" : 3.675824436536181,
+      "y" : 6.290049822064057
+    },
+>>>>>>> Stashed changes
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   }, {
@@ -18,11 +26,19 @@
       "y" : 7.644839857651246
     },
     "prevControl" : {
+<<<<<<< Updated upstream
       "x" : 5.3650177935943075,
       "y" : 7.644839857651246
     },
     "nextControl" : {
       "x" : 2.086107448066271,
+=======
+      "x" : 2.086107448066271,
+      "y" : 7.644839857651246
+    },
+    "nextControl" : {
+      "x" : 5.3650177935943075,
+>>>>>>> Stashed changes
       "y" : 7.644839857651246
     },
     "isLocked" : false,
@@ -33,6 +49,7 @@
       "y" : 7.246749703440097
     },
     "prevControl" : {
+<<<<<<< Updated upstream
       "x" : 6.380814408037527,
       "y" : 5.579856300541659
     },
@@ -40,6 +57,15 @@
       "x" : 5.913736654804271,
       "y" : 7.62332147093713
     },
+=======
+      "x" : 5.913736654804271,
+      "y" : 7.62332147093713
+    },
+    "nextControl" : {
+      "x" : 6.380814408037527,
+      "y" : 5.579856300541659
+    },
+>>>>>>> Stashed changes
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -48,6 +74,7 @@
       "y" : 4.825931198102017
     },
     "prevControl" : {
+<<<<<<< Updated upstream
       "x" : 7.602930011862397,
       "y" : 4.546192170818506
     },
@@ -55,6 +82,15 @@
       "x" : 5.408034264098819,
       "y" : 5.140643102504475
     },
+=======
+      "x" : 5.408034264098819,
+      "y" : 5.140643102504475
+    },
+    "nextControl" : {
+      "x" : 7.602930011862397,
+      "y" : 4.546192170818506
+    },
+>>>>>>> Stashed changes
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -63,6 +99,7 @@
       "y" : 5.923368920521947
     },
     "prevControl" : {
+<<<<<<< Updated upstream
       "x" : 6.802866931299657,
       "y" : 6.6667754005706
     },
@@ -70,6 +107,15 @@
       "x" : 8.047825948038591,
       "y" : 5.554838132320542
     },
+=======
+      "x" : 8.047825948038591,
+      "y" : 5.554838132320542
+    },
+    "nextControl" : {
+      "x" : 6.802866931299657,
+      "y" : 6.6667754005706
+    },
+>>>>>>> Stashed changes
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -77,20 +123,35 @@
       "x" : 3.038,
       "y" : 5.354000000000001
     },
+<<<<<<< Updated upstream
     "prevControl" : null,
     "nextControl" : {
       "x" : 6.365622775800711,
       "y" : 5.6122206405693955
     },
+=======
+    "prevControl" : {
+      "x" : 6.365622775800711,
+      "y" : 5.6122206405693955
+    },
+    "nextControl" : null,
+>>>>>>> Stashed changes
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 0.9236234458259289,
+<<<<<<< Updated upstream
     "rotationDegrees" : 180.0
   }, {
     "waypointRelativePos" : 2.15,
     "rotationDegrees" : 90.0
+=======
+    "rotationDegrees" : 0.0
+  }, {
+    "waypointRelativePos" : 2.15,
+    "rotationDegrees" : 270.0
+>>>>>>> Stashed changes
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -110,7 +171,11 @@
       "x" : 7.0,
       "y" : 5.510000000000001
     },
+<<<<<<< Updated upstream
     "rotationOffset" : 90.0,
+=======
+    "rotationOffset" : 270.0,
+>>>>>>> Stashed changes
     "minWaypointRelativePos" : 2.3397075365579214,
     "maxWaypointRelativePos" : 4.566929133858248,
     "name" : "Point Towards Zone"
@@ -136,13 +201,21 @@
   },
   "goalEndState" : {
     "velocity" : 0,
+<<<<<<< Updated upstream
     "rotation" : 125.0
+=======
+    "rotation" : -55.0
+>>>>>>> Stashed changes
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
+<<<<<<< Updated upstream
     "rotation" : 305.0
+=======
+    "rotation" : 125.0
+>>>>>>> Stashed changes
   },
   "useDefaultConstraints" : true
 }

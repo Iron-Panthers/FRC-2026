@@ -183,7 +183,11 @@
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
+<<<<<<< Updated upstream
     "rotation" : -90.0
+=======
+    "rotation" : 90.0
+>>>>>>> Stashed changes
   },
   "useDefaultConstraints" : true
 }
