@@ -7,40 +7,36 @@
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 3.516869517246131,
-      "y" : 7.6997591985633775
+      "x" : 4.47304480031633,
+      "y" : 7.6353000395413195
     },
     "isLocked" : false,
     "linkedName" : "Shooting Pose 2 Left"
   }, {
     "anchor" : {
-      "x" : 3.038,
-      "y" : 5.363890875954924
+      "x" : 7.977744444444443,
+      "y" : 5.958766666666667
     },
     "prevControl" : {
-      "x" : 2.843434055622471,
-      "y" : 5.2069065032024735
+      "x" : 7.957588888888889,
+      "y" : 7.813077777777779
     },
     "nextControl" : null,
     "isLocked" : false,
-    "linkedName" : "Shooting Pose Left"
+    "linkedName" : null
   } ],
-  "rotationTargets" : [ ],
-  "constraintZones" : [ {
-    "name" : "Constraints Zone",
-    "minWaypointRelativePos" : 0,
-    "maxWaypointRelativePos" : 1.0,
-    "constraints" : {
-      "maxVelocity" : 4.0,
-      "maxAcceleration" : 15.0,
-      "maxAngularVelocity" : 540.0,
-      "maxAngularAcceleration" : 720.0,
-      "nominalVoltage" : 12.0,
-      "unlimited" : false
-    }
+  "rotationTargets" : [ {
+    "waypointRelativePos" : 0.5,
+    "rotationDegrees" : -67.0
   } ],
+  "constraintZones" : [ ],
   "pointTowardsZones" : [ ],
-  "eventMarkers" : [ ],
+  "eventMarkers" : [ {
+    "name" : "Intake down",
+    "waypointRelativePos" : 0.45847176079734303,
+    "endWaypointRelativePos" : null,
+    "command" : null
+  } ],
   "globalConstraints" : {
     "maxVelocity" : 3.1,
     "maxAcceleration" : 4.0,
@@ -51,7 +47,7 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : -55.0
+    "rotation" : 90.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
