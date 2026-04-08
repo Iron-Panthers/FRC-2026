@@ -5,11 +5,19 @@
       "x" : 4.407,
       "y" : 7.644022222222223
     },
+<<<<<<< HEAD
     "prevControl" : {
       "x" : 6.160502222412783,
       "y" : 7.595373493975904
     },
     "nextControl" : null,
+=======
+    "prevControl" : null,
+    "nextControl" : {
+      "x" : 6.160502222412783,
+      "y" : 7.595373493975904
+    },
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -18,6 +26,7 @@
       "y" : 7.074602609727165
     },
     "prevControl" : {
+<<<<<<< HEAD
       "x" : 8.56453291814947,
       "y" : 6.76186245057335
     },
@@ -25,6 +34,15 @@
       "x" : 7.54509934756821,
       "y" : 7.387342768880981
     },
+=======
+      "x" : 7.54509934756821,
+      "y" : 7.387342768880981
+    },
+    "nextControl" : {
+      "x" : 8.56453291814947,
+      "y" : 6.76186245057335
+    },
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -33,6 +51,7 @@
       "y" : 4.7613760379596695
     },
     "prevControl" : {
+<<<<<<< HEAD
       "x" : 8.54405134947893,
       "y" : 3.5726513768022823
     },
@@ -40,6 +59,15 @@
       "x" : 8.56049822064057,
       "y" : 7.010047449584816
     },
+=======
+      "x" : 8.56049822064057,
+      "y" : 7.010047449584816
+    },
+    "nextControl" : {
+      "x" : 8.54405134947893,
+      "y" : 3.5726513768022823
+    },
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : null
   }, {
@@ -47,17 +75,29 @@
       "x" : 3.038,
       "y" : 5.354000000000001
     },
+<<<<<<< HEAD
     "prevControl" : null,
     "nextControl" : {
       "x" : 7.108007117437722,
       "y" : 6.343845788849349
     },
+=======
+    "prevControl" : {
+      "x" : 7.108007117437722,
+      "y" : 6.343845788849349
+    },
+    "nextControl" : null,
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.1,
+<<<<<<< HEAD
     "rotationDegrees" : 90.0
+=======
+    "rotationDegrees" : 270.0
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -111,13 +151,21 @@
   },
   "goalEndState" : {
     "velocity" : 0,
+<<<<<<< HEAD
     "rotation" : 125.0
+=======
+    "rotation" : -55.0
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
+<<<<<<< HEAD
     "rotation" : 180.0
+=======
+    "rotation" : 0.0
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
   },
   "useDefaultConstraints" : true
 }

@@ -5,11 +5,19 @@
       "x" : 3.038,
       "y" : 5.363890875954924
     },
+<<<<<<< HEAD
     "prevControl" : {
       "x" : 3.672792408066429,
       "y" : 6.310699891376038
     },
     "nextControl" : null,
+=======
+    "prevControl" : null,
+    "nextControl" : {
+      "x" : 3.672792408066429,
+      "y" : 6.310699891376038
+    },
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   }, {
@@ -17,17 +25,29 @@
       "x" : 13.068600237247924,
       "y" : 5.579074733096087
     },
+<<<<<<< HEAD
     "prevControl" : null,
     "nextControl" : {
       "x" : 12.068600237247924,
       "y" : 5.579074733096087
     },
+=======
+    "prevControl" : {
+      "x" : 12.068600237247924,
+      "y" : 5.579074733096087
+    },
+    "nextControl" : null,
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
     "isLocked" : false,
     "linkedName" : null
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 0.391549295774647,
+<<<<<<< HEAD
     "rotationDegrees" : 0.0
+=======
+    "rotationDegrees" : -180.0
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
   } ],
   "constraintZones" : [ {
     "name" : "Constraints Zone",
@@ -54,13 +74,21 @@
   },
   "goalEndState" : {
     "velocity" : 0,
+<<<<<<< HEAD
     "rotation" : 180.0
+=======
+    "rotation" : 0.0
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
+<<<<<<< HEAD
     "rotation" : 125.0
+=======
+    "rotation" : -55.0
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
   },
   "useDefaultConstraints" : true
 }

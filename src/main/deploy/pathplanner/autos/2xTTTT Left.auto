@@ -11,7 +11,11 @@
       }, {
         "type" : "path",
         "data" : {
+<<<<<<< HEAD
           "pathName" : "2xTT 1 Left"
+=======
+          "pathName" : "2xTT 1 I Left"
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
         }
       }, {
         "type" : "named",
@@ -26,7 +30,11 @@
       }, {
         "type" : "path",
         "data" : {
+<<<<<<< HEAD
           "pathName" : "2xTT 2 Left"
+=======
+          "pathName" : "2xTT 2 I Left"
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
         }
       }, {
         "type" : "named",
