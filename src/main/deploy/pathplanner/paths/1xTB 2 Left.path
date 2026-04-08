@@ -5,11 +5,11 @@
       "x" : 3.374567022538553,
       "y" : 7.494211150652433
     },
-    "prevControl" : {
+    "prevControl" : null,
+    "nextControl" : {
       "x" : 3.516869517246131,
       "y" : 7.6997591985633775
     },
-    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose 2 Left"
   }, {
@@ -17,11 +17,11 @@
       "x" : 3.038,
       "y" : 5.363890875954924
     },
-    "prevControl" : null,
-    "nextControl" : {
+    "prevControl" : {
       "x" : 2.843434055622471,
       "y" : 5.2069065032024735
     },
+    "nextControl" : null,
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   } ],
@@ -51,13 +51,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 125.0
+    "rotation" : -55.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 113.0
+    "rotation" : -67.0
   },
   "useDefaultConstraints" : true
 }
