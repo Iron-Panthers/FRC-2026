@@ -58,4 +58,20 @@ public class ShootCommandFactory {
           }
         });
   }
+
+  /** Command to bind to whileTrue – repeats while the button is held. */
+  public Command whileHeldShuttling() {
+    return new InstantCommand(
+            () -> {
+              shooterController.setTargetState(
+                  (shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
+                              || shooterController.getTargetState() == ShooterState.SHUTTLE)
+                          && shooterController.flywheelsUpToSpeed() // time correct
+                      ? ShooterState.SHUTTLE
+                      : ShooterState.TOTAL_SPIN_UP);
+            })
+        .repeatedly()
+        .alongWith(
+            new WaitCommand(.75).andThen(intakeController.setTargetStateCommand(IntakeState.STOW)));
+  }
 }

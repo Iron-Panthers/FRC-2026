@@ -438,7 +438,11 @@ public class RobotContainer {
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
 
     // SHUTTLE
-    driverA.povRight().whileTrue(new ShuttleCommand(swerve, shooterController));
+    driverA
+        .povRight()
+        .whileTrue(new PassToPoseCommand(swerve).alongWith(shootCommand.whileHeldShuttling()));
+
+    driverA.povRight().onFalse(shootCommand.onRelease());
 
     driverA
         .rightBumper()
