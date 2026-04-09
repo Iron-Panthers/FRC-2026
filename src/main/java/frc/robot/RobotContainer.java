@@ -34,7 +34,6 @@ import frc.robot.commands.FieldAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.PassToPoseCommand;
 import frc.robot.commands.ShootCommandFactory;
-import frc.robot.commands.ShuttleCommand;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
@@ -139,7 +138,8 @@ public class RobotContainer {
           intakeRack = new IntakeRack(new IntakeRackIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           vision = new Vision(new VisionIOPhotonvision("CamC", 0));
-          //         new VisionIOPhotonvision("arducam-3", 1));
+          // , new VisionIOPhotonvision("CamB", 1));
+          // new VisionIOPhotonvision("arducam-3", 1));
           // // rgb = new RGB(new RGBIOAddressableLED());
           // // rgb = new RGB(new RGBIOCANdle());
           // // canWatchdog = new CANWatchdog(new CANWatchdogIOComp(), rgb);
@@ -405,7 +405,7 @@ public class RobotContainer {
   private void configureDriverAButtons() {
     driverA.rightStick().whileTrue(new FieldAxisAssistCommand(swerve));
 
-    driverA.leftStick().whileTrue(new PassToPoseCommand(swerve));
+    // driverA.leftStick().whileTrue(new PassToPoseCommand(swerve));
     // driverA.rightStick().onTrue(new HappyBirthdayCommand());
     driverA
         .povLeft()

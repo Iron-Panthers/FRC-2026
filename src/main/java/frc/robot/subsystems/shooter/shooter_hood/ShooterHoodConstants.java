@@ -26,7 +26,7 @@ public class ShooterHoodConstants {
   // TODO update all the PID information
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(1000, 0, 0, 0.1, 4.18, 0, 0.8);
+        case COMP -> new PIDGains(1000, 0, 0, 0, 4.18, 0, 0.8);
         case SIM -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };

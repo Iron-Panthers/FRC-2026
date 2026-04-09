@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.2454567022538554,
-        "y": 0.8806555555555553
+        "x": 3.2815,
+        "y": 0.7265480427046258
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.173662369578645,
-        "y": 0.8184414080520179
+        "x": 5.537164887307236,
+        "y": 0.7050296559905087
       },
       "isLocked": false,
       "linkedName": "Trench Shooting Pose Right"
     },
     {
       "anchor": {
-        "x": 5.8311777777777785,
-        "y": 0.7496444444444432
+        "x": 7.871909845788851,
+        "y": 1.1246381969157766
       },
       "prevControl": {
-        "x": 5.528860331184913,
-        "y": 0.44591039473400435
+        "x": 7.857249390222935,
+        "y": 0.7607923451435069
       },
       "nextControl": {
-        "x": 6.4247266464059525,
-        "y": 1.3459745722662468
+        "x": 7.99026097271649,
+        "y": 4.061897983392646
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.7303999999999995,
-        "y": 4.014844444444445
+        "x": 6.03208778173191,
+        "y": 3.513179122182681
       },
       "prevControl": {
-        "x": 5.786809693323624,
-        "y": 3.7712916852748255
+        "x": 6.232598559317011,
+        "y": 3.662495658682224
       },
       "nextControl": {
-        "x": 5.617324681422163,
-        "y": 4.503054966625789
+        "x": 5.526405693950179,
+        "y": 3.136607354685646
       },
       "isLocked": false,
       "linkedName": null
@@ -52,24 +52,24 @@
         "y": 0.7265480427046258
       },
       "prevControl": {
-        "x": 6.505959847313711,
-        "y": 1.01368213595846
+        "x": 6.470105940460148,
+        "y": 0.8830841380943444
       },
       "nextControl": {
-        "x": 5.60113823293955,
-        "y": 0.6286613336445056
+        "x": 5.588359061017745,
+        "y": 0.6670579528491664
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.2454567022538554,
-        "y": 0.8806555555555553
+        "x": 3.2815,
+        "y": 0.7265480427046258
       },
       "prevControl": {
-        "x": 5.084160863822361,
-        "y": 0.6416454940301018
+        "x": 4.94540925266904,
+        "y": 0.6835112692763936
       },
       "nextControl": null,
       "isLocked": false,
@@ -82,16 +82,12 @@
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 0.6181172291296626,
-      "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 1.2,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 1.0330708661417352,
+      "rotationDegrees": -83.27403642344655
     },
     {
       "waypointRelativePos": 2.0,
-      "rotationDegrees": -90.0
+      "rotationDegrees": 73.68614757373936
     },
     {
       "waypointRelativePos": 3.684210526315819,
@@ -128,19 +124,6 @@
         "nominalVoltage": 12.0,
         "unlimited": false
       }
-    },
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.9748305905130716,
-      "maxWaypointRelativePos": 2.168441432720228,
-      "constraints": {
-        "maxVelocity": 0.3,
-        "maxAcceleration": 4.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
     }
   ],
   "pointTowardsZones": [],
@@ -168,13 +151,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 66.25345435489646
+    "rotation": 78.0
   },
   "reversed": false,
   "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 66.25345435489646
+    "rotation": 78.0
   },
   "useDefaultConstraints": true
 }

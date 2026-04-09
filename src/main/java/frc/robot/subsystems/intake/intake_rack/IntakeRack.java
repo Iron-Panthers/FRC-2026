@@ -79,7 +79,8 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
   @Override
   public void periodic() {
     super.periodic();
-    if (getPositionTarget().getMaxCruiseVelocity().isPresent()) {
+    if (getPositionTarget().getMaxCruiseVelocity().isPresent()
+        && getControlMode() != ControlMode.ZEROING) {
       pidController.setConstraints(
           new Constraints(
               getPositionTarget().getMaxCruiseVelocity().get(),
