@@ -138,7 +138,7 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
           intakeRack = new IntakeRack(new IntakeRackIOTalonFX());
           intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
-          vision = new Vision(new VisionIOPhotonvision("camD (1)", 0));
+          vision = new Vision(new VisionIOPhotonvision("CamC", 0));
           //         new VisionIOPhotonvision("arducam-3", 1));
           // // rgb = new RGB(new RGBIOAddressableLED());
           // // rgb = new RGB(new RGBIOCANdle());
@@ -267,7 +267,12 @@ public class RobotContainer {
     // Register Command Names in this method
 
     new EventTrigger("Intake down")
-        .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.INTAKE)));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  intakeController.setTargetState(IntakeState.INTAKE);
+                  shooterController.setTargetState(ShooterState.INTAKE);
+                }));
     new EventTrigger("Intake stow")
         .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)));
     new EventTrigger("Spin up shooter")

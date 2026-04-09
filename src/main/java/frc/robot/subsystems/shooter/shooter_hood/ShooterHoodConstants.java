@@ -26,7 +26,7 @@ public class ShooterHoodConstants {
   // TODO update all the PID information
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(1000, 0, 0, 0, 4.18, 0, 0.8);
+        case COMP -> new PIDGains(1000, 0, 0, 0.1, 4.18, 0, 0.8);
         case SIM -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
@@ -58,7 +58,7 @@ public class ShooterHoodConstants {
   // TODO Update Limits
   public static final double UPPER_VOLT_LIMIT = 6;
   public static final double LOWER_VOLT_LIMIT = -6;
-  public static final double SUPPLY_CURRENT_LIMIT = 30;
+  public static final double SUPPLY_CURRENT_LIMIT = 7;
 
   // TODO Change Limits
   public static final double ZEROING_VOLTS = -1;
