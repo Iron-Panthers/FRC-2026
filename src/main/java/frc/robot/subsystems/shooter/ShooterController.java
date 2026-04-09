@@ -199,6 +199,15 @@ public class ShooterController extends SubsystemBase {
       }
 
       // Serializer
+      if (targetState == ShooterState.SHOOT) {
+        if (shooterFlywheel.reachedVelocityTargetManual()) {
+          serializer.setVelocityTarget(targetState.serializerTarget);
+        } else {
+          serializer.setVelocityTarget(SerializerTarget.IDLE);
+        }
+      } else {
+        serializer.setVelocityTarget(targetState.serializerTarget);
+      }
       serializer.setVelocityTarget(targetState.serializerTarget);
     } else {
       shooterHood.setPositionTarget(targetState.hoodTarget);

@@ -8,8 +8,8 @@ public class ShooterAccelerator
     extends GenericRollers<ShooterAccelerator.ShooterAcceleratorTarget> {
   public enum ShooterAcceleratorTarget implements GenericRollers.VelocityTarget {
     IDLE(0, ShooterAcceleratorConstants.CURRENT_LIMIT_AMPS),
-    SHOOT(34.44, ShooterAcceleratorConstants.CURRENT_LIMIT_AMPS),
-    WARMUP_ACCELERATOR(40, ShooterAcceleratorConstants.CURRENT_LIMIT_AMPS);
+    SHOOT(50.44, ShooterAcceleratorConstants.CURRENT_LIMIT_AMPS),
+    WARMUP_ACCELERATOR(60, ShooterAcceleratorConstants.CURRENT_LIMIT_AMPS);
 
     private double velocity;
     private double supplyCurrentLimit;
