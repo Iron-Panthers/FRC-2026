@@ -41,6 +41,7 @@ public class Drive extends SubsystemBase {
   private DriveModes driveMode = DriveModes.TELEOP;
 
   private boolean isScoped = false;
+  private boolean isBeingDefended = false;
 
   private GyroIO gyroIO;
   private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -118,7 +119,8 @@ public class Drive extends SubsystemBase {
             Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond);
         if (speedMagnitude < 0.01
             && Math.abs(targetSpeeds.omegaRadiansPerSecond) < 0.1
-            && isScoped) {
+            && isScoped
+            && isBeingDefended) {
           driveMode = DriveModes.DEFENSE;
         }
       }
@@ -395,5 +397,9 @@ public class Drive extends SubsystemBase {
     for (Module module : modules) {
       module.setSupplyCurrentLimit(DriveConstants.CURRENT_LIMIT_AMPS);
     }
+  }
+
+  public void setIsBeingDefended(boolean isBeingDefended) {
+    this.isBeingDefended = isBeingDefended;
   }
 }

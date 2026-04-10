@@ -53,8 +53,14 @@ public class ShooterFlywheel extends GenericRollers<ShooterFlywheel.ShooterFlywh
         supplyCurrentAmps);
   }
 
-  public boolean reachedVelocityTargetManual() {
-    return Math.abs(super.inputs.velocityRadsPerSec - Units.rotationsToRadians(manualVelocityRPS))
-        < 40;
+  public boolean reachedVelocityTarget() {
+    if (super.useManualVelocity) {
+      return Math.abs(super.inputs.velocityRadsPerSec - Units.rotationsToRadians(manualVelocityRPS))
+          < 40;
+    } else {
+      return Math.abs(
+              super.inputs.velocityRadsPerSec - Units.rotationsToRadians(velocityTarget.velocity))
+          < 40;
+    }
   }
 }

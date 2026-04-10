@@ -182,7 +182,7 @@ public class ShooterController extends SubsystemBase {
 
       // Omniwheels
       if (targetState == ShooterState.SHOOT) {
-        if (shooterFlywheel.reachedVelocityTargetManual()) {
+        if (shooterFlywheel.reachedVelocityTarget()) {
           shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
         } else {
           shooterOmniwheel.setVelocityTarget(ShooterOmniwheelTarget.IDLE);
@@ -200,7 +200,7 @@ public class ShooterController extends SubsystemBase {
 
       // Serializer
       if (targetState == ShooterState.SHOOT) {
-        if (shooterFlywheel.reachedVelocityTargetManual()) {
+        if (shooterFlywheel.reachedVelocityTarget()) {
           serializer.setVelocityTarget(targetState.serializerTarget);
         } else {
           serializer.setVelocityTarget(SerializerTarget.IDLE);
@@ -272,6 +272,6 @@ public class ShooterController extends SubsystemBase {
 
   @AutoLogOutput(key = "Shooter/Flywheels Up To Speed")
   public boolean flywheelsUpToSpeed() {
-    return shooterFlywheel.reachedVelocityTargetManual();
+    return shooterFlywheel.reachedVelocityTarget();
   }
 }

@@ -440,7 +440,7 @@ public class RobotContainer {
     // SHUTTLE
     driverA
         .povRight()
-        .whileTrue(new PassToPoseCommand(swerve).alongWith(shootCommand.whileHeldShuttling()));
+        .whileTrue(new PassToPoseCommand(swerve).andThen(shootCommand.whileHeldShuttling()));
 
     driverA.povRight().onFalse(shootCommand.onRelease());
 
@@ -495,6 +495,9 @@ public class RobotContainer {
 
     driverB.povDown().onTrue(shooterController.zeroCommand());
     driverB.povDown().onFalse(shooterController.stopZeroingCommand());
+
+    driverB.rightTrigger().onTrue(new InstantCommand(() -> swerve.setIsBeingDefended(true)));
+    driverB.leftTrigger().onTrue(new InstantCommand(() -> swerve.setIsBeingDefended(false)));
   }
 
   private void configureAutos() {

@@ -13,6 +13,8 @@ public class PassToPoseCommand extends Command {
   private Drive swerve;
   private Pose2d targetPose;
 
+  private Rotation2d targetAngle;
+
   private Pose2d BLUE_CORNER_TOP = new Pose2d(0, 0, Pose2d.kZero.getRotation());
   private Pose2d BLUE_CORNER_BOTTOM =
       new Pose2d(0, DriveConstants.BLUE_HUB_ORIGIN.getY() * 2, Pose2d.kZero.getRotation());
@@ -40,7 +42,19 @@ public class PassToPoseCommand extends Command {
       angle = angle.plus(new Rotation2d(Math.PI));
     }
 
-    swerve.setTargetHeading(estimatedPose.getRotation().plus(angle));
+    targetAngle = estimatedPose.getRotation().plus(angle);
+    swerve.setTargetHeading(targetAngle);
+  }
+
+  @Override
+  public boolean isFinished() {
+    return Math.abs(
+            RobotState.getInstance()
+                .getEstimatedPose()
+                .getRotation()
+                .minus(targetAngle)
+                .getDegrees())
+        < 6;
   }
 
   @Override
