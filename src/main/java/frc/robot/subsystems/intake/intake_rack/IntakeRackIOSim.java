@@ -2,13 +2,13 @@ package frc.robot.subsystems.intake.intake_rack;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.RobotSimState;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOSim;
 
 public class IntakeRackIOSim extends GenericSuperstructureIOSim implements IntakeRackIO {
 
-  private final SingleJointedArmSim intakeRackSim;
+  private final ElevatorSim intakeRackSim;
   private final double reduction;
 
   public IntakeRackIOSim() {
@@ -17,13 +17,13 @@ public class IntakeRackIOSim extends GenericSuperstructureIOSim implements Intak
     this.reduction = IntakeRackConstants.INTAKE_RACK_CONFIG.reduction();
 
     intakeRackSim =
-        new SingleJointedArmSim(
+        new ElevatorSim(
             DCMotor.getKrakenX60Foc(1),
             reduction,
-            IntakeRackConstants.PHYSICAL_CONSTANTS.momentOfInertia(),
-            IntakeRackConstants.PHYSICAL_CONSTANTS.lengthMeters(),
-            IntakeRackConstants.PHYSICAL_CONSTANTS.minAngleRads(),
-            IntakeRackConstants.PHYSICAL_CONSTANTS.maxAngleRads(),
+            IntakeRackConstants.PHYSICAL_CONSTANTS.massInKilograms(),
+            IntakeRackConstants.PHYSICAL_CONSTANTS.drumRadiusMeters(),
+            IntakeRackConstants.PHYSICAL_CONSTANTS.minExtensionMeters(),
+            IntakeRackConstants.PHYSICAL_CONSTANTS.maxExtensionMeters(),
             IntakeRackConstants.PHYSICAL_CONSTANTS.simulateGravity(),
             0);
     setOffset();
@@ -52,24 +52,35 @@ public class IntakeRackIOSim extends GenericSuperstructureIOSim implements Intak
     intakeRackSim.setInputVoltage(appliedVoltage);
     intakeRackSim.update(0.02);
 
-    // Convert position and velocity from meters to rotations for the TalonFX sensor
-    double rotations = intakeRackSim.getAngleRads() / (2 * Math.PI * reduction);
-    double velocityRPS = intakeRackSim.getVelocityRadPerSec() / (2 * Math.PI * reduction);
+    // Convert position and velocity from meters to rotations for the
+    // TalonFX sensor
+    // Correct unit conversion: meters to rotations
+    double rotations =
+        intakeRackSim.getPositionMeters()
+            / (2 * Math.PI * IntakeRackConstants.PHYSICAL_CONSTANTS.drumRadiusMeters())
+            * reduction;
+
+    // Correct unit conversion: meters/s to rotations/s
+    double velocityRPS =
+        intakeRackSim.getVelocityMetersPerSecond()
+            / (2 * Math.PI * IntakeRackConstants.PHYSICAL_CONSTANTS.drumRadiusMeters())
+            * reduction;
 
     talon.getSimState().setRawRotorPosition(rotations);
     talon.getSimState().setRotorVelocity(velocityRPS);
 
+    inputs.isConnected = true;
     inputs.positionRotations = rotations;
     inputs.velocityRotPerSec = velocityRPS;
     inputs.appliedVolts = appliedVoltage;
-    inputs.supplyCurrentAmps = talon.getSimState().getSupplyCurrent();
+    inputs.supplyCurrentAmps = 1.0; // Not simulated
     inputs.tempCelsius = 25.0; // Not simulated
 
     // update the Sim State to match if it is up or down
     if (rotations < .1) {
-      RobotSimState.getInstance().setIntakeState(true);
-    } else {
       RobotSimState.getInstance().setIntakeState(false);
+    } else {
+      RobotSimState.getInstance().setIntakeState(true);
     }
   }
 

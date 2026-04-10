@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1xTB Long 1 I Right"
+            "pathName": "1xTB Long 1 Right"
           }
         },
         {
@@ -31,7 +31,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2xB 2 I Right"
+            "pathName": "1xTB 2 Right"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2xB 2 Right"
           }
         },
         {

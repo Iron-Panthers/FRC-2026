@@ -16,17 +16,17 @@ public class ShooterHoodConstants {
       switch (Constants.getRobotType()) {
         case COMP -> new ShooterHoodConfig(
             // reduction between sensor and mechanism
-            CAN.at(1, "Shooter Hood"), 0.75);
+            CAN.at(30, "Shooter Hood"), 36 / 22.0 * 158 / 10);
         case SIM -> new ShooterHoodConfig(
             // Reduction between motor and mechanism
-            CAN.at(8, "Shooter Hood"), 0.75);
+            CAN.at(8, "Shooter Hood"), 12 * .375);
         default -> new ShooterHoodConfig(0, 1);
       };
 
   // TODO update all the PID information
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(500, 0, 0, .5, 4.1, 0, 0.45);
+        case COMP -> new PIDGains(1000, 0, 0, 0, 4.18, 0, 0.8);
         case SIM -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };
@@ -34,7 +34,7 @@ public class ShooterHoodConstants {
   // TODO update Motion Magic
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(6, 10);
+        case COMP -> new MotionMagicConfig(6, 1);
         case SIM -> new MotionMagicConfig(7.5, 10);
         default -> new MotionMagicConfig(0, 0);
       };
@@ -48,9 +48,9 @@ public class ShooterHoodConstants {
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-  public static final InvertedValue MOTOR_DIRECTION = InvertedValue.Clockwise_Positive;
+  public static final InvertedValue MOTOR_DIRECTION = InvertedValue.CounterClockwise_Positive;
 
-  public static final double POSITION_TARGET_EPSILON = 0.05;
+  public static final double POSITION_TARGET_EPSILON = 0.005;
 
   /** Distance from center of hood rotation to hood end */
   public static final double SHOOTER_HOOD_LENGTH = 10; // in inches
@@ -58,7 +58,7 @@ public class ShooterHoodConstants {
   // TODO Update Limits
   public static final double UPPER_VOLT_LIMIT = 6;
   public static final double LOWER_VOLT_LIMIT = -6;
-  public static final double SUPPLY_CURRENT_LIMIT = 30;
+  public static final double SUPPLY_CURRENT_LIMIT = 20;
 
   // TODO Change Limits
   public static final double ZEROING_VOLTS = -1;
@@ -75,11 +75,11 @@ public class ShooterHoodConstants {
                 new Transform3d(
                     new Translation3d(
                         Units.inchesToMeters(0),
-                        Units.inchesToMeters(9.5),
+                        Units.inchesToMeters(-9.5),
                         Units.inchesToMeters(20.234)),
-                        // Units.inchesToMeters(0),
-                        // Units.inchesToMeters(0),
-                        // Units.inchesToMeters(0)),
+                    // Units.inchesToMeters(0),
+                    // Units.inchesToMeters(0),
+                    // Units.inchesToMeters(0)),
                     new Rotation3d(0, 0, Math.toRadians(0))))
             .rotateBy(new Rotation3d(0, 0, Math.toRadians(90)))
             .minus(new Pose3d());

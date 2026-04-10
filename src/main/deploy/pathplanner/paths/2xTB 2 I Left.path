@@ -64,7 +64,7 @@
     },
     "prevControl" : {
       "x" : 8.047825948038591,
-      "y" : 5.554838132320543
+      "y" : 5.554838132320542
     },
     "nextControl" : {
       "x" : 6.802866931299657,
@@ -87,10 +87,10 @@
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 0.9236234458259289,
-    "rotationDegrees" : 90.0
+    "rotationDegrees" : 0.0
   }, {
     "waypointRelativePos" : 2.15,
-    "rotationDegrees" : 358.83299999999997
+    "rotationDegrees" : 270.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -110,7 +110,7 @@
       "x" : 7.0,
       "y" : 5.510000000000001
     },
-    "rotationOffset" : 0.0,
+    "rotationOffset" : 270.0,
     "minWaypointRelativePos" : 2.3397075365579214,
     "maxWaypointRelativePos" : 4.566929133858248,
     "name" : "Point Towards Zone"
@@ -136,13 +136,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 135.0
+    "rotation" : -55.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 315.0
+    "rotation" : 125.0
   },
   "useDefaultConstraints" : true
 }

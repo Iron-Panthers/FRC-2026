@@ -10,7 +10,7 @@ import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 public class StowCommand extends ParallelCommandGroup {
   public StowCommand(IntakeController intakeController, ShooterController shooterController) {
     addCommands(
-        intakeController.setTargetStateCommand(IntakeState.MIDDLE_STOW),
+        intakeController.setTargetStateCommand(IntakeState.STOW),
         shooterController.setTargetStateCommand(ShooterState.IDLE));
   }
 }

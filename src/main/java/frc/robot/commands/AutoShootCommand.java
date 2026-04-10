@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.intake.IntakeController;
+import frc.robot.subsystems.intake.IntakeController.IntakeState;
 import frc.robot.subsystems.shooter.ShooterController;
 import frc.robot.subsystems.shooter.ShooterController.ShooterState;
 import frc.robot.subsystems.swerve.Drive;
@@ -24,11 +25,8 @@ public class AutoShootCommand extends SequentialCommandGroup {
         // new AlignToShootCommand(swerve, shooterController).alongWith(
         new InstantCommand(() -> shooterController.setTargetState(ShooterState.SHOOT))
             .alongWith(
-                new WaitCommand(0.2)
-                    .andThen(
-                        intakeActive
-                            ? new AgitateIntakeCommand(intakeController, 4)
-                            : new InstantCommand()))
+                new WaitCommand(1)
+                    .andThen(intakeController.setTargetStateCommand(IntakeState.STOW)))
             .withDeadline(new WaitCommand(4.3)),
         (intakeActive
             ? new IntakeCommand(intakeController, shooterController)

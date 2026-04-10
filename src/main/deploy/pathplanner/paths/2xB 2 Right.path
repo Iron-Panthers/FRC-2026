@@ -3,91 +3,87 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.944804270462635,
-        "y": 0.7265480427046258
+        "x": 3.038,
+        "y": 2.856
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.223410256410257,
-        "y": 0.7558461538461541
+        "x": 3.91252669039146,
+        "y": 2.254353499406881
       },
       "isLocked": false,
-      "linkedName": "Trench Shooting Pose Right"
+      "linkedName": "Shooting Pose Right"
     },
     {
       "anchor": {
-        "x": 7.481469298245615,
-        "y": 1.0347368421052625
+        "x": 6.225753262158957,
+        "y": 2.684721233689205
       },
       "prevControl": {
-        "x": 6.712171052631579,
-        "y": 0.5443092105263159
+        "x": 5.999810201660736,
+        "y": 2.5233333333333325
       },
       "nextControl": {
-        "x": 8.140868811962655,
-        "y": 1.4551040320998738
+        "x": 6.585672652809943,
+        "y": 2.9418065127256248
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.827653508771929,
-        "y": 3.5830372807017543
+        "x": 6.107402135231317,
+        "y": 4.180249110320284
       },
       "prevControl": {
-        "x": 7.910948810220934,
-        "y": 3.2457871554906172
+        "x": 5.838422301304865,
+        "y": 4.556820877817319
       },
       "nextControl": {
-        "x": 7.23708888888889,
-        "y": 5.974144444444444
+        "x": 6.258010070154326,
+        "y": 3.969398001428069
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.236512455516015,
-        "y": 1.3720996441281137
+        "x": 6.225753262158957,
+        "y": 2.5556109134045073
       },
       "prevControl": {
-        "x": 8.854078058079127,
-        "y": 3.256700956383563
+        "x": 6.83902728351127,
+        "y": 2.6954804270462636
       },
       "nextControl": {
-        "x": 6.033627182385398,
-        "y": 1.2260258068172694
+        "x": 5.349686831575123,
+        "y": 2.3558062888853866
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.944804270462635,
-        "y": 0.7265480427046258
+        "x": 2.686,
+        "y": 3.201
       },
       "prevControl": {
-        "x": 4.6871886120996455,
-        "y": 0.6619928825622776
+        "x": 1.1043772241992889,
+        "y": 2.792313167259786
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Trench Shooting Pose Right"
+      "linkedName": "Shooting Pose 2 Right"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.4955595026642977,
-      "rotationDegrees": -56.91254698399373
+      "waypointRelativePos": 0.42204724409448785,
+      "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.145648312611008,
-      "rotationDegrees": -178.833
-    },
-    {
-      "waypointRelativePos": 2.8,
-      "rotationDegrees": -119.99999999999999
+      "waypointRelativePos": 1.801065719360589,
+      "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [
@@ -103,10 +99,29 @@
         "nominalVoltage": 12.0,
         "unlimited": false
       }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.38470191226096234,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 7.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
     }
   ],
   "pointTowardsZones": [],
   "eventMarkers": [
+    {
+      "name": "Intake off",
+      "waypointRelativePos": 2.8,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
     {
       "name": "Spin up shooter",
       "waypointRelativePos": 3.0,
@@ -124,13 +139,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -102.09475707701203
+    "rotation": 27.08835109544119
   },
   "reversed": false,
   "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -102.09475707701203
+    "rotation": 55.0
   },
   "useDefaultConstraints": true
 }

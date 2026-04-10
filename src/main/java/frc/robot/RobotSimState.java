@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.RobotType;
@@ -53,15 +54,15 @@ public class RobotSimState {
         driveSimulation::getSimulatedDriveTrainPose, // Supplier<Pose2d> of robot pose
         driveSimulation::getDriveTrainSimulatedChassisSpeedsFieldRelative);
 
-    // Register intake on the right side of the robot
+    // Register intake on the back of the robot
     double halfLength = DriveConstants.mapleSimConfig.bumperLengthX.in(Meters) / 2.0;
     double halfWidth = DriveConstants.mapleSimConfig.bumperWidthY.in(Meters) / 2.0;
     double intakeReach = 0.1; // meters beyond bumper
     fuelSim.registerIntake(
+        -halfLength - intakeReach,
         -halfLength,
-        halfLength,
-        -halfWidth - intakeReach,
         -halfWidth,
+        halfWidth,
         () -> intakeActive && fuelCount < 60,
         () -> fuelCount++);
 
@@ -115,16 +116,25 @@ public class RobotSimState {
 
   // Shooting utilities
   public void shootFuel(
-      Angle launchAngle, Transform3d shooterTransform3d, LinearVelocity launchVelocity) {
+      Angle launchAngle,
+      Transform3d shooterTransform3d,
+      LinearVelocity launchVelocity,
+      Distance shooterWidth) {
     if (fuelCount <= 0) return; // no fuel to shoot
     fuelCount--;
 
     // Build a transform that includes the shooter's position and combines the hood pitch with the
     // shooter's yaw
+    Transform3d shooterOffset =
+        new Transform3d(
+            new Translation3d(0, (Math.random() * 2 - 1) * (shooterWidth.in(Units.Meters) * .5), 0),
+            new Rotation3d());
+
     Transform3d launchTransform =
         new Transform3d(
-            shooterTransform3d.getTranslation(),
-            new Rotation3d(0, 0, shooterTransform3d.getRotation().getZ()));
+                shooterTransform3d.getTranslation(),
+                new Rotation3d(0, 0, shooterTransform3d.getRotation().getZ()))
+            .plus(shooterOffset);
 
     fuelSim.launchFuel(launchVelocity, launchAngle, launchTransform);
   }
@@ -173,7 +183,8 @@ public class RobotSimState {
       double shotsPerSecond,
       Angle shooterAngle,
       Transform3d shooterTransform3d,
-      LinearVelocity launchVelocity) {
+      LinearVelocity launchVelocity,
+      Distance shooterWidth) {
     if (running && !isShooterRunning) {
       // Starting the shooter
       isShooterRunning = true;
@@ -188,12 +199,14 @@ public class RobotSimState {
     this.currentShooterAngle = shooterAngle;
     this.currentShooterTransform = shooterTransform3d;
     this.currentLaunchVelocity = launchVelocity;
+    this.currentShooterWidth = shooterWidth;
   }
 
   // Store current shooting parameters
   private Angle currentShooterAngle = Units.Radians.of(0);
   private Transform3d currentShooterTransform = new Transform3d();
   private LinearVelocity currentLaunchVelocity = MetersPerSecond.of(0);
+  private Distance currentShooterWidth = Meters.of(0);
 
   /**
    * Should be called periodically (e.g., in Robot.java's simulationPeriodic). Handles automatic
@@ -207,7 +220,8 @@ public class RobotSimState {
     double currentTime = Timer.getFPGATimestamp();
     if (currentTime - lastShootTime >= shootIntervalSeconds) {
       // Time to shoot another ball
-      shootFuel(currentShooterAngle, currentShooterTransform, currentLaunchVelocity);
+      shootFuel(
+          currentShooterAngle, currentShooterTransform, currentLaunchVelocity, currentShooterWidth);
       lastShootTime = currentTime;
       Logger.recordOutput("RobotSimState/AutoShooterActive", true);
     }

@@ -13,10 +13,8 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     implements LoggableMechanism3d {
   public enum ShooterHoodTarget implements GenericSuperstructure.PositionTarget {
     STOW(0, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
-    HALF(45, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
-    TOP(45, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
     SHOOT_TEMP(12, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
-    SHUTTLE(15, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT),
+    SHUTTLE(34, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT),
     DEFAULT_SHOOT(14, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT); // might need to update?
 
     private double position; // in rotations
@@ -56,6 +54,9 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
   @Override
   public void periodic() {
     super.periodic();
+    if (super.getPositionTarget() == ShooterHoodTarget.STOW && reachedTarget()) {
+      super.setControlMode(ControlMode.STOP);
+    }
     Logger.recordOutput(
         "Shooter/Shooter Hood/PositionTargetRotations", // TODO: add naming convention to notion doc
         getPositionTarget().getPosition());
@@ -100,6 +101,6 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
         .plus(ShooterHoodConstants.BASE_TO_SHOOTER_HOOD_TRANSFORM)
         .plus(
             new Transform3d(
-                Translation3d.kZero, new Rotation3d(-Math.toRadians(getPosition() * 360), 0, 0)));
+                Translation3d.kZero, new Rotation3d(Math.toRadians(getPosition() * 360), 0, 0)));
   }
 } // close class

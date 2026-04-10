@@ -19,11 +19,11 @@
     },
     "prevControl" : {
       "x" : 7.542298086586268,
-      "y" : 7.833526667795425
+      "y" : 7.833526667795424
     },
     "nextControl" : {
       "x" : 7.866118421052631,
-      "y" : 6.521359649122809
+      "y" : 6.521359649122808
     },
     "isLocked" : false,
     "linkedName" : null
@@ -57,10 +57,10 @@
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.0817051509769038,
-    "rotationDegrees" : 0.0
+    "rotationDegrees" : 270.0
   }, {
     "waypointRelativePos" : 2.5201919232306995,
-    "rotationDegrees" : 0.0
+    "rotationDegrees" : 180.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -90,15 +90,21 @@
     "nominalVoltage" : 12.0,
     "unlimited" : false
   },
+<<<<<<< HEAD
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -55.0
+=======
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 135.0
+    "rotation" : -55.0
+>>>>>>> f0bfdb6d0cc246d211ea374a4d8feeb1ff36cdfb
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : 315.0
+    "rotation" : 188.18404927249674
   },
   "useDefaultConstraints" : true
 }

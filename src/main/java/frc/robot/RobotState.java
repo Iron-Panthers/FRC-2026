@@ -276,13 +276,13 @@ public class RobotState {
         }
         default -> {
           addEntry(1.3, new HoodParams(83, 8.5, 1.09));
-          addEntry(2.0, new HoodParams(77, 8.3, .97));
-          addEntry(2.5, new HoodParams(75, 8.9, 1.14));
+          addEntry(2.0, new HoodParams(77, 8.4, .97));
+          addEntry(2.5, new HoodParams(73, 9, 1.14));
           addEntry(3.0, new HoodParams(73, 9.4, 1.15)); // tuned to here
-          addEntry(3.5, new HoodParams(72, 9.9, 1.22));
-          addEntry(4.0, new HoodParams(70.5, 10.4, 1.3));
-          addEntry(4.5, new HoodParams(69, 10.7, 1.34));
-          addEntry(5.2, new HoodParams(67, 11.1, 1.39));
+          addEntry(3.5, new HoodParams(69, 9.5, 1.22));
+          addEntry(4.0, new HoodParams(67, 10.2, 1.3));
+          addEntry(4.5, new HoodParams(67, 10.5, 1.34));
+          addEntry(5.2, new HoodParams(64, 10.9, 1.39));
         }
       }
     }
@@ -358,14 +358,14 @@ public class RobotState {
       Rotation2d turretAngle =
           shotVelocity
               .getAngle()
-              .plus(isAllianceRed() ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180));
+              .plus(isAllianceRed() ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0));
 
       // modify the above line for a shooter offset
       double shooterOffsetY =
-          0.08255; // meters, tune this later based on where the shooter is // TODO: make this an
+          0; // meters, tune this later based on where the shooter is // TODO: make this an
       // actual constant
       Rotation2d shooterAngleOffset = Rotation2d.fromRadians(Math.atan2(shooterOffsetY, distance));
-      turretAngle = turretAngle.plus(shooterAngleOffset);
+      // turretAngle = turretAngle.plus(shooterAngleOffset);
 
       double shotHorizontalSpeed = shotVelocity.getNorm();
 

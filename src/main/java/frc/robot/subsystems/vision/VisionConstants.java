@@ -29,8 +29,14 @@ public class VisionConstants {
           // new Transform3d(new Translation3d(), new Rotation3d())
           // arducam-7 (front in rollers)
           new Transform3d(
-              new Translation3d(-0.3742394074228319, 0.2958554867169158, 0.46319638351625225),
-              new Rotation3d(0.048833313512474996, -0.6159735526187061, 3.0981605781693538)),
+              new Translation3d(0.33493633, 0, 0.422076702),
+              new Rotation3d(0.00776866, -0.5635942421, 0)),
+          new Transform3d(
+              new Translation3d(0.373037, -0.295926, 0.485082),
+              new Rotation3d(0, (Math.toRadians(-11)), (Math.toRadians(-90)))),
+          new Transform3d(
+              new Translation3d(0.373037, 0.295926, 0.485082),
+              new Rotation3d(0, (Math.toRadians(-11)), (Math.toRadians(90)))),
           // // arducam-6 (front)
           // new Transform3d(new Translation3d(0.22860929920064077, 0.2077131830328219,
           // 0.4409522926695345), new Rotation3d(0.022664911373188813, -0.47667215401543667,
@@ -39,9 +45,9 @@ public class VisionConstants {
           //   new Transform3d(
           //       new Translation3d(0.3245, -0.2707, 0.4556), new Rotation3d(0, -0.3816,
           // 3.1275))
-          new Transform3d(
-              new Translation3d(0.32229575747678485, 0.2693020732473436, 0.4564431972611209),
-              new Rotation3d(0.002536819350520349, -0.3801061008791202, -0.010367739955583455))
+          // new Transform3d(
+          //     new Translation3d(0.32229575747678485, 0.2693020732473436, 0.4564431972611209),
+          //     new Rotation3d(0.002536819350520349, -0.3801061008791202, -0.010367739955583455))
         };
         case VISION -> new Transform3d[] {
           // arducam-1 (front left)

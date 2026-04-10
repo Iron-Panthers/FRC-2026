@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2xT 1 I Right"
+            "pathName": "2xTT 1 Right"
           }
         },
         {
@@ -25,13 +25,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto shoot full hopper"
+            "name": "Align and auto shoot full hopper (no intake)"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2xT 2 I Right"
+            "pathName": "2xTT 2 Right"
           }
         },
         {
@@ -43,13 +43,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Auto shoot full hopper"
+            "name": "Align and auto shoot full hopper (no intake)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "xT  Right"
           }
         }
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Right Autos (make these)",
   "choreoAuto": false
 }

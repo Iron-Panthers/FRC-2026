@@ -11,7 +11,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "1xTB Long 1 I Left"
+          "pathName" : "2xTT 1 Left"
         }
       }, {
         "type" : "named",
@@ -21,22 +21,22 @@
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Align and auto shoot full hopper"
+          "name" : "Align and auto shoot full hopper (no intake)"
         }
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "1xTB I 2 Left"
-        }
-      }, {
-        "type" : "path",
-        "data" : {
-          "pathName" : "2xB 2 I Left"
+          "pathName" : "2xTT 2 Left"
         }
       }, {
         "type" : "named",
         "data" : {
-          "name" : "Align and auto shoot full hopper"
+          "name" : "Smart zero"
+        }
+      }, {
+        "type" : "named",
+        "data" : {
+          "name" : "Align and auto shoot full hopper (no intake)"
         }
       } ]
     }

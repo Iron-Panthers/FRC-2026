@@ -2,13 +2,13 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 4.407449584816133,
+      "x" : 4.407,
       "y" : 7.644022222222223
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 6.139679715302492,
-      "y" : 7.860023724792409
+      "x" : 6.160502222412783,
+      "y" : 7.595373493975904
     },
     "isLocked" : false,
     "linkedName" : null
@@ -57,13 +57,7 @@
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.1,
-    "rotationDegrees" : 348.0346560677093
-  }, {
-    "waypointRelativePos" : 1.9,
-    "rotationDegrees" : 341.7078047808029
-  }, {
-    "waypointRelativePos" : 2.4,
-    "rotationDegrees" : 240.0
+    "rotationDegrees" : 270.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -117,7 +111,7 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 135.0
+    "rotation" : -55.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",

@@ -45,8 +45,8 @@ public class ShootCommandFactory {
                       : ShooterState.TOTAL_SPIN_UP);
             })
         .repeatedly()
-        .alongWith(intakeController.setTargetStateCommand(IntakeState.IDLE))
-        .alongWith(new WaitCommand(1).andThen(new AgitateIntakeCommand(intakeController, 30)));
+        .alongWith(
+            new WaitCommand(1.7).andThen(intakeController.setTargetStateCommand(IntakeState.STOW)));
   }
 
   /** Command to bind to onFalse – runs when the button is released. */
@@ -57,5 +57,21 @@ public class ShootCommandFactory {
             shooterController.setTargetState(ShooterState.COMPACT_SPIN_UP);
           }
         });
+  }
+
+  /** Command to bind to whileTrue – repeats while the button is held. */
+  public Command whileHeldShuttling() {
+    return new InstantCommand(
+            () -> {
+              shooterController.setTargetState(
+                  (shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
+                              || shooterController.getTargetState() == ShooterState.SHUTTLE)
+                          && shooterController.flywheelsUpToSpeed() // time correct
+                      ? ShooterState.SHUTTLE
+                      : ShooterState.TOTAL_SPIN_UP);
+            })
+        .repeatedly()
+        .alongWith(
+            new WaitCommand(.75).andThen(intakeController.setTargetStateCommand(IntakeState.STOW)));
   }
 }

@@ -48,8 +48,8 @@
       "y" : 5.354000000000001
     },
     "prevControl" : {
-      "x" : 6.849786476868328,
-      "y" : 5.7967568208778175
+      "x" : 6.6199156626506035,
+      "y" : 6.590024096385543
     },
     "nextControl" : null,
     "isLocked" : false,
@@ -57,10 +57,10 @@
   } ],
   "rotationTargets" : [ {
     "waypointRelativePos" : 1.0817051509769038,
-    "rotationDegrees" : -180.0
+    "rotationDegrees" : 90.0
   }, {
     "waypointRelativePos" : 1.918294849023086,
-    "rotationDegrees" : -180.0
+    "rotationDegrees" : 90.0
   } ],
   "constraintZones" : [ {
     "name" : "Intake",
@@ -109,7 +109,7 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : 135.0
+    "rotation" : -55.0
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",

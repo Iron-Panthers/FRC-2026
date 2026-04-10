@@ -11,7 +11,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "1xTB 1 I Left"
+          "pathName" : "1xTB 1 Left"
         }
       }, {
         "type" : "named",
@@ -36,7 +36,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "1xTB I 2 Left"
+          "pathName" : "1xTB 2 Left"
         }
       }, {
         "type" : "deadline",
@@ -56,7 +56,7 @@
       }, {
         "type" : "path",
         "data" : {
-          "pathName" : "1xTB 3 I Left"
+          "pathName" : "1xTB 3 Left"
         }
       } ]
     }

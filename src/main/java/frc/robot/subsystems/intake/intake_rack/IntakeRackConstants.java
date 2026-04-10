@@ -32,8 +32,8 @@ public class IntakeRackConstants {
 
   public static final MotionMagicConfig MOTION_MAGIC_CONFIG =
       switch (Constants.getRobotType()) {
-        case COMP -> new MotionMagicConfig(400, 80);
-        case SIM -> new MotionMagicConfig(7.5, 10);
+        case COMP -> new MotionMagicConfig(400, 40);
+        case SIM -> new MotionMagicConfig(400, 40);
         default -> new MotionMagicConfig(0, 0);
       };
 
@@ -46,12 +46,12 @@ public class IntakeRackConstants {
 
   public static final GravityTypeValue GRAVITY_TYPE = GravityTypeValue.Arm_Cosine;
 
-  public static final double POSITION_TARGET_EPSILON = 0.01;
+  public static final double POSITION_TARGET_EPSILON = 3;
 
   // CURRENT LIMITS
   public static final double UPPER_VOLT_LIMIT = 12;
   public static final double LOWER_VOLT_LIMIT = -12;
-  public static final double SUPPLY_CURRENT_LIMIT = 25;
+  public static final double SUPPLY_CURRENT_LIMIT = 35;
 
   // ZEROING CONSTANTS
   public static final double ZEROING_VOLTS = -3;
@@ -63,9 +63,9 @@ public class IntakeRackConstants {
             .plus(
                 new Transform3d(
                     new Translation3d(
-                        // Units.inchesToMeters(-10.940786),
-                        // Units.inchesToMeters(-0.1875),
-                        // Units.inchesToMeters(7.191913)),
+                        // Units.inchesToMeters(0),
+                        // Units.inchesToMeters(0),
+                        // Units.inchesToMeters(0)),
                         Units.inchesToMeters(0),
                         Units.inchesToMeters(9.990),
                         Units.inchesToMeters(7.709)),
@@ -75,15 +75,15 @@ public class IntakeRackConstants {
       };
 
   public static record IntakeRackPhysicalConstants(
-      double momentOfInertia,
-      double lengthMeters,
-      double minAngleRads,
-      double maxAngleRads,
+      double massInKilograms,
+      double drumRadiusMeters,
+      double minExtensionMeters,
+      double maxExtensionMeters,
       boolean simulateGravity) {}
 
   public static final IntakeRackPhysicalConstants PHYSICAL_CONSTANTS =
       switch (Constants.getRobotType()) {
-        case SIM -> new IntakeRackPhysicalConstants(0.02, 0.706747, -1000.0, 1000, true);
+        case SIM -> new IntakeRackPhysicalConstants(0.1, 0.1, -15, 15, false);
         case COMP -> new IntakeRackPhysicalConstants(0.1, 0, 0, 0, false);
         default -> new IntakeRackPhysicalConstants(0.1, 0, 0, 0, false);
       };
