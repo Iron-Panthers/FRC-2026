@@ -12,9 +12,7 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTarget>
     implements LoggableMechanism3d {
   public enum ShooterHoodTarget implements GenericSuperstructure.PositionTarget {
-    STOW(1, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
-    HALF(45, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
-    TOP(45, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
+    STOW(0, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
     SHOOT_TEMP(12, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
     SHUTTLE(34, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT),
     DEFAULT_SHOOT(14, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT); // might need to update?
@@ -56,6 +54,9 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
   @Override
   public void periodic() {
     super.periodic();
+    if (super.getPositionTarget() == ShooterHoodTarget.STOW && reachedTarget()) {
+      super.setControlMode(ControlMode.STOP);
+    }
     Logger.recordOutput(
         "Shooter/Shooter Hood/PositionTargetRotations", // TODO: add naming convention to notion doc
         getPositionTarget().getPosition());
