@@ -59,27 +59,27 @@
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 6.073044444444445,
-      "y" : 7.3293444444444455
+      "x" : 5.999810201660737,
+      "y" : 7.203712930011863
     },
     "prevControl" : {
-      "x" : 6.3122526937524714,
-      "y" : 7.010639205219455
+      "x" : 6.239018450968763,
+      "y" : 6.885007690786873
     },
     "nextControl" : {
-      "x" : 5.833836195136419,
-      "y" : 7.648049683669436
+      "x" : 5.760601952352711,
+      "y" : 7.522418169236854
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 3.2815,
-      "y" : 7.483451957295375
+      "x" : 3.245,
+      "y" : 7.329000000000001
     },
     "prevControl" : {
-      "x" : 5.095500207948627,
-      "y" : 7.663809810447506
+      "x" : 4.020118623962041,
+      "y" : 7.870782918149467
     },
     "nextControl" : null,
     "isLocked" : false,
@@ -100,9 +100,6 @@
   }, {
     "waypointRelativePos" : 4.86,
     "rotationDegrees" : -3.1429185137888
-  }, {
-    "waypointRelativePos" : 5.0,
-    "rotationDegrees" : 113.0
   } ],
   "constraintZones" : [ {
     "name" : "Constraints Zone",
@@ -175,7 +172,7 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : -78.0
+    "rotation" : -66.90995084751302
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",

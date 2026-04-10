@@ -2,13 +2,13 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 3.2815,
-      "y" : 7.483451957295375
+      "x" : 3.245,
+      "y" : 7.329000000000001
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 5.537164887307236,
-      "y" : 7.504970344009492
+      "x" : 4.009359430604984,
+      "y" : 7.677117437722421
     },
     "isLocked" : false,
     "linkedName" : "Trench Shooting Pose Left"
@@ -44,27 +44,27 @@
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 5.8311777777777785,
-      "y" : 7.483451957295375
+      "x" : 6.236512455516015,
+      "y" : 7.440415183867143
     },
     "prevControl" : {
-      "x" : 6.470105940460148,
-      "y" : 7.326915861905657
+      "x" : 6.875440618198385,
+      "y" : 7.283879088477424
     },
     "nextControl" : {
-      "x" : 5.588359061017745,
-      "y" : 7.542942047150834
+      "x" : 5.993693738755982,
+      "y" : 7.499905273722602
     },
     "isLocked" : false,
     "linkedName" : null
   }, {
     "anchor" : {
-      "x" : 3.2815,
-      "y" : 7.483451957295375
+      "x" : 3.245,
+      "y" : 7.329000000000001
     },
     "prevControl" : {
-      "x" : 4.94540925266904,
-      "y" : 7.5264887307236075
+      "x" : 4.332135231316728,
+      "y" : 7.569525504151841
     },
     "nextControl" : null,
     "isLocked" : false,
@@ -114,7 +114,7 @@
   "pointTowardsZones" : [ ],
   "eventMarkers" : [ {
     "name" : "Intake down",
-    "waypointRelativePos" : 0.3407550822846105,
+    "waypointRelativePos" : 0.1349831271091114,
     "endWaypointRelativePos" : null,
     "command" : null
   }, {
@@ -133,13 +133,13 @@
   },
   "goalEndState" : {
     "velocity" : 0,
-    "rotation" : -78.0
+    "rotation" : -66.90995084751302
   },
   "reversed" : false,
   "folder" : "Left Paths (auto generated)",
   "idealStartingState" : {
     "velocity" : 0,
-    "rotation" : -78.0
+    "rotation" : -66.90995084751302
   },
   "useDefaultConstraints" : true
 }

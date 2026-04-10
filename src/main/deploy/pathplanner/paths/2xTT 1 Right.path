@@ -64,28 +64,28 @@
     },
     {
       "anchor": {
-        "x": 6.073044444444445,
-        "y": 0.8806555555555553
+        "x": 5.999810201660737,
+        "y": 1.0062870699881374
       },
       "prevControl": {
-        "x": 6.3122526937524714,
-        "y": 1.1993607947805456
+        "x": 6.239018450968763,
+        "y": 1.3249923092131277
       },
       "nextControl": {
-        "x": 5.833836195136419,
-        "y": 0.561950316330565
+        "x": 5.760601952352711,
+        "y": 0.6875818307631472
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.2815,
-        "y": 0.7265480427046258
+        "x": 3.245,
+        "y": 0.881
       },
       "prevControl": {
-        "x": 5.095500207948627,
-        "y": 0.5461901895524948
+        "x": 4.020118623962041,
+        "y": 0.3392170818505338
       },
       "nextControl": null,
       "isLocked": false,
@@ -112,10 +112,6 @@
     {
       "waypointRelativePos": 4.86,
       "rotationDegrees": 3.1429185137888447
-    },
-    {
-      "waypointRelativePos": 5.0,
-      "rotationDegrees": -113.0
     }
   ],
   "constraintZones": [
@@ -197,7 +193,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 78.0
+    "rotation": 66.909950847513
   },
   "reversed": false,
   "folder": "Right Paths (make these)",

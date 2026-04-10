@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.2815,
-        "y": 0.7265480427046258
+        "x": 3.245,
+        "y": 0.881
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.537164887307236,
-        "y": 0.7050296559905087
+        "x": 4.009359430604984,
+        "y": 0.5328825622775799
       },
       "isLocked": false,
       "linkedName": "Trench Shooting Pose Right"
@@ -48,28 +48,28 @@
     },
     {
       "anchor": {
-        "x": 5.8311777777777785,
-        "y": 0.7265480427046258
+        "x": 6.236512455516015,
+        "y": 0.7695848161328582
       },
       "prevControl": {
-        "x": 6.470105940460148,
-        "y": 0.8830841380943444
+        "x": 6.875440618198385,
+        "y": 0.9261209115225768
       },
       "nextControl": {
-        "x": 5.588359061017745,
-        "y": 0.6670579528491664
+        "x": 5.993693738755982,
+        "y": 0.7100947262773987
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.2815,
-        "y": 0.7265480427046258
+        "x": 3.245,
+        "y": 0.881
       },
       "prevControl": {
-        "x": 4.94540925266904,
-        "y": 0.6835112692763936
+        "x": 4.332135231316728,
+        "y": 0.6404744958481603
       },
       "nextControl": null,
       "isLocked": false,
@@ -130,7 +130,7 @@
   "eventMarkers": [
     {
       "name": "Intake down",
-      "waypointRelativePos": 0.3407550822846105,
+      "waypointRelativePos": 0.1349831271091114,
       "endWaypointRelativePos": null,
       "command": null
     },
@@ -151,13 +151,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 78.0
+    "rotation": 66.909950847513
   },
   "reversed": false,
   "folder": "Right Paths (make these)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 78.0
+    "rotation": 66.909950847513
   },
   "useDefaultConstraints": true
 }

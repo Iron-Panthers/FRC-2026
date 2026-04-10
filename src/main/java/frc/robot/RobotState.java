@@ -279,7 +279,7 @@ public class RobotState {
           addEntry(2.0, new HoodParams(77, 8.4, .97));
           addEntry(2.5, new HoodParams(73, 9, 1.14));
           addEntry(3.0, new HoodParams(73, 9.4, 1.15)); // tuned to here
-          addEntry(3.5, new HoodParams(69, 9.8, 1.22));
+          addEntry(3.5, new HoodParams(69, 9.5, 1.22));
           addEntry(4.0, new HoodParams(67, 10.2, 1.3));
           addEntry(4.5, new HoodParams(67, 10.5, 1.34));
           addEntry(5.2, new HoodParams(64, 10.9, 1.39));

@@ -10,7 +10,7 @@ public class IntakeRollers extends GenericRollers<IntakeRollers.IntakeRollersTar
     INTAKE_REALLY_SLOW(1, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
     IDLE(0.0, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
     INTAKE_DOWN(-1, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
-    EJECT(-3.0, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
+    EJECT(-20.0, IntakeRollersConstants.CURRENT_LIMIT_AMPS), // TODO: CHANGE maxCurrentAmps
     HOLD(1.0, IntakeRollersConstants.CURRENT_LIMIT_AMPS); // TODO: CHANGE maxCurrentAmps
 
     private double velocity;
