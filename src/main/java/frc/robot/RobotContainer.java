@@ -401,6 +401,15 @@ public class RobotContainer {
 
     new Trigger(() -> vision.getMultiTags() && !defaultZeroing)
         .whileTrue(new RunCommand(() -> swerve.smartZeroGyro()));
+
+    // Stop running serializer button
+    new Trigger(
+            () ->
+                serializer.serializerStalling()
+                    && intakeController.getTargetState() == IntakeState.INTAKE
+                    && shooterController.getTargetState()
+                        == ShooterState.INTAKE) // TODO: make these constants
+        .onTrue(shooterController.setTargetStateCommand(ShooterState.IDLE));
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
   }
@@ -440,7 +449,7 @@ public class RobotContainer {
     // SHUTTLE
     driverA
         .povRight()
-        .whileTrue(new PassToPoseCommand(swerve).andThen(shootCommand.whileHeldShuttling()));
+        .whileTrue(new PassToPoseCommand(swerve).alongWith(shootCommand.whileHeldShuttling()));
 
     driverA.povRight().onFalse(shootCommand.onRelease());
 

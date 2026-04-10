@@ -7,6 +7,7 @@ public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
   public enum SerializerTarget implements GenericRollers.VelocityTarget {
     IDLE(0, SerializerConstants.CURRENT_LIMIT_AMPS),
     SLOW(15, SerializerConstants.CURRENT_LIMIT_AMPS),
+    HOLD(1, SerializerConstants.CURRENT_LIMIT_AMPS),
     SPIN_UP(40, 20),
     SHOOT(50, SerializerConstants.CURRENT_LIMIT_AMPS);
 
@@ -31,5 +32,18 @@ public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
 
   public Serializer(GenericRollersIO IntakeRollersIO) {
     super("Serializer", IntakeRollersIO);
+  }
+
+  public double getVelocityRadsPerSec() {
+    return inputs.velocityRadsPerSec;
+  }
+
+  /**
+   * Returns true when the serializer is applying amps but not going anywhere
+   *
+   * @return
+   */
+  public boolean serializerStalling() {
+    return getFilteredCurrent() > 15d && getVelocityRadsPerSec() < 10d;
   }
 }
