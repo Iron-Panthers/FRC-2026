@@ -400,16 +400,7 @@ public class RobotContainer {
         .onTrue(new VibrateHIDCommand(driverB.getHID(), 1, 0.4));
 
     new Trigger(() -> vision.getMultiTags() && !defaultZeroing)
-        .whileTrue(new RunCommand(() -> swerve.smartZeroGyro()));
-
-    // Stop running serializer button
-    new Trigger(
-            () ->
-                serializer.serializerStalling()
-                    && intakeController.getTargetState() == IntakeState.INTAKE
-                    && shooterController.getTargetState()
-                        == ShooterState.INTAKE) // TODO: make these constants
-        .onTrue(shooterController.setTargetStateCommand(ShooterState.IDLE));
+        .onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
   }

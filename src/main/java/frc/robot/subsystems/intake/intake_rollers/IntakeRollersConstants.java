@@ -14,7 +14,7 @@ public class IntakeRollersConstants {
             CAN.at(9, "Intake Roller Right"),
             36.0 / 15.0,
             false,
-            false);
+            true);
         default -> new IntakeRollerConfig(
             CAN.at(0, "Intake Roller"), CAN.at(0, "Intake Roller 2"), 2, false, true);
       };
