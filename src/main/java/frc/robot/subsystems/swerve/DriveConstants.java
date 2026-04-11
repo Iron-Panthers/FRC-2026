@@ -47,7 +47,7 @@ public class DriveConstants {
             Units.inchesToMeters(24.25),
             Units.inchesToMeters(33),
             Units.inchesToMeters(37),
-            4,
+            6,
             10,
             8);
         case VISION -> new DrivebaseConfig(
@@ -272,7 +272,8 @@ public class DriveConstants {
             3.125);
       };
 
-  public static final double CURRENT_LIMIT_AMPS = 35;
+  public static final double STEER_CURRENT_LIMIT_AMPS = 35;
+  public static final double DRIVE_CURRENT_LIMIT_AMPS = 60;
 
   /**
    * These are the configs for the maple sim drivebase This should be updated to be similar to the

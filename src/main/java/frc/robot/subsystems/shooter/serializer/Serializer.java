@@ -2,13 +2,16 @@ package frc.robot.subsystems.shooter.serializer;
 
 import frc.robot.lib.generic_subsystems.rollers.GenericRollers;
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIO;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
   public enum SerializerTarget implements GenericRollers.VelocityTarget {
     IDLE(0, SerializerConstants.CURRENT_LIMIT_AMPS),
     SLOW(15, SerializerConstants.CURRENT_LIMIT_AMPS),
     SPIN_UP(40, 20),
-    SHOOT(50, SerializerConstants.CURRENT_LIMIT_AMPS);
+    SHOOT(50, SerializerConstants.CURRENT_LIMIT_AMPS),
+    HOLD(1, SerializerConstants.CURRENT_LIMIT_AMPS),
+    ;
 
     private double velocity;
     private double supplyCurrentLimit;
@@ -42,7 +45,8 @@ public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
    *
    * @return
    */
+  @AutoLogOutput(key = "Serializer/Serializer Stalling")
   public boolean serializerStalling() {
-    return getFilteredCurrent() > 15d && getVelocityRadsPerSec() < 10d;
+    return getFilteredCurrent() > 15d && getVelocityRadsPerSec() < 3d;
   }
 }

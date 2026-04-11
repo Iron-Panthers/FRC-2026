@@ -393,13 +393,13 @@ public class Drive extends SubsystemBase {
     return headingController == null || headingController.atTarget();
   }
 
-  public void setDriveAmpLimits() {
-    for (Module module : modules) {
-      module.setSupplyCurrentLimit(DriveConstants.CURRENT_LIMIT_AMPS);
-    }
-  }
-
   public void setIsBeingDefended(boolean isBeingDefended) {
     this.isBeingDefended = isBeingDefended;
+  }
+
+  public void setDriveSupplyCurrentLimits(double amps) {
+    for (Module module : modules) {
+      module.setDriveSupplyCurrentLimit(amps);
+    }
   }
 }
