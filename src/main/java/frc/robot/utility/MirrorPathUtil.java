@@ -27,7 +27,7 @@ import java.io.IOException;
  * <p>Uses Jackson's JsonNode / ObjectNode (tree model) to read and write the path JSON.
  */
 public class MirrorPathUtil {
-  private static final double FIELD_WIDTH_METERS = 8.21;
+  private static final double FIELD_WIDTH_METERS = 8.07;
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
   /** Mirrors a Y coordinate across the field centerline. */
