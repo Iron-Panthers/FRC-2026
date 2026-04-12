@@ -409,7 +409,7 @@ public class RobotContainer {
                     && intakeController.getTargetState() == IntakeState.INTAKE
                     && shooterController.getTargetState()
                         == ShooterState.INTAKE) // TODO: make these constants
-        .onTrue(shooterController.setTargetStateCommand(ShooterState.IDLE));
+        .onTrue(new InstantCommand(() -> shooterController.setTargetState(ShooterState.IDLE)));
 
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
@@ -487,8 +487,12 @@ public class RobotContainer {
   }
 
   private void configureDriverBButtons() {
-    driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
-    driverB.leftBumper().onFalse(intakeController.setTargetStateCommand(IntakeState.IDLE));
+    driverB
+        .leftBumper()
+        .onTrue(
+            intakeController
+                .setTargetStateCommand(IntakeState.REVERSE)
+                .alongWith(shooterController.setTargetStateCommand(ShooterState.INTAKE)));
 
     driverB
         .x()
