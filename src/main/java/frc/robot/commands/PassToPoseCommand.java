@@ -47,16 +47,5 @@ public class PassToPoseCommand extends Command {
   }
 
   @Override
-  public boolean isFinished() {
-    return Math.abs(
-            RobotState.getInstance()
-                .getEstimatedPose()
-                .getRotation()
-                .minus(targetAngle)
-                .getDegrees())
-        < 6;
-  }
-
-  @Override
   public void end(boolean interrupted) {}
 }

@@ -80,7 +80,7 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
   }
 
   public void setVelocityTarget(G velocityTarget) {
-    setControlMode(ControlMode.VELOCITY);
+    setControlMode(velocityTarget.getVelocity() == 0 ? ControlMode.STOP : ControlMode.VELOCITY);
     this.velocityTarget = velocityTarget;
     this.useManualVelocity = false;
   }

@@ -3,23 +3,23 @@
   "waypoints" : [ {
     "anchor" : {
       "x" : 2.686,
-      "y" : 5.009
+      "y" : 4.869
     },
     "prevControl" : null,
     "nextControl" : {
       "x" : 2.828302494707578,
-      "y" : 5.214548047910946
+      "y" : 5.0745480479109455
     },
     "isLocked" : false,
     "linkedName" : "Shooting Pose 2 Left"
   }, {
     "anchor" : {
       "x" : 3.038,
-      "y" : 5.363890875954924
+      "y" : 5.223890875954924
     },
     "prevControl" : {
       "x" : 2.843434055622471,
-      "y" : 5.2069065032024735
+      "y" : 5.066906503202473
     },
     "nextControl" : null,
     "isLocked" : false,

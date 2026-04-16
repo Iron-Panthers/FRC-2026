@@ -400,7 +400,17 @@ public class RobotContainer {
         .onTrue(new VibrateHIDCommand(driverB.getHID(), 1, 0.4));
 
     new Trigger(() -> vision.getMultiTags() && !defaultZeroing)
-        .whileTrue(new RunCommand(() -> swerve.smartZeroGyro()));
+        .onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+
+    // Stop running serializer button
+    new Trigger(
+            () ->
+                serializer.serializerStalling()
+                    && intakeController.getTargetState() == IntakeState.INTAKE
+                    && shooterController.getTargetState()
+                        == ShooterState.INTAKE) // TODO: make these constants
+        .onTrue(new InstantCommand(() -> shooterController.setTargetState(ShooterState.IDLE)));
+
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
   }
@@ -440,7 +450,7 @@ public class RobotContainer {
     // SHUTTLE
     driverA
         .povRight()
-        .whileTrue(new PassToPoseCommand(swerve).andThen(shootCommand.whileHeldShuttling()));
+        .whileTrue(new PassToPoseCommand(swerve).alongWith(shootCommand.whileHeldShuttling()));
 
     driverA.povRight().onFalse(shootCommand.onRelease());
 
@@ -477,8 +487,12 @@ public class RobotContainer {
   }
 
   private void configureDriverBButtons() {
-    driverB.leftBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.REVERSE));
-    driverB.leftBumper().onFalse(intakeController.setTargetStateCommand(IntakeState.IDLE));
+    driverB
+        .leftBumper()
+        .onTrue(
+            intakeController
+                .setTargetStateCommand(IntakeState.REVERSE)
+                .alongWith(shooterController.setTargetStateCommand(ShooterState.INTAKE)));
 
     driverB
         .x()
@@ -498,6 +512,8 @@ public class RobotContainer {
 
     driverB.rightTrigger().onTrue(new InstantCommand(() -> swerve.setIsBeingDefended(true)));
     driverB.leftTrigger().onTrue(new InstantCommand(() -> swerve.setIsBeingDefended(false)));
+
+    driverB.b().onTrue(new InstantCommand(() -> swerve.setDriveSupplyCurrentLimits(35)));
   }
 
   private void configureAutos() {

@@ -3,23 +3,23 @@
   "waypoints" : [ {
     "anchor" : {
       "x" : 3.038,
-      "y" : 5.363890875954924
+      "y" : 5.223890875954924
     },
     "prevControl" : null,
     "nextControl" : {
       "x" : 3.672792408066429,
-      "y" : 6.310699891376038
+      "y" : 6.170699891376038
     },
     "isLocked" : false,
     "linkedName" : "Shooting Pose Left"
   }, {
     "anchor" : {
       "x" : 13.068600237247924,
-      "y" : 5.579074733096087
+      "y" : 5.439074733096087
     },
     "prevControl" : {
       "x" : 12.068600237247924,
-      "y" : 5.579074733096087
+      "y" : 5.439074733096087
     },
     "nextControl" : null,
     "isLocked" : false,
