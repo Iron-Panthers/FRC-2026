@@ -18,7 +18,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
-import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import java.util.ArrayList;
 
@@ -38,7 +37,6 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
   private final StatusSignal<Voltage> appliedVolts;
   private final StatusSignal<Current> supplyCurrent;
   private final StatusSignal<Current> statorCurrent;
-  private final StatusSignal<Temperature> temp;
 
   protected Slot0Configs gainsConfig;
 
@@ -118,25 +116,22 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
     appliedVolts = talon.getMotorVoltage();
     supplyCurrent = talon.getSupplyCurrent();
     statorCurrent = talon.getStatorCurrent();
-    temp = talon.getDeviceTemp();
     positionRotations = talon.getPosition();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
-        50, positionRotations, velocityRPS, appliedVolts, supplyCurrent, temp);
+        50, positionRotations, velocityRPS, appliedVolts, supplyCurrent);
   }
 
   @Override
   public void updateInputs(GenericSuperstructureIOInputs inputs) {
     inputs.isConnected =
-        BaseStatusSignal.refreshAll(
-                positionRotations, velocityRPS, appliedVolts, supplyCurrent, temp)
+        BaseStatusSignal.refreshAll(positionRotations, velocityRPS, appliedVolts, supplyCurrent)
             .isOK();
     inputs.positionRotations = positionRotations.getValueAsDouble();
     inputs.velocityRotPerSec = velocityRPS.getValueAsDouble();
     inputs.appliedVolts = appliedVolts.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
     inputs.statorCurrent = statorCurrent.getValueAsDouble();
-    inputs.tempCelsius = temp.getValueAsDouble();
   }
 
   @Override

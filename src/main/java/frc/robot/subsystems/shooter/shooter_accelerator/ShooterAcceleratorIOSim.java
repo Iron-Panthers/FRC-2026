@@ -78,7 +78,6 @@ public class ShooterAcceleratorIOSim extends GenericRollersIOSim implements Shoo
     rotorPositionRotations += currentVelocityRPS * 0.02;
 
     inputs.connected = true;
-    inputs.positionRads = rotorPositionRotations * 2.0 * Math.PI;
     inputs.velocityRadsPerSec = shooterAcceleratorSim.getAngularVelocityRadPerSec();
     inputs.appliedVolts = appliedVoltage;
     inputs.supplyCurrentAmps = Math.abs(shooterAcceleratorSim.getCurrentDrawAmps());

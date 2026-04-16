@@ -9,9 +9,8 @@ public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
     IDLE(0, SerializerConstants.CURRENT_LIMIT_AMPS),
     SLOW(15, SerializerConstants.CURRENT_LIMIT_AMPS),
     SPIN_UP(40, 20),
-    SHOOT(50, SerializerConstants.CURRENT_LIMIT_AMPS),
-    HOLD(1, SerializerConstants.CURRENT_LIMIT_AMPS),
-    ;
+    SHOOT(68, SerializerConstants.CURRENT_LIMIT_AMPS),
+    HOLD(1, SerializerConstants.CURRENT_LIMIT_AMPS);
 
     private double velocity;
     private double supplyCurrentLimit;

@@ -78,7 +78,6 @@ public class ShooterOmniwheelIOSim extends GenericRollersIOSim implements Shoote
     rotorPositionRotations += currentVelocityRPS * 0.02;
 
     inputs.connected = true;
-    inputs.positionRads = rotorPositionRotations * 2.0 * Math.PI;
     inputs.velocityRadsPerSec = shooterOmniwheelsSim.getAngularVelocityRadPerSec();
     inputs.appliedVolts = appliedVoltage;
     inputs.supplyCurrentAmps = Math.abs(shooterOmniwheelsSim.getCurrentDrawAmps());

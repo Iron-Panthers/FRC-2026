@@ -74,7 +74,6 @@ public class IntakeRackIOSim extends GenericSuperstructureIOSim implements Intak
     inputs.velocityRotPerSec = velocityRPS;
     inputs.appliedVolts = appliedVoltage;
     inputs.supplyCurrentAmps = 1.0; // Not simulated
-    inputs.tempCelsius = 25.0; // Not simulated
 
     // update the Sim State to match if it is up or down
     if (rotations < .1) {

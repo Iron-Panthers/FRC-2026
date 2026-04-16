@@ -72,8 +72,6 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   public void updateInputs(GenericRollersIOInputs inputs) {
     inputs.connected =
         BaseStatusSignal.refreshAll(position, velocity, appliedVolts, supplyCurrent).isOK();
-    inputs.positionRads =
-        Units.rotationsToRadians(position.getValueAsDouble()) / mechanismReduction;
     inputs.velocityRadsPerSec =
         Units.rotationsToRadians(velocity.getValueAsDouble()) / mechanismReduction;
     inputs.appliedVolts = appliedVolts.getValueAsDouble();

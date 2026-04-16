@@ -64,7 +64,6 @@ public class ShooterHoodIOSim extends GenericSuperstructureIOSim implements Shoo
     inputs.velocityRotPerSec = velocityRPS;
     inputs.appliedVolts = appliedVoltage;
     inputs.supplyCurrentAmps = talon.getSimState().getSupplyCurrent();
-    inputs.tempCelsius = 25.0; // Not simulated
   }
 
   @Override

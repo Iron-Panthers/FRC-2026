@@ -50,7 +50,6 @@ public class SerializerSim extends GenericRollersIOSim {
     talon.getSimState().setRotorVelocity(velocityRPS);
 
     inputs.connected = true;
-    inputs.positionRads = rotations;
     inputs.velocityRadsPerSec = velocityRPS;
     inputs.appliedVelocity = appliedVelocity;
     inputs.supplyCurrentAmps = 1.0; // Not simulated
