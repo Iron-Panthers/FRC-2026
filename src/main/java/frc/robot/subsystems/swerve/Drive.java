@@ -171,10 +171,10 @@ public class Drive extends SubsystemBase {
         if (speedMagnitude > 0.015 || Math.abs(targetSpeeds.omegaRadiansPerSecond) > 0.4) {
           driveMode = DriveModes.TELEOP;
         }
-        modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
-        modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(135))));
-        modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-225))));
-        modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(225))));
+        modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+        modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+        modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+        modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
       }
     }
 
