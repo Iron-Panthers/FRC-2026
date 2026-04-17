@@ -46,7 +46,7 @@ public class RobotSimState {
     SimulatedArena.overrideInstance(arena);
 
     // init fuel sim
-    fuelSim = new FuelSim("FieldSimulation");
+    fuelSim = new FuelSim("Field Simulation");
     fuelSim.registerRobot(
         DriveConstants.mapleSimConfig.bumperWidthY, // from left to right in meters
         DriveConstants.mapleSimConfig.bumperLengthX, // from front to back in meters
@@ -223,11 +223,11 @@ public class RobotSimState {
       shootFuel(
           currentShooterAngle, currentShooterTransform, currentLaunchVelocity, currentShooterWidth);
       lastShootTime = currentTime;
-      Logger.recordOutput("RobotSimState/AutoShooterActive", true);
+      Logger.recordOutput("Robot Sim State/Auto Shooter Active", true);
     }
   }
 
-  @AutoLogOutput(key = "RobotSimState/ShooterRunning")
+  @AutoLogOutput(key = "Robot Sim State/Shooter Running")
   public boolean isShooterRunning() {
     return isShooterRunning;
   }
