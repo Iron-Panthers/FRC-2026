@@ -88,23 +88,23 @@ public class Vision extends SubsystemBase {
             TAG_COUNT_DEVIATIONS
                 .get(MathUtil.clamp(observation.tagCount() - 1, 0, TAG_COUNT_DEVIATIONS.size() - 1))
                 .computeDeviation(observation.averageDistance());
-        Logger.recordOutput("Vision/Camera" + cameraIndex + "/StdDevs", visionStdDevs);
+        Logger.recordOutput("Vision/Camera" + cameraIndex + "/Std Devs", visionStdDevs);
         RobotState.getInstance().addVisionMeasurement(measurement, visionStdDevs);
         Logger.recordOutput(
-            "Vision/Camera" + cameraIndex + "/AverageDistance", observation.averageDistance());
+            "Vision/Camera" + cameraIndex + "/Average Distance", observation.averageDistance());
       }
 
       Logger.recordOutput(
-          "Vision/Camera" + cameraIndex + "/TagPoses",
+          "Vision/Camera" + cameraIndex + "/Tag Poses",
           tagPoses.toArray(new Pose3d[tagPoses.size()]));
       Logger.recordOutput(
-          "Vision/Camera" + cameraIndex + "/estimatedPoses",
+          "Vision/Camera" + cameraIndex + "/Estimated Poses",
           estimatedPoses.toArray(new Pose3d[estimatedPoses.size()]));
       Logger.recordOutput(
-          "Vision/Camera" + cameraIndex + "/AcceptedPoses",
+          "Vision/Camera" + cameraIndex + "/Accepted Poses",
           acceptedPoses.toArray(new Pose3d[acceptedPoses.size()]));
       Logger.recordOutput(
-          "Vision/Camera" + cameraIndex + "/RejectedPoses",
+          "Vision/Camera" + cameraIndex + "/Rejected Poses",
           rejectedPoses.toArray(new Pose3d[rejectedPoses.size()]));
       Logger.recordOutput(
           "Vision/Camera" + cameraIndex + "/Angle",
@@ -116,15 +116,15 @@ public class Vision extends SubsystemBase {
     }
 
     Logger.recordOutput(
-        "Vision/Summary/TagPoses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
+        "Vision/Summary/Tag Poses", allTagPoses.toArray(new Pose3d[allTagPoses.size()]));
     Logger.recordOutput(
-        "Vision/Summary/EstimatedPoses",
+        "Vision/Summary/Estimated Poses",
         allEstimatedPoses.toArray(new Pose3d[allEstimatedPoses.size()]));
     Logger.recordOutput(
-        "Vision/Summary/AcceptedPoses",
+        "Vision/Summary/Accepted Poses",
         allAcceptedPoses.toArray(new Pose3d[allAcceptedPoses.size()]));
     Logger.recordOutput(
-        "Vision/Summary/RejectedPoses",
+        "Vision/Summary/Rejected Poses",
         allRejectedPoses.toArray(new Pose3d[allRejectedPoses.size()]));
   }
 

@@ -50,15 +50,15 @@ public abstract class BaseHeadingController {
     double pidOutput =
         controller.calculate(headingSupplier.get().getRadians(), targetHeading.getRadians());
     double output = pidOutput + controller.getSetpoint().velocity;
-    Logger.recordOutput("Swerve/HeadingController/PIDOutput", pidOutput);
+    Logger.recordOutput("Swerve/Heading Controller/PID Output", pidOutput);
     Logger.recordOutput(
-        "Swerve/HeadingController/SetpointVelocity", controller.getSetpoint().velocity);
-    Logger.recordOutput("Swerve/HeadingController/Output", output);
+        "Swerve/Heading Controller/Setpoint Velocity", controller.getSetpoint().velocity);
+    Logger.recordOutput("Swerve/Heading Controller/Output", output);
     Logger.recordOutput(
-        "Swerve/HeadingController/SetpointPosition", controller.getSetpoint().position);
+        "Swerve/Heading Controller/Setpoint Position", controller.getSetpoint().position);
     Logger.recordOutput(
-        "Swerve/HeadingController/CurrentPosition", headingSupplier.get().getRadians());
-    Logger.recordOutput("Swerve/HeadingController/AtTarget", atTarget());
+        "Swerve/Heading Controller/Current Position", headingSupplier.get().getRadians());
+    Logger.recordOutput("Swerve/Heading Controller/At Target", atTarget());
     if (atTarget()) {
       return 0;
     }

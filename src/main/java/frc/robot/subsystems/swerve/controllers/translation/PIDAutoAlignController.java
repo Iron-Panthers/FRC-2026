@@ -97,15 +97,15 @@ public class PIDAutoAlignController extends BaseTranslationController {
       yVel = 0;
     }
 
-    Logger.recordOutput("Swerve/PIDAutoalign/Angle", currToTargAngle);
-    Logger.recordOutput("Swerve/PIDAutoalign/OriginAngle", startToTargAngle);
-    Logger.recordOutput("Swerve/PIDAutoalign/SetpointPos", magController.getSetpoint().position);
-    Logger.recordOutput("Swerve/PIDAutoalign/CurrPos", magTranslCurrPos);
-    Logger.recordOutput("Swerve/PIDAutoalign/TargPos", magTranslTargPos);
-    Logger.recordOutput("Swerve/PIDAutoalign/MagVel", magVel);
-    Logger.recordOutput("Swerve/PIDAutoalign/Target", targetPosition);
-    Logger.recordOutput("Swerve/PIDAutoalign/TrapVel", magController.getSetpoint().velocity);
-    Logger.recordOutput("Swerve/PIDAutoalign/PIDVel", pidOutput);
+    Logger.recordOutput("Swerve/PID Autoalign/Angle", currToTargAngle);
+    Logger.recordOutput("Swerve/PID Autoalign/Origin Angle", startToTargAngle);
+    Logger.recordOutput("Swerve/PID Autoalign/SetpointPos", magController.getSetpoint().position);
+    Logger.recordOutput("Swerve/PID Autoalign/CurrPos", magTranslCurrPos);
+    Logger.recordOutput("Swerve/PID Autoalign/TargPos", magTranslTargPos);
+    Logger.recordOutput("Swerve/PID Autoalign/MagVel", magVel);
+    Logger.recordOutput("Swerve/PID Autoalign/Target", targetPosition);
+    Logger.recordOutput("Swerve/PID Autoalign/TrapVel", magController.getSetpoint().velocity);
+    Logger.recordOutput("Swerve/PID Autoalign/PIDVel", pidOutput);
   }
 
   public double calculateTimeLeft() {
@@ -121,15 +121,15 @@ public class PIDAutoAlignController extends BaseTranslationController {
         totalTime
             * (positionSupplier.get().getTranslation().getDistance(targetPosition.getTranslation())
                 / d);
-    Logger.recordOutput("Swerve/PIDAutoalign/TimeLeft", totalTime);
+    Logger.recordOutput("Swerve/PID Autoalign/Time Left", totalTime);
     return timeLeft;
   }
 
   // update the values
   public ChassisSpeeds update() {
     calculateLinearMovement();
-    Logger.recordOutput("Swerve/PIDAutoalign/XVel", xVel);
-    Logger.recordOutput("Swerve/PIDAutoalign/YVel", yVel);
+    Logger.recordOutput("Swerve/PID Autoalign/XVel", xVel);
+    Logger.recordOutput("Swerve/PID Autoalign/YVel", yVel);
     return ChassisSpeeds.fromFieldRelativeSpeeds(
         -xVel, -yVel, 0, positionSupplier.get().getRotation().plus(Rotation2d.k180deg));
   }

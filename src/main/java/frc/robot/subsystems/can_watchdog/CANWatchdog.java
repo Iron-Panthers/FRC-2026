@@ -21,10 +21,10 @@ public class CANWatchdog extends SubsystemBase {
     int[] missingDevices = io.missingDevices();
     hasAllDevices = missingDevices.length == 0;
     RGBMessages.MISSING_CAN_DEVICE.setIsExpired(hasAllDevices);
-    Logger.recordOutput("CANWatchdog/NumberOfMissingDevices", missingDevices.length);
-    Logger.recordOutput("CANWatchdog/HasAllDevices", hasAllDevices());
+    Logger.recordOutput("CANWatchdog/Number Of Missing Devices", missingDevices.length);
+    Logger.recordOutput("CANWatchdog/Has All Devices", hasAllDevices());
     if (!hasAllDevices()) {
-      Logger.recordOutput("CANWatchdog/FirstDeviceMissing", missingDevices[0]);
+      Logger.recordOutput("CANWatchdog/First Device Missing", missingDevices[0]);
     }
   }
 

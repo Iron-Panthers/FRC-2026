@@ -28,12 +28,12 @@ public class TeleopHeadingController extends BaseHeadingController {
     }
     double output = super.update();
     Logger.recordOutput(
-        "Swerve/HeadingController/SetpointVelocity", controller.getSetpoint().velocity);
-    Logger.recordOutput("Swerve/HeadingController/Output", output);
+        "Swerve/Heading Controller/Setpoint Velocity", controller.getSetpoint().velocity);
+    Logger.recordOutput("Swerve/Heading Controller/Output", output);
     Logger.recordOutput(
-        "Swerve/HeadingController/SetpointPosition", controller.getSetpoint().position);
+        "Swerve/Heading Controller/Setpoint Position", controller.getSetpoint().position);
     Logger.recordOutput(
-        "Swerve/HeadingController/CurrentPosition", headingSupplier.get().getRadians());
+        "Swerve/Heading Controller/Current Position", headingSupplier.get().getRadians());
     return output;
   }
 }
