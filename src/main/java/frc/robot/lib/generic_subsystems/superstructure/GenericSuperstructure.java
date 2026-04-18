@@ -77,13 +77,13 @@ public abstract class GenericSuperstructure<G extends GenericSuperstructure.Posi
     }
 
     Logger.recordOutput(name + "/Target", positionTarget.toString());
-    Logger.recordOutput(name + "/ControlMode", controlMode.toString());
-    Logger.recordOutput(name + "/ReachedTarget", reachedTarget());
-    Logger.recordOutput(name + "/TargetPosition", positionTarget.getPosition());
-    Logger.recordOutput(name + "/TargetPositionManual", positionTargetManual.orElse(0.0));
+    Logger.recordOutput(name + "/Control Mode", controlMode.toString());
+    Logger.recordOutput(name + "/Reached Target", reachedTarget());
+    Logger.recordOutput(name + "/Target Position", positionTarget.getPosition());
+    Logger.recordOutput(name + "/Target Position Manual", positionTargetManual.orElse(0.0));
     filteredCurrent = this.linearFilter.calculate(inputs.supplyCurrentAmps);
-    Logger.recordOutput(name + "/FilteredCurrent", filteredCurrent);
-    Logger.recordOutput(name + "/TotalAmpSeconds", totalAmps);
+    Logger.recordOutput(name + "/Filtered Current", filteredCurrent);
+    Logger.recordOutput(name + "/Total Amp Seconds", totalAmps);
   }
 
   public G getPositionTarget() {

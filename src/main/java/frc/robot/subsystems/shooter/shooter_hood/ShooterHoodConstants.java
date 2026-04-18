@@ -16,7 +16,7 @@ public class ShooterHoodConstants {
       switch (Constants.getRobotType()) {
         case COMP -> new ShooterHoodConfig(
             // reduction between sensor and mechanism
-            CAN.at(30, "Shooter Hood"), 36 / 22.0 * 158 / 10);
+            CAN.at(30, "Shooter Hood"), 36 / 12.0 * 158 / 10);
         case SIM -> new ShooterHoodConfig(
             // Reduction between motor and mechanism
             CAN.at(8, "Shooter Hood"), 12 * .375);
@@ -26,7 +26,7 @@ public class ShooterHoodConstants {
   // TODO update all the PID information
   public static final PIDGains GAINS =
       switch (Constants.getRobotType()) {
-        case COMP -> new PIDGains(1000, 0, 0, 0, 4.18, 0, 0.8);
+        case COMP -> new PIDGains(1000, 0, 0, 0, 5.1282, 0, 0.8);
         case SIM -> new PIDGains(60, 0, 0, 0, 2.265488, 0.1, 0);
         default -> new PIDGains(0, 0, 0, 0, 0, 0, 0);
       };

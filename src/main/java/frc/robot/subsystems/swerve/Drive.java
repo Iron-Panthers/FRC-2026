@@ -49,10 +49,10 @@ public class Drive extends SubsystemBase {
 
   private Rotation2d fieldRelativeYaw = new Rotation2d();
 
-  @AutoLogOutput(key = "Swerve/GyroYawOffset")
+  @AutoLogOutput(key = "Swerve/Gyro Yaw Offset")
   private Rotation2d gyroYawOffset = new Rotation2d();
 
-  @AutoLogOutput(key = "Swerve/CurrentPosition")
+  @AutoLogOutput(key = "Swerve/Current Position")
   private Pose2d currentPosition = new Pose2d();
 
   private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
@@ -126,7 +126,7 @@ public class Drive extends SubsystemBase {
       }
       case TRAJECTORY -> {
         Logger.recordOutput(
-            "Swerve/DistanceFromSetpoint",
+            "Swerve/Distance From Setpoint",
             RobotState.getInstance()
                 .getEstimatedPose()
                 .getTranslation()
@@ -166,15 +166,15 @@ public class Drive extends SubsystemBase {
         }
         double speedMagnitude =
             Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond);
-        Logger.recordOutput("Swerve/speedMagnitude", speedMagnitude);
-        Logger.recordOutput("Swerve/angularVelocity", targetSpeeds.omegaRadiansPerSecond);
+        Logger.recordOutput("Swerve/Speed Magnitude", speedMagnitude);
+        Logger.recordOutput("Swerve/Angular Velocity", targetSpeeds.omegaRadiansPerSecond);
         if (speedMagnitude > 0.015 || Math.abs(targetSpeeds.omegaRadiansPerSecond) > 0.4) {
           driveMode = DriveModes.TELEOP;
         }
-        modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
-        modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
-        modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
-        modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+        modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
+        modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(135))));
+        modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-225))));
+        modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(225))));
       }
     }
 
@@ -194,29 +194,29 @@ public class Drive extends SubsystemBase {
         modules[i].runToSetpoint(moduleTargetStates[i]);
       }
 
-      Logger.recordOutput("Swerve/ModuleTargetStates", moduleTargetStates);
+      Logger.recordOutput("Swerve/Module Target States", moduleTargetStates);
     }
-    Logger.recordOutput("Swerve/IsScoped", isScoped);
-    Logger.recordOutput("Swerve/TargetSpeeds", targetSpeeds);
-    Logger.recordOutput("Swerve/DriveMode", driveMode);
+    Logger.recordOutput("Swerve/Is Scoped", isScoped);
+    Logger.recordOutput("Swerve/Target Speeds", targetSpeeds);
+    Logger.recordOutput("Swerve/Drive Mode", driveMode);
     Logger.recordOutput(
         "Swerve/Magnitude",
         Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond));
-    Logger.recordOutput("Swerve/FieldRelativeYaw", fieldRelativeYaw);
-    Logger.recordOutput("Swerve/TrajectorySpeeds", trajectorySpeeds);
+    Logger.recordOutput("Swerve/Field Relative Yaw", fieldRelativeYaw);
+    Logger.recordOutput("Swerve/Trajectory Speeds", trajectorySpeeds);
     if (headingController != null) {
       Logger.recordOutput(
-          "Swerve/HeadingTarget", headingController.getTargetHeading().getRadians());
+          "Swerve/Heading Target", headingController.getTargetHeading().getRadians());
     }
-    Logger.recordOutput("Swerve/EstimatedX", RobotState.getInstance().getEstimatedPose().getX());
-    Logger.recordOutput("Swerve/EstimatedY", RobotState.getInstance().getEstimatedPose().getY());
+    Logger.recordOutput("Swerve/Estimated X", RobotState.getInstance().getEstimatedPose().getX());
+    Logger.recordOutput("Swerve/Estimated Y", RobotState.getInstance().getEstimatedPose().getY());
     if (pidAutoAlignController != null) {
-      Logger.recordOutput("Swerve/PID/VelocityX", pidAutoAlignController.getXVel());
-      Logger.recordOutput("Swerve/PID/VelocityY", pidAutoAlignController.getYVel());
+      Logger.recordOutput("Swerve/PID/Velocity X", pidAutoAlignController.getXVel());
+      Logger.recordOutput("Swerve/PID/Velocity Y", pidAutoAlignController.getYVel());
     }
     if (axisAssistController != null) {
-      Logger.recordOutput("Swerve/PID/VelocityX", axisAssistController.getXVel());
-      Logger.recordOutput("Swerve/PID/VelocityY", axisAssistController.getYVel());
+      Logger.recordOutput("Swerve/PID/Velocity X", axisAssistController.getXVel());
+      Logger.recordOutput("Swerve/PID/Velocity Y", axisAssistController.getYVel());
     }
   }
 
@@ -267,14 +267,14 @@ public class Drive extends SubsystemBase {
                 : RobotState.getInstance().getEstimatedPose().getRotation());
   }
 
-  @AutoLogOutput(key = "Swerve/ModuleStates")
+  @AutoLogOutput(key = "Swerve/Module States")
   public SwerveModuleState[] getModuleStates() {
     return Arrays.stream(modules)
         .map(module -> module.getModuleState())
         .toArray(SwerveModuleState[]::new);
   }
 
-  @AutoLogOutput(key = "Swerve/RobotSpeeds")
+  @AutoLogOutput(key = "Swerve/Robot Speeds")
   public ChassisSpeeds getRobotSpeeds() {
     return KINEMATICS.toChassisSpeeds(getModuleStates());
   }

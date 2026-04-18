@@ -99,13 +99,13 @@ public class AxisAssist extends BaseTranslationController {
       pidAxisVel = Units.Meters.of(0);
     }
 
-    Logger.recordOutput("Swerve/AxisAssist/SetpointPos", magController.getSetpoint().position);
-    Logger.recordOutput("Swerve/AxisAssist/CurrPos", magTranslCurrPos);
-    Logger.recordOutput("Swerve/AxisAssist/TargPos", magTranslTargPos);
-    Logger.recordOutput("Swerve/AxisAssist/MagVel", magVel);
-    Logger.recordOutput("Swerve/AxisAssist/Target", targetPosition);
-    Logger.recordOutput("Swerve/AxisAssist/TrapVel", magController.getSetpoint().velocity);
-    Logger.recordOutput("Swerve/AxisAssist/PIDVel", pidOutput);
+    Logger.recordOutput("Swerve/Axis Assist/SetpointPos", magController.getSetpoint().position);
+    Logger.recordOutput("Swerve/Axis Assist/CurrPos", magTranslCurrPos);
+    Logger.recordOutput("Swerve/Axis Assist/TargPos", magTranslTargPos);
+    Logger.recordOutput("Swerve/Axis Assist/MagVel", magVel);
+    Logger.recordOutput("Swerve/Axis Assist/Target", targetPosition);
+    Logger.recordOutput("Swerve/Axis Assist/TrapVel", magController.getSetpoint().velocity);
+    Logger.recordOutput("Swerve/Axis Assist/PIDVel", pidOutput);
   }
 
   public Distance calculateLinearVelocity(double y) {
@@ -127,8 +127,8 @@ public class AxisAssist extends BaseTranslationController {
   public ChassisSpeeds update() {
     calculateLinearMovement();
     Distance controlAxisVel = calculateLinearVelocity(controlY ? controllerY : controllerX);
-    Logger.recordOutput("Swerve/AxisAssist/ControlAxisVel", controlAxisVel);
-    Logger.recordOutput("Swerve/AxisAssist/PidAxisVel", pidAxisVel);
+    Logger.recordOutput("Swerve/Axis Assist/ControlAxisVel", controlAxisVel);
+    Logger.recordOutput("Swerve/Axis Assist/PidAxisVel", pidAxisVel);
     return ChassisSpeeds.fromFieldRelativeSpeeds(
         controlY ? pidAxisVel.in(Units.Meters) : controlAxisVel.in(Units.Meters),
         controlY ? controlAxisVel.in(Units.Meters) : pidAxisVel.in(Units.Meters),
