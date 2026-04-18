@@ -61,7 +61,7 @@ public class ShooterHoodConstants {
   public static final double SUPPLY_CURRENT_LIMIT = 20;
 
   // TODO Change Limits
-  public static final double ZEROING_VOLTS = -1;
+  public static final double ZEROING_VOLTS = -3;
   public static final double ZEROING_OFFSET = 0; // offset in degrees
   public static final double ZEROING_VOLTAGE_THRESHOLD = 5;
 
