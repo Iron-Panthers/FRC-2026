@@ -86,6 +86,8 @@ public class RobotState {
 
   private static RobotState instance;
 
+  private Pose2d pathPlannerTargetPose;
+
   public static RobotState getInstance() {
     if (instance == null) instance = new RobotState();
     return instance;
@@ -517,5 +519,13 @@ public class RobotState {
                     <= DriveConstants.TRENCH_LENGTH));
     Logger.recordOutput("Swerve/isUnderTrench", underTrench);
     return underTrench;
+  }
+
+  public void setPathPlannerTargetPose(Pose2d pose) {
+    pathPlannerTargetPose = pose;
+  }
+
+  public Pose2d getPathPlannerTargetPose() {
+    return pathPlannerTargetPose;
   }
 }

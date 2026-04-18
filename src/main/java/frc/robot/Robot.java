@@ -44,7 +44,10 @@ public class Robot extends LoggedRobot {
     Pathfinding.setPathfinder(new LocalADStarAK());
 
     PathPlannerLogging.setLogTargetPoseCallback(
-        (pose) -> Logger.recordOutput("PathPlanner/TargetPose", pose));
+        (pose) -> {
+          RobotState.getInstance().setPathPlannerTargetPose(pose); // Don't kill me Nora
+          Logger.recordOutput("PathPlanner/TargetPose", pose);
+        });
     PathPlannerLogging.setLogCurrentPoseCallback(
         (pose) -> Logger.recordOutput("PathPlanner/CurrentPose", pose));
     PathPlannerLogging.setLogActivePathCallback(
@@ -80,6 +83,7 @@ public class Robot extends LoggedRobot {
       case SIM:
         // Running a physics simulator, log to NT
         Logger.addDataReceiver(new NT4Publisher());
+        Logger.addDataReceiver(new WPILOGWriter("C:\\Users\\esori\\Downloads"));
         break;
 
       case REPLAY:

@@ -5,8 +5,10 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
@@ -19,7 +21,7 @@ import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.utility.FuelSim;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.seasonspecific.rebuilt2026.*;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -29,6 +31,7 @@ public class RobotSimState {
 
   private int fuelCount = START_FUEL_CAPACITY;
   private boolean intakeActive = false;
+  SwerveDriveSimulation obstacle;
 
   private RobotSimState() {
     // init the arena (drive sim only, no game piece placement)
@@ -69,6 +72,17 @@ public class RobotSimState {
     fuelSim.spawnStartingFuel();
     fuelSim.setLoggingFrequency(20);
     fuelSim.start();
+
+    // opponent simulation
+    obstacle =
+        new SwerveDriveSimulation(
+            DriveConstants.obstacleConfig,
+            new Pose2d(new Translation2d(8.47, 1.7), new Rotation2d()));
+    SimulatedArena.getInstance().addDriveTrainSimulation(obstacle);
+  }
+
+  public Pose2d getObstaclePosition() {
+    return obstacle.getSimulatedDriveTrainPose();
   }
 
   // Singleton instance

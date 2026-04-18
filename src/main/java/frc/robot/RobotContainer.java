@@ -9,6 +9,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -373,6 +375,22 @@ public class RobotContainer {
             .andThen(
                 new InstantCommand(
                     () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
+    NamedCommands.registerCommand(
+        "Check If Off",
+        new WaitUntilCommand(
+            () ->
+                RobotState.getInstance()
+                        .getPathPlannerTargetPose()
+                        .getTranslation()
+                        .getDistance(RobotState.getInstance().getEstimatedPose().getTranslation())
+                    > 1));
+    NamedCommands.registerCommand(
+        "Translate To Shoot",
+        new AlignToPoseCommand(
+            swerve,
+            () -> new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)),
+            true,
+            true));
   }
 
   private void configureBindings() {
@@ -590,6 +608,8 @@ public class RobotContainer {
     Logger.recordOutput(
         "FieldSimulation/RobotFuel", RobotSimState.getInstance().getIntakeGamePieces());
     Logger.recordOutput("FieldSimulation/FuelCount", RobotSimState.getInstance().getFuelCount());
+    Logger.recordOutput(
+        "FieldSimulation/ObstaclePosition", RobotSimState.getInstance().getObstaclePosition());
 
     // Update the shooting logic with the correct rollers
     RobotSimState.getInstance()

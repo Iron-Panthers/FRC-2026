@@ -297,6 +297,9 @@ public class DriveConstants {
                       KilogramSquareMeters.of(0.04),
                       1.4));
 
+  public static final DriveTrainSimulationConfig obstacleConfig =
+      DriveTrainSimulationConfig.Default().withRobotMass(Kilograms.of(1000000000));
+
   public static final TrajectoryFollowerConstants TRAJECTORY_CONFIG =
       switch (getRobotType()) {
         case COMP -> new TrajectoryFollowerConstants(
