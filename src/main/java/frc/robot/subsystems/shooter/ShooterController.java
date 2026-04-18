@@ -43,7 +43,7 @@ public class ShooterController extends SubsystemBase {
     /** idle: no spin */
     INTAKE(
         ShooterHoodTarget.STOW,
-        ShooterFlywheelTarget.IDLE,
+        ShooterFlywheelTarget.INTAKE,
         ShooterAcceleratorTarget.IDLE,
         ShooterOmniwheelTarget.IDLE,
         SerializerTarget.SLOW),
