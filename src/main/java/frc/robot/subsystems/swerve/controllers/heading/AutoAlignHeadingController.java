@@ -37,7 +37,7 @@ public class AutoAlignHeadingController extends BaseHeadingController {
     } else {
       System.out.println("AutoAlignHeadingController: max velocity or acceleration is set to 0");
     }
-    Logger.recordOutput("Swerve/PIDAutoalign/VelocityWanted", v);
+    Logger.recordOutput("Swerve/PID Autoalign/Velocity Wanted", v);
     v = Math.min(v, HEADING_CONTROLLER_CONSTANTS.maxVelocity());
     super.getController().setConstraints(new Constraints(v, a));
   }

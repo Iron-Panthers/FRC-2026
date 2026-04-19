@@ -58,7 +58,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
       super.setControlMode(ControlMode.STOP);
     }
     Logger.recordOutput(
-        "Shooter/Shooter Hood/PositionTargetRotations", // TODO: add naming convention to notion doc
+        "Shooter/Shooter Hood/Position Target Rotations", // TODO: add naming convention to notion doc
         getPositionTarget().getPosition());
   }
 
@@ -94,7 +94,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
   }
 
   // TODO make sure logic is correct for getting Display Pose3D
-  @AutoLogOutput(key = "Shooter/Shooter Hood/DisplayPose3d")
+  @AutoLogOutput(key = "Shooter/Shooter Hood/Display Pose3d")
   @Override
   public Pose3d getDisplayPose3d() {
     return getParentPosition()

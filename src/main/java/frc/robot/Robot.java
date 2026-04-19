@@ -49,10 +49,10 @@ public class Robot extends LoggedRobot {
           Logger.recordOutput("PathPlanner/TargetPose", pose);
         });
     PathPlannerLogging.setLogCurrentPoseCallback(
-        (pose) -> Logger.recordOutput("PathPlanner/CurrentPose", pose));
+        (pose) -> Logger.recordOutput("Path Planner/Current Pose", pose));
     PathPlannerLogging.setLogActivePathCallback(
         (path) ->
-            Logger.recordOutput("PathPlanner/ActivePath", path.toArray(new Pose2d[path.size()])));
+            Logger.recordOutput("Path Planner/Active Path", path.toArray(new Pose2d[path.size()])));
 
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);

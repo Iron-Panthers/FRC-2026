@@ -598,12 +598,12 @@ public class RobotContainer {
   public void updateSimulation() {
     if (Constants.getRobotMode() != Constants.Mode.SIM) return;
 
-    Logger.recordOutput("Testing/BlankPose3d", new Pose3d());
+    Logger.recordOutput("Testing/Blank Pose3d", new Pose3d());
 
     SimulatedArena.getInstance().simulationPeriodic();
     RobotSimState.getInstance().getFuelSim().updateSim();
     Logger.recordOutput(
-        "FieldSimulation/RobotPosition",
+        "Field Simulation/Robot Position",
         RobotSimState.getInstance().getDriveSimulation().getSimulatedDriveTrainPose());
     Logger.recordOutput(
         "FieldSimulation/RobotFuel", RobotSimState.getInstance().getIntakeGamePieces());

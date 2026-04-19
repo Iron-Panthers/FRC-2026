@@ -49,12 +49,12 @@ public abstract class GenericRollers<G extends GenericRollers.VelocityTarget> {
     Logger.recordOutput(name + "/Max Current Amps", velocityTarget.getSupplyCurrentLimit());
 
     filteredCurrent = this.filter.calculate(inputs.supplyCurrentAmps);
-    Logger.recordOutput(name + "/FilteredCurrent", filteredCurrent);
+    Logger.recordOutput(name + "/Filtered Current", filteredCurrent);
 
     totalAmps += (getSupplyCurrentAmps() / 50);
-    Logger.recordOutput(name + "/TotalAmpSeconds", totalAmps);
+    Logger.recordOutput(name + "/Total Amp Seconds", totalAmps);
 
-    Logger.recordOutput(name + "/ControlMode", controlMode.toString());
+    Logger.recordOutput(name + "/Control Mode", controlMode.toString());
     switch (controlMode) {
       case VELOCITY -> {
         rollerIO.setSupplyCurrentLimit(

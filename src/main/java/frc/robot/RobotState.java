@@ -120,12 +120,12 @@ public class RobotState {
     poseEstimator.resetPose(pose);
   }
 
-  @AutoLogOutput(key = "RobotState/EstimatedPose")
+  @AutoLogOutput(key = "Robot State/Estimated Pose")
   public Pose2d getEstimatedPose() {
     return estimatedPose;
   }
 
-  @AutoLogOutput(key = "RobotState/Velocity")
+  @AutoLogOutput(key = "Robot State/Velocity")
   /* meters per second */
   public Translation2d getVelocity() {
     return new Translation2d(
@@ -137,7 +137,7 @@ public class RobotState {
   }
 
   /* In inches because we are imperial... */
-  @AutoLogOutput(key = "RobotState/Error")
+  @AutoLogOutput(key = "Robot State/Error")
   public double alignError() {
     return lastApproachPose.getTranslation().getDistance(estimatedPose.getTranslation())
         * 100
@@ -165,8 +165,8 @@ public class RobotState {
    * @return
    */
   public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench) {
-    Logger.recordOutput("RobotState/EstimatedPose", estimatedPose);
-    Logger.recordOutput("RobotState/ApproachPose", approachPose2d);
+    Logger.recordOutput("Robot State/Estimated Pose", estimatedPose);
+    Logger.recordOutput("Robot State/Approach Pose", approachPose2d);
 
     Command finalPathfindingCommand = null;
 
@@ -210,11 +210,11 @@ public class RobotState {
   public TargetShootingState calculateTargetShootingState() {
     TargetShootingState targetShootingState = shootingAnglePredictor.calculateTargetShootingState();
     Logger.recordOutput(
-        "RobotState/TargetShootingState/DrivebaseYaw", targetShootingState.drivebaseYaw());
+        "RobotState/Target Shooting State/Drivebase Yaw", targetShootingState.drivebaseYaw());
     Logger.recordOutput(
-        "RobotState/TargetShootingState/ShooterAngle", targetShootingState.shooterAngle());
+        "RobotState/Target Shooting State/Shooter Angle", targetShootingState.shooterAngle());
     Logger.recordOutput(
-        "RobotState/TargetShootingState/ShooterSpeed", targetShootingState.shooterSpeed());
+        "RobotState/Target Shooting State/Shooter Speed", targetShootingState.shooterSpeed());
     return targetShootingState;
   }
 
@@ -322,10 +322,10 @@ public class RobotState {
       Translation2d robotVelocity = new Translation2d(filteredVx, filteredVy);
 
       // Log the raw and filtered velocities for tuning
-      Logger.recordOutput("ShootingPredictor/RawVx", rawSpeeds.vxMetersPerSecond);
-      Logger.recordOutput("ShootingPredictor/RawVy", rawSpeeds.vyMetersPerSecond);
-      Logger.recordOutput("ShootingPredictor/FilteredVx", filteredVx);
-      Logger.recordOutput("ShootingPredictor/FilteredVy", filteredVy);
+      Logger.recordOutput("Shooting Predictor/Raw Vx", rawSpeeds.vxMetersPerSecond);
+      Logger.recordOutput("Shooting Predictor/Raw Vy", rawSpeeds.vyMetersPerSecond);
+      Logger.recordOutput("Shooting Predictor/Filtered Vx", filteredVx);
+      Logger.recordOutput("Shooting Predictor/Filtered Vy", filteredVy);
 
       // Get the initial important things
       Pose3d robotPose3d = new Pose3d(getEstimatedPose());
@@ -388,15 +388,15 @@ public class RobotState {
                   + baselineVerticalVelocity * baselineVerticalVelocity);
       double adjustedShooterSpeed = baseline.shooterSpeed * (newExitSpeed / staticExitSpeed);
 
-      Logger.recordOutput("ShootingPredictor/Distance", distance);
-      Logger.recordOutput("ShootingPredictor/BaselineVh", baselineVelocity);
-      Logger.recordOutput("ShootingPredictor/BaselineVv", baselineVerticalVelocity);
-      Logger.recordOutput("ShootingPredictor/ShotHorizontalSpeed", shotHorizontalSpeed);
-      Logger.recordOutput("ShootingPredictor/TurretAngle", turretAngle);
-      Logger.recordOutput("ShootingPredictor/AdjustedHoodAngle", adjustedHoodAngle);
-      Logger.recordOutput("ShootingPredictor/AdjustedShooterSpeed", adjustedShooterSpeed);
-      Logger.recordOutput("ShootingPredictor/ShooterOffsetY", shooterOffsetY);
-      Logger.recordOutput("ShootingPredictor/ShooterAngleOffset", shooterAngleOffset);
+      Logger.recordOutput("Shooting Predictor/Distance", distance);
+      Logger.recordOutput("Shooting Predictor/Baseline Vh", baselineVelocity);
+      Logger.recordOutput("Shooting Predictor/Baseline Vv", baselineVerticalVelocity);
+      Logger.recordOutput("Shooting Predictor/Shot Horizontal Speed", shotHorizontalSpeed);
+      Logger.recordOutput("Shooting Predictor/Turret Angle", turretAngle);
+      Logger.recordOutput("Shooting Predictor/Adjusted Hood Angle", adjustedHoodAngle);
+      Logger.recordOutput("Shooting Predictor/Adjusted Shooter Speed", adjustedShooterSpeed);
+      Logger.recordOutput("Shooting Predictor/Shooter Offset Y", shooterOffsetY);
+      Logger.recordOutput("Shooting Predictor/Shooter Angle Offset", shooterAngleOffset);
 
       return new TargetShootingState(
           turretAngle, Degrees.of(adjustedHoodAngle), MetersPerSecond.of(adjustedShooterSpeed));
@@ -426,7 +426,7 @@ public class RobotState {
     // Pose2d flippedEstimatedPose = isAllianceRed()
     //                 ? FlippingUtil.flipFieldPose(estimatedPose)
     //                 : estimatedPose;
-    Logger.recordOutput("RobotState/ShootingPoseOne", shootingPoseOne);
+    Logger.recordOutput("Robot State/Shooting Pose One", shootingPoseOne);
     // Logger.recordOutput("RobotState/ShootingPoseTwo", shootingPoseTwo);
     // if (shootingPoseOne.getTranslation().getDistance(flippedEstimatedPose.getTranslation()) <
     //     shootingPoseTwo.getTranslation().getDistance(flippedEstimatedPose.getTranslation())){
@@ -488,7 +488,7 @@ public class RobotState {
     return new Pose2d(x, y, new Rotation2d(angle));
   }
 
-  @AutoLogOutput(key = "RobotState/isAllianceRed")
+  @AutoLogOutput(key = "Robot State/isAllianceRed")
   public static boolean isAllianceRed() {
     // where true is red and false is blue
     var alliance = DriverStation.getAlliance();

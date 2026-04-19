@@ -21,7 +21,7 @@ public class Module {
     moduleIO.updateInputs(inputs);
     Logger.processInputs("Swerve/Module" + index, inputs);
     totalAmps += (inputs.driveSupplyCurrent / 50);
-    Logger.recordOutput("Swerve/Module" + index + "/TotalAmpSeconds", totalAmps);
+    Logger.recordOutput("Swerve/Module" + index + "/Total Amp Seconds", totalAmps);
   }
 
   public void runToSetpoint(SwerveModuleState targetState) {
@@ -34,7 +34,7 @@ public class Module {
 
     moduleIO.runDriveVelocitySetpoint(driveVelocityRads);
 
-    Logger.recordOutput("Swerve/Module" + index + "/SteerSetpoint", targetState.angle.getRadians());
+    Logger.recordOutput("Swerve/Module" + index + "/Steer Setpoint", targetState.angle.getRadians());
     Logger.recordOutput(
         "Swerve/Module" + index + "/SteerError",
         targetState.angle.getRadians() - inputs.steerAbsolutePosition.getRadians());
