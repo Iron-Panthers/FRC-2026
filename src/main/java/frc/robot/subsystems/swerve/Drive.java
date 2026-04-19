@@ -402,4 +402,11 @@ public class Drive extends SubsystemBase {
       module.setDriveSupplyCurrentLimit(amps);
     }
   }
+
+  public boolean reachedAutoAlignTarget() {
+    if (driveMode != DriveModes.AUTO_ALIGN) {
+      return false;
+    }
+    return autoAlignHeadingController.atTarget() && pidAutoAlignController.atTarget();
+  }
 }

@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -433,8 +434,7 @@ public class RobotContainer {
         .onTrue(
             swerve.zeroGyroCommand().alongWith(new InstantCommand(() -> defaultZeroing = true)));
     // SMART ZERO GYRO
-    //driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
-    driverA.x().whileTrue(new AlignToShootPoseCommand(swerve, true));
+    // driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     // INTAKE
     driverA.b().onTrue(new IntakeCommand(intakeController, shooterController));
     // STOW ROBOT
@@ -455,7 +455,18 @@ public class RobotContainer {
         .whileTrue(new PassToPoseCommand(swerve).alongWith(shootCommand.whileHeldShuttling()));
 
     driverA.povRight().onFalse(shootCommand.onRelease());
+    
+    // AUTO ALIGN SHOOT
+    driverA
+        .x()
+        .whileTrue(
+            new AlignToShootPoseCommand(swerve, true)
+                .alongWith(
+                    new WaitUntilCommand(() -> swerve.reachedAutoAlignTarget())
+                        .andThen(shootCommand.whileHeld())))
+        .onFalse(shootCommand.onRelease());
 
+    // DEFAULT SHOOT
     driverA
         .rightBumper()
         .whileTrue(
@@ -465,7 +476,8 @@ public class RobotContainer {
                   intakeController.setTargetState(IntakeState.IDLE);
                 },
                 () -> shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP)));
-
+    
+    // DEFAULT TRENCH SHOOT
     driverA
         .povDown()
         .whileTrue(
