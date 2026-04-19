@@ -21,7 +21,8 @@ public class MotorOutputManager extends SubsystemBase {
 
   private MotorOutputManager() {}
 
-  public void registerMotorOutputs(Supplier<Double>... suppliers) {
+  @SafeVarargs
+  public final void registerMotorOutputs(Supplier<Double>... suppliers) {
     for (Supplier<Double> supplier : suppliers) {
       currentSuppliers.add(supplier);
     }

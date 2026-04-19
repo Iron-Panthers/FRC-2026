@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
+import frc.robot.commands.AlignToShootPoseCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
@@ -432,7 +433,8 @@ public class RobotContainer {
         .onTrue(
             swerve.zeroGyroCommand().alongWith(new InstantCommand(() -> defaultZeroing = true)));
     // SMART ZERO GYRO
-    driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    //driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    driverA.x().whileTrue(new AlignToShootPoseCommand(swerve, true));
     // INTAKE
     driverA.b().onTrue(new IntakeCommand(intakeController, shooterController));
     // STOW ROBOT
