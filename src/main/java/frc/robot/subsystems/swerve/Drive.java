@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import static edu.wpi.first.units.Units.Rotation;
 import static frc.robot.subsystems.swerve.DriveConstants.HEADING_CONTROLLER_CONSTANTS;
 import static frc.robot.subsystems.swerve.DriveConstants.KINEMATICS;
 
@@ -42,6 +43,7 @@ public class Drive extends SubsystemBase {
 
   private boolean isScoped = false;
   private boolean isBeingDefended = false;
+  private boolean isHDefense = false;
 
   private GyroIO gyroIO;
   private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -121,7 +123,12 @@ public class Drive extends SubsystemBase {
             && Math.abs(targetSpeeds.omegaRadiansPerSecond) < 0.1
             && isScoped
             && isBeingDefended) {
-          driveMode = DriveModes.DEFENSE;
+          if (Math.abs(headingController.getTargetHeading().plus(Rotation2d.kCW_90deg).getDegrees())<17
+            || Math.abs(headingController.getTargetHeading().plus(Rotation2d.kCCW_90deg).getDegrees())<17){
+              setDefenseMode(true);
+          } else {
+              setDefenseMode(false);
+          }
         }
       }
       case TRAJECTORY -> {
@@ -171,10 +178,18 @@ public class Drive extends SubsystemBase {
         if (speedMagnitude > 0.015 || Math.abs(targetSpeeds.omegaRadiansPerSecond) > 0.4) {
           driveMode = DriveModes.TELEOP;
         }
+        if (isHDefense) {
+          modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+          modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+          modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+          modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+
+        } else {
         modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
         modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(135))));
         modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-225))));
         modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(225))));
+        }
       }
     }
 
@@ -395,6 +410,20 @@ public class Drive extends SubsystemBase {
 
   public void setIsBeingDefended(boolean isBeingDefended) {
     this.isBeingDefended = isBeingDefended;
+  }
+
+  /**
+   * Sets the defense mode and sets the defense type to that supplied in the params
+   *
+   * @param isHDefense wether or not to use H defense versus X defense
+   */
+  public void setDefenseMode(boolean isHDefense) {
+    setDefenseMode();
+    this.isHDefense = isHDefense;
+  }
+
+  public boolean getIsHDefense() {
+    return isHDefense;
   }
 
   public void setDriveSupplyCurrentLimits(double amps) {
