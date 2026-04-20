@@ -476,26 +476,26 @@ public class RobotContainer {
                 () -> shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP)));
 
     // ARC ALIGN
-    driverA
-        .leftBumper()
-        .whileTrue(
-            new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
-                .alongWith(
-                    new WaitUntilCommand(
-                            () ->
-                                RobotState.getInstance()
-                                        .getEstimatedPose()
-                                        .getTranslation()
-                                        .getDistance(
-                                            RobotState.getInstance()
-                                                .getAlignPose()
-                                                .getTranslation())
-                                    < 1)
-                        .andThen(
-                            shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
+    // driverA
+    //     .leftBumper()
+    //     .whileTrue(
+    //         new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
+    //             .alongWith(
+    //                 new WaitUntilCommand(
+    //                         () ->
+    //                             RobotState.getInstance()
+    //                                     .getEstimatedPose()
+    //                                     .getTranslation()
+    //                                     .getDistance(
+    //                                         RobotState.getInstance()
+    //                                             .getAlignPose()
+    //                                             .getTranslation())
+    //                                 < 1)
+    //                     .andThen(
+    //                         shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
 
     // ALIGN TO SHOOT
-    // driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
+    driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
   }
 
   private void configureDriverBButtons() {
