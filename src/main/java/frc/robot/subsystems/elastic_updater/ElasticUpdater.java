@@ -14,7 +14,7 @@ public class ElasticUpdater extends SubsystemBase {
   @Override
   public void periodic() {
 
-    Logger.recordOutput("MatchTime", matchTime = DriverStation.getMatchTime());
+    Logger.recordOutput("Match Time", matchTime = DriverStation.getMatchTime());
 
     if (DriverStation.isAutonomous()) {
       updateMatchData((matchTime >= 0 && matchTime <= 30) ? "Auto" : "Invalid Timeframe");
@@ -44,7 +44,7 @@ public class ElasticUpdater extends SubsystemBase {
   }
 
   private void updateMatchData(String timeframe) {
-    Logger.recordOutput("MatchTimeframe", timeframe);
+    Logger.recordOutput("Match Time frame", timeframe);
 
     boolean firstAllianceIsRed = true;
     // DriverStation.getGameSpecificMessage returns the team that is active on shifts 2 and 4.
@@ -63,11 +63,11 @@ public class ElasticUpdater extends SubsystemBase {
       redHubActive = firstAllianceIsRed ^ (timeframe == "Shift 2" || timeframe == "Shift 4");
       blueHubActive = !redHubActive;
     }
-    Logger.recordOutput("RedHubActive", redHubActive);
-    Logger.recordOutput("BlueHubActive", blueHubActive);
+    Logger.recordOutput("Red Hub Active", redHubActive);
+    Logger.recordOutput("Blue Hub Active", blueHubActive);
 
     ourHubActive = RobotState.isAllianceRed() ? redHubActive : blueHubActive;
-    Logger.recordOutput("OurHubActive", ourHubActive);
+    Logger.recordOutput("Our Hub Active", ourHubActive);
 
     if (timeframe == "Auto") {
       timeUntilOurHubShifts = matchTime;
@@ -89,7 +89,7 @@ public class ElasticUpdater extends SubsystemBase {
       timeUntilOurHubShifts = -1;
     }
 
-    Logger.recordOutput("TimeUntilOurHubShifts", timeUntilOurHubShifts);
+    Logger.recordOutput("Time Until Our Hub Shifts", timeUntilOurHubShifts);
   }
 
   public double getTimeUntilOurHubShifts() {
