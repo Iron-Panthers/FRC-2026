@@ -26,7 +26,8 @@ public class SerializerIOTalonFX extends GenericRollersIOTalonFX {
             .withReduction(SERIALIZER_CONFIG.reduction())
             .withUpperVoltageLimit(UPPER_VOLT_LIMIT)
             .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
-            .withNeutralMode(SERIALIZER_CONFIG.brake()));
+            .withNeutralMode(SERIALIZER_CONFIG.brake())
+            .withStatorCurrentLimit(STATOR_CURRENT_LIMIT));
     talon2.getConfigurator().apply(config);
     talon2
         .getConfigurator()

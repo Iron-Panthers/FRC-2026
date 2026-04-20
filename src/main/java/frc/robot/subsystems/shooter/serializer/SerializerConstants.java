@@ -30,6 +30,8 @@ public class SerializerConstants {
   public static final double UPPER_VOLT_LIMIT = 10;
   public static final double LOWER_VOLT_LIMIT = -10;
 
+  public static final double STATOR_CURRENT_LIMIT = 50;
+
   public static final SerializerPhysicalConstants PHYSICAL_CONSTANTS =
       switch (Constants.getRobotType()) {
         case SIM -> new SerializerPhysicalConstants(0.000105);

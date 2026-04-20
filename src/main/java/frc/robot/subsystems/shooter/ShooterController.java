@@ -33,6 +33,13 @@ public class ShooterController extends SubsystemBase {
         ShooterAcceleratorTarget.IDLE,
         ShooterOmniwheelTarget.IDLE,
         SerializerTarget.IDLE),
+    /** spin just flywheels */
+    FLYWHEEL_SPIN_UP(
+        ShooterHoodTarget.STOW,
+        ShooterFlywheelTarget.INTAKE,
+        ShooterAcceleratorTarget.IDLE,
+        ShooterOmniwheelTarget.IDLE,
+        SerializerTarget.IDLE),
     /** hold: hold the balls in the hopper */
     HOLD(
         ShooterHoodTarget.STOW,
@@ -43,7 +50,7 @@ public class ShooterController extends SubsystemBase {
     /** idle: no spin */
     INTAKE(
         ShooterHoodTarget.STOW,
-        ShooterFlywheelTarget.IDLE,
+        ShooterFlywheelTarget.INTAKE,
         ShooterAcceleratorTarget.IDLE,
         ShooterOmniwheelTarget.IDLE,
         SerializerTarget.SLOW),
@@ -215,7 +222,6 @@ public class ShooterController extends SubsystemBase {
       } else {
         serializer.setVelocityTarget(targetState.serializerTarget);
       }
-      serializer.setVelocityTarget(targetState.serializerTarget);
     } else {
       shooterHood.setPositionTarget(targetState.hoodTarget);
       shooterFlywheel.setVelocityTarget(targetState.flywheelTarget);
