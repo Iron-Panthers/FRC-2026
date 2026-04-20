@@ -41,6 +41,12 @@ public class GenericRollersConfiguration extends GenericMechanismConfiguration {
   }
 
   @Override
+  public GenericRollersConfiguration withStatorCurrentLimit(double statorCurrentLimit) {
+    super.withStatorCurrentLimit(statorCurrentLimit);
+    return this;
+  }
+
+  @Override
   public GenericRollersConfiguration withCANCoderID(int canCoderID) {
     super.withCANCoderID(canCoderID);
     return this;
