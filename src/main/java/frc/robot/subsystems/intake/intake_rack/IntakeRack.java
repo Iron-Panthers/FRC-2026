@@ -90,9 +90,9 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
       superstructureIO.runPosition(pidController.getSetpoint().position);
     }
     Logger.recordOutput(
-        "Intake/Intake Rack/PositionTargetRotations", getPositionTarget().getPosition());
+        "Intake/Intake Rack/Position Target Rotations", getPositionTarget().getPosition());
     Logger.recordOutput(
-        "Intake/Intake Rack/PositionTargetRotations Pid", pidController.getSetpoint().position);
+        "Intake/Intake Rack/Position Target Rotations Pid", pidController.getSetpoint().position);
   }
 
   @Override
@@ -114,7 +114,7 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
     this.loggableMechanism3dParent = parent;
   }
 
-  @AutoLogOutput(key = "Intake/Intake Rack/DisplayPose3d")
+  @AutoLogOutput(key = "Intake/Intake Rack/Display Pose3d")
   @Override
   public Pose3d getDisplayPose3d() {
     return getParentPosition()

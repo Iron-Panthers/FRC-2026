@@ -11,6 +11,7 @@ public interface GenericRollersIO {
     public double appliedVolts = 0;
     public double supplyCurrentAmps = 0;
     public double appliedVelocity;
+    public double statorCurrentAmps = 0;
   }
 
   default void updateInputs(GenericRollersIOInputs inputs) {}
@@ -22,4 +23,6 @@ public interface GenericRollersIO {
   default void setSlot0(double kP, double kI, double kD, double kS, double kV, double kA) {}
 
   default void setSupplyCurrentLimit(double amps) {}
+
+  default void setStatorCurrentLimit(double amps) {}
 }

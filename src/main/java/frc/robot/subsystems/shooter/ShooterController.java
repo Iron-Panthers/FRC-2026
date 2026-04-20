@@ -229,9 +229,9 @@ public class ShooterController extends SubsystemBase {
     shooterAccelerator.periodic();
     serializer.periodic();
 
-    Logger.recordOutput("Shooter/TargetState", targetState);
-    Logger.recordOutput("Shooter/IsStopped", stopped);
-    Logger.recordOutput("Shooter/AutoAim", autoAim);
+    Logger.recordOutput("Shooter/Target State", targetState);
+    Logger.recordOutput("Shooter/Is Stopped", stopped);
+    Logger.recordOutput("Shooter/Auto Aim", autoAim);
   }
 
   public ShooterState getTargetState() {

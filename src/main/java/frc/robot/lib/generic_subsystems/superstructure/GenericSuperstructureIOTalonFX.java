@@ -61,6 +61,8 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
     config.MotorOutput.Inverted = superstructureConfig.motorDirection;
     config.CurrentLimits.SupplyCurrentLimit = superstructureConfig.supplyCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.CurrentLimits.StatorCurrentLimit = superstructureConfig.statorCurrentLimit;
+    config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     config.Voltage.withPeakForwardVoltage(superstructureConfig.upperVoltLimit);
     config.Voltage.withPeakReverseVoltage(superstructureConfig.lowerVoltLimit);
@@ -119,13 +121,13 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
     positionRotations = talon.getPosition();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
-        50, positionRotations, velocityRPS, appliedVolts, supplyCurrent);
+        50, positionRotations, velocityRPS, appliedVolts, supplyCurrent, statorCurrent);
   }
 
   @Override
   public void updateInputs(GenericSuperstructureIOInputs inputs) {
     inputs.isConnected =
-        BaseStatusSignal.refreshAll(positionRotations, velocityRPS, appliedVolts, supplyCurrent)
+        BaseStatusSignal.refreshAll(positionRotations, velocityRPS, appliedVolts, supplyCurrent, statorCurrent)
             .isOK();
     inputs.positionRotations = positionRotations.getValueAsDouble();
     inputs.velocityRotPerSec = velocityRPS.getValueAsDouble();

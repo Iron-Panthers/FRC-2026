@@ -87,6 +87,39 @@ public abstract class GenericMechanismConfiguration {
   }
 
   /**
+   * The absolute maximum amount of stator current allowed.
+   *
+   * <p>Supply current limits commonly range from 20-80 A depending on the breaker used.
+   *
+   * <ul>
+   *   <li><b>Minimum Value:</b> 0.0
+   *   <li><b>Maximum Value:</b> 800.0
+   *   <li><b>Default Value:</b> 120
+   *   <li><b>Units:</b> A
+   * </ul>
+   */
+  public double statorCurrentLimit = 140;
+
+  /**
+   * The absolute maximum amount of supply current allowed.
+   *
+   * <p>Supply current limits commonly range from 20-80 A depending on the breaker used.
+   *
+   * <ul>
+   *   <li><b>Minimum Value:</b> 0.0
+   *   <li><b>Maximum Value:</b> 800.0
+   *   <li><b>Default Value:</b> 120
+   *   <li><b>Units:</b> A
+   * </ul>
+   *
+   * @return itself
+   */
+  public GenericMechanismConfiguration withStatorCurrentLimit(double statorCurrentLimit) {
+    this.statorCurrentLimit = statorCurrentLimit;
+    return this;
+  }
+
+  /**
    * The non-zero ID for a CANCoder. The Talon will update its position and velocity whenever
    * CANcoder publishes its information on CAN bus, and the Talon internal rotor will not be used.
    */
