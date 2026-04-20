@@ -122,6 +122,10 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         50, positionRotations, velocityRPS, appliedVolts, supplyCurrent, statorCurrent);
+
+      if (followerMotors.size() == 0) {
+      talon.optimizeBusUtilization();
+    }
   }
 
   @Override
