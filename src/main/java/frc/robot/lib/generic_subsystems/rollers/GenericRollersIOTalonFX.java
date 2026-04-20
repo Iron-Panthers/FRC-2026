@@ -13,6 +13,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.MotorOutputManager;
+
 import java.util.ArrayList;
 
 public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
@@ -58,6 +60,10 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
       followerTalon.setNeutralMode(rollersConfig.neutralMode);
       followerTalon.getConfigurator().apply(config);
       followerMotors.add(followerTalon);
+      
+      MotorOutputManager.getInstance()
+          .registerMotorOutputs(
+            () -> followerTalon.getSupplyCurrent().getValueAsDouble());
     }
 
     position = talon.getPosition();
@@ -70,6 +76,11 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     if (followerMotors.size() == 0) {
       talon.optimizeBusUtilization();
     }
+
+    MotorOutputManager.getInstance()
+        .registerMotorOutputs(
+          () -> supplyCurrent.getValueAsDouble());
+
   }
 
   @Override

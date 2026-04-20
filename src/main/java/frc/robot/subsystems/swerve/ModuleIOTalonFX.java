@@ -109,9 +109,7 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     MotorOutputManager.getInstance()
         .registerMotorOutputs(
             () -> driveSupplyCurrent.getValueAsDouble(),
-            () -> driveStatorCurrent.getValueAsDouble(),
-            () -> steerSupplyCurrent.getValueAsDouble(),
-            () -> steerStatorCurrent.getValueAsDouble());
+            () -> steerSupplyCurrent.getValueAsDouble());
 
     // TODO: Why is this 100 Hz when everything else is 50 Hz? (Do we use can FD?)
     BaseStatusSignal.setUpdateFrequencyForAll(
