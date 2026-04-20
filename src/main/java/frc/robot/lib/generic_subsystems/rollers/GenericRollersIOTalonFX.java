@@ -59,14 +59,13 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
       followerTalon.getConfigurator().apply(config);
       followerMotors.add(followerTalon);
     }
-    
+
     position = talon.getPosition();
     velocity = talon.getVelocity();
     appliedVolts = talon.getMotorVoltage();
     supplyCurrent = talon.getSupplyCurrent();
     statorCurrent = talon.getStatorCurrent();
     BaseStatusSignal.setUpdateFrequencyForAll(50, velocity, appliedVolts, supplyCurrent);
-
 
     if (followerMotors.size() == 0) {
       talon.optimizeBusUtilization();

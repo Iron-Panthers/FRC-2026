@@ -1,6 +1,5 @@
 package frc.robot.subsystems.swerve;
 
-import static edu.wpi.first.units.Units.Rotation;
 import static frc.robot.subsystems.swerve.DriveConstants.HEADING_CONTROLLER_CONSTANTS;
 import static frc.robot.subsystems.swerve.DriveConstants.KINEMATICS;
 
@@ -123,11 +122,14 @@ public class Drive extends SubsystemBase {
             && Math.abs(targetSpeeds.omegaRadiansPerSecond) < 0.1
             && isScoped
             && isBeingDefended) {
-          if (Math.abs(headingController.getTargetHeading().plus(Rotation2d.kCW_90deg).getDegrees())<17
-            || Math.abs(headingController.getTargetHeading().plus(Rotation2d.kCCW_90deg).getDegrees())<17){
-              setDefenseMode(true);
+          if (Math.abs(headingController.getTargetHeading().plus(Rotation2d.kCW_90deg).getDegrees())
+                  < 17
+              || Math.abs(
+                      headingController.getTargetHeading().plus(Rotation2d.kCCW_90deg).getDegrees())
+                  < 17) {
+            setDefenseMode(true);
           } else {
-              setDefenseMode(false);
+            setDefenseMode(false);
           }
         }
       }
@@ -185,10 +187,10 @@ public class Drive extends SubsystemBase {
           modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
 
         } else {
-        modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
-        modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(135))));
-        modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-225))));
-        modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(225))));
+          modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
+          modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(135))));
+          modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-225))));
+          modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(225))));
         }
       }
     }

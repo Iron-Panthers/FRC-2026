@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
@@ -410,7 +409,9 @@ public class RobotContainer {
                     && intakeController.getTargetState() == IntakeState.INTAKE
                     && shooterController.getTargetState()
                         == ShooterState.INTAKE) // TODO: make these constants
-        .onTrue(new InstantCommand(() -> shooterController.setTargetState(ShooterState.FLYWHEEL_SPIN_UP)));
+        .onTrue(
+            new InstantCommand(
+                () -> shooterController.setTargetState(ShooterState.FLYWHEEL_SPIN_UP)));
 
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
@@ -479,7 +480,8 @@ public class RobotContainer {
     // driverA
     //     .leftBumper()
     //     .whileTrue(
-    //         new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
+    //         new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(),
+    // true)
     //             .alongWith(
     //                 new WaitUntilCommand(
     //                         () ->
@@ -492,7 +494,8 @@ public class RobotContainer {
     //                                             .getTranslation())
     //                                 < 1)
     //                     .andThen(
-    //                         shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
+    //
+    // shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
 
     // ALIGN TO SHOOT
     driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
