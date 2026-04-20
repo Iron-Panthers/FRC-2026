@@ -31,6 +31,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
         (intakeActive
             ? new IntakeCommand(intakeController, shooterController)
             : new InstantCommand()),
-        shooterController.setTargetStateCommand(ShooterState.IDLE));
+        shooterController.setTargetStateCommand(ShooterState.FLYWHEEL_SPIN_UP));
   }
 }
