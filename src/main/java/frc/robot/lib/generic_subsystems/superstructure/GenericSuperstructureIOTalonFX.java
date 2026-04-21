@@ -20,7 +20,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.MotorOutputManager;
-
 import java.util.ArrayList;
 
 public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstructureIO {
@@ -115,8 +114,7 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
       followerMotors.add(followerTalon);
 
       MotorOutputManager.getInstance()
-          .registerMotorOutputs(
-            () -> followerTalon.getSupplyCurrent().getValueAsDouble());
+          .registerMotorOutputs(() -> followerTalon.getSupplyCurrent().getValueAsDouble());
     }
 
     // STATUS SIGNALS
@@ -125,10 +123,8 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
     supplyCurrent = talon.getSupplyCurrent();
     statorCurrent = talon.getStatorCurrent();
     positionRotations = talon.getPosition();
-    
-    MotorOutputManager.getInstance()
-        .registerMotorOutputs(
-          () -> supplyCurrent.getValueAsDouble());
+
+    MotorOutputManager.getInstance().registerMotorOutputs(() -> supplyCurrent.getValueAsDouble());
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         50, positionRotations, velocityRPS, appliedVolts, supplyCurrent, statorCurrent);
@@ -137,7 +133,8 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
   @Override
   public void updateInputs(GenericSuperstructureIOInputs inputs) {
     inputs.isConnected =
-        BaseStatusSignal.refreshAll(positionRotations, velocityRPS, appliedVolts, supplyCurrent, statorCurrent)
+        BaseStatusSignal.refreshAll(
+                positionRotations, velocityRPS, appliedVolts, supplyCurrent, statorCurrent)
             .isOK();
     inputs.positionRotations = positionRotations.getValueAsDouble();
     inputs.velocityRotPerSec = velocityRPS.getValueAsDouble();

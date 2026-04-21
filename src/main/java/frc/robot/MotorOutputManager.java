@@ -10,8 +10,7 @@ public class MotorOutputManager extends SubsystemBase {
 
   private static MotorOutputManager instance;
   private static double totalAmpSeconds = 0.0;
-  private static double totalAmpSecondsSquared = 0.0;
-
+  private static double totalAmpSquaredSeconds = 0.0;
 
   public static MotorOutputManager getInstance() {
     if (instance == null) {
@@ -38,11 +37,11 @@ public class MotorOutputManager extends SubsystemBase {
       totalAmps += supplier.get();
     }
     totalAmpSeconds += totalAmps * 0.02;
-    totalAmpSecondsSquared += totalAmps * totalAmps * 0.02;
+    totalAmpSquaredSeconds += totalAmps * totalAmps * 0.02;
 
     Logger.recordOutput("MotorOutputManager/TotalAmps", totalAmps);
     Logger.recordOutput("MotorOutputManager/TotalAmpsSquared", totalAmps * totalAmps);
     Logger.recordOutput("MotorOutputManager/TotalAmpSeconds", totalAmpSeconds);
-    Logger.recordOutput("MotorOutputManager/TotalAmpSecondsSquared", totalAmpSecondsSquared);
+    Logger.recordOutput("MotorOutputManager/TotalAmpSecondsSquared", totalAmpSquaredSeconds);
   }
 }

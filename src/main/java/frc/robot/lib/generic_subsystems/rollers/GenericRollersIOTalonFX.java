@@ -14,7 +14,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.MotorOutputManager;
-
 import java.util.ArrayList;
 
 public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
@@ -60,10 +59,9 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
       followerTalon.setNeutralMode(rollersConfig.neutralMode);
       followerTalon.getConfigurator().apply(config);
       followerMotors.add(followerTalon);
-      
+
       MotorOutputManager.getInstance()
-          .registerMotorOutputs(
-            () -> followerTalon.getSupplyCurrent().getValueAsDouble());
+          .registerMotorOutputs(() -> followerTalon.getSupplyCurrent().getValueAsDouble());
     }
 
     position = talon.getPosition();
@@ -71,22 +69,21 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     appliedVolts = talon.getMotorVoltage();
     supplyCurrent = talon.getSupplyCurrent();
     statorCurrent = talon.getStatorCurrent();
-    BaseStatusSignal.setUpdateFrequencyForAll(50, position, velocity, appliedVolts, supplyCurrent, statorCurrent);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50, position, velocity, appliedVolts, supplyCurrent, statorCurrent);
 
     if (followerMotors.size() == 0) {
       talon.optimizeBusUtilization();
     }
 
-    MotorOutputManager.getInstance()
-        .registerMotorOutputs(
-          () -> supplyCurrent.getValueAsDouble());
-
+    MotorOutputManager.getInstance().registerMotorOutputs(() -> supplyCurrent.getValueAsDouble());
   }
 
   @Override
   public void updateInputs(GenericRollersIOInputs inputs) {
     inputs.connected =
-        BaseStatusSignal.refreshAll(position, velocity, appliedVolts, supplyCurrent, statorCurrent).isOK();
+        BaseStatusSignal.refreshAll(position, velocity, appliedVolts, supplyCurrent, statorCurrent)
+            .isOK();
     inputs.velocityRadsPerSec =
         Units.rotationsToRadians(velocity.getValueAsDouble()) / mechanismReduction;
     inputs.appliedVolts = appliedVolts.getValueAsDouble();
@@ -139,8 +136,8 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   }
 
   @Override
-  public void setStatorCurrentLimit(double amps){
-    if (Math.abs(config.CurrentLimits.StatorCurrentLimit - amps) > 0.01){
+  public void setStatorCurrentLimit(double amps) {
+    if (Math.abs(config.CurrentLimits.StatorCurrentLimit - amps) > 0.01) {
       config.CurrentLimits.StatorCurrentLimitEnable = true;
       config.CurrentLimits.StatorCurrentLimit = amps;
       config.withSlot0(gainsConfig);
