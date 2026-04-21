@@ -85,13 +85,13 @@ public class FieldAxisAssistCommand extends AxisAssistCommand {
     } else {
       // For vertical hub alignment, snap to 0 or PI
       if (RobotState.isAllianceRed()) {
-        fieldTarget = (poseRadians > 0 && poseRadians < Math.PI) ? -Math.PI/2 : Math.PI/2;
+        fieldTarget = (poseRadians > 0 && poseRadians < Math.PI) ? -Math.PI / 2 : Math.PI / 2;
       } else {
-        fieldTarget = (poseRadians > 0 && poseRadians < Math.PI) ? Math.PI/2 : -Math.PI/2;
+        fieldTarget = (poseRadians > 0 && poseRadians < Math.PI) ? Math.PI / 2 : -Math.PI / 2;
       }
       double offset = ROTATION_OFFSET;
 
-      if (fieldTarget == Math.PI/2) {
+      if (fieldTarget == Math.PI / 2) {
         offset *= -1;
       }
       if (closerToBlueHub()) {
