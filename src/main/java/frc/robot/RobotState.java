@@ -179,13 +179,18 @@ public class RobotState {
    * @param underTrench
    * @return
    */
-  public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench) {
+  public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench, boolean stayOnCurrentSide) {
     Logger.recordOutput("Robot State/Estimated Pose", estimatedPose);
     Logger.recordOutput("Robot State/Approach Pose", approachPose2d);
 
     Command finalPathfindingCommand = null;
     List<Pair<Translation2d, Translation2d>> combined =
         new ArrayList<Pair<Translation2d, Translation2d>>(dynamicObstacles);
+
+    if(stayOnCurrentSide){
+      // add a dynamic obstacle that covers half of the field
+      combined.add(DriveConstants.FIELD_SPLITTING_LINE);
+    }
 
     if (underTrench) {
       combined.addAll(DriveConstants.OBSTACLES_FOR_TRENCH_PATHFINDING);

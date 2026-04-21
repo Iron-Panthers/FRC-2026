@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 4.343,
-        "y": 0.6081969157769855
+        "y": 0.608
       },
       "prevControl": null,
       "nextControl": {
         "x": 6.042952550415183,
-        "y": 0.7157888493475661
+        "y": 0.7155919335705806
       },
       "isLocked": false,
       "linkedName": null
@@ -103,9 +103,25 @@
         "x": 4.020118623962041,
         "y": 0.3392170818505338
       },
-      "nextControl": null,
+      "nextControl": {
+        "x": 2.469881376037959,
+        "y": 1.4227829181494662
+      },
       "isLocked": false,
       "linkedName": "Trench Shooting Pose Right"
+    },
+    {
+      "anchor": {
+        "x": 4.805539739034861,
+        "y": 0.7803440094897132
+      },
+      "prevControl": {
+        "x": 3.63771055753641,
+        "y": 1.1015634638195897
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
     }
   ],
   "rotationTargets": [

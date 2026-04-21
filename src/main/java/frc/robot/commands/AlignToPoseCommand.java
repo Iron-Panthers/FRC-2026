@@ -20,6 +20,7 @@ public class AlignToPoseCommand extends Command {
   private Pose2d currentApproachPose;
   private boolean underTrench;
   private boolean endOnAccurate = false;
+  private boolean stayOnCurrentSide = false;
 
   public AlignToPoseCommand(Drive drive, Supplier<Pose2d> approachPose, boolean underTrench) {
     // all of this jank is basically so that we can get a command that generates the pose on the fly
@@ -40,6 +41,13 @@ public class AlignToPoseCommand extends Command {
     this.endOnAccurate = endOnAccurate;
   }
 
+  public AlignToPoseCommand(
+      Drive drive, Supplier<Pose2d> approachPose, boolean underTrench, boolean endOnAccurate, boolean stayOnCurrentSide) {
+    this(drive, approachPose, underTrench, endOnAccurate);
+    this.stayOnCurrentSide = stayOnCurrentSide;
+  }
+
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -50,7 +58,7 @@ public class AlignToPoseCommand extends Command {
           new VelocityClamp(drive)
               .andThen(
                   RobotState.getInstance()
-                      .getPathPlannerApproachPoseCommand(currentApproachPose, underTrench));
+                      .getPathPlannerApproachPoseCommand(currentApproachPose, underTrench, stayOnCurrentSide));
       poseAlignCommand.initialize();
     } catch (Exception e) {
       e.printStackTrace();

@@ -382,7 +382,7 @@ public class RobotContainer {
                         swerve,
                         () -> new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)),
                         true,
-                        true)
+                        true, true)
                     .raceWith(new WaitUnitlRobotStuckCommand(swerve)))
                 .repeatedly())
             .until(
@@ -611,7 +611,7 @@ public class RobotContainer {
         "FieldSimulation/RobotFuel", RobotSimState.getInstance().getIntakeGamePieces());
     Logger.recordOutput("FieldSimulation/FuelCount", RobotSimState.getInstance().getFuelCount());
     Logger.recordOutput(
-        "FieldSimulation/ObstaclePosition", RobotSimState.getInstance().getObstaclePosition());
+        "FieldSimulation/ObstaclePositions", RobotSimState.getInstance().getObstaclePositions().toArray(new Pose2d[0]));
 
     // Update the shooting logic with the correct rollers
     RobotSimState.getInstance()

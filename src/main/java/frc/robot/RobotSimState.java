@@ -3,6 +3,9 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,7 +34,7 @@ public class RobotSimState {
 
   private int fuelCount = START_FUEL_CAPACITY;
   private boolean intakeActive = false;
-  SwerveDriveSimulation obstacle;
+  List<SwerveDriveSimulation> obstacles = new ArrayList<SwerveDriveSimulation>();
 
   private RobotSimState() {
     // init the arena (drive sim only, no game piece placement)
@@ -41,9 +44,8 @@ public class RobotSimState {
     arena.setShouldRunClock(true);
 
     // Add the drive simulation
-    driveSimulation =
-        new SwerveDriveSimulation(
-            DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
+    driveSimulation = new SwerveDriveSimulation(
+        DriveConstants.mapleSimConfig, RobotState.getInstance().getEstimatedPose());
     arena.addDriveTrainSimulation(driveSimulation);
 
     SimulatedArena.overrideInstance(arena);
@@ -74,20 +76,21 @@ public class RobotSimState {
     fuelSim.start();
 
     // opponent simulation
-    obstacle =
-        new SwerveDriveSimulation(
-            DriveConstants.obstacleConfig,
-            new Pose2d(new Translation2d(7.840, 3.922), new Rotation2d()));
-    SimulatedArena.getInstance().addDriveTrainSimulation(obstacle);
-    // SwerveDriveSimulation obstacle2 =
-    //     new SwerveDriveSimulation(
-    //         DriveConstants.obstacleConfig,
-    //         new Pose2d(new Translation2d(6.742, 2.007), new Rotation2d()));
-    // SimulatedArena.getInstance().addDriveTrainSimulation(obstacle2);
+
+    addObstacleToSim(new Pose2d(new Translation2d(7.840, 3.922), new Rotation2d()));
+    addObstacleToSim(new Pose2d(new Translation2d(4.343, 0.608), new Rotation2d()));
   }
 
-  public Pose2d getObstaclePosition() {
-    return obstacle.getSimulatedDriveTrainPose();
+  public List<Pose2d> getObstaclePositions() {
+    return obstacles.stream().map((obstacle) -> obstacle.getSimulatedDriveTrainPose()).toList();
+  }
+
+  public void addObstacleToSim(Pose2d pose) {
+    SwerveDriveSimulation obstacle = new SwerveDriveSimulation(
+            DriveConstants.obstacleConfig,
+            pose);
+    obstacles.add(obstacle);
+    SimulatedArena.getInstance().addDriveTrainSimulation(obstacle);
   }
 
   // Singleton instance
@@ -100,7 +103,8 @@ public class RobotSimState {
           "WARNING: YOU ARE TRYING TO ACCESS ROBOT SIM STATE FROM AN ACTUAL ROBOT -- THIS IS A CODE"
               + " ERROR");
     }
-    if (instance == null) instance = new RobotSimState();
+    if (instance == null)
+      instance = new RobotSimState();
     return instance;
   }
 
@@ -139,21 +143,21 @@ public class RobotSimState {
       Transform3d shooterTransform3d,
       LinearVelocity launchVelocity,
       Distance shooterWidth) {
-    if (fuelCount <= 0) return; // no fuel to shoot
+    if (fuelCount <= 0)
+      return; // no fuel to shoot
     fuelCount--;
 
-    // Build a transform that includes the shooter's position and combines the hood pitch with the
+    // Build a transform that includes the shooter's position and combines the hood
+    // pitch with the
     // shooter's yaw
-    Transform3d shooterOffset =
-        new Transform3d(
-            new Translation3d(0, (Math.random() * 2 - 1) * (shooterWidth.in(Units.Meters) * .5), 0),
-            new Rotation3d());
+    Transform3d shooterOffset = new Transform3d(
+        new Translation3d(0, (Math.random() * 2 - 1) * (shooterWidth.in(Units.Meters) * .5), 0),
+        new Rotation3d());
 
-    Transform3d launchTransform =
-        new Transform3d(
-                shooterTransform3d.getTranslation(),
-                new Rotation3d(0, 0, shooterTransform3d.getRotation().getZ()))
-            .plus(shooterOffset);
+    Transform3d launchTransform = new Transform3d(
+        shooterTransform3d.getTranslation(),
+        new Rotation3d(0, 0, shooterTransform3d.getRotation().getZ()))
+        .plus(shooterOffset);
 
     fuelSim.launchFuel(launchVelocity, launchAngle, launchTransform);
   }
@@ -172,13 +176,12 @@ public class RobotSimState {
     Pose3d[] gamePiecePoses = new Pose3d[fuelCount];
     double spacing = Units.Inches.of(5.91).in(Units.Meters);
     for (int i = 0; i < fuelCount; i++) {
-      gamePiecePoses[i] =
-          new Pose3d(
-              new Translation3d(
-                  driveSimulation.getSimulatedDriveTrainPose().getX(),
-                  driveSimulation.getSimulatedDriveTrainPose().getY(),
-                  i * spacing),
-              new Rotation3d());
+      gamePiecePoses[i] = new Pose3d(
+          new Translation3d(
+              driveSimulation.getSimulatedDriveTrainPose().getX(),
+              driveSimulation.getSimulatedDriveTrainPose().getY(),
+              i * spacing),
+          new Rotation3d());
     }
     return gamePiecePoses;
   }
@@ -189,13 +192,16 @@ public class RobotSimState {
   private double shootIntervalSeconds = 0.0;
 
   /**
-   * Tells the RobotSimState that the shooter is currently running and should shoot fuel
+   * Tells the RobotSimState that the shooter is currently running and should
+   * shoot fuel
    * automatically.
    *
-   * @param shotsPerSecond The rate at which to shoot fuel (e.g., 2.0 for 2 shots per second)
-   * @param shooterAngle The angle at which to shoot
-   * @param shooterTransform3d The 3D transform of the shooter relative to the robot
-   * @param launchVelocity The velocity at which to launch the fuel
+   * @param shotsPerSecond     The rate at which to shoot fuel (e.g., 2.0 for 2
+   *                           shots per second)
+   * @param shooterAngle       The angle at which to shoot
+   * @param shooterTransform3d The 3D transform of the shooter relative to the
+   *                           robot
+   * @param launchVelocity     The velocity at which to launch the fuel
    */
   public void setShooterRunning(
       boolean running,
@@ -228,7 +234,8 @@ public class RobotSimState {
   private Distance currentShooterWidth = Meters.of(0);
 
   /**
-   * Should be called periodically (e.g., in Robot.java's simulationPeriodic). Handles automatic
+   * Should be called periodically (e.g., in Robot.java's simulationPeriodic).
+   * Handles automatic
    * shooting when the shooter is running.
    */
   public void periodicShooter() {

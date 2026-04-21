@@ -402,4 +402,8 @@ public class Drive extends SubsystemBase {
       module.setDriveSupplyCurrentLimit(amps);
     }
   }
+  
+  public ChassisSpeeds getTargetSpeed(){
+    return targetSpeeds;
+  }
 }

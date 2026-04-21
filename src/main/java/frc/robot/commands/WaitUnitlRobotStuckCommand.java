@@ -41,22 +41,17 @@ public class WaitUnitlRobotStuckCommand extends SequentialCommandGroup {
                       double speed =
                           Math.sqrt(
                               Math.pow(
-                                      (RobotState.getInstance()
-                                          .getVelocity()
-                                          .getMeasureX()
-                                          .in(Units.Meters)),
+                                      (swerve.getTargetSpeed().vxMetersPerSecond),
                                       2)
                                   + Math.pow(
-                                      (RobotState.getInstance()
-                                          .getVelocity()
-                                          .getMeasureY()
-                                          .in(Units.Meters)),
+                                      (swerve.getTargetSpeed().vyMetersPerSecond),
                                       2));
 
                       double width = DriveConstants.DRIVE_CONFIG.bumperWidthX();
                       double length = DriveConstants.DRIVE_CONFIG.bumperWidthY();
-
-                      double distanceAway = .5;
+                    
+                      Translation2d halfWidth = new Translation2d(width, length);
+                      double distanceAway = halfWidth.getNorm();
                       // double edgeDistance = Math.sqrt((Math.pow(width,2) + Math.pow(length,2)) /
                       // 4) * 2;
                       Translation2d otherRobotTranslation2d =
@@ -65,22 +60,16 @@ public class WaitUnitlRobotStuckCommand extends SequentialCommandGroup {
                               .getTranslation()
                               .plus(
                                   new Translation2d(
-                                      (RobotState.getInstance()
-                                              .getVelocity()
-                                              .getMeasureX()
-                                              .in(Units.Meters))
+                                      (swerve.getTargetSpeed().vxMetersPerSecond)
                                           * distanceAway
                                           / (speed),
-                                      -(RobotState.getInstance()
-                                              .getVelocity()
-                                              .getMeasureY()
-                                              .in(Units.Meters))
+                                      -(swerve.getTargetSpeed().vyMetersPerSecond)
                                           * distanceAway
                                           / (speed)));
                       Logger.recordOutput(
                           "PathPlanner/Other Robot Position",
                           new Pose2d(otherRobotTranslation2d, Rotation2d.kZero));
-                      Translation2d halfWidth = new Translation2d(width, length);
+                          
                       Translation2d lowerBound = otherRobotTranslation2d.minus(halfWidth);
                       Translation2d upperBound = otherRobotTranslation2d.plus(halfWidth);
 
