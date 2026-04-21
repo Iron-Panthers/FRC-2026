@@ -464,6 +464,10 @@ public class RobotContainer {
         .whileTrue(
             new AlignToShootPoseCommand(swerve, true)
                 .alongWith(
+                    (new WaitUntilCommand(() -> swerve.almostReachedAutoAlignTarget())
+                        .andThen(
+                            shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))))
+                .alongWith(
                     new WaitUntilCommand(() -> swerve.reachedAutoAlignTarget())
                         .andThen(new RunCommand(() -> swerve.setDefenseMode()))
                         .andThen(shootCommand.whileHeld())))

@@ -196,7 +196,7 @@ public class ShooterController extends SubsystemBase {
 
       // Omniwheels
       if (targetState == ShooterState.SHOOT) {
-        if (shooterFlywheel.reachedVelocityTarget()) {
+        if (shooterFlywheel.reachedVelocityTarget() && shooterHood.reachedPositionTargetManual()) {
           shooterOmniwheel.setVelocityTarget(targetState.omniwheelTarget);
         } else {
           shooterOmniwheel.setVelocityTarget(ShooterOmniwheelTarget.IDLE);

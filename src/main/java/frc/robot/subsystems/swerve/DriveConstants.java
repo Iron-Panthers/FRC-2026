@@ -312,7 +312,7 @@ public class DriveConstants {
   // Tolerance in Radians
   public static final HeadingControllerConstants HEADING_CONTROLLER_CONSTANTS =
       switch (getRobotType()) {
-        case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.01);
+        case COMP -> new HeadingControllerConstants(6, 0, 5, 200, 0.03);
         case SIM -> new HeadingControllerConstants(6, 0, 5, 200, 0.01);
         case VISION -> new HeadingControllerConstants(3, 0, 5, 15, 0.007);
         case ALPHA -> new HeadingControllerConstants(6, 0, 5, 200, 0.002);
@@ -322,7 +322,7 @@ public class DriveConstants {
   public static final PIDAutoAlignControllerConstants PID_AUTOALIGN_CONSTANTS =
       switch (getRobotType()) {
         case COMP -> new PIDAutoAlignControllerConstants(
-            8, 0, 0, 2, 2, 0.01); /*FIXME: tune these constants*/
+            8, 0, 0, 3, 3, 0.03); /*FIXME: tune these constants*/
         case VISION -> new PIDAutoAlignControllerConstants(
             8, 0, 0, 3, 3, 0.01); /*FIXME: tune these constants*/
         case ALPHA -> new PIDAutoAlignControllerConstants(

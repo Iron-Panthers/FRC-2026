@@ -474,4 +474,11 @@ public class Drive extends SubsystemBase {
     }
     return autoAlignHeadingController.atTarget() && pidAutoAlignController.atTarget();
   }
+
+  public boolean almostReachedAutoAlignTarget() {
+    if (driveMode != DriveModes.AUTO_ALIGN) {
+      return false;
+    }
+    return pidAutoAlignController.almostAtTarget();
+  }
 }
