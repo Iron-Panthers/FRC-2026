@@ -465,4 +465,11 @@ public class DriveConstants {
   public static final double TRENCH_WIDTH = 0.65;
   public static final double TRENCH_LENGTH = 0.6;
   public static final Pose2d TRENCH_POSE = new Pose2d(4.6, 0.65, new Rotation2d());
+
+
+  public static final Pose2d RED_LEFT_DEFENSE_POSE = new Pose2d(15.785, 3.284, Rotation2d.fromDegrees(169.97));
+  public static final Pose2d BLUE_LEFT_DEFENSE_POSE = FlippingUtil.flipFieldPose(RED_LEFT_DEFENSE_POSE);
+  public static final Pose2d RED_RIGHT_DEFENSE_POSE = new Pose2d(BLUE_LEFT_DEFENSE_POSE.getX(), RED_LEFT_DEFENSE_POSE.getY(), Rotation2d.k180deg.minus(RED_LEFT_DEFENSE_POSE.getRotation()));
+  public static final Pose2d BLUE_RIGHT_DEFENSE_POSE = new Pose2d(RED_LEFT_DEFENSE_POSE.getX(), BLUE_LEFT_DEFENSE_POSE.getY(), Rotation2d.k180deg.minus(BLUE_LEFT_DEFENSE_POSE.getRotation()));
+
 }
