@@ -35,5 +35,17 @@ public class TeleopHeadingController extends BaseHeadingController {
     Logger.recordOutput(
         "Swerve/Heading Controller/Current Position", headingSupplier.get().getRadians());
     return output;
+
+  }
+
+  // TUrn compare heading into get Error (setpoint vs current ^^^)
+  // Pass headingController into robotContainer into Drive to pass lambda
+  // lambda should call getError
+  // pass lambda into commandFactory for shootCommandFactory
+
+  public boolean compareHeading(double thresholdAngle) {
+    double error = super.getHeadingSupplier().get().minus(super.getTargetHeading()).getRadians();
+    Logger.recordOutput("Swerve/Heading Controller/Heading Error", error);
+    return Math.abs(error) <= Rotation2d.fromDegrees(thresholdAngle).getRadians();
   }
 }
