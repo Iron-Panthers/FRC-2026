@@ -9,11 +9,17 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.pathfinding.Pathfinder;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
@@ -39,6 +45,7 @@ import frc.robot.commands.ShootCommandFactory;
 import frc.robot.commands.StowCommand;
 import frc.robot.commands.VibrateHIDCommand;
 import frc.robot.commands.VisionTuningCommands;
+import frc.robot.commands.WaitUnitlRobotStuckCommand;
 import frc.robot.subsystems.can_watchdog.CANWatchdog;
 import frc.robot.subsystems.can_watchdog.CANWatchdogIO;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
@@ -377,20 +384,19 @@ public class RobotContainer {
                     () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
     NamedCommands.registerCommand(
         "Check If Off",
-        new WaitUntilCommand(
-            () ->
-                RobotState.getInstance()
-                        .getPathPlannerTargetPose()
-                        .getTranslation()
-                        .getDistance(RobotState.getInstance().getEstimatedPose().getTranslation())
-                    > 1));
+        new WaitUnitlRobotStuckCommand());
     NamedCommands.registerCommand(
         "Translate To Shoot",
-        new AlignToPoseCommand(
+        (new AlignToPoseCommand(
             swerve,
             () -> new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)),
             true,
-            true));
+            true).raceWith(new WaitUnitlRobotStuckCommand())).repeatedly().until(() -> {
+                return new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180))
+                .getTranslation()
+                .getDistance(RobotState.getInstance().getEstimatedPose().getTranslation())
+            < 0.04;
+            }).andThen(new InstantCommand(() -> RobotState.getInstance().resetDynamicObstacles())));
   }
 
   private void configureBindings() {

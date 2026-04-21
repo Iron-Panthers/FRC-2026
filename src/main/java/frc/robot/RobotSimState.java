@@ -77,8 +77,13 @@ public class RobotSimState {
     obstacle =
         new SwerveDriveSimulation(
             DriveConstants.obstacleConfig,
-            new Pose2d(new Translation2d(8.47, 1.7), new Rotation2d()));
+            new Pose2d(new Translation2d(7.840, 3.922), new Rotation2d()));
     SimulatedArena.getInstance().addDriveTrainSimulation(obstacle);
+    // SwerveDriveSimulation obstacle2 =
+    //     new SwerveDriveSimulation(
+    //         DriveConstants.obstacleConfig,
+    //         new Pose2d(new Translation2d(6.742, 2.007), new Rotation2d()));
+    // SimulatedArena.getInstance().addDriveTrainSimulation(obstacle2);
   }
 
   public Pose2d getObstaclePosition() {

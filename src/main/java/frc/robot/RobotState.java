@@ -8,12 +8,23 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radian;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -40,11 +51,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotState.ShootingAnglePredictor.HoodParams;
 import frc.robot.subsystems.swerve.DriveConstants;
 import frc.robot.subsystems.vision.VisionConstants;
-import java.util.HashMap;
-import java.util.function.Supplier;
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /* based on wpimath/../PoseEstimator.java */
 public class RobotState {
@@ -87,6 +93,9 @@ public class RobotState {
   private static RobotState instance;
 
   private Pose2d pathPlannerTargetPose;
+
+  @AutoLogOutput(key = "PathPlanner/Dynamic Obstacles")
+  private List<Pair<Translation2d,Translation2d>> dynamicObstacles = new ArrayList<Pair<Translation2d,Translation2d>>();
 
   public static RobotState getInstance() {
     if (instance == null) instance = new RobotState();
@@ -157,6 +166,14 @@ public class RobotState {
     return translateByVector(pose, mag, theta).transformBy(new Transform2d(0, 0, theta));
   }
 
+  public void addDynamicObstacle(Pair<Translation2d,Translation2d> obj){
+    dynamicObstacles.add(obj);
+  }
+
+  public void resetDynamicObstacles(){
+    dynamicObstacles.clear();
+  }
+
   /**
    * Gets the scuffed path planner built command for following a path to a certain pose
    *
@@ -169,15 +186,18 @@ public class RobotState {
     Logger.recordOutput("Robot State/Approach Pose", approachPose2d);
 
     Command finalPathfindingCommand = null;
+    List<Pair<Translation2d,Translation2d>> combined = new ArrayList<Pair<Translation2d,Translation2d>>(dynamicObstacles);
 
     if (underTrench) {
+      combined.addAll(DriveConstants.OBSTACLES_FOR_TRENCH_PATHFINDING);
       Pathfinding.setDynamicObstacles(
-          DriveConstants.OBSTACLES_FOR_TRENCH_PATHFINDING, estimatedPose.getTranslation());
+          combined, estimatedPose.getTranslation());
       finalPathfindingCommand =
           AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
     } else {
+      combined.addAll(DriveConstants.OBSTACLES_FOR_BUMP_PATHFINDING);
       Pathfinding.setDynamicObstacles(
-          DriveConstants.OBSTACLES_FOR_BUMP_PATHFINDING, estimatedPose.getTranslation());
+          combined, estimatedPose.getTranslation());
       finalPathfindingCommand =
           AutoBuilder.pathfindToPose(approachPose2d, DriveConstants.ALIGN_PATH_CONSTRAINTS, 0.0);
     }

@@ -54,6 +54,7 @@ public class Robot extends LoggedRobot {
         (path) ->
             Logger.recordOutput("Path Planner/Active Path", path.toArray(new Pose2d[path.size()])));
 
+
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -83,7 +84,7 @@ public class Robot extends LoggedRobot {
       case SIM:
         // Running a physics simulator, log to NT
         Logger.addDataReceiver(new NT4Publisher());
-        Logger.addDataReceiver(new WPILOGWriter("C:\\Users\\esori\\Downloads"));
+        // Logger.addDataReceiver(new WPILOGWriter("C:\\Users\\esori\\Downloads"));
         break;
 
       case REPLAY:
