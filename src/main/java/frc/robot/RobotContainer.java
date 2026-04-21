@@ -411,7 +411,9 @@ public class RobotContainer {
                     && intakeController.getTargetState() == IntakeState.INTAKE
                     && shooterController.getTargetState()
                         == ShooterState.INTAKE) // TODO: make these constants
-        .onTrue(new InstantCommand(() -> shooterController.setTargetState(ShooterState.FLYWHEEL_SPIN_UP)));
+        .onTrue(
+            new InstantCommand(
+                () -> shooterController.setTargetState(ShooterState.FLYWHEEL_SPIN_UP)));
 
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
@@ -455,7 +457,7 @@ public class RobotContainer {
         .whileTrue(new PassToPoseCommand(swerve).alongWith(shootCommand.whileHeldShuttling()));
 
     driverA.povRight().onFalse(shootCommand.onRelease());
-    
+
     // AUTO ALIGN SHOOT
     driverA
         .x()
@@ -463,6 +465,7 @@ public class RobotContainer {
             new AlignToShootPoseCommand(swerve, true)
                 .alongWith(
                     new WaitUntilCommand(() -> swerve.reachedAutoAlignTarget())
+                        .andThen(new RunCommand(() -> swerve.setDefenseMode()))
                         .andThen(shootCommand.whileHeld())))
         .onFalse(shootCommand.onRelease());
 
@@ -476,7 +479,7 @@ public class RobotContainer {
                   intakeController.setTargetState(IntakeState.IDLE);
                 },
                 () -> shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP)));
-    
+
     // DEFAULT TRENCH SHOOT
     driverA
         .povDown()
@@ -492,7 +495,8 @@ public class RobotContainer {
     // driverA
     //     .leftBumper()
     //     .whileTrue(
-    //         new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(), true)
+    //         new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(),
+    // true)
     //             .alongWith(
     //                 new WaitUntilCommand(
     //                         () ->
@@ -505,7 +509,8 @@ public class RobotContainer {
     //                                             .getTranslation())
     //                                 < 1)
     //                     .andThen(
-    //                         shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
+    //
+    // shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
 
     // ALIGN TO SHOOT
     driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
