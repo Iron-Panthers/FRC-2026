@@ -58,7 +58,8 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
       super.setControlMode(ControlMode.STOP);
     }
     Logger.recordOutput(
-        "Shooter/Shooter Hood/Position Target Rotations", // TODO: add naming convention to notion doc
+        "Shooter/Shooter Hood/Position Target Rotations", // TODO: add naming convention to notion
+        // doc
         getPositionTarget().getPosition());
   }
 

@@ -19,6 +19,7 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -53,7 +54,6 @@ public class Robot extends LoggedRobot {
     PathPlannerLogging.setLogActivePathCallback(
         (path) ->
             Logger.recordOutput("Path Planner/Active Path", path.toArray(new Pose2d[path.size()])));
-
 
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -108,6 +108,8 @@ public class Robot extends LoggedRobot {
 
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
     CommandScheduler.getInstance().schedule(PathfindingCommand.warmupCommand());
+
+    SmartDashboard.putData(CommandScheduler.getInstance());
   }
 
   /** This function is called periodically during all modes. */
