@@ -115,7 +115,9 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
       followerTalon.getConfigurator().apply(config);
       followerTalon.optimizeBusUtilization();
       followerMotors.add(followerTalon);
-      followerMotorSupplyCurrents.add(followerTalon.getSupplyCurrent());
+
+      MotorOutputManager.getInstance()
+          .registerMotorOutputs(() -> followerTalon.getSupplyCurrent().getValueAsDouble());
     }
 
     // STATUS SIGNALS
@@ -124,6 +126,8 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
     supplyCurrent = talon.getSupplyCurrent();
     statorCurrent = talon.getStatorCurrent();
     positionRotations = talon.getPosition();
+
+    MotorOutputManager.getInstance().registerMotorOutputs(() -> supplyCurrent.getValueAsDouble());
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         50, positionRotations, velocityRPS, appliedVolts, supplyCurrent, statorCurrent);

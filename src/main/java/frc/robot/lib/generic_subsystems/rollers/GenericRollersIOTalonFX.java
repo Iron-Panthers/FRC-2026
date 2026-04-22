@@ -62,7 +62,9 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
       followerTalon.getConfigurator().apply(config);
       followerTalon.optimizeBusUtilization();
       followerMotors.add(followerTalon);
-      followerMotorSupplyCurrents.add(followerTalon.getSupplyCurrent());
+
+      MotorOutputManager.getInstance()
+          .registerMotorOutputs(() -> followerTalon.getSupplyCurrent().getValueAsDouble());
     }
 
     position = talon.getPosition();
@@ -77,10 +79,6 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     }
 
     MotorOutputManager.getInstance().registerMotorOutputs(() -> supplyCurrent.getValueAsDouble());
-
-    for (StatusSignal<Current> motorCurrent : followerMotorSupplyCurrents) {
-      MotorOutputManager.getInstance().registerMotorOutputs(() -> motorCurrent.getValueAsDouble());
-    }
   }
 
   @Override
