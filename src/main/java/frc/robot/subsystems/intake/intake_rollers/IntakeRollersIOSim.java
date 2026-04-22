@@ -77,6 +77,7 @@ public class IntakeRollersIOSim extends GenericRollersIOSim implements IntakeRol
     rotorPositionRotations += currentVelocityRPS * 0.02;
 
     inputs.connected = true;
+    inputs.positionRads = rotorPositionRotations * 2.0 * Math.PI;
     inputs.velocityRadsPerSec = intakeRollersSim.getAngularVelocityRadPerSec();
     inputs.appliedVolts = appliedVoltage;
     inputs.supplyCurrentAmps = Math.abs(intakeRollersSim.getCurrentDrawAmps());

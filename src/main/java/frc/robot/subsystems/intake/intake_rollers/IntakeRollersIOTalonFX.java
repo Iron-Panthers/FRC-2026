@@ -17,6 +17,7 @@ public class IntakeRollersIOTalonFX extends GenericRollersIOTalonFX implements I
         new GenericRollersConfiguration()
             .withID(INTAKE_ROLLER_CONFIG.motorID())
             .withSupplyCurrentLimit(CURRENT_LIMIT_AMPS)
+            .withStatorCurrentLimit(STATOR_CURRENT_LIMIT)
             .withMotorDirection(
                 INTAKE_ROLLER_CONFIG.inverted()
                     ? InvertedValue.CounterClockwise_Positive

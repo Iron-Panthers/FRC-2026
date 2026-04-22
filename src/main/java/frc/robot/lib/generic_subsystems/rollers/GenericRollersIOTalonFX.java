@@ -58,6 +58,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
           new Follower(rollersConfig.id, followerConfig.motorAlignmentValue()));
       followerTalon.setNeutralMode(rollersConfig.neutralMode);
       followerTalon.getConfigurator().apply(config);
+      followerTalon.optimizeBusUtilization();
       followerMotors.add(followerTalon);
 
       MotorOutputManager.getInstance()
@@ -69,8 +70,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     appliedVolts = talon.getMotorVoltage();
     supplyCurrent = talon.getSupplyCurrent();
     statorCurrent = talon.getStatorCurrent();
-    BaseStatusSignal.setUpdateFrequencyForAll(
-        50, position, velocity, appliedVolts, supplyCurrent, statorCurrent);
+    BaseStatusSignal.setUpdateFrequencyForAll(50, velocity, appliedVolts, supplyCurrent);
 
     if (followerMotors.size() == 0) {
       talon.optimizeBusUtilization();
