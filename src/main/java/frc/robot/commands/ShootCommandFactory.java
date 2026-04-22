@@ -46,7 +46,7 @@ public class ShootCommandFactory {
             })
         .repeatedly()
         .alongWith(
-            new WaitCommand(2.1).andThen(intakeController.setTargetStateCommand(IntakeState.STOW)));
+            new WaitCommand(1.5).andThen(intakeController.setTargetStateCommand(IntakeState.STOW)));
   }
 
   /** Command to bind to onFalse – runs when the button is released. */

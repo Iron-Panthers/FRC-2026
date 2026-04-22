@@ -458,7 +458,7 @@ public class RobotContainer {
 
     driverA.povRight().onFalse(shootCommand.onRelease());
 
-    // AUTO ALIGN SHOOT
+    // DEFENSE POSE SHOOT
     driverA
         .x()
         .whileTrue(
@@ -469,7 +469,6 @@ public class RobotContainer {
                             shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))))
                 .alongWith(
                     new WaitUntilCommand(() -> swerve.reachedAutoAlignTarget())
-                        .andThen(new RunCommand(() -> swerve.setDefenseMode()))
                         .andThen(shootCommand.whileHeld())))
         .onFalse(shootCommand.onRelease());
 

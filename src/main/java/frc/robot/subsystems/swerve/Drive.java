@@ -476,7 +476,7 @@ public class Drive extends SubsystemBase {
   }
 
   public boolean almostReachedAutoAlignTarget() {
-    if (driveMode != DriveModes.AUTO_ALIGN) {
+    if (driveMode != DriveModes.AUTO_ALIGN || driveMode != DriveModes.DEFENSE) {
       return false;
     }
     return pidAutoAlignController.almostAtTarget();
