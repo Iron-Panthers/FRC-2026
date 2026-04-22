@@ -57,6 +57,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
           new Follower(rollersConfig.id, followerConfig.motorAlignmentValue()));
       followerTalon.setNeutralMode(rollersConfig.neutralMode);
       followerTalon.getConfigurator().apply(config);
+      followerTalon.optimizeBusUtilization();
       followerMotors.add(followerTalon);
     }
 
