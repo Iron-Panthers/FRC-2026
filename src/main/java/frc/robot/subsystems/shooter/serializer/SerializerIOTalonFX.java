@@ -23,32 +23,9 @@ public class SerializerIOTalonFX extends GenericRollersIOTalonFX {
             .withUpperVoltageLimit(UPPER_VOLT_LIMIT)
             .withLowerVoltageLimit(LOWER_VOLT_LIMIT)
             .withNeutralMode(SERIALIZER_CONFIG.brake())
-            .withStatorCurrentLimit(STATOR_CURRENT_LIMIT)
             .withAdditionalFollowerMotor(
-                SERIALIZER_CONFIG.motorID2(), SERIALIZER_CONFIG.opposeMotor()));
-  }
-
-  @Override
-  public void runVelocity(double velocity) {
-    super.runVelocity(velocity);
-  }
-
-  @Override
-  public void stop() {
-    super.stop();
-  }
-
-  @Override
-  public void setSlot0(double kP, double kI, double kD, double kS, double kV, double kA) {
-    super.setSlot0(kP, kI, kD, kS, kV, kA);
-  }
-
-  @Override
-  public void setSupplyCurrentLimit(double amps) {
-    if (Math.abs(config.CurrentLimits.SupplyCurrentLimit - amps) > 0.01) {
-      config.CurrentLimits.SupplyCurrentLimitEnable = true;
-      config.CurrentLimits.SupplyCurrentLimit = amps;
-      config.withSlot0(gainsConfig);
-    }
+                SERIALIZER_CONFIG.motorID2(), SERIALIZER_CONFIG.opposeMotor())
+            .withStatorCurrentLimit(STATOR_CURRENT_LIMIT));
+    super.setSlot0(GAINS.kP(), GAINS.kI(), GAINS.kD(), GAINS.kS(), GAINS.kV(), GAINS.kA());
   }
 }

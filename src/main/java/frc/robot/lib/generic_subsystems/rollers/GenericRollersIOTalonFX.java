@@ -91,6 +91,8 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     inputs.appliedVolts = appliedVolts.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
     inputs.statorCurrentAmps = statorCurrent.getValueAsDouble();
+    inputs.positionRads =
+        Units.rotationsToRadians(position.getValueAsDouble()) / mechanismReduction;
   }
 
   @Override

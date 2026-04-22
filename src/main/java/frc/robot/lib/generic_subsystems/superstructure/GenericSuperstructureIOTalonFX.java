@@ -140,7 +140,6 @@ public abstract class GenericSuperstructureIOTalonFX implements GenericSuperstru
     for (StatusSignal<Current> motorCurrent : followerMotorSupplyCurrents) {
       MotorOutputManager.getInstance().registerMotorOutputs(() -> motorCurrent.getValueAsDouble());
     }
-
   }
 
   @Override
