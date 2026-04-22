@@ -7,9 +7,9 @@ import org.littletonrobotics.junction.AutoLogOutput;
 public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
   public enum SerializerTarget implements GenericRollers.VelocityTarget {
     IDLE(0, SerializerConstants.CURRENT_LIMIT_AMPS),
-    SLOW(15, SerializerConstants.CURRENT_LIMIT_AMPS),
+    SLOW(40, SerializerConstants.CURRENT_LIMIT_AMPS),
     SPIN_UP(40, 20),
-    SHOOT(68, SerializerConstants.CURRENT_LIMIT_AMPS),
+    SHOOT(80, SerializerConstants.CURRENT_LIMIT_AMPS),
     HOLD(1, SerializerConstants.CURRENT_LIMIT_AMPS);
 
     private double velocity;

@@ -22,6 +22,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.MotorOutputManager;
 import frc.robot.subsystems.swerve.DriveConstants.Gains;
 import frc.robot.subsystems.swerve.DriveConstants.ModuleConfig;
 import frc.robot.subsystems.swerve.DriveConstants.MotionProfileGains;
@@ -104,6 +105,12 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     steerAppliedVolts = steerTalon.getMotorVoltage();
     steerSupplyCurrent = steerTalon.getSupplyCurrent();
     steerStatorCurrent = steerTalon.getStatorCurrent();
+
+    MotorOutputManager.getInstance()
+        .registerMotorOutputs(
+            () -> driveSupplyCurrent.getValueAsDouble(),
+            () -> steerSupplyCurrent.getValueAsDouble());
+
     // TODO: Why is this 100 Hz when everything else is 50 Hz? (Do we use can FD?)
     BaseStatusSignal.setUpdateFrequencyForAll(
         100,
