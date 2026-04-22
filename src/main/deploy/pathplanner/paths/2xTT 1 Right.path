@@ -103,25 +103,9 @@
         "x": 4.020118623962041,
         "y": 0.3392170818505338
       },
-      "nextControl": {
-        "x": 2.469881376037959,
-        "y": 1.4227829181494662
-      },
-      "isLocked": false,
-      "linkedName": "Trench Shooting Pose Right"
-    },
-    {
-      "anchor": {
-        "x": 4.805539739034861,
-        "y": 0.7803440094897132
-      },
-      "prevControl": {
-        "x": 3.63771055753641,
-        "y": 1.1015634638195897
-      },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Trench Shooting Pose Right"
     }
   ],
   "rotationTargets": [
@@ -165,7 +149,7 @@
       "minWaypointRelativePos": 2.409486931268149,
       "maxWaypointRelativePos": 3.2,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 2.0,
         "maxAcceleration": 4.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
