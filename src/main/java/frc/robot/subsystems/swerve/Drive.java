@@ -412,6 +412,13 @@ public class Drive extends SubsystemBase {
     this.isBeingDefended = isBeingDefended;
   }
 
+  public Rotation2d getShootingError() {
+    if (headingController == null) {
+      return Rotation2d.fromDegrees(0);
+    }
+    return headingController.getError();
+  }
+
   /**
    * Sets the defense mode and sets the defense type to that supplied in the params
    *

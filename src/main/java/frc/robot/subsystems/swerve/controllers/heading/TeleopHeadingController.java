@@ -43,9 +43,9 @@ public class TeleopHeadingController extends BaseHeadingController {
   // lambda should call getError
   // pass lambda into commandFactory for shootCommandFactory
 
-  public boolean compareHeading(double thresholdAngle) {
-    double error = super.getHeadingSupplier().get().minus(super.getTargetHeading()).getRadians();
+  public Rotation2d getError() {
+    Rotation2d error = Rotation2d.fromDegrees((Math.abs(targetHeading.getDegrees() - headingSupplier.get().getDegrees()) + 360) % 360);
     Logger.recordOutput("Swerve/Heading Controller/Heading Error", error);
-    return Math.abs(error) <= Rotation2d.fromDegrees(thresholdAngle).getRadians();
+    return error;
   }
 }

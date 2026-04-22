@@ -82,6 +82,8 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
+
+import org.dyn4j.geometry.Rotation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.Logger;
@@ -441,7 +443,7 @@ public class RobotContainer {
 
     // SHOOTING COMMAND
     ShootCommandFactory shootCommand =
-        new ShootCommandFactory(shooterController, intakeController, matchTimerUpdater);
+        new ShootCommandFactory(shooterController, intakeController, matchTimerUpdater, swerve::getShootingError); //TODO: Change degrees in fromDegrees
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
 

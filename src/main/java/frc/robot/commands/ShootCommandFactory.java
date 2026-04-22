@@ -1,5 +1,8 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -20,14 +23,17 @@ public class ShootCommandFactory {
   private final ShooterController shooterController;
   private final IntakeController intakeController;
   private final ElasticUpdater matchTimerUpdater;
+  private final Supplier<Rotation2d> getHeadingError;
 
   public ShootCommandFactory(
       ShooterController shooterController,
       IntakeController intakeController,
-      ElasticUpdater matchTimerUpdater) {
+      ElasticUpdater matchTimerUpdater,
+      Supplier<Rotation2d> getHeadingError) {
     this.shooterController = shooterController;
     this.intakeController = intakeController;
     this.matchTimerUpdater = matchTimerUpdater;
+    this.getHeadingError = getHeadingError;
   }
 
   /** Command to bind to whileTrue – repeats while the button is held. */
@@ -41,6 +47,7 @@ public class ShootCommandFactory {
                           && (matchTimerUpdater.isOurHubActive()
                               || matchTimerUpdater.getTimeUntilOurHubShifts() < 2
                               || matchTimerUpdater.getTimeUntilOurHubShifts() > 24) // time correct
+                          && getHeadingError.get().getDegrees() < 3 // angle correct
                       ? ShooterState.SHOOT
                       : ShooterState.TOTAL_SPIN_UP);
             })
