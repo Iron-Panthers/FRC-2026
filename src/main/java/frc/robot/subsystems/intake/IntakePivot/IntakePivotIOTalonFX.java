@@ -1,6 +1,6 @@
-package frc.robot.subsystems.intake.intake_pivot;
+package frc.robot.subsystems.intake.IntakePivot;
 
-import static frc.robot.subsystems.intake.intake_pivot.IntakePivotConstants.*;
+import static frc.robot.subsystems.intake.IntakePivot.IntakePivotConstants.*;
 
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureConfiguration;
 import frc.robot.lib.generic_subsystems.superstructure.GenericSuperstructureIOTalonFX;

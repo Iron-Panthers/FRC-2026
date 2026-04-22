@@ -52,6 +52,12 @@ public class ShooterController extends SubsystemBase {
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.SHOOT,
         SerializerTarget.SHOOT),
+    SHORT_SHOOT(
+        ShooterHoodTarget.SHORT_SHOOT,
+        ShooterFlywheelTarget.SHOOT,
+        ShooterAcceleratorTarget.SHOOT,
+        ShooterOmniwheelTarget.SHOOT,
+        SerializerTarget.SHOOT),
     TOTAL_SPIN_UP(
         ShooterHoodTarget.SHOOT_TEMP,
         ShooterFlywheelTarget.SHOOT,

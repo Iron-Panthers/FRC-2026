@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.intake_pivot;
+package frc.robot.subsystems.intake.IntakePivot;
 
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;

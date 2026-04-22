@@ -43,14 +43,14 @@ import frc.robot.subsystems.can_watchdog.CANWatchdogIO;
 import frc.robot.subsystems.elastic_updater.ElasticUpdater;
 import frc.robot.subsystems.intake.IntakeController;
 import frc.robot.subsystems.intake.IntakeController.IntakeState;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivot;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivotIO;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivotIOSim;
-import frc.robot.subsystems.intake.intake_pivot.IntakePivotIOTalonFX;
-import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
-import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIO;
-import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOSim;
-import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOTalonFX;
+import frc.robot.subsystems.intake.IntakePivot.IntakePivot;
+import frc.robot.subsystems.intake.IntakePivot.IntakePivotIO;
+import frc.robot.subsystems.intake.IntakePivot.IntakePivotIOSim;
+import frc.robot.subsystems.intake.IntakePivot.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.IntakeRollers.IntakeRollers;
+import frc.robot.subsystems.intake.IntakeRollers.IntakeRollersIO;
+import frc.robot.subsystems.intake.IntakeRollers.IntakeRollersIOSim;
+import frc.robot.subsystems.intake.IntakeRollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.shooter.ShooterController;
@@ -409,7 +409,15 @@ public class RobotContainer {
         .onTrue(
             swerve.zeroGyroCommand().alongWith(new InstantCommand(() -> defaultZeroing = true)));
     // SMART ZERO GYRO
-    driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    // driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+
+    driverA
+        .x()
+        .onTrue(
+            shooterController
+                .setStoppedCommand(true)
+                .alongWith(intakeController.setStoppedCommand(true)));
+
     // INTAKE
     driverA.b().onTrue(new IntakeCommand(intakeController, shooterController));
     // STOW ROBOT
@@ -456,7 +464,16 @@ public class RobotContainer {
     //     .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
 
     // ALIGN TO SHOOT
-    driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
+    // driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
+    driverA
+        .leftBumper()
+        .whileTrue(
+            new StartEndCommand(
+                () -> {
+                  shooterController.setTargetState(ShooterState.SHORT_SHOOT);
+                  intakeController.setTargetState(IntakeState.IDLE);
+                },
+                () -> shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP)));
   }
 
   private void configureDriverBButtons() {

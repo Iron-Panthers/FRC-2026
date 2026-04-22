@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake.intake_rollers;
+package frc.robot.subsystems.intake.IntakeRollers;
 
 import frc.robot.lib.generic_subsystems.rollers.GenericRollersIO;
 

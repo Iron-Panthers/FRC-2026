@@ -17,7 +17,8 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
     TOP(45, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
     SHOOT_TEMP(12, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
     SHUTTLE(15, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT),
-    DEFAULT_SHOOT(14, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT); // might need to update?
+    DEFAULT_SHOOT(14, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // might need to update?
+    SHORT_SHOOT(10, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT);
 
     private double position; // in rotations
     private double supplyCurrentLimit;
