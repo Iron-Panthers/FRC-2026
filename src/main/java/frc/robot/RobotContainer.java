@@ -497,7 +497,7 @@ public class RobotContainer {
     //                         shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
 
     // ALIGN TO SHOOT
-    driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
+    driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController).alongWith(shootCommand.whileHeld())).onFalse(shootCommand.onRelease());
   }
 
   private void configureDriverBButtons() {
