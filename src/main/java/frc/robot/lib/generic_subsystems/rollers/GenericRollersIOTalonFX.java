@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
   protected final TalonFX talon;
   protected final ArrayList<TalonFX> followerMotors;
+  protected final ArrayList<StatusSignal<Current>> followerMotorSupplyCurrents;
   protected final TalonFXConfiguration config;
   protected Slot0Configs gainsConfig;
 
@@ -51,6 +52,7 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     config.HardwareLimitSwitch.ReverseLimitEnable = false;
     // Initialize follower motors
     followerMotors = new ArrayList<>();
+    followerMotorSupplyCurrents = new ArrayList<>();
     for (GenericRollersConfiguration.FollowerMotorConfig followerConfig :
         rollersConfig.followerMotors) {
       TalonFX followerTalon = new TalonFX(followerConfig.id());
@@ -89,6 +91,8 @@ public abstract class GenericRollersIOTalonFX implements GenericRollersIO {
     inputs.appliedVolts = appliedVolts.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyCurrent.getValueAsDouble();
     inputs.statorCurrentAmps = statorCurrent.getValueAsDouble();
+    inputs.positionRads =
+        Units.rotationsToRadians(position.getValueAsDouble()) / mechanismReduction;
   }
 
   @Override

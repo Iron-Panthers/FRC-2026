@@ -104,4 +104,14 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
             new Transform3d(
                 Translation3d.kZero, new Rotation3d(Math.toRadians(getPosition() * 360), 0, 0)));
   }
+
+  public boolean reachedPositionTargetManual() {
+
+    return Math.abs(
+            super.inputs.positionRotations
+                - (positionTargetManual.isPresent()
+                    ? positionTargetManual.get()
+                    : positionTarget.position))
+        < ShooterHoodConstants.POSITION_TARGET_EPSILON;
+  }
 } // close class
