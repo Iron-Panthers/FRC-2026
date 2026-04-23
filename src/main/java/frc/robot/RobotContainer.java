@@ -83,8 +83,6 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
-
-import org.dyn4j.geometry.Rotation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.Logger;
@@ -446,17 +444,21 @@ public class RobotContainer {
 
     // SHOOTING COMMAND
     ShootCommandFactory shootCommand =
-        new ShootCommandFactory(shooterController, intakeController, matchTimerUpdater, swerve::getShootingError); //TODO: Change degrees in fromDegrees
+        new ShootCommandFactory(
+            shooterController,
+            intakeController,
+            matchTimerUpdater,
+            swerve::getShootingError); // TODO: Change degrees in fromDegrees
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
 
     // DEFENSE MODE
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
 
-    // SHUTTLE
+    // PASS
     driverA
         .povRight()
-        .whileTrue(new PassToPoseCommand(swerve).alongWith(shootCommand.whileHeldShuttling()));
+        .whileTrue(new PassToPoseCommand(swerve).alongWith(shootCommand.whileHeldPassing()));
 
     driverA.povRight().onFalse(shootCommand.onRelease());
 
@@ -518,7 +520,11 @@ public class RobotContainer {
     // shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
 
     // ALIGN TO SHOOT
-    driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController).alongWith(shootCommand.whileHeld())).onFalse(shootCommand.onRelease());
+    driverA
+        .leftBumper()
+        .whileTrue(
+            new AlignToShootCommand(swerve, shooterController).alongWith(shootCommand.whileHeld()))
+        .onFalse(shootCommand.onRelease());
   }
 
   private void configureDriverBButtons() {

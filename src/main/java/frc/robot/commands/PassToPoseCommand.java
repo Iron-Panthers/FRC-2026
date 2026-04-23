@@ -15,9 +15,12 @@ public class PassToPoseCommand extends Command {
 
   private Rotation2d targetAngle;
 
-  private Pose2d BLUE_CORNER_TOP = new Pose2d(0, 0, Pose2d.kZero.getRotation());
+  private Pose2d BLUE_CORNER_TOP = new Pose2d(0, 1, Pose2d.kZero.getRotation());
   private Pose2d BLUE_CORNER_BOTTOM =
-      new Pose2d(0, DriveConstants.BLUE_HUB_ORIGIN.getY() * 2, Pose2d.kZero.getRotation());
+      new Pose2d(
+          0,
+          DriveConstants.BLUE_HUB_ORIGIN.getY() * 2 - BLUE_CORNER_TOP.getY(),
+          Pose2d.kZero.getRotation());
 
   public PassToPoseCommand(Drive swerve) {
     this.swerve = swerve;
