@@ -272,8 +272,8 @@ public class DriveConstants {
             3.125);
       };
 
-  public static final double STEER_CURRENT_LIMIT_AMPS = 20;
-  public static final double DRIVE_CURRENT_LIMIT_AMPS = 40;
+  public static final double STEER_CURRENT_LIMIT_AMPS = 10;
+  public static final double DRIVE_CURRENT_LIMIT_AMPS = 35;
 
   /**
    * These are the configs for the maple sim drivebase This should be updated to be similar to the
