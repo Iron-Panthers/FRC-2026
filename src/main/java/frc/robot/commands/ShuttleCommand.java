@@ -15,6 +15,6 @@ public class ShuttleCommand extends SequentialCommandGroup {
   public ShuttleCommand(Drive swerve, ShooterController shooterController) {
     addCommands(
         new InstantCommand(() -> swerve.setTargetHeading(new Rotation2d(0))),
-        shooterController.setTargetStateCommand(ShooterState.SHUTTLE));
+        shooterController.setTargetStateCommand(ShooterState.PASS));
   }
 }

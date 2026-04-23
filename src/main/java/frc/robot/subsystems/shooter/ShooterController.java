@@ -92,12 +92,18 @@ public class ShooterController extends SubsystemBase {
         ShooterAcceleratorTarget.IDLE,
         ShooterOmniwheelTarget.IDLE,
         SerializerTarget.IDLE),
-    SHUTTLE(
-        ShooterHoodTarget.SHUTTLE,
-        ShooterFlywheelTarget.SHOOT,
-        ShooterAcceleratorTarget.SHOOT,
+    PASS(
+        ShooterHoodTarget.PASS,
+        ShooterFlywheelTarget.PASS,
+        ShooterAcceleratorTarget.PASS,
         ShooterOmniwheelTarget.SHOOT,
-        SerializerTarget.SHOOT);
+        SerializerTarget.SHOOT),
+    PASS_SPIN_UP(
+        ShooterHoodTarget.PASS,
+        ShooterFlywheelTarget.PASS,
+        ShooterAcceleratorTarget.PASS,
+        ShooterOmniwheelTarget.IDLE,
+        SerializerTarget.IDLE);
 
     public final ShooterHoodTarget hoodTarget;
     public final ShooterFlywheelTarget flywheelTarget;
