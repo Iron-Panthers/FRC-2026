@@ -33,7 +33,7 @@ public class WaitUnitlRobotStuckCommand extends SequentialCommandGroup {
                                 .getTranslation()
                                 .getDistance(
                                     RobotState.getInstance().getEstimatedPose().getTranslation())
-                            > 1
+                            > 2
                         && !swerve.isPIDAutoAlign())
             .andThen(
                 new InstantCommand(

@@ -412,7 +412,7 @@ public class RobotContainer {
                           .getDistance(RobotState.getInstance().getEstimatedPose().getTranslation())
                       < .04;
                 })
-            .andThen(new InstantCommand(() -> RobotState.getInstance().resetDynamicObstacles())));
+            .andThen(new InstantCommand(() -> RobotState.getInstance().resetDynamicObstacles())).andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
   }
 
   private void configureBindings() {
