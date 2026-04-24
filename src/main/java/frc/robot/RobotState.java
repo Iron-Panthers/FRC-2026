@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /* based on wpimath/../PoseEstimator.java */
@@ -180,7 +179,11 @@ public class RobotState {
    * @param underTrench
    * @return
    */
-  public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench, boolean stayOnCurrentSide, boolean stayOnRightSide) {
+  public Command getPathPlannerApproachPoseCommand(
+      Pose2d approachPose2d,
+      boolean underTrench,
+      boolean stayOnCurrentSide,
+      boolean stayOnRightSide) {
     Logger.recordOutput("Robot State/Estimated Pose", estimatedPose);
     Logger.recordOutput("Robot State/Approach Pose", approachPose2d);
 
@@ -188,11 +191,11 @@ public class RobotState {
     List<Pair<Translation2d, Translation2d>> combined =
         new ArrayList<Pair<Translation2d, Translation2d>>(dynamicObstacles);
 
-    if(stayOnCurrentSide){
+    if (stayOnCurrentSide) {
       // add a dynamic obstacle that covers half of the field
-      if(stayOnRightSide ^ isAllianceRed()){
+      if (stayOnRightSide ^ isAllianceRed()) {
         combined.add(DriveConstants.FIELD_SPLITTING_LINE_LEFT);
-      }else{
+      } else {
         combined.add(DriveConstants.FIELD_SPLITTING_LINE_RIGHT);
       }
     }

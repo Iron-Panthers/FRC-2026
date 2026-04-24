@@ -8,7 +8,6 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -40,16 +39,12 @@ public class WaitUnitlRobotStuckCommand extends SequentialCommandGroup {
                     () -> {
                       double speed =
                           Math.sqrt(
-                              Math.pow(
-                                      (swerve.getTargetSpeed().vxMetersPerSecond),
-                                      2)
-                                  + Math.pow(
-                                      (swerve.getTargetSpeed().vyMetersPerSecond),
-                                      2));
+                              Math.pow((swerve.getTargetSpeed().vxMetersPerSecond), 2)
+                                  + Math.pow((swerve.getTargetSpeed().vyMetersPerSecond), 2));
 
                       double width = DriveConstants.DRIVE_CONFIG.bumperWidthX();
                       double length = DriveConstants.DRIVE_CONFIG.bumperWidthY();
-                    
+
                       Translation2d halfWidth = new Translation2d(width, length);
                       double distanceAway = halfWidth.getNorm();
                       // double edgeDistance = Math.sqrt((Math.pow(width,2) + Math.pow(length,2)) /
@@ -69,7 +64,7 @@ public class WaitUnitlRobotStuckCommand extends SequentialCommandGroup {
                       Logger.recordOutput(
                           "PathPlanner/Other Robot Position",
                           new Pose2d(otherRobotTranslation2d, Rotation2d.kZero));
-                          
+
                       Translation2d lowerBound = otherRobotTranslation2d.minus(halfWidth);
                       Translation2d upperBound = otherRobotTranslation2d.plus(halfWidth);
 

@@ -42,21 +42,27 @@ public class AlignToPoseCommand extends Command {
     this.endOnAccurate = endOnAccurate;
   }
 
-  
   public AlignToPoseCommand(
-      Drive drive, Supplier<Pose2d> approachPose, boolean underTrench, boolean endOnAccurate, boolean stayOnRightSide) {
+      Drive drive,
+      Supplier<Pose2d> approachPose,
+      boolean underTrench,
+      boolean endOnAccurate,
+      boolean stayOnRightSide) {
     this(drive, approachPose, underTrench, endOnAccurate);
     this.stayOnCurrentSide = true;
     this.stayOnRightSide = stayOnRightSide;
   }
 
   public AlignToPoseCommand(
-      Drive drive, Pose2d approachPose, boolean underTrench, boolean endOnAccurate, boolean stayOnRightSide) {
+      Drive drive,
+      Pose2d approachPose,
+      boolean underTrench,
+      boolean endOnAccurate,
+      boolean stayOnRightSide) {
     this(drive, () -> approachPose, underTrench, endOnAccurate);
     this.stayOnCurrentSide = true;
     this.stayOnRightSide = stayOnRightSide;
   }
-
 
   // Called when the command is initially scheduled.
   @Override
@@ -68,7 +74,8 @@ public class AlignToPoseCommand extends Command {
           new VelocityClamp(drive)
               .andThen(
                   RobotState.getInstance()
-                      .getPathPlannerApproachPoseCommand(currentApproachPose, underTrench, stayOnCurrentSide, stayOnRightSide));
+                      .getPathPlannerApproachPoseCommand(
+                          currentApproachPose, underTrench, stayOnCurrentSide, stayOnRightSide));
       poseAlignCommand.initialize();
     } catch (Exception e) {
       e.printStackTrace();

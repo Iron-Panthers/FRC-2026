@@ -5,17 +5,11 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -54,11 +48,9 @@ import frc.robot.subsystems.intake.IntakeController.IntakeState;
 import frc.robot.subsystems.intake.intake_rack.IntakeRack;
 import frc.robot.subsystems.intake.intake_rack.IntakeRackIO;
 import frc.robot.subsystems.intake.intake_rack.IntakeRackIOSim;
-import frc.robot.subsystems.intake.intake_rack.IntakeRackIOTalonFX;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollers;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIO;
 import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOSim;
-import frc.robot.subsystems.intake.intake_rollers.IntakeRollersIOTalonFX;
 import frc.robot.subsystems.rgb.RGB;
 import frc.robot.subsystems.rgb.RGBIO;
 import frc.robot.subsystems.shooter.ShooterController;
@@ -90,11 +82,11 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonvision;
 import frc.robot.subsystems.vision.VisionIOPhotonvisionSim;
 import frc.robot.utility.ElasticSetpoints;
+import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.photonvision.EstimatedRobotPose;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -145,8 +137,8 @@ public class RobotContainer {
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[1]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[2]),
                   new ModuleIOTalonFXReal(DriveConstants.MODULE_CONFIGS[3]));
-          intakeRack = new IntakeRack(new IntakeRackIOTalonFX());
-          intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
+          //   intakeRack = new IntakeRack(new IntakeRackIOTalonFX());
+          //   intakeRollers = new IntakeRollers(new IntakeRollersIOTalonFX());
           vision =
               new Vision(
                   new VisionIOPhotonvision("CamC", 0),
@@ -384,35 +376,46 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
     NamedCommands.registerCommand("Check If Off", new WaitUnitlRobotStuckCommand(swerve));
-    Supplier<Pose2d> shootingPoseSupplier = () -> 
-                        (autoChooser == null ? false : autoChooser.get().getName().contains("Right")) ?
-                            new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)):
-                            new Pose2d(3.245, FlippingUtil.fieldSizeY - 0.881, new Rotation2d((-66.19) * Math.PI / 180));
+    Supplier<Pose2d> shootingPoseSupplier =
+        () ->
+            (autoChooser == null ? false : autoChooser.get().getName().contains("Right"))
+                ? new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180))
+                : new Pose2d(
+                    3.245,
+                    FlippingUtil.fieldSizeY - 0.881,
+                    new Rotation2d((-66.19) * Math.PI / 180));
     // (RobotState.getInstance().getPathPlannerTargetPose()).nearest(
     //     List.<Pose2d>of(
     //     new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)),
-    //     new Pose2d(3.245, FlippingUtil.fieldSizeY - 0.881, new Rotation2d((-66.19) * Math.PI / 180)))
+    //     new Pose2d(3.245, FlippingUtil.fieldSizeY - 0.881, new Rotation2d((-66.19) * Math.PI /
+    // 180)))
     // );
-    Supplier<Pose2d> flippedShootingPoseSupplier = () -> {
-        return RobotState.isAllianceRed() ? FlippingUtil.flipFieldPose(shootingPoseSupplier.get()) : shootingPoseSupplier.get();
-    };
+    Supplier<Pose2d> flippedShootingPoseSupplier =
+        () -> {
+          return RobotState.isAllianceRed()
+              ? FlippingUtil.flipFieldPose(shootingPoseSupplier.get())
+              : shootingPoseSupplier.get();
+        };
     NamedCommands.registerCommand(
         "Translate To Shoot",
         ((new AlignToPoseCommand(
                         swerve,
                         shootingPoseSupplier,
                         true,
-                        true, autoChooser == null ? false : autoChooser.get().getName().contains("Right"))
+                        true,
+                        autoChooser == null ? false : autoChooser.get().getName().contains("Right"))
                     .raceWith(new WaitUnitlRobotStuckCommand(swerve)))
                 .repeatedly())
             .until(
                 () -> {
-                  return flippedShootingPoseSupplier.get()
+                  return flippedShootingPoseSupplier
+                          .get()
                           .getTranslation()
                           .getDistance(RobotState.getInstance().getEstimatedPose().getTranslation())
                       < .04;
                 })
-            .andThen(new InstantCommand(() -> RobotState.getInstance().resetDynamicObstacles())).andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
+            .andThen(new InstantCommand(() -> RobotState.getInstance().resetDynamicObstacles()))
+            .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP)));
   }
 
   private void configureBindings() {
@@ -631,7 +634,8 @@ public class RobotContainer {
         "FieldSimulation/RobotFuel", RobotSimState.getInstance().getIntakeGamePieces());
     Logger.recordOutput("FieldSimulation/FuelCount", RobotSimState.getInstance().getFuelCount());
     Logger.recordOutput(
-        "FieldSimulation/ObstaclePositions", RobotSimState.getInstance().getObstaclePositions().toArray(new Pose2d[0]));
+        "FieldSimulation/ObstaclePositions",
+        RobotSimState.getInstance().getObstaclePositions().toArray(new Pose2d[0]));
 
     // Update the shooting logic with the correct rollers
     RobotSimState.getInstance()
