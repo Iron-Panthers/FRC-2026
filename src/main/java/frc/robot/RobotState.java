@@ -190,7 +190,7 @@ public class RobotState {
 
     if(stayOnCurrentSide){
       // add a dynamic obstacle that covers half of the field
-      if(stayOnRightSide)
+      if(stayOnRightSide ^ isAllianceRed())
         combined.add(DriveConstants.FIELD_SPLITTING_LINE_RIGHT);
       else
         combined.add(DriveConstants.FIELD_SPLITTING_LINE_LEFT);
@@ -521,7 +521,7 @@ public class RobotState {
     if (RobotBase.isReal()) {
       return alliance.get() == DriverStation.Alliance.Red;
     }
-    return false;
+    return true;
   }
 
   public boolean isUnderTrench() {

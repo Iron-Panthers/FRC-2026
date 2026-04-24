@@ -384,7 +384,7 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
     NamedCommands.registerCommand("Check If Off", new WaitUnitlRobotStuckCommand(swerve));
-    Supplier<Pose2d> shootingPoseSupplierUnflipped = () -> 
+    Supplier<Pose2d> shootingPoseSupplier = () -> 
                         (autoChooser == null ? false : autoChooser.get().getName().contains("Right")) ?
                             new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)):
                             new Pose2d(3.245, FlippingUtil.fieldSizeY - 0.881, new Rotation2d((-66.19) * Math.PI / 180));
@@ -393,9 +393,9 @@ public class RobotContainer {
     //     new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)),
     //     new Pose2d(3.245, FlippingUtil.fieldSizeY - 0.881, new Rotation2d((-66.19) * Math.PI / 180)))
     // );
-    Supplier<Pose2d> shootingPoseSupplier = () -> {
-        return RobotState.isAllianceRed() ? FlippingUtil.flipFieldPose(shootingPoseSupplierUnflipped.get()) : shootingPoseSupplierUnflipped.get();
-    };
+    // Supplier<Pose2d> shootingPoseSupplier = () -> {
+    //     return RobotState.isAllianceRed() ? FlippingUtil.flipFieldPose(shootingPoseSupplierUnflipped.get()) : shootingPoseSupplierUnflipped.get();
+    // };
     NamedCommands.registerCommand(
         "Translate To Shoot",
         ((new AlignToPoseCommand(
