@@ -63,6 +63,9 @@ public class IntakeController extends SubsystemBase {
     } else if (intakeRack.getPosition() < 7 && targetState == IntakeState.INTAKE) {
       intakeRollers.setVelocityTarget(IntakeRollersTarget.IDLE);
       intakeRack.setPositionTarget(targetState.getIntakeRackTarget());
+    } else if (targetState == IntakeState.STOW && !intakeRack.reachedTarget()) {
+      intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE);
+      intakeRack.setPositionTarget(targetState.getIntakeRackTarget());
     } else {
       // set target states to those in the current controller state
       intakeRack.setPositionTarget(targetState.getIntakeRackTarget());

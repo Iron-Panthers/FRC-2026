@@ -17,7 +17,7 @@ public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarge
     implements LoggableMechanism3d {
   public enum IntakeRackTarget implements GenericSuperstructure.PositionTarget {
     INTAKE(11.9, IntakeRackConstants.SUPPLY_CURRENT_LIMIT, Optional.empty()),
-    STOW(0, IntakeRackConstants.SUPPLY_CURRENT_LIMIT, Optional.of(3d));
+    STOW(0, IntakeRackConstants.SUPPLY_CURRENT_LIMIT, Optional.of(6d));
 
     private double position;
     private double supplyCurrentLimit;
