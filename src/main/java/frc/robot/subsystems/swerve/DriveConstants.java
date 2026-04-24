@@ -383,7 +383,7 @@ public class DriveConstants {
           Pair.of(
               FlippingUtil.flipFieldPosition(new Translation2d(4.039, 1.337)),
               FlippingUtil.flipFieldPosition(new Translation2d(5.216, 0))));
-
+      
   public static final Pair<Translation2d,Translation2d> FIELD_SPLITTING_LINE_RIGHT = Pair.of(new Translation2d(
     0,FlippingUtil.fieldSizeY/2 - 0.05 - 2.5), new Translation2d(FlippingUtil.fieldSizeX, FlippingUtil.fieldSizeY/2 + .05 - 2.5));
   public static final Pair<Translation2d,Translation2d> FIELD_SPLITTING_LINE_LEFT = Pair.of(new Translation2d(

@@ -393,21 +393,21 @@ public class RobotContainer {
     //     new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)),
     //     new Pose2d(3.245, FlippingUtil.fieldSizeY - 0.881, new Rotation2d((-66.19) * Math.PI / 180)))
     // );
-    // Supplier<Pose2d> shootingPoseSupplier = () -> {
-    //     return RobotState.isAllianceRed() ? FlippingUtil.flipFieldPose(shootingPoseSupplierUnflipped.get()) : shootingPoseSupplierUnflipped.get();
-    // };
+    Supplier<Pose2d> flippedShootingPoseSupplier = () -> {
+        return RobotState.isAllianceRed() ? FlippingUtil.flipFieldPose(shootingPoseSupplier.get()) : shootingPoseSupplier.get();
+    };
     NamedCommands.registerCommand(
         "Translate To Shoot",
         ((new AlignToPoseCommand(
                         swerve,
                         shootingPoseSupplier,
                         true,
-                        true, true)
+                        true, autoChooser == null ? false : autoChooser.get().getName().contains("Right"))
                     .raceWith(new WaitUnitlRobotStuckCommand(swerve)))
                 .repeatedly())
             .until(
                 () -> {
-                  return shootingPoseSupplier.get()
+                  return flippedShootingPoseSupplier.get()
                           .getTranslation()
                           .getDistance(RobotState.getInstance().getEstimatedPose().getTranslation())
                       < .04;

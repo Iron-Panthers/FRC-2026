@@ -191,9 +191,9 @@ public class RobotState {
     if(stayOnCurrentSide){
       // add a dynamic obstacle that covers half of the field
       if(stayOnRightSide ^ isAllianceRed()){
-        combined.add(DriveConstants.FIELD_SPLITTING_LINE_RIGHT);
-      }else{
         combined.add(DriveConstants.FIELD_SPLITTING_LINE_LEFT);
+      }else{
+        combined.add(DriveConstants.FIELD_SPLITTING_LINE_RIGHT);
       }
     }
 
