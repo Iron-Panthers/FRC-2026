@@ -64,7 +64,7 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     driveConfig.Feedback.SensorToMechanismRatio = MODULE_CONSTANTS.driveReduction();
-    driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     driveConfig.MotorOutput.Inverted = config.driveInverted();
 
     setDriveSlot0(MODULE_CONSTANTS.driveGains());

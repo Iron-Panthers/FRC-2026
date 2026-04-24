@@ -284,7 +284,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP);
+                  shooterController.setTargetState(ShooterState.COMPACT_SPIN_UP);
                 }));
     new EventTrigger("Intake off")
         .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.IDLE)));
@@ -299,7 +299,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
     NamedCommands.registerCommand(
-        "Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
+        "Spin up shooter", shooterController.setTargetStateCommand(ShooterState.COMPACT_SPIN_UP));
     NamedCommands.registerCommand(
         "Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
     NamedCommands.registerCommand(
@@ -336,14 +336,8 @@ public class RobotContainer {
         "Align and auto shoot full hopper",
         new AlignToShootCommand(swerve, shooterController)
             .withDeadline(
-                new WaitCommand(0.2)
-                    .andThen(
-                        new AutoShootCommand(
-                            swerve,
-                            shooterController,
-                            intakeController,
-                            matchTimerUpdater,
-                            true))));
+                new AutoShootCommand(
+                    swerve, shooterController, intakeController, matchTimerUpdater, true)));
     NamedCommands.registerCommand(
         "Align and auto shoot full hopper (no intake)",
         new AlignToShootCommand(swerve, shooterController)
@@ -426,10 +420,7 @@ public class RobotContainer {
     // driverA.rightStick().onTrue(new HappyBirthdayCommand());
     driverA
         .povLeft()
-        .onTrue(
-            new InstantCommand(
-                () ->
-                    intakeController.setIntakeRackActive(!intakeController.getIntakeRackActive())));
+        .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)));
     // ZERO GYRO
     driverA
         .start()

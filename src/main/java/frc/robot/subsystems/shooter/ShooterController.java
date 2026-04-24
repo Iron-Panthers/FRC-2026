@@ -79,13 +79,13 @@ public class ShooterController extends SubsystemBase {
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.IDLE,
-        SerializerTarget.IDLE),
+        SerializerTarget.SPIN_UP),
     COMPACT_SPIN_UP(
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.SHOOT,
         ShooterAcceleratorTarget.SHOOT,
         ShooterOmniwheelTarget.IDLE,
-        SerializerTarget.IDLE),
+        SerializerTarget.SPIN_UP),
     ZEROING(
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.IDLE,
