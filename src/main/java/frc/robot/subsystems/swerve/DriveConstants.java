@@ -384,8 +384,10 @@ public class DriveConstants {
               FlippingUtil.flipFieldPosition(new Translation2d(4.039, 1.337)),
               FlippingUtil.flipFieldPosition(new Translation2d(5.216, 0))));
 
-  public static final Pair<Translation2d,Translation2d> FIELD_SPLITTING_LINE = Pair.of(new Translation2d(
-    0,FlippingUtil.fieldSizeY/2 - 0.05), new Translation2d(FlippingUtil.fieldSizeX, FlippingUtil.fieldSizeY/2 + .05));
+  public static final Pair<Translation2d,Translation2d> FIELD_SPLITTING_LINE_RIGHT = Pair.of(new Translation2d(
+    0,FlippingUtil.fieldSizeY/2 - 0.05 - 2.5), new Translation2d(FlippingUtil.fieldSizeX, FlippingUtil.fieldSizeY/2 + .05 - 2.5));
+  public static final Pair<Translation2d,Translation2d> FIELD_SPLITTING_LINE_LEFT = Pair.of(new Translation2d(
+    0,FlippingUtil.fieldSizeY/2 - 0.05 + 2.5), new Translation2d(FlippingUtil.fieldSizeX, FlippingUtil.fieldSizeY/2 + .05 + 2.5));
 
   public static final Translation2d CENTER_OF_FIELD = new Translation2d(8.27, 4.035);
   public static final Translation3d BLUE_HUB_ORIGIN = new Translation3d(4.5974, 4.034536, 1.5748);

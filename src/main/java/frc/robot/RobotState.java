@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 /* based on wpimath/../PoseEstimator.java */
@@ -179,7 +180,7 @@ public class RobotState {
    * @param underTrench
    * @return
    */
-  public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench, boolean stayOnCurrentSide) {
+  public Command getPathPlannerApproachPoseCommand(Pose2d approachPose2d, boolean underTrench, boolean stayOnCurrentSide, boolean stayOnRightSide) {
     Logger.recordOutput("Robot State/Estimated Pose", estimatedPose);
     Logger.recordOutput("Robot State/Approach Pose", approachPose2d);
 
@@ -189,7 +190,10 @@ public class RobotState {
 
     if(stayOnCurrentSide){
       // add a dynamic obstacle that covers half of the field
-      combined.add(DriveConstants.FIELD_SPLITTING_LINE);
+      if(stayOnRightSide)
+        combined.add(DriveConstants.FIELD_SPLITTING_LINE_RIGHT);
+      else
+        combined.add(DriveConstants.FIELD_SPLITTING_LINE_LEFT);
     }
 
     if (underTrench) {
@@ -549,20 +553,5 @@ public class RobotState {
 
   public Pose2d getPathPlannerTargetPose() {
     return pathPlannerTargetPose;
-  }
-
-  Boolean isAutoRightSide = null;
-
-  @AutoLogOutput(key = "Robot State/isAutoRightSide")
-  public boolean isAutoRightSide() {
-    if(isAutoRightSide == null) {
-      if(getPathPlannerTargetPose() == null) {
-        return true;
-      } else {
-        isAutoRightSide = getPathPlannerTargetPose().getY() < FlippingUtil.fieldSizeY / 2;
-      }
-    }
-
-    return  isAutoRightSide;
   }
 }
