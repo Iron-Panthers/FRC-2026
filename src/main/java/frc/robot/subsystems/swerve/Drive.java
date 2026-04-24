@@ -3,6 +3,8 @@ package frc.robot.subsystems.swerve;
 import static frc.robot.subsystems.swerve.DriveConstants.HEADING_CONTROLLER_CONSTANTS;
 import static frc.robot.subsystems.swerve.DriveConstants.KINEMATICS;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -487,5 +489,11 @@ public class Drive extends SubsystemBase {
       return false;
     }
     return pidAutoAlignController.almostAtTarget();
+  }
+
+  public void setNeutralMode(NeutralModeValue value){
+    for (Module module : modules) {
+      module.setNeutralMode(value);
+    }
   }
 }
