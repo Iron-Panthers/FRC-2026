@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.util.FlippingUtil;
@@ -384,7 +385,7 @@ public class RobotContainer {
                     () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
     NamedCommands.registerCommand("Check If Off", new WaitUnitlRobotStuckCommand(swerve));
     Supplier<Pose2d> shootingPoseSupplierUnflipped = () -> 
-                        (autoChooser.getSendableChooser().getSelected().contains("Right")) ?
+                        (autoChooser == null ? false : autoChooser.get().getName().contains("Right")) ?
                             new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)):
                             new Pose2d(3.245, FlippingUtil.fieldSizeY - 0.881, new Rotation2d((-66.19) * Math.PI / 180));
     // (RobotState.getInstance().getPathPlannerTargetPose()).nearest(
@@ -399,7 +400,7 @@ public class RobotContainer {
         "Translate To Shoot",
         ((new AlignToPoseCommand(
                         swerve,
-                        shootingPoseSupplier.get(),
+                        shootingPoseSupplier,
                         true,
                         true, true)
                     .raceWith(new WaitUnitlRobotStuckCommand(swerve)))

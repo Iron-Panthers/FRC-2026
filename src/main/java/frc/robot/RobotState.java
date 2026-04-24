@@ -550,4 +550,19 @@ public class RobotState {
   public Pose2d getPathPlannerTargetPose() {
     return pathPlannerTargetPose;
   }
+
+  Boolean isAutoRightSide = null;
+
+  @AutoLogOutput(key = "Robot State/isAutoRightSide")
+  public boolean isAutoRightSide() {
+    if(isAutoRightSide == null) {
+      if(getPathPlannerTargetPose() == null) {
+        return true;
+      } else {
+        isAutoRightSide = getPathPlannerTargetPose().getY() < FlippingUtil.fieldSizeY / 2;
+      }
+    }
+
+    return  isAutoRightSide;
+  }
 }
