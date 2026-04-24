@@ -47,6 +47,12 @@ public class AlignToPoseCommand extends Command {
     this.stayOnCurrentSide = stayOnCurrentSide;
   }
 
+  public AlignToPoseCommand(
+      Drive drive, Pose2d approachPose, boolean underTrench, boolean endOnAccurate, boolean stayOnCurrentSide) {
+    this(drive, () -> approachPose, underTrench, endOnAccurate);
+    this.stayOnCurrentSide = stayOnCurrentSide;
+  }
+
 
   // Called when the command is initially scheduled.
   @Override

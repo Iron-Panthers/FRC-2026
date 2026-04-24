@@ -5,10 +5,16 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.events.EventTrigger;
+import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -87,6 +93,7 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.photonvision.EstimatedRobotPose;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -376,18 +383,30 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
     NamedCommands.registerCommand("Check If Off", new WaitUnitlRobotStuckCommand(swerve));
+    Supplier<Pose2d> shootingPoseSupplierUnflipped = () -> 
+                        (autoChooser.getSendableChooser().getSelected().contains("Right")) ?
+                            new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)):
+                            new Pose2d(3.245, FlippingUtil.fieldSizeY - 0.881, new Rotation2d((-66.19) * Math.PI / 180));
+    // (RobotState.getInstance().getPathPlannerTargetPose()).nearest(
+    //     List.<Pose2d>of(
+    //     new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)),
+    //     new Pose2d(3.245, FlippingUtil.fieldSizeY - 0.881, new Rotation2d((-66.19) * Math.PI / 180)))
+    // );
+    Supplier<Pose2d> shootingPoseSupplier = () -> {
+        return RobotState.isAllianceRed() ? FlippingUtil.flipFieldPose(shootingPoseSupplierUnflipped.get()) : shootingPoseSupplierUnflipped.get();
+    };
     NamedCommands.registerCommand(
         "Translate To Shoot",
         ((new AlignToPoseCommand(
                         swerve,
-                        () -> new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)),
+                        shootingPoseSupplier.get(),
                         true,
                         true, true)
                     .raceWith(new WaitUnitlRobotStuckCommand(swerve)))
                 .repeatedly())
             .until(
                 () -> {
-                  return new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180))
+                  return shootingPoseSupplier.get()
                           .getTranslation()
                           .getDistance(RobotState.getInstance().getEstimatedPose().getTranslation())
                       < .04;
