@@ -218,12 +218,11 @@ public abstract class ModuleIOTalonFX implements ModuleIO {
     }
   }
 
-  public void setNeutralMode(NeutralModeValue value){
-    if (driveConfig.MotorOutput.NeutralMode != value){
-      TalonFXConfiguration neutralConfig = new TalonFXConfiguration();
-      neutralConfig.MotorOutput.NeutralMode = value;
-      tryUntilOk(5, () -> driveTalon.getConfigurator().apply(neutralConfig, 0.25));
+  @Override
+  public void setNeutralMode(NeutralModeValue value) {
+    if (driveConfig.MotorOutput.NeutralMode != value) {
       driveConfig.MotorOutput.NeutralMode = value;
+      tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
     }
   }
 }
