@@ -33,6 +33,12 @@ public class ShooterController extends SubsystemBase {
         ShooterAcceleratorTarget.IDLE,
         ShooterOmniwheelTarget.IDLE,
         SerializerTarget.IDLE),
+    REVERSE(
+        ShooterHoodTarget.STOW,
+        ShooterFlywheelTarget.INTAKE,
+        ShooterAcceleratorTarget.IDLE,
+        ShooterOmniwheelTarget.IDLE,
+        SerializerTarget.REVERSE),
     /** spin just flywheels */
     FLYWHEEL_SPIN_UP(
         ShooterHoodTarget.STOW,

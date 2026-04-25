@@ -524,7 +524,7 @@ public class RobotContainer {
         .onTrue(
             intakeController
                 .setTargetStateCommand(IntakeState.REVERSE)
-                .alongWith(shooterController.setTargetStateCommand(ShooterState.INTAKE)));
+                .alongWith(shooterController.setTargetStateCommand(ShooterState.REVERSE)));
 
     driverB
         .x()
