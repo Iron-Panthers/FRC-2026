@@ -334,7 +334,7 @@ public class RobotContainer {
         new AutoShootCommand(swerve, shooterController, intakeController, matchTimerUpdater, true));
     NamedCommands.registerCommand(
         "Align and auto shoot full hopper",
-        new AlignToShootCommand(swerve, shooterController)
+        new AlignToShootPoseCommand(swerve, true)
             .withDeadline(
                 new AutoShootCommand(
                     swerve, shooterController, intakeController, matchTimerUpdater, true)));
@@ -398,16 +398,16 @@ public class RobotContainer {
     new Trigger(() -> vision.getMultiTags() && !defaultZeroing)
         .onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
 
-    // Stop running serializer button
-    new Trigger(
-            () ->
-                serializer.serializerStalling()
-                    && intakeController.getTargetState() == IntakeState.INTAKE
-                    && shooterController.getTargetState()
-                        == ShooterState.INTAKE) // TODO: make these constants
-        .onTrue(
-            new InstantCommand(
-                () -> shooterController.setTargetState(ShooterState.FLYWHEEL_SPIN_UP)));
+    // // Stop running serializer button
+    // new Trigger(
+    //         () ->
+    //             serializer.serializerStalling()
+    //                 && intakeController.getTargetState() == IntakeState.INTAKE
+    //                 && shooterController.getTargetState()
+    //                     == ShooterState.INTAKE) // TODO: make these constants
+    //     .onTrue(
+    //         new InstantCommand(
+    //             () -> shooterController.setTargetState(ShooterState.FLYWHEEL_SPIN_UP)));
 
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
