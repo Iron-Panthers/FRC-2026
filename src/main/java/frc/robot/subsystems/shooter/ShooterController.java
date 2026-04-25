@@ -38,7 +38,7 @@ public class ShooterController extends SubsystemBase {
         ShooterHoodTarget.STOW,
         ShooterFlywheelTarget.INTAKE,
         ShooterAcceleratorTarget.IDLE,
-        ShooterOmniwheelTarget.IDLE,
+        ShooterOmniwheelTarget.SLOW_REVERSE,
         SerializerTarget.IDLE),
     /** hold: hold the balls in the hopper */
     HOLD(

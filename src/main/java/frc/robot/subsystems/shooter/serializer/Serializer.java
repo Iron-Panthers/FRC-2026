@@ -47,6 +47,6 @@ public class Serializer extends GenericRollers<Serializer.SerializerTarget> {
    */
   @AutoLogOutput(key = "Serializer/Serializer Stalling")
   public boolean serializerStalling() {
-    return getFilteredCurrent() > 15d && getVelocityRadsPerSec() < 3d;
+    return getFilteredCurrent() > 15d && getVelocityRadsPerSec() < 5d;
   }
 }
