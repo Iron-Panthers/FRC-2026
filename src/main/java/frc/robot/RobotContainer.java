@@ -375,11 +375,11 @@ public class RobotContainer {
     Supplier<Pose2d> shootingPoseSupplier =
         () ->
             (autoChooser == null ? false : autoChooser.get().getName().contains("Right"))
-                ? new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180))
+                ? new Pose2d(3.891, 0.823, new Rotation2d(77.005 * Math.PI / 180))
                 : new Pose2d(
-                    3.245,
-                    FlippingUtil.fieldSizeY - 0.881,
-                    new Rotation2d((-66.19) * Math.PI / 180));
+                    3.891,
+                    FlippingUtil.fieldSizeY - 0.823,
+                    new Rotation2d((-77.005) * Math.PI / 180));
     // (RobotState.getInstance().getPathPlannerTargetPose()).nearest(
     //     List.<Pose2d>of(
     //     new Pose2d(3.245, 0.881, new Rotation2d(66.19 * Math.PI / 180)),
