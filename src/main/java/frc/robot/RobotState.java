@@ -451,7 +451,7 @@ public class RobotState {
 
   public Pose2d getShootingPose() {
     Pose2d shootingPoseOne =
-        getShootingPose(2.154).plus(new Transform2d(new Translation2d(), Rotation2d.kPi));
+        getShootingPose(2.154).plus(new Transform2d(new Translation2d(), Rotation2d.kZero));
     // Pose2d shootingPoseTwo = getShootingPose(4.0); //edit forf climb
     // Pose2d flippedEstimatedPose = isAllianceRed()
     //                 ? FlippingUtil.flipFieldPose(estimatedPose)

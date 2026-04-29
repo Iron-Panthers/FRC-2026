@@ -22,15 +22,17 @@ public class AutoShootCommand extends SequentialCommandGroup {
       ElasticUpdater matchTimerUpdater,
       boolean intakeActive) {
     addCommands(
-        // new AlignToShootCommand(swerve, shooterController).alongWith(
-        new InstantCommand(() -> shooterController.setTargetState(ShooterState.SHOOT))
-            .alongWith(
-                new WaitCommand(2)
-                    .andThen(intakeController.setTargetStateCommand(IntakeState.STOW)))
-            .withDeadline(new WaitCommand(3.3)),
+        (new InstantCommand(() -> shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP))
+                .andThen(new WaitCommand(0.2)))
+            .andThen(
+                new InstantCommand(() -> shooterController.setTargetState(ShooterState.SHOOT))
+                    .alongWith(
+                        new WaitCommand(1.3)
+                            .andThen(intakeController.setTargetStateCommand(IntakeState.STOW)))
+                    .withDeadline(new WaitCommand(3))),
         (intakeActive
             ? new IntakeCommand(intakeController, shooterController)
             : new InstantCommand()),
-        shooterController.setTargetStateCommand(ShooterState.IDLE));
+        shooterController.setTargetStateCommand(ShooterState.FLYWHEEL_SPIN_UP));
   }
 }

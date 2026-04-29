@@ -3,6 +3,7 @@ package frc.robot.subsystems.swerve;
 import static frc.robot.subsystems.swerve.DriveConstants.HEADING_CONTROLLER_CONSTANTS;
 import static frc.robot.subsystems.swerve.DriveConstants.KINEMATICS;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -42,6 +43,8 @@ public class Drive extends SubsystemBase {
 
   private boolean isScoped = false;
   private boolean isBeingDefended = false;
+  private boolean isHDefense = false;
+  private boolean isFromTeleop = false;
 
   private GyroIO gyroIO;
   private GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -57,6 +60,9 @@ public class Drive extends SubsystemBase {
 
   private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
   private ChassisSpeeds trajectorySpeeds = new ChassisSpeeds();
+
+  private double speedMagnitude =
+      Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond);
 
   private Pose2d targetPosition = new Pose2d();
 
@@ -115,14 +121,21 @@ public class Drive extends SubsystemBase {
               Math.abs(rotationVelocity) > 0.0001 ? rotationVelocity : 0.0001;
         }
 
-        double speedMagnitude =
-            Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond);
         if (speedMagnitude < 0.01
             && Math.abs(targetSpeeds.omegaRadiansPerSecond) < 0.1
             && isScoped
             && isBeingDefended) {
-          driveMode = DriveModes.DEFENSE;
+          if (Math.abs(headingController.getTargetHeading().plus(Rotation2d.kCW_90deg).getDegrees())
+                  < 17
+              || Math.abs(
+                      headingController.getTargetHeading().plus(Rotation2d.kCCW_90deg).getDegrees())
+                  < 17) {
+            setDefenseMode(true);
+          } else {
+            setDefenseMode(false);
+          }
         }
+        isFromTeleop = true;
       }
       case TRAJECTORY -> {
         Logger.recordOutput(
@@ -144,6 +157,29 @@ public class Drive extends SubsystemBase {
         if (pidAutoAlignController != null) {
           targetSpeeds = pidAutoAlignController.update();
           targetSpeeds.omegaRadiansPerSecond = autoAlignHeadingController.update();
+
+          if (speedMagnitude < 0.01
+              && Math.abs(targetSpeeds.omegaRadiansPerSecond) < 0.1
+              && isScoped
+              && isBeingDefended) {
+            if (Math.abs(
+                        autoAlignHeadingController
+                            .getTargetHeading()
+                            .plus(Rotation2d.kCW_90deg)
+                            .getDegrees())
+                    < 17
+                || Math.abs(
+                        autoAlignHeadingController
+                            .getTargetHeading()
+                            .plus(Rotation2d.kCCW_90deg)
+                            .getDegrees())
+                    < 17) {
+              setDefenseMode(true);
+            } else {
+              setDefenseMode(false);
+            }
+          }
+          isFromTeleop = false;
         }
       }
       case AXIS_ASSIST -> {
@@ -166,15 +202,31 @@ public class Drive extends SubsystemBase {
         }
         double speedMagnitude =
             Math.hypot(targetSpeeds.vxMetersPerSecond, targetSpeeds.vyMetersPerSecond);
+
         Logger.recordOutput("Swerve/Speed Magnitude", speedMagnitude);
         Logger.recordOutput("Swerve/Angular Velocity", targetSpeeds.omegaRadiansPerSecond);
-        if (speedMagnitude > 0.015 || Math.abs(targetSpeeds.omegaRadiansPerSecond) > 0.4) {
-          driveMode = DriveModes.TELEOP;
+
+        if (isFromTeleop) {
+          if (speedMagnitude > 0.015 || Math.abs(targetSpeeds.omegaRadiansPerSecond) > 0.4) {
+            driveMode = DriveModes.TELEOP;
+          }
+        } else {
+          if (speedMagnitude > 0.015 || Math.abs(targetSpeeds.omegaRadiansPerSecond) > 0.4) {
+            driveMode = DriveModes.AUTO_ALIGN;
+          }
         }
-        modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
-        modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(135))));
-        modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-225))));
-        modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(225))));
+
+        if (isHDefense) {
+          modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+          modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+          modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+          modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(0))));
+        } else {
+          modules[0].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-135))));
+          modules[1].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(135))));
+          modules[2].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(-225))));
+          modules[3].runToSetpoint(new SwerveModuleState(0, new Rotation2d(Math.toRadians(225))));
+        }
       }
     }
 
@@ -397,6 +449,27 @@ public class Drive extends SubsystemBase {
     this.isBeingDefended = isBeingDefended;
   }
 
+  public Rotation2d getShootingError() {
+    if (headingController == null) {
+      return Rotation2d.fromDegrees(0);
+    }
+    return headingController.getError();
+  }
+
+  /**
+   * Sets the defense mode and sets the defense type to that supplied in the params
+   *
+   * @param isHDefense wether or not to use H defense versus X defense
+   */
+  public void setDefenseMode(boolean isHDefense) {
+    setDefenseMode();
+    this.isHDefense = isHDefense;
+  }
+
+  public boolean getIsHDefense() {
+    return isHDefense;
+  }
+
   public void setDriveSupplyCurrentLimits(double amps) {
     for (Module module : modules) {
       module.setDriveSupplyCurrentLimit(amps);
@@ -405,5 +478,25 @@ public class Drive extends SubsystemBase {
 
   public ChassisSpeeds getTargetSpeed() {
     return targetSpeeds;
+  }
+
+  public boolean reachedAutoAlignTarget() {
+    if (driveMode != DriveModes.AUTO_ALIGN) {
+      return false;
+    }
+    return autoAlignHeadingController.atTarget() && pidAutoAlignController.atTarget();
+  }
+
+  public boolean almostReachedAutoAlignTarget() {
+    if (driveMode != DriveModes.AUTO_ALIGN || driveMode != DriveModes.DEFENSE) {
+      return false;
+    }
+    return pidAutoAlignController.almostAtTarget();
+  }
+
+  public void setNeutralMode(NeutralModeValue value) {
+    for (Module module : modules) {
+      module.setNeutralMode(value);
+    }
   }
 }

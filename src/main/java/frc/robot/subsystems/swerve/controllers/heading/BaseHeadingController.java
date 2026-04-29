@@ -105,4 +105,18 @@ public abstract class BaseHeadingController {
   protected Supplier<Rotation2d> getHeadingSupplier() {
     return headingSupplier;
   }
+
+  // TUrn compare heading into get Error (setpoint vs current ^^^)
+  // Pass headingController into robotContainer into Drive to pass lambda
+  // lambda should call getError
+  // pass lambda into commandFactory for shootCommandFactory
+
+  public Rotation2d getError() {
+    Rotation2d error =
+        Rotation2d.fromDegrees(
+            (Math.abs(targetHeading.getDegrees() - headingSupplier.get().getDegrees()) + 360)
+                % 360);
+    Logger.recordOutput("Swerve/Heading Controller/Heading Error", error);
+    return error;
+  }
 }

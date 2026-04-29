@@ -26,11 +26,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Mode;
 import frc.robot.commands.AlignToPoseCommand;
 import frc.robot.commands.AlignToShootCommand;
+import frc.robot.commands.AlignToShootPoseCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.FieldAxisAssistCommand;
 import frc.robot.commands.IntakeCommand;
@@ -284,7 +286,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP);
+                  shooterController.setTargetState(ShooterState.COMPACT_SPIN_UP);
                 }));
     new EventTrigger("Intake off")
         .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.IDLE)));
@@ -294,16 +296,16 @@ public class RobotContainer {
         "Intake down",
         intakeController
             .setTargetStateCommand(IntakeState.INTAKE)
-            .alongWith(shooterController.setTargetStateCommand(ShooterState.IDLE)));
+            .alongWith(shooterController.setTargetStateCommand(ShooterState.FLYWHEEL_SPIN_UP)));
     // probably have to change this, come back later
     NamedCommands.registerCommand(
         "Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
     NamedCommands.registerCommand(
-        "Spin up shooter", shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP));
+        "Spin up shooter", shooterController.setTargetStateCommand(ShooterState.COMPACT_SPIN_UP));
     NamedCommands.registerCommand(
         "Shoot", shooterController.setTargetStateCommand(ShooterState.SHOOT));
     NamedCommands.registerCommand(
-        "Stop shooting", shooterController.setTargetStateCommand(ShooterState.IDLE));
+        "Stop shooting", shooterController.setTargetStateCommand(ShooterState.FLYWHEEL_SPIN_UP));
     NamedCommands.registerCommand(
         "Align to shoot", new AlignToShootCommand(swerve, shooterController));
     NamedCommands.registerCommand(
@@ -327,7 +329,7 @@ public class RobotContainer {
                     () -> intakeController.setTargetStateCommand(IntakeState.INTAKE)))
             .andThen(
                 new InstantCommand(
-                    () -> shooterController.setTargetStateCommand(ShooterState.IDLE))));
+                    () -> shooterController.setTargetStateCommand(ShooterState.FLYWHEEL_SPIN_UP))));
 
     NamedCommands.registerCommand(
         "Auto shoot full hopper",
@@ -336,14 +338,8 @@ public class RobotContainer {
         "Align and auto shoot full hopper",
         new AlignToShootCommand(swerve, shooterController)
             .withDeadline(
-                new WaitCommand(0.2)
-                    .andThen(
-                        new AutoShootCommand(
-                            swerve,
-                            shooterController,
-                            intakeController,
-                            matchTimerUpdater,
-                            true))));
+                new AutoShootCommand(
+                    swerve, shooterController, intakeController, matchTimerUpdater, true)));
     NamedCommands.registerCommand(
         "Align and auto shoot full hopper (no intake)",
         new AlignToShootCommand(swerve, shooterController)
@@ -452,7 +448,9 @@ public class RobotContainer {
                     && intakeController.getTargetState() == IntakeState.INTAKE
                     && shooterController.getTargetState()
                         == ShooterState.INTAKE) // TODO: make these constants
-        .onTrue(new InstantCommand(() -> shooterController.setTargetState(ShooterState.IDLE)));
+        .onTrue(
+            new InstantCommand(
+                () -> shooterController.setTargetState(ShooterState.FLYWHEEL_SPIN_UP)));
 
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
@@ -465,17 +463,14 @@ public class RobotContainer {
     // driverA.rightStick().onTrue(new HappyBirthdayCommand());
     driverA
         .povLeft()
-        .onTrue(
-            new InstantCommand(
-                () ->
-                    intakeController.setIntakeRackActive(!intakeController.getIntakeRackActive())));
+        .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)));
     // ZERO GYRO
     driverA
         .start()
         .onTrue(
             swerve.zeroGyroCommand().alongWith(new InstantCommand(() -> defaultZeroing = true)));
     // SMART ZERO GYRO
-    driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
+    // driverA.x().onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
     // INTAKE
     driverA.b().onTrue(new IntakeCommand(intakeController, shooterController));
     // STOW ROBOT
@@ -483,20 +478,39 @@ public class RobotContainer {
 
     // SHOOTING COMMAND
     ShootCommandFactory shootCommand =
-        new ShootCommandFactory(shooterController, intakeController, matchTimerUpdater);
+        new ShootCommandFactory(
+            shooterController,
+            intakeController,
+            matchTimerUpdater,
+            swerve::getShootingError); // TODO: Change degrees in fromDegrees
     driverA.a().whileTrue(shootCommand.whileHeld());
     driverA.a().onFalse(shootCommand.onRelease());
 
     // DEFENSE MODE
     driverA.povUp().whileTrue(new RunCommand(() -> swerve.setDefenseMode(), swerve));
 
-    // SHUTTLE
+    // PASS
     driverA
         .povRight()
-        .whileTrue(new PassToPoseCommand(swerve).alongWith(shootCommand.whileHeldShuttling()));
+        .whileTrue(new PassToPoseCommand(swerve).alongWith(shootCommand.whileHeldPassing()));
 
     driverA.povRight().onFalse(shootCommand.onRelease());
 
+    // DEFENSE POSE SHOOT
+    driverA
+        .x()
+        .whileTrue(
+            new AlignToShootPoseCommand(swerve, true)
+                .alongWith(
+                    (new WaitUntilCommand(() -> swerve.almostReachedAutoAlignTarget())
+                        .andThen(
+                            shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))))
+                .alongWith(
+                    new WaitUntilCommand(() -> swerve.reachedAutoAlignTarget())
+                        .andThen(shootCommand.whileHeld())))
+        .onFalse(shootCommand.onRelease());
+
+    // DEFAULT SHOOT
     driverA
         .rightBumper()
         .whileTrue(
@@ -507,6 +521,7 @@ public class RobotContainer {
                 },
                 () -> shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP)));
 
+    // DEFAULT TRENCH SHOOT
     driverA
         .povDown()
         .whileTrue(
@@ -518,15 +533,32 @@ public class RobotContainer {
                 () -> shooterController.setTargetState(ShooterState.TOTAL_SPIN_UP)));
 
     // ARC ALIGN
-    // driverA.rightBumper().whileTrue(new AlignToPoseCommand(swerve, () ->
-    // RobotState.getInstance().getShootingPose(), true)
-    //   .alongWith(
-    //     new WaitUntilCommand(() ->
-    // RobotState.getInstance().getEstimatedPose().getTranslation().getDistance(RobotState.getInstance().getAlignPose().getTranslation()) < 1)
-    //     .andThen(shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
+    // driverA
+    //     .leftBumper()
+    //     .whileTrue(
+    //         new AlignToPoseCommand(swerve, () -> RobotState.getInstance().getShootingPose(),
+    // true)
+    //             .alongWith(
+    //                 new WaitUntilCommand(
+    //                         () ->
+    //                             RobotState.getInstance()
+    //                                     .getEstimatedPose()
+    //                                     .getTranslation()
+    //                                     .getDistance(
+    //                                         RobotState.getInstance()
+    //                                             .getAlignPose()
+    //                                             .getTranslation())
+    //                                 < 1)
+    //                     .andThen(
+    //
+    // shooterController.setTargetStateCommand(ShooterState.TOTAL_SPIN_UP))));
 
     // ALIGN TO SHOOT
-    driverA.leftBumper().whileTrue(new AlignToShootCommand(swerve, shooterController));
+    driverA
+        .leftBumper()
+        .whileTrue(
+            new AlignToShootCommand(swerve, shooterController).alongWith(shootCommand.whileHeld()))
+        .onFalse(shootCommand.onRelease());
   }
 
   private void configureDriverBButtons() {

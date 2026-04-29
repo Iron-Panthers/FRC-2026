@@ -14,7 +14,7 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
   public enum ShooterHoodTarget implements GenericSuperstructure.PositionTarget {
     STOW(0, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
     SHOOT_TEMP(12, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT), // need to update
-    SHUTTLE(34, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT),
+    PASS(34, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT),
     DEFAULT_SHOOT(14, ShooterHoodConstants.SUPPLY_CURRENT_LIMIT); // might need to update?
 
     private double position; // in rotations
@@ -103,5 +103,15 @@ public class ShooterHood extends GenericSuperstructure<ShooterHood.ShooterHoodTa
         .plus(
             new Transform3d(
                 Translation3d.kZero, new Rotation3d(Math.toRadians(getPosition() * 360), 0, 0)));
+  }
+
+  public boolean reachedPositionTargetManual() {
+
+    return Math.abs(
+            super.inputs.positionRotations
+                - (positionTargetManual.isPresent()
+                    ? positionTargetManual.get()
+                    : positionTarget.position))
+        < ShooterHoodConstants.POSITION_TARGET_EPSILON;
   }
 } // close class
