@@ -340,7 +340,9 @@ public class RobotContainer {
                     swerve, shooterController, intakeController, matchTimerUpdater, true)));
     NamedCommands.registerCommand(
         "Align and auto shoot full hopper (no intake)",
-        new AlignToShootCommand(swerve, shooterController)
+        new AlignToShootPoseCommand(swerve, true)
+                .withDeadline(new WaitUntilCommand(()-> !RobotState.getInstance().isUnderTrench()))
+            .andThen((new AlignToShootCommand(swerve, shooterController))
             .withDeadline(
                 new WaitCommand(0.2)
                     .andThen(
@@ -349,7 +351,7 @@ public class RobotContainer {
                             shooterController,
                             intakeController,
                             matchTimerUpdater,
-                            false))));
+                            false)))));
     NamedCommands.registerCommand(
         "Auto shoot full hopper (no intake)",
         new AutoShootCommand(
