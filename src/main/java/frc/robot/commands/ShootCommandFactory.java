@@ -42,30 +42,28 @@ public class ShootCommandFactory {
 
   /** Command to bind to whileTrue – repeats while the button is held. */
   public Command whileHeld() {
-    return ((new WaitCommand(0.1)
+    return 
+    // Jittering that stops when intake goes in
+    (((new WaitUntilCommand(()-> shooterController.getTargetState() == ShooterState.SHOOT)
                 .andThen(
-                    new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
+                    new InstantCommand(() -> intakeController.setTargetState(IntakeState.MID)))
                 .andThen(new WaitCommand(0.1))
-                .andThen(() -> intakeController.setTargetState(IntakeState.INTAKE)))
+                .andThen(() -> intakeController.setTargetState(IntakeState.SHOOT)))
             .andThen(
                 new WaitCommand(0.2)
                     .andThen(
-                        new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
+                        new InstantCommand(() -> intakeController.setTargetState(IntakeState.MID)))
                     .andThen(new WaitCommand(0.1))
-                    .andThen(() -> intakeController.setTargetState(IntakeState.INTAKE)))
+                    .andThen(() -> intakeController.setTargetState(IntakeState.SHOOT)))
             .andThen(
                 new WaitCommand(0.2)
                     .andThen(
-                        new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
+                        new InstantCommand(() -> intakeController.setTargetState(IntakeState.MID)))
                     .andThen(new WaitCommand(0.1))
-                    .andThen(() -> intakeController.setTargetState(IntakeState.INTAKE)))
-            .andThen(
-                new WaitCommand(0.1)
-                    .andThen(
-                        new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
-                    .andThen(new WaitCommand(0.1))
-                    .andThen(() -> intakeController.setTargetState(IntakeState.INTAKE))))
+                    .andThen(() -> intakeController.setTargetState(IntakeState.SHOOT))))
+                    .withDeadline(new WaitUntilCommand(()-> intakeController.getTargetState() == IntakeState.STOW)))
         .alongWith(
+          // deciding to shoot or not
             new InstantCommand(
                     () -> {
                       shooterController.setTargetState(
@@ -82,6 +80,7 @@ public class ShootCommandFactory {
                               : ShooterState.TOTAL_SPIN_UP);
                     })
                 .repeatedly()
+                // automatically putting intake rack in (if button not pressed)
                 .alongWith(
                     (new WaitUntilCommand(
                                 () -> shooterController.getTargetState() == ShooterState.SHOOT)
