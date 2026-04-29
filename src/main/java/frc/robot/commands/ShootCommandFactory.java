@@ -42,62 +42,75 @@ public class ShootCommandFactory {
 
   /** Command to bind to whileTrue – repeats while the button is held. */
   public Command whileHeld() {
-    return 
-    // Jittering that stops when intake goes in
-    (((new WaitUntilCommand(()-> shooterController.getTargetState() == ShooterState.SHOOT)
-                .andThen(
-                    new InstantCommand(() -> intakeController.setTargetState(IntakeState.MID)))
-                .andThen(new WaitCommand(0.1))
-                .andThen(() -> intakeController.setTargetState(IntakeState.SHOOT)))
-            .andThen(
-                new WaitCommand(0.2)
-                    .andThen(
-                        new InstantCommand(() -> intakeController.setTargetState(IntakeState.MID)))
-                    .andThen(new WaitCommand(0.1))
-                    .andThen(() -> intakeController.setTargetState(IntakeState.SHOOT)))
-            .andThen(
-                new WaitCommand(0.2)
-                    .andThen(
-                        new InstantCommand(() -> intakeController.setTargetState(IntakeState.MID)))
-                    .andThen(new WaitCommand(0.1))
-                    .andThen(() -> intakeController.setTargetState(IntakeState.SHOOT))))
-                    .withDeadline(new WaitUntilCommand(()-> intakeController.getTargetState() == IntakeState.STOW)))
-        .alongWith(
-          // deciding to shoot or not
-            new InstantCommand(
-                    () -> {
-                      shooterController.setTargetState(
-                          (shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
-                                      || shooterController.getTargetState() == ShooterState.SHOOT)
-                                  && shooterController.flywheelsUpToSpeed()
-                                  && (matchTimerUpdater.isOurHubActive()
-                                      || matchTimerUpdater.getTimeUntilOurHubShifts() < 2
-                                      || matchTimerUpdater.getTimeUntilOurHubShifts()
-                                          > 24) // time correct
-                                  && (getHeadingError.get().getDegrees() < 4
-                                      || getHeadingError.get().getDegrees() > 356) // angle correct
-                              ? ShooterState.SHOOT
-                              : ShooterState.TOTAL_SPIN_UP);
-                    })
-                .repeatedly()
-                // automatically putting intake rack in (if button not pressed)
-                .alongWith(
-                    (new WaitUntilCommand(
-                                () -> shooterController.getTargetState() == ShooterState.SHOOT)
-                            .andThen(new InstantCommand(() -> time = Timer.getFPGATimestamp()))
+    return new InstantCommand(() -> intakeController.setTargetState(IntakeState.SHOOT))
+        .andThen(
+            // Jittering that stops when intake goes in
+            (((new WaitUntilCommand(() -> shooterController.getTargetState() == ShooterState.SHOOT)
                             .andThen(
-                                new WaitUntilCommand(
-                                    () ->
-                                        ((SmartDashboard.getNumber("Intake Rack In Time", 1.5)
-                                                + time)
-                                            < Timer.getFPGATimestamp())))
-                            .andThen(intakeController.setTargetStateCommand(IntakeState.STOW))
-                            .withDeadline(
-                                new WaitUntilCommand(
-                                    () ->
-                                        (shooterController.getTargetState()
-                                            == ShooterState.TOTAL_SPIN_UP))))
-                        .repeatedly()));
+                                new InstantCommand(
+                                    () -> intakeController.setTargetState(IntakeState.MID)))
+                            .andThen(new WaitCommand(0.1))
+                            .andThen(() -> intakeController.setTargetState(IntakeState.SHOOT)))
+                        .andThen(
+                            new WaitCommand(0.2)
+                                .andThen(
+                                    new InstantCommand(
+                                        () -> intakeController.setTargetState(IntakeState.MID)))
+                                .andThen(new WaitCommand(0.1))
+                                .andThen(() -> intakeController.setTargetState(IntakeState.SHOOT)))
+                        .andThen(
+                            new WaitCommand(0.2)
+                                .andThen(
+                                    new InstantCommand(
+                                        () -> intakeController.setTargetState(IntakeState.MID)))
+                                .andThen(new WaitCommand(0.1))
+                                .andThen(() -> intakeController.setTargetState(IntakeState.SHOOT))))
+                    .withDeadline(
+                        new WaitUntilCommand(
+                            () -> intakeController.getTargetState() == IntakeState.STOW)))
+                .alongWith(
+                    // deciding to shoot or not
+                    new InstantCommand(
+                            () -> {
+                              shooterController.setTargetState(
+                                  (shooterController.getTargetState() == ShooterState.TOTAL_SPIN_UP
+                                              || shooterController.getTargetState()
+                                                  == ShooterState.SHOOT)
+                                          && shooterController.flywheelsUpToSpeed()
+                                          && (matchTimerUpdater.isOurHubActive()
+                                              || matchTimerUpdater.getTimeUntilOurHubShifts() < 2
+                                              || matchTimerUpdater.getTimeUntilOurHubShifts()
+                                                  > 24) // time correct
+                                          && (getHeadingError.get().getDegrees() < 4
+                                              || getHeadingError.get().getDegrees()
+                                                  > 356) // angle correct
+                                      ? ShooterState.SHOOT
+                                      : ShooterState.TOTAL_SPIN_UP);
+                            })
+                        .repeatedly()
+                        // automatically putting intake rack in (if button not pressed)
+                        .alongWith(
+                            (new WaitUntilCommand(
+                                        () ->
+                                            shooterController.getTargetState()
+                                                == ShooterState.SHOOT)
+                                    .andThen(
+                                        new InstantCommand(() -> time = Timer.getFPGATimestamp()))
+                                    .andThen(
+                                        new WaitUntilCommand(
+                                            () ->
+                                                ((SmartDashboard.getNumber(
+                                                            "Intake Rack In Time", 1.5)
+                                                        + time)
+                                                    < Timer.getFPGATimestamp())))
+                                    .andThen(
+                                        intakeController.setTargetStateCommand(IntakeState.STOW))
+                                    .withDeadline(
+                                        new WaitUntilCommand(
+                                            () ->
+                                                (shooterController.getTargetState()
+                                                    == ShooterState.TOTAL_SPIN_UP))))
+                                .repeatedly())));
   }
 
   /** Command to bind to onFalse – runs when the button is released. */
