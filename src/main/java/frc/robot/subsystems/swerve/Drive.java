@@ -180,6 +180,8 @@ public class Drive extends SubsystemBase {
             }
           }
           isFromTeleop = false;
+        } else if (headingController != null) {
+          targetSpeeds.omegaRadiansPerSecond = headingController.update();
         }
       }
       case AXIS_ASSIST -> {
