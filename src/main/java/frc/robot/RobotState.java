@@ -496,6 +496,7 @@ public class RobotState {
     return true;
   }
 
+  @AutoLogOutput(key = "Robot State/isUnderTrench")
   public boolean isUnderTrench() {
     Pose2d robotPose = getEstimatedPose();
     Pose2d flippedTrenchPose = FlippingUtil.flipFieldPose(DriveConstants.TRENCH_POSE);
@@ -515,7 +516,6 @@ public class RobotState {
             || (Math.abs(robotPose.getX() - flippedTrenchPose.getX()) <= DriveConstants.TRENCH_WIDTH
                 && Math.abs(robotPose.getY() - DriveConstants.TRENCH_POSE.getY())
                     <= DriveConstants.TRENCH_LENGTH));
-    Logger.recordOutput("Swerve/isUnderTrench", underTrench);
     return underTrench;
   }
 }

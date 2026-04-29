@@ -16,7 +16,7 @@ import org.littletonrobotics.junction.Logger;
 public class IntakeRack extends GenericSuperstructure<IntakeRack.IntakeRackTarget>
     implements LoggableMechanism3d {
   public enum IntakeRackTarget implements GenericSuperstructure.PositionTarget {
-    INTAKE(11.9, IntakeRackConstants.SUPPLY_CURRENT_LIMIT, Optional.empty()),
+    INTAKE(11.7, IntakeRackConstants.SUPPLY_CURRENT_LIMIT, Optional.empty()),
     STOW(0, IntakeRackConstants.SUPPLY_CURRENT_LIMIT, Optional.of(6d));
 
     private double position;

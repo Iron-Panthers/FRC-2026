@@ -334,13 +334,15 @@ public class RobotContainer {
         new AutoShootCommand(swerve, shooterController, intakeController, matchTimerUpdater, true));
     NamedCommands.registerCommand(
         "Align and auto shoot full hopper",
-        new AlignToShootCommand(swerve, shooterController)
+        new AlignToShootPoseCommand(swerve, true)
             .withDeadline(
                 new AutoShootCommand(
                     swerve, shooterController, intakeController, matchTimerUpdater, true)));
     NamedCommands.registerCommand(
         "Align and auto shoot full hopper (no intake)",
-        new AlignToShootCommand(swerve, shooterController)
+        new AlignToShootPoseCommand(swerve, true)
+                .withDeadline(new WaitUntilCommand(()-> !RobotState.getInstance().isUnderTrench()))
+            .andThen((new AlignToShootCommand(swerve, shooterController))
             .withDeadline(
                 new WaitCommand(0.2)
                     .andThen(
@@ -349,7 +351,7 @@ public class RobotContainer {
                             shooterController,
                             intakeController,
                             matchTimerUpdater,
-                            false))));
+                            false)))));
     NamedCommands.registerCommand(
         "Auto shoot full hopper (no intake)",
         new AutoShootCommand(
@@ -398,16 +400,16 @@ public class RobotContainer {
     new Trigger(() -> vision.getMultiTags() && !defaultZeroing)
         .onTrue(new InstantCommand(() -> swerve.smartZeroGyro()));
 
-    // Stop running serializer button
-    new Trigger(
-            () ->
-                serializer.serializerStalling()
-                    && intakeController.getTargetState() == IntakeState.INTAKE
-                    && shooterController.getTargetState()
-                        == ShooterState.INTAKE) // TODO: make these constants
-        .onTrue(
-            new InstantCommand(
-                () -> shooterController.setTargetState(ShooterState.FLYWHEEL_SPIN_UP)));
+    // // Stop running serializer button
+    // new Trigger(
+    //         () ->
+    //             serializer.serializerStalling()
+    //                 && intakeController.getTargetState() == IntakeState.INTAKE
+    //                 && shooterController.getTargetState()
+    //                     == ShooterState.INTAKE) // TODO: make these constants
+    //     .onTrue(
+    //         new InstantCommand(
+    //             () -> shooterController.setTargetState(ShooterState.FLYWHEEL_SPIN_UP)));
 
     // Use pov down and left for testing buttons please!! (Drivers get annoyed when we use other
     // buttons)
@@ -524,7 +526,7 @@ public class RobotContainer {
         .onTrue(
             intakeController
                 .setTargetStateCommand(IntakeState.REVERSE)
-                .alongWith(shooterController.setTargetStateCommand(ShooterState.INTAKE)));
+                .alongWith(shooterController.setTargetStateCommand(ShooterState.REVERSE)));
 
     driverB
         .x()
