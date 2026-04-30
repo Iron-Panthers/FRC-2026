@@ -279,7 +279,8 @@ public class RobotContainer {
                   shooterController.setTargetState(ShooterState.INTAKE);
                 }));
     new EventTrigger("Intake stow")
-        .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)));
+        .onTrue(
+            new InstantCommand(() -> intakeController.setTargetState(IntakeState.SHOOTING_STOW)));
     new EventTrigger("Spin up shooter")
         .onTrue(
             new InstantCommand(
@@ -297,7 +298,7 @@ public class RobotContainer {
             .alongWith(shooterController.setTargetStateCommand(ShooterState.FLYWHEEL_SPIN_UP)));
     // probably have to change this, come back later
     NamedCommands.registerCommand(
-        "Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
+        "Intake stow", intakeController.setTargetStateCommand(IntakeState.SHOOTING_STOW));
     NamedCommands.registerCommand(
         "Spin up shooter", shooterController.setTargetStateCommand(ShooterState.COMPACT_SPIN_UP));
     NamedCommands.registerCommand(
@@ -320,7 +321,9 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
             .alongWith(new WaitCommand(1))
-            .alongWith(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
+            .alongWith(
+                new InstantCommand(
+                    () -> intakeController.setTargetState(IntakeState.SHOOTING_STOW)))
             .alongWith(new WaitCommand(7))
             .andThen(
                 new InstantCommand(
@@ -423,7 +426,8 @@ public class RobotContainer {
     // driverA.rightStick().onTrue(new HappyBirthdayCommand());
     driverA
         .povLeft()
-        .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)));
+        .onTrue(
+            new InstantCommand(() -> intakeController.setTargetState(IntakeState.SHOOTING_STOW)));
     // ZERO GYRO
     driverA
         .start()
@@ -535,7 +539,7 @@ public class RobotContainer {
             shooterController
                 .setStoppedCommand(true)
                 .alongWith(intakeController.setStoppedCommand(true)));
-    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW));
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeState.SHOOTING_STOW));
 
     driverB.rightBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.INTAKE));
 

@@ -67,7 +67,7 @@ public class ShootCommandFactory {
                                 .andThen(() -> intakeController.setTargetState(IntakeState.SHOOT))))
                     .withDeadline(
                         new WaitUntilCommand(
-                            () -> intakeController.getTargetState() == IntakeState.STOW)))
+                            () -> intakeController.getTargetState() == IntakeState.SHOOTING_STOW)))
                 .alongWith(
                     // deciding to shoot or not
                     new InstantCommand(
@@ -104,7 +104,8 @@ public class ShootCommandFactory {
                                                         + time)
                                                     < Timer.getFPGATimestamp())))
                                     .andThen(
-                                        intakeController.setTargetStateCommand(IntakeState.STOW))
+                                        intakeController.setTargetStateCommand(
+                                            IntakeState.SHOOTING_STOW))
                                     .withDeadline(
                                         new WaitUntilCommand(
                                             () ->
@@ -136,6 +137,7 @@ public class ShootCommandFactory {
             })
         .repeatedly()
         .alongWith(
-            new WaitCommand(1.5).andThen(intakeController.setTargetStateCommand(IntakeState.STOW)));
+            new WaitCommand(1.5)
+                .andThen(intakeController.setTargetStateCommand(IntakeState.SHOOTING_STOW)));
   }
 }

@@ -16,6 +16,7 @@ import org.littletonrobotics.junction.Logger;
 public class IntakeController extends SubsystemBase {
   public enum IntakeState {
     STOW(IntakeRackTarget.STOW, IntakeRollersTarget.IDLE),
+    SHOOTING_STOW(IntakeRackTarget.SHOOTING_STOW, IntakeRollersTarget.IDLE),
     SHOOT(IntakeRackTarget.INTAKE, IntakeRollersTarget.INTAKE_SLOW),
     MID(IntakeRackTarget.MIDDLE, IntakeRollersTarget.INTAKE_SLOW),
     IDLE(IntakeRackTarget.INTAKE, IntakeRollersTarget.IDLE),
@@ -65,7 +66,8 @@ public class IntakeController extends SubsystemBase {
     } else if (intakeRack.getPosition() < 7 && targetState == IntakeState.INTAKE) {
       intakeRollers.setVelocityTarget(IntakeRollersTarget.IDLE);
       intakeRack.setPositionTarget(targetState.getIntakeRackTarget());
-    } else if (targetState == IntakeState.STOW && !intakeRack.reachedTarget()) {
+    } else if ((targetState == IntakeState.STOW || targetState == IntakeState.SHOOTING_STOW)
+        && !intakeRack.reachedTarget()) {
       intakeRollers.setVelocityTarget(IntakeRollersTarget.INTAKE);
       intakeRack.setPositionTarget(targetState.getIntakeRackTarget());
     } else {
