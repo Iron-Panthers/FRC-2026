@@ -26,6 +26,8 @@ public class ShootCommandFactory {
   private final IntakeController intakeController;
   private final ElasticUpdater matchTimerUpdater;
   private final Supplier<Rotation2d> getHeadingError;
+
+  private boolean justShoot = false;
   double time = Timer.getFPGATimestamp();
 
   public ShootCommandFactory(
@@ -43,6 +45,7 @@ public class ShootCommandFactory {
   /** Command to bind to whileTrue – repeats while the button is held. */
   public Command whileHeld() {
     return new InstantCommand(() -> intakeController.setTargetState(IntakeState.SHOOT))
+        .alongWith(setJustShootCommand(false))
         .andThen(
             // Jittering that stops when intake goes in
             (((new WaitUntilCommand(() -> shooterController.getTargetState() == ShooterState.SHOOT)
@@ -81,9 +84,9 @@ public class ShootCommandFactory {
                                               || matchTimerUpdater.getTimeUntilOurHubShifts() < 2
                                               || matchTimerUpdater.getTimeUntilOurHubShifts()
                                                   > 24) // time correct
-                                          && (getHeadingError.get().getDegrees() < 4
-                                              || getHeadingError.get().getDegrees()
-                                                  > 356) // angle correct
+                                          && ((getHeadingError.get().getDegrees() < 4
+                                                  || getHeadingError.get().getDegrees() > 356)
+                                              || justShoot) // angle correct
                                       ? ShooterState.SHOOT
                                       : ShooterState.TOTAL_SPIN_UP);
                             })
@@ -139,5 +142,9 @@ public class ShootCommandFactory {
         .alongWith(
             new WaitCommand(1.5)
                 .andThen(intakeController.setTargetStateCommand(IntakeState.SHOOTING_STOW)));
+  }
+
+  public Command setJustShootCommand(boolean justShoot) {
+    return new InstantCommand(() -> this.justShoot = justShoot);
   }
 }

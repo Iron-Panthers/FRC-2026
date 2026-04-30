@@ -524,6 +524,11 @@ public class RobotContainer {
         .whileTrue(
             new AlignToShootCommand(swerve, shooterController).alongWith(shootCommand.whileHeld()))
         .onFalse(shootCommand.onRelease());
+
+    driverB
+        .b()
+        .onTrue(shootCommand.setJustShootCommand(true))
+        .onFalse(shootCommand.setJustShootCommand(false));
   }
 
   private void configureDriverBButtons() {
@@ -552,8 +557,6 @@ public class RobotContainer {
 
     driverB.rightTrigger().onTrue(new InstantCommand(() -> swerve.setIsBeingDefended(true)));
     driverB.leftTrigger().onTrue(new InstantCommand(() -> swerve.setIsBeingDefended(false)));
-
-    driverB.b().onTrue(new InstantCommand(() -> swerve.setDriveSupplyCurrentLimits(35)));
 
     driverB.y().onTrue(intakeController.setTargetStateCommand(IntakeState.INTAKE_SLOW));
   }
