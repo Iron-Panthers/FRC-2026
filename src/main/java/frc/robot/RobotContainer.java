@@ -554,6 +554,8 @@ public class RobotContainer {
     driverB.leftTrigger().onTrue(new InstantCommand(() -> swerve.setIsBeingDefended(false)));
 
     driverB.b().onTrue(new InstantCommand(() -> swerve.setDriveSupplyCurrentLimits(35)));
+
+    driverB.y().onTrue(intakeController.setTargetStateCommand(IntakeState.INTAKE_SLOW));
   }
 
   private void configureAutos() {
