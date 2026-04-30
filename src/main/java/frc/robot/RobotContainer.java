@@ -625,14 +625,13 @@ public class RobotContainer {
     Logger.recordOutput("Testing/Blank Pose3d", new Pose3d());
 
     SimulatedArena.getInstance().simulationPeriodic();
-    // RobotSimState.getInstance().getFuelSim().updateSim();
+    RobotSimState.getInstance().getFuelSim().updateSim();
     Logger.recordOutput(
         "Field Simulation/Robot Position",
         RobotSimState.getInstance().getDriveSimulation().getSimulatedDriveTrainPose());
     Logger.recordOutput(
         "Field Simulation/Robot Fuel", RobotSimState.getInstance().getIntakeGamePieces());
-    // Logger.recordOutput("Field Simulation/Fuel Count",
-    // RobotSimState.getInstance().getFuelCount());
+    Logger.recordOutput("Field Simulation/Fuel Count", RobotSimState.getInstance().getFuelCount());
 
     // Update the shooting logic with the correct rollers
     RobotSimState.getInstance()
