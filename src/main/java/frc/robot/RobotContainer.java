@@ -5,6 +5,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
@@ -592,11 +593,13 @@ public class RobotContainer {
   public void autoInit() {
     // Smart zero the robot
     CommandScheduler.getInstance().schedule(new InstantCommand(() -> swerve.smartZeroGyro()));
+    intakeController.stopZeroing();
   }
 
   // runs when teleop starts
   public void teleopInit() {
     CommandScheduler.getInstance().schedule(new VibrateHIDCommand(driverB.getHID(), 5, .5));
+    swerve.setNeutralMode(NeutralModeValue.Brake);
   }
 
   /** Ran when periodic disabled */

@@ -118,6 +118,10 @@ public class IntakeController extends SubsystemBase {
     return new InstantCommand(() -> intakeRack.endZeroing());
   }
 
+  public void stopZeroing() {
+    intakeRack.endZeroing();
+  }
+
   public void setIntakeRackActive(boolean isActive) {
     intakeRackActive = isActive;
   }
