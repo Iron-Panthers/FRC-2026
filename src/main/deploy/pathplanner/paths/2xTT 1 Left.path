@@ -2,13 +2,13 @@
   "version" : "2025.0",
   "waypoints" : [ {
     "anchor" : {
-      "x" : 4.343,
-      "y" : 7.461803084223015
+      "x" : 4.37,
+      "y" : 7.442
     },
     "prevControl" : null,
     "nextControl" : {
-      "x" : 4.891613285883749,
-      "y" : 7.42952550415184
+      "x" : 4.918613285883749,
+      "y" : 7.409722419928825
     },
     "isLocked" : false,
     "linkedName" : null
@@ -105,7 +105,7 @@
     "rotationDegrees" : 90.0
   }, {
     "waypointRelativePos" : 2.1,
-    "rotationDegrees" : 65.0
+    "rotationDegrees" : 90.0
   }, {
     "waypointRelativePos" : 4.25196850393701,
     "rotationDegrees" : -90.0
@@ -119,7 +119,7 @@
     "maxWaypointRelativePos" : 2.4172313649564448,
     "constraints" : {
       "maxVelocity" : 5.0,
-      "maxAcceleration" : 8.0,
+      "maxAcceleration" : 6.5,
       "maxAngularVelocity" : 540.0,
       "maxAngularAcceleration" : 720.0,
       "nominalVoltage" : 12.0,
