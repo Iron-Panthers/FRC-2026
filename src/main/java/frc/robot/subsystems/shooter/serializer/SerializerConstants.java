@@ -28,7 +28,7 @@ public class SerializerConstants {
 
   public static final int CURRENT_LIMIT_AMPS = 20;
 
-  public static final double STATOR_CURRENT_LIMIT = 35;
+  public static final double STATOR_CURRENT_LIMIT = 30;
 
   public static final SerializerPhysicalConstants PHYSICAL_CONSTANTS =
       switch (Constants.getRobotType()) {
