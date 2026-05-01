@@ -604,7 +604,7 @@ public class RobotContainer {
   // runs when teleop starts
   public void teleopInit() {
     CommandScheduler.getInstance().schedule(new VibrateHIDCommand(driverB.getHID(), 5, .5));
-    swerve.setDriveSupplyCurrentLimits(40);
+    swerve.setNeutralMode(NeutralModeValue.Brake);
   }
 
   /** Ran when periodic disabled */
