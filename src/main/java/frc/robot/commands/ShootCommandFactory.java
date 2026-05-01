@@ -81,9 +81,9 @@ public class ShootCommandFactory {
                                                   == ShooterState.SHOOT)
                                           && shooterController.flywheelsUpToSpeed()
                                           && (matchTimerUpdater.isOurHubActive()
-                                              || matchTimerUpdater.getTimeUntilOurHubShifts() < 2
+                                              || matchTimerUpdater.getTimeUntilOurHubShifts() <= 3
                                               || matchTimerUpdater.getTimeUntilOurHubShifts()
-                                                  > 24) // time correct
+                                                  >= 24) // time correct
                                           && ((getHeadingError.get().getDegrees() < 4
                                                   || getHeadingError.get().getDegrees() > 356)
                                               || justShoot) // angle correct
