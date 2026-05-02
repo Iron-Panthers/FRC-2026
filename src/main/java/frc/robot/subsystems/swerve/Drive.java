@@ -349,7 +349,9 @@ public class Drive extends SubsystemBase {
     if (headingController == null) {
       headingController =
           new TeleopHeadingController(
-              () -> fieldRelativeYaw, RobotState.getInstance().calculateTargetShootingState().drivebaseYaw(), HEADING_CONTROLLER_CONSTANTS);
+              () -> fieldRelativeYaw,
+              RobotState.getInstance().calculateTargetShootingState().drivebaseYaw(),
+              HEADING_CONTROLLER_CONSTANTS);
     }
     headingController.setScoped(scoped);
   }
