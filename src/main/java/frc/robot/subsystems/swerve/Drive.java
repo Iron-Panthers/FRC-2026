@@ -349,7 +349,7 @@ public class Drive extends SubsystemBase {
     if (headingController == null) {
       headingController =
           new TeleopHeadingController(
-              () -> fieldRelativeYaw, new Rotation2d(), HEADING_CONTROLLER_CONSTANTS);
+              () -> fieldRelativeYaw, RobotState.getInstance().calculateTargetShootingState().drivebaseYaw(), HEADING_CONTROLLER_CONSTANTS);
     }
     headingController.setScoped(scoped);
   }
@@ -496,5 +496,9 @@ public class Drive extends SubsystemBase {
     for (Module module : modules) {
       module.setNeutralMode(value);
     }
+  }
+
+  public boolean getIsScoped() {
+    return isScoped;
   }
 }

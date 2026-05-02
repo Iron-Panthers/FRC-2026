@@ -389,8 +389,8 @@ public class RobotContainer {
                       -driverA.getLeftX(),
                       driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis(),
                       DriveConstants.DRIVE_CONFIG.maxLinearAcceleration());
-                  if (Math.abs(driverA.getLeftTriggerAxis()) > 0.1
-                      || Math.abs(driverA.getRightTriggerAxis()) > 0.1) {
+                  if ((Math.abs(driverA.getLeftTriggerAxis()) > 0.1
+                      || Math.abs(driverA.getRightTriggerAxis()) > 0.1) && !swerve.getIsScoped()) {
                     swerve.clearHeadingControl();
                   }
                 })
