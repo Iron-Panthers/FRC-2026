@@ -1,0 +1,70 @@
+language: "en-US"
+tone_instructions: >
+  Direct and concise. This is a competitive FRC robotics codebase written by a small team.
+  Focus on: WPILib pattern correctness, AdvantageKit logging completeness (missing @AutoLog,
+  missing @AutoLogOutput, missing Logger.processInputs calls), IO-layer discipline (hardware
+  access outside IO implementations), and safety-critical issues. Skip style nitpicks —
+  Spotless (Google Java Format) handles formatting automatically. Do not suggest major
+  architectural changes unless something is clearly broken.
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+
+  path_instructions:
+    - path: "src/main/java/frc/robot/subsystems/**/*IOSim.java"
+      instructions: >
+        Verify TalonFX SimState is updated BEFORE calling super.updateInputs() (or inputs are
+        set before returning). Verify all WPILib physics sim objects (FlywheelSim,
+        SingleJointedArmSim, DCMotorSim) are updated with the 0.02s timestep
+        (Constants.PERIODIC_LOOP_SEC), not a hardcoded value. Verify simulated sensor readings
+        (position, velocity, current) are written back to the inputs struct.
+
+    - path: "src/main/java/frc/robot/subsystems/**/*IO.java"
+      instructions: >
+        Verify the inner IOInputs class has the @AutoLog annotation. Verify every field in
+        IOInputs has a primitive default value (e.g., 0.0, false, new double[]{}) — null
+        defaults cause NullPointerExceptions in replay mode.
+
+    - path: "src/main/java/frc/robot/Constants.java"
+      instructions: >
+        Flag if ROBOT_TYPE is hardcoded to COMP, ALPHA, or VISION (should stay as the
+        conditional expression so it auto-resolves in sim). Flag if REPLAY is accidentally
+        left as true — this would cause the robot to fail to boot without a log file present.
+
+    - path: "src/main/deploy/pathplanner/autos/*.auto"
+      instructions: >
+        Check that every named command referenced in this auto file is registered in
+        RobotContainer.java via NamedCommands.registerCommand(). Unregistered named commands
+        silently do nothing in PathPlanner.
+
+    - path: "src/main/java/frc/robot/RobotContainer.java"
+      instructions: >
+        Verify that any new subsystem added to the COMP case also has a corresponding entry
+        in the SIM case (or is explicitly commented as intentionally sim-only / comp-only).
+        Verify new named command registrations use the exact same string key as referenced
+        in any .auto files. Verify new button bindings use CommandXboxController and follow
+        the .onTrue()/.whileTrue()/.onFalse() pattern.
+
+    - path: "src/main/java/frc/robot/subsystems/**/*Controller.java"
+      instructions: >
+        Verify that all new states in the state enum have corresponding target values for
+        every child subsystem parameter. Verify @AutoLogOutput is present on the current
+        state field so it appears in logs.
+
+    - path: "src/main/java/frc/robot/lib/generic_subsystems/**"
+      instructions: >
+        These are shared base classes used by all subsystems. Changes here affect the entire
+        robot. Flag any breaking changes to method signatures or constructor parameters.
+
+auto_review:
+  enabled: true
+  drafts: false
+  base_branches:
+    - "main"
+    - "dev"
+    - "master"
