@@ -38,7 +38,6 @@ public class IntakeRollersConstants {
   public static final IntakeRollerPhysicalConstants PHYSICAL_CONSTANTS =
       switch (Constants.getRobotType()) {
         case SIM -> new IntakeRollerPhysicalConstants(0.01);
-        case COMP -> new IntakeRollerPhysicalConstants(0.1);
         default -> new IntakeRollerPhysicalConstants(0.1);
       };
 

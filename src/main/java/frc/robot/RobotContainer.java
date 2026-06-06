@@ -5,6 +5,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.RobotConfig;
@@ -279,7 +280,8 @@ public class RobotContainer {
                   shooterController.setTargetState(ShooterState.INTAKE);
                 }));
     new EventTrigger("Intake stow")
-        .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)));
+        .onTrue(
+            new InstantCommand(() -> intakeController.setTargetState(IntakeState.SHOOTING_STOW)));
     new EventTrigger("Spin up shooter")
         .onTrue(
             new InstantCommand(
@@ -297,7 +299,7 @@ public class RobotContainer {
             .alongWith(shooterController.setTargetStateCommand(ShooterState.FLYWHEEL_SPIN_UP)));
     // probably have to change this, come back later
     NamedCommands.registerCommand(
-        "Intake stow", intakeController.setTargetStateCommand(IntakeState.STOW));
+        "Intake stow", intakeController.setTargetStateCommand(IntakeState.SHOOTING_STOW));
     NamedCommands.registerCommand(
         "Spin up shooter", shooterController.setTargetStateCommand(ShooterState.COMPACT_SPIN_UP));
     NamedCommands.registerCommand(
@@ -320,7 +322,9 @@ public class RobotContainer {
                 new InstantCommand(
                     () -> shooterController.setTargetStateCommand(ShooterState.SHOOT)))
             .alongWith(new WaitCommand(1))
-            .alongWith(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)))
+            .alongWith(
+                new InstantCommand(
+                    () -> intakeController.setTargetState(IntakeState.SHOOTING_STOW)))
             .alongWith(new WaitCommand(7))
             .andThen(
                 new InstantCommand(
@@ -341,17 +345,18 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Align and auto shoot full hopper (no intake)",
         new AlignToShootPoseCommand(swerve, true)
-                .withDeadline(new WaitUntilCommand(()-> !RobotState.getInstance().isUnderTrench()))
-            .andThen((new AlignToShootCommand(swerve, shooterController))
-            .withDeadline(
-                new WaitCommand(0.2)
-                    .andThen(
-                        new AutoShootCommand(
-                            swerve,
-                            shooterController,
-                            intakeController,
-                            matchTimerUpdater,
-                            false)))));
+            .withDeadline(new WaitUntilCommand(() -> !RobotState.getInstance().isUnderTrench()))
+            .andThen(
+                (new AlignToShootCommand(swerve, shooterController))
+                    .withDeadline(
+                        new WaitCommand(0.2)
+                            .andThen(
+                                new AutoShootCommand(
+                                    swerve,
+                                    shooterController,
+                                    intakeController,
+                                    matchTimerUpdater,
+                                    false)))));
     NamedCommands.registerCommand(
         "Auto shoot full hopper (no intake)",
         new AutoShootCommand(
@@ -384,8 +389,9 @@ public class RobotContainer {
                       -driverA.getLeftX(),
                       driverA.getLeftTriggerAxis() - driverA.getRightTriggerAxis(),
                       DriveConstants.DRIVE_CONFIG.maxLinearAcceleration());
-                  if (Math.abs(driverA.getLeftTriggerAxis()) > 0.1
-                      || Math.abs(driverA.getRightTriggerAxis()) > 0.1) {
+                  if ((Math.abs(driverA.getLeftTriggerAxis()) > 0.1
+                          || Math.abs(driverA.getRightTriggerAxis()) > 0.1)
+                      && !swerve.getIsScoped()) {
                     swerve.clearHeadingControl();
                   }
                 })
@@ -422,7 +428,8 @@ public class RobotContainer {
     // driverA.rightStick().onTrue(new HappyBirthdayCommand());
     driverA
         .povLeft()
-        .onTrue(new InstantCommand(() -> intakeController.setTargetState(IntakeState.STOW)));
+        .onTrue(
+            new InstantCommand(() -> intakeController.setTargetState(IntakeState.SHOOTING_STOW)));
     // ZERO GYRO
     driverA
         .start()
@@ -518,6 +525,11 @@ public class RobotContainer {
         .whileTrue(
             new AlignToShootCommand(swerve, shooterController).alongWith(shootCommand.whileHeld()))
         .onFalse(shootCommand.onRelease());
+
+    driverB
+        .b()
+        .onTrue(shootCommand.setJustShootCommand(true))
+        .onFalse(shootCommand.setJustShootCommand(false));
   }
 
   private void configureDriverBButtons() {
@@ -534,7 +546,7 @@ public class RobotContainer {
             shooterController
                 .setStoppedCommand(true)
                 .alongWith(intakeController.setStoppedCommand(true)));
-    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeState.STOW));
+    driverB.a().onTrue(intakeController.setTargetStateCommand(IntakeState.SHOOTING_STOW));
 
     driverB.rightBumper().onTrue(intakeController.setTargetStateCommand(IntakeState.INTAKE));
 
@@ -547,7 +559,7 @@ public class RobotContainer {
     driverB.rightTrigger().onTrue(new InstantCommand(() -> swerve.setIsBeingDefended(true)));
     driverB.leftTrigger().onTrue(new InstantCommand(() -> swerve.setIsBeingDefended(false)));
 
-    driverB.b().onTrue(new InstantCommand(() -> swerve.setDriveSupplyCurrentLimits(35)));
+    driverB.y().onTrue(intakeController.setTargetStateCommand(IntakeState.INTAKE_SLOW));
   }
 
   private void configureAutos() {
@@ -587,11 +599,13 @@ public class RobotContainer {
   public void autoInit() {
     // Smart zero the robot
     CommandScheduler.getInstance().schedule(new InstantCommand(() -> swerve.smartZeroGyro()));
+    intakeController.stopZeroing();
   }
 
   // runs when teleop starts
   public void teleopInit() {
     CommandScheduler.getInstance().schedule(new VibrateHIDCommand(driverB.getHID(), 5, .5));
+    swerve.setNeutralMode(NeutralModeValue.Brake);
   }
 
   /** Ran when periodic disabled */

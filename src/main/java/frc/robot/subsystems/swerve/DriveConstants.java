@@ -129,22 +129,22 @@ public class DriveConstants {
           new ModuleConfig(
               CAN.at(35, "FR Drive"),
               CAN.at(6, "FR Steer"),
-              9,
-              new Rotation2d(-0.513884),
+              12,
+              new Rotation2d(2.101554),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive),
           new ModuleConfig(
               CAN.at(3, "BL Drive"),
               CAN.at(4, "BL Steer"),
               6,
-              new Rotation2d(2.822525),
+              new Rotation2d(2.847068),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.Clockwise_Positive),
           new ModuleConfig(
               CAN.at(2, "BR Drive"),
               CAN.at(1, "BR Steer"),
-              12,
-              new Rotation2d(-0.770058),
+              25,
+              new Rotation2d(1.377515),
               InvertedValue.CounterClockwise_Positive,
               InvertedValue.CounterClockwise_Positive)
         };
@@ -273,7 +273,7 @@ public class DriveConstants {
       };
 
   public static final double STEER_CURRENT_LIMIT_AMPS = 10;
-  public static final double DRIVE_CURRENT_LIMIT_AMPS = 35;
+  public static final double DRIVE_CURRENT_LIMIT_AMPS = 40;
 
   /**
    * These are the configs for the maple sim drivebase This should be updated to be similar to the
